@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evalia — Curated Vacation Rentals</title>
+  <meta name="description" content="Evalia — Handpicked luxury vacation rentals. Seamless booking, memorable stays. Browse villas, chalets, beachfront & city apartments." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --sand: #F5EFE4; --cream: #FBF8F3; --stone: #D9CEBC;
+      --copper: #B87544; --copper-light: #D4956A;
+      --dark: #1A1610; --muted: #6B5F50; --white: #FFFFFF;
+      --shadow: 0 8px 40px rgba(26,22,16,.12); --radius: 16px;
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--cream); color: var(--dark); overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; object-fit: cover; }
+    button { cursor: pointer; border: none; font-family: var(--font-body); }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--cream); }
+    ::-webkit-scrollbar-thumb { background: var(--stone); border-radius: 3px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+      background: rgba(251,248,243,.92); backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(217,206,188,.4); transition: padding .3s;
+    }
+    nav.scrolled { padding: 14px 48px; }
+    .nav-logo { font-family: var(--font-display); font-size: 28px; font-weight: 600; letter-spacing: .04em; }
+    .nav-logo span { color: var(--copper); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { font-size: 13px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); transition: color .2s; }
+    .nav-links a:hover { color: var(--dark); }
+    .nav-cta { background: var(--dark); color: var(--cream); padding: 11px 24px; border-radius: 50px; font-size: 13px; font-weight: 500; letter-spacing: .06em; transition: background .2s, transform .15s; }
+    .nav-cta:hover { background: var(--copper); transform: translateY(-1px); }
+    .nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .nav-burger span { width: 24px; height: 2px; background: var(--dark); border-radius: 2px; transition: .3s; }
+
+    /* ── HERO ── */
+    .hero { position: relative; height: 100vh; min-height: 680px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #2C1F10 0%, #4A3320 40%, #1A1610 100%); }
+    .hero-bg::after { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E"); opacity: .5; }
+    /* Hero background image slot — replace gradient with your hero photo */
+    .hero-photo { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: .35; }
+    .hero-circle { position: absolute; border-radius: 50%; border: 1px solid rgba(184,117,68,.25); animation: pulse 6s ease-in-out infinite; }
+    .hero-circle:nth-child(2) { width: 600px; height: 600px; top: -100px; right: -100px; }
+    .hero-circle:nth-child(3) { width: 400px; height: 400px; bottom: -50px; left: -80px; animation-delay: 2s; }
+    .hero-circle:nth-child(4) { width: 250px; height: 250px; top: 30%; right: 20%; animation-delay: 4s; }
+    @keyframes pulse { 0%,100% { opacity: .4; transform: scale(1); } 50% { opacity: .7; transform: scale(1.04); } }
+    .hero-content { position: relative; z-index: 2; text-align: center; padding: 0 20px; animation: fadeUp .9s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--copper-light); margin-bottom: 20px; }
+    .hero-title { font-family: var(--font-display); font-size: clamp(54px, 7vw, 96px); font-weight: 300; color: var(--cream); line-height: 1.05; margin-bottom: 24px; }
+    .hero-title em { font-style: italic; color: var(--copper-light); }
+    .hero-sub { font-size: 16px; font-weight: 300; color: rgba(245,239,228,.7); max-width: 480px; margin: 0 auto 48px; line-height: 1.7; }
+    .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: var(--copper); color: var(--white); padding: 16px 36px; border-radius: 50px; font-size: 14px; font-weight: 500; letter-spacing: .06em; transition: background .2s, transform .15s, box-shadow .2s; box-shadow: 0 4px 24px rgba(184,117,68,.4); }
+    .btn-primary:hover { background: #A0663A; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(184,117,68,.5); }
+    .btn-ghost { background: rgba(255,255,255,.1); color: var(--cream); padding: 16px 36px; border-radius: 50px; font-size: 14px; font-weight: 500; letter-spacing: .06em; border: 1px solid rgba(255,255,255,.25); transition: background .2s, transform .15s; }
+    .btn-ghost:hover { background: rgba(255,255,255,.18); transform: translateY(-2px); }
+    .hero-scroll { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgba(245,239,228,.4); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; animation: bounce 2s ease-in-out infinite; z-index: 2; }
+    .hero-scroll::before { content: ''; width: 1px; height: 40px; background: linear-gradient(to bottom, transparent, rgba(245,239,228,.3)); }
+    @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+    /* ── SEARCH ── */
+    .search-wrap { position: relative; z-index: 10; max-width: 800px; margin: -36px auto 0; padding: 0 24px; }
+    .search-bar { background: var(--white); border-radius: 20px; padding: 8px; display: flex; align-items: stretch; gap: 8px; box-shadow: 0 20px 60px rgba(26,22,16,.2); flex-wrap: wrap; }
+    .search-field { flex: 1; min-width: 120px; padding: 12px 16px; border: none; outline: none; font-family: var(--font-body); font-size: 14px; color: var(--dark); background: transparent; border-right: 1px solid var(--stone); }
+    .search-field:last-of-type { border-right: none; }
+    .search-field::placeholder { color: var(--muted); font-size: 13px; }
+    .search-btn { background: var(--copper); color: var(--white); padding: 14px 28px; border-radius: 14px; font-size: 14px; font-weight: 500; transition: background .2s; white-space: nowrap; }
+    .search-btn:hover { background: #A0663A; }
+
+    /* ── SECTIONS ── */
+    section { padding: 100px 48px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--copper); margin-bottom: 16px; }
+    .section-title { font-family: var(--font-display); font-size: clamp(36px, 4vw, 56px); font-weight: 300; line-height: 1.1; color: var(--dark); }
+    .section-title em { font-style: italic; color: var(--copper); }
+    .section-sub { margin-top: 16px; font-size: 15px; font-weight: 300; color: var(--muted); line-height: 1.75; max-width: 520px; }
+    .section-header { margin-bottom: 60px; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-sub { margin: 16px auto 0; }
+
+    /* ── STATS ── */
+    .stats { background: var(--dark); padding: 60px 48px; display: flex; justify-content: center; gap: 80px; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-num { font-family: var(--font-display); font-size: 52px; font-weight: 300; color: var(--cream); line-height: 1; display: block; }
+    .stat-num span { color: var(--copper-light); }
+    .stat-label { font-size: 12px; font-weight: 400; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+
+    /* ── PROPERTIES ── */
+    #properties { background: var(--cream); }
+    .props-header { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px; margin-bottom: 60px; }
+    .filter-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+    .pill { padding: 8px 20px; border-radius: 50px; border: 1px solid var(--stone); font-size: 13px; font-weight: 400; color: var(--muted); background: transparent; transition: all .2s; }
+    .pill.active, .pill:hover { background: var(--dark); border-color: var(--dark); color: var(--cream); }
+    .props-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 32px; }
+
+    /* ── PROPERTY CARD ── */
+    .prop-card { border-radius: var(--radius); overflow: hidden; background: var(--white); box-shadow: 0 2px 16px rgba(26,22,16,.07); transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s; cursor: pointer; }
+    .prop-card:hover { transform: translateY(-8px); box-shadow: 0 24px 60px rgba(26,22,16,.16); }
+    .prop-img-wrap { position: relative; height: 260px; overflow: hidden; background: var(--stone); }
+    /* ── PHOTO SLOT: actual <img> OR gradient fallback ── */
+    .prop-img-wrap .prop-photo { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    .prop-card:hover .prop-img-wrap .prop-photo { transform: scale(1.06); }
+    .prop-img-wrap .prop-emoji-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 72px; transition: transform .5s ease; }
+    .prop-card:hover .prop-img-wrap .prop-emoji-fallback { transform: scale(1.06); }
+    .prop-badge { position: absolute; top: 16px; left: 16px; background: var(--dark); color: var(--cream); font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; padding: 5px 12px; border-radius: 50px; }
+    .prop-badge.avail { background: var(--copper); }
+    .prop-fav { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; background: rgba(255,255,255,.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: transform .2s; cursor: pointer; }
+    .prop-fav:hover { transform: scale(1.15); }
+    .prop-fav.loved { color: #e04; }
+    .prop-video-badge { position: absolute; bottom: 12px; right: 12px; background: rgba(26,22,16,.7); color: var(--cream); font-size: 11px; padding: 4px 10px; border-radius: 50px; letter-spacing: .05em; backdrop-filter: blur(4px); cursor: pointer; transition: background .2s; }
+    .prop-video-badge:hover { background: var(--copper); }
+    .prop-body { padding: 24px; }
+    .prop-location { font-size: 11px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--copper); margin-bottom: 6px; }
+    .prop-name { font-family: var(--font-display); font-size: 22px; font-weight: 400; color: var(--dark); margin-bottom: 10px; line-height: 1.2; }
+    .prop-amenities { display: flex; gap: 16px; font-size: 12px; color: var(--muted); margin-bottom: 20px; flex-wrap: wrap; }
+    .prop-amenities span { display: flex; align-items: center; gap: 4px; }
+    .prop-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 20px; border-top: 1px solid var(--sand); }
+    .prop-price { font-family: var(--font-display); font-size: 28px; font-weight: 300; color: var(--dark); }
+    .prop-price sup { font-size: 14px; font-weight: 500; }
+    .prop-price-label { font-size: 12px; color: var(--muted); }
+    .prop-stars { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--muted); }
+    .star { color: var(--copper); }
+    .btn-book { background: var(--dark); color: var(--cream); padding: 10px 22px; border-radius: 50px; font-size: 13px; font-weight: 500; transition: background .2s, transform .15s; }
+    .btn-book:hover { background: var(--copper); transform: translateY(-1px); }
+
+    /* ── VIDEO LIGHTBOX ── */
+    .video-overlay { position: fixed; inset: 0; background: rgba(10,8,5,.9); z-index: 500; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .3s; backdrop-filter: blur(12px); }
+    .video-overlay.open { opacity: 1; pointer-events: all; }
+    .video-wrap { position: relative; width: 90%; max-width: 900px; }
+    .video-wrap video, .video-wrap iframe { width: 100%; aspect-ratio: 16/9; border-radius: 16px; background: #000; }
+    .video-close { position: absolute; top: -48px; right: 0; width: 36px; height: 36px; background: rgba(255,255,255,.15); border-radius: 50%; font-size: 18px; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s; }
+    .video-close:hover { background: var(--copper); }
+
+    /* ── GALLERY LIGHTBOX ── */
+    .gallery-overlay { position: fixed; inset: 0; background: rgba(10,8,5,.95); z-index: 400; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .3s; }
+    .gallery-overlay.open { opacity: 1; pointer-events: all; }
+    .gallery-img { max-width: 90vw; max-height: 80vh; border-radius: 12px; object-fit: contain; }
+    .gallery-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; background: rgba(255,255,255,.15); border-radius: 50%; font-size: 20px; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s; }
+    .gallery-nav:hover { background: var(--copper); }
+    .gallery-prev { left: 24px; }
+    .gallery-next { right: 24px; }
+    .gallery-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: rgba(255,255,255,.15); border-radius: 50%; font-size: 18px; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+    /* ── EXPERIENCE ── */
+    .experience { background: var(--sand); display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 0; overflow: hidden; }
+    .exp-visual { position: relative; min-height: 560px; background: linear-gradient(160deg, #3D2812 0%, #1A1610 100%); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    /* ── PHOTO SLOT: replace gradient with your own brand photo ── */
+    .exp-visual-photo { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: .5; }
+    .exp-visual::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(184,117,68,.12)' stroke-width='1'%3E%3Ccircle cx='30' cy='30' r='28'/%3E%3Ccircle cx='30' cy='30' r='18'/%3E%3Ccircle cx='30' cy='30' r='8'/%3E%3C/g%3E%3C/svg%3E") repeat; }
+    .exp-icon-big { position: relative; font-size: 120px; filter: drop-shadow(0 20px 60px rgba(184,117,68,.4)); animation: float 4s ease-in-out infinite; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+    .exp-text { padding: 80px 64px; display: flex; flex-direction: column; justify-content: center; }
+    .exp-features { margin-top: 48px; display: flex; flex-direction: column; gap: 32px; }
+    .exp-feat { display: flex; gap: 20px; align-items: flex-start; }
+    .exp-feat-icon { width: 48px; height: 48px; flex-shrink: 0; background: var(--white); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 4px 16px rgba(26,22,16,.08); }
+    .exp-feat-body h4 { font-family: var(--font-display); font-size: 19px; font-weight: 400; margin-bottom: 4px; }
+    .exp-feat-body p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* ── BOOKING ── */
+    #booking { background: var(--dark); color: var(--cream); }
+    #booking .section-title { color: var(--cream); }
+    #booking .section-sub { color: rgba(245,239,228,.6); }
+    .booking-grid { display: grid; grid-template-columns: 1fr 420px; gap: 64px; align-items: start; }
+    .booking-steps { display: flex; flex-direction: column; gap: 40px; }
+    .booking-step { display: flex; gap: 24px; align-items: flex-start; }
+    .step-num { width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; border: 1px solid rgba(184,117,68,.5); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 18px; font-weight: 300; color: var(--copper-light); }
+    .step-body h4 { font-family: var(--font-display); font-size: 20px; font-weight: 400; margin-bottom: 6px; color: var(--cream); }
+    .step-body p { font-size: 14px; color: rgba(245,239,228,.55); line-height: 1.65; }
+
+    /* ── BOOKING FORM ── */
+    .booking-form-card { background: var(--cream); border-radius: 24px; padding: 40px; color: var(--dark); box-shadow: 0 40px 80px rgba(0,0,0,.4); }
+    .form-title { font-family: var(--font-display); font-size: 26px; font-weight: 400; margin-bottom: 28px; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: block; }
+    .form-input { width: 100%; padding: 13px 16px; border: 1.5px solid var(--stone); border-radius: 12px; font-family: var(--font-body); font-size: 14px; color: var(--dark); background: var(--white); outline: none; transition: border-color .2s, box-shadow .2s; }
+    .form-input:focus { border-color: var(--copper); box-shadow: 0 0 0 3px rgba(184,117,68,.15); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-select { width: 100%; padding: 13px 16px; border: 1.5px solid var(--stone); border-radius: 12px; font-family: var(--font-body); font-size: 14px; color: var(--dark); background: var(--white); outline: none; appearance: none; cursor: pointer; transition: border-color .2s; }
+    .form-select:focus { border-color: var(--copper); }
+    .price-summary { background: var(--sand); border-radius: 14px; padding: 20px; margin: 24px 0; }
+    .price-row { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); padding: 6px 0; }
+    .price-row.total { border-top: 1px solid var(--stone); margin-top: 8px; padding-top: 14px; font-weight: 500; font-size: 16px; color: var(--dark); }
+    .btn-checkout { width: 100%; background: var(--copper); color: var(--white); padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 500; letter-spacing: .04em; transition: background .2s, transform .15s; }
+    .btn-checkout:hover { background: #A0663A; transform: translateY(-1px); }
+
+    /* form status messages */
+    .form-status { margin-top: 12px; padding: 12px 16px; border-radius: 10px; font-size: 13px; display: none; }
+    .form-status.success { background: rgba(61,139,94,.12); color: #2d7a50; display: block; }
+    .form-status.error { background: rgba(184,84,68,.1); color: #a03828; display: block; }
+
+    /* ── PAYMENT ── */
+    #payment { background: var(--cream); }
+    .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .payment-card { background: var(--white); border-radius: 24px; padding: 40px; box-shadow: var(--shadow); }
+    .payment-tabs { display: flex; gap: 8px; margin-bottom: 32px; }
+    .ptab { flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid var(--stone); font-size: 13px; font-weight: 500; color: var(--muted); background: transparent; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .ptab.active { background: var(--dark); border-color: var(--dark); color: var(--cream); }
+    .card-visual { background: linear-gradient(135deg, #1A1610 0%, #3D2812 50%, #4A3320 100%); border-radius: 18px; padding: 28px; color: var(--cream); margin-bottom: 28px; position: relative; overflow: hidden; height: 180px; }
+    .card-visual::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; border-radius: 50%; background: rgba(184,117,68,.2); }
+    .card-chip { font-size: 30px; margin-bottom: 20px; }
+    .card-number { font-size: 18px; letter-spacing: .15em; margin-bottom: 20px; opacity: .8; }
+    .card-foot { display: flex; justify-content: space-between; font-size: 12px; opacity: .6; letter-spacing: .08em; text-transform: uppercase; }
+    .card-brand { position: absolute; top: 24px; right: 24px; font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--copper-light); }
+    .payment-methods { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+    .pm-badge { padding: 8px 16px; border: 1px solid var(--stone); border-radius: 8px; font-size: 12px; font-weight: 500; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .pm-badge span { font-size: 16px; }
+    .payment-features { display: flex; flex-direction: column; gap: 28px; }
+    .pf-item { display: flex; gap: 16px; align-items: flex-start; }
+    .pf-icon { width: 44px; height: 44px; flex-shrink: 0; background: linear-gradient(135deg, rgba(184,117,68,.15), rgba(184,117,68,.05)); border: 1px solid rgba(184,117,68,.3); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .pf-body h4 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+    .pf-body p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── TESTIMONIALS ── */
+    #testimonials { background: var(--sand); }
+    .testi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px; }
+    .testi-card { background: var(--white); border-radius: var(--radius); padding: 32px; box-shadow: 0 2px 16px rgba(26,22,16,.06); }
+    .testi-stars { display: flex; gap: 3px; margin-bottom: 20px; font-size: 16px; }
+    .testi-text { font-family: var(--font-display); font-size: 18px; font-weight: 300; font-style: italic; line-height: 1.6; color: var(--dark); margin-bottom: 24px; }
+    .testi-author { display: flex; align-items: center; gap: 14px; }
+    .testi-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--stone); display: flex; align-items: center; justify-content: center; font-size: 20px; overflow: hidden; }
+    .testi-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .testi-name { font-size: 14px; font-weight: 500; }
+    .testi-stay { font-size: 12px; color: var(--muted); }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--dark); color: var(--cream); }
+    #contact .section-title { color: var(--cream); }
+    #contact .section-sub { color: rgba(245,239,228,.6); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .contact-info { display: flex; flex-direction: column; gap: 32px; margin-top: 40px; }
+    .ci-item { display: flex; gap: 16px; align-items: flex-start; }
+    .ci-icon { width: 44px; height: 44px; flex-shrink: 0; border: 1px solid rgba(184,117,68,.4); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .ci-label { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--copper-light); margin-bottom: 4px; }
+    .ci-value { font-size: 15px; color: var(--cream); }
+    .ci-value a { color: var(--copper-light); }
+    .contact-form { margin-top: 8px; }
+    .cf-input { width: 100%; padding: 14px 18px; background: rgba(255,255,255,.06); border: 1.5px solid rgba(217,206,188,.2); border-radius: 12px; font-family: var(--font-body); font-size: 14px; color: var(--cream); outline: none; transition: border-color .2s; margin-bottom: 16px; }
+    .cf-input::placeholder { color: rgba(245,239,228,.3); }
+    .cf-input:focus { border-color: var(--copper); }
+    .cf-textarea { resize: vertical; min-height: 120px; }
+    .btn-send { width: 100%; background: var(--copper); color: var(--white); padding: 15px; border-radius: 12px; font-size: 14px; font-weight: 500; letter-spacing: .05em; transition: background .2s; }
+    .btn-send:hover { background: #A0663A; }
+
+    /* ── FOOTER ── */
+    footer { background: #0F0C08; padding: 60px 48px 32px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 48px; border-bottom: 1px solid rgba(217,206,188,.12); margin-bottom: 32px; }
+    .footer-brand-name { font-family: var(--font-display); font-size: 28px; font-weight: 600; color: var(--cream); margin-bottom: 16px; }
+    .footer-brand-name span { color: var(--copper); }
+    .footer-desc { font-size: 14px; color: rgba(245,239,228,.4); line-height: 1.7; }
+    .footer-socials { display: flex; gap: 12px; margin-top: 24px; }
+    .soc { width: 38px; height: 38px; border: 1px solid rgba(217,206,188,.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: border-color .2s, background .2s; }
+    .soc:hover { border-color: var(--copper); background: rgba(184,117,68,.1); }
+    .footer-col h5 { font-size: 12px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--copper-light); margin-bottom: 20px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-col a { font-size: 14px; color: rgba(245,239,228,.45); transition: color .2s; }
+    .footer-col a:hover { color: var(--cream); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-copy { font-size: 13px; color: rgba(245,239,228,.25); }
+
+    /* ── MODAL ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(10,8,5,.75); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .3s; backdrop-filter: blur(8px); }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--cream); border-radius: 28px; max-width: 640px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 48px; position: relative; transform: translateY(24px) scale(.97); transition: transform .3s cubic-bezier(.22,1,.36,1); }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-close { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; background: var(--sand); border-radius: 50%; font-size: 18px; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: background .2s; cursor: pointer; }
+    .modal-close:hover { background: var(--stone); }
+    .modal-title { font-family: var(--font-display); font-size: 32px; font-weight: 300; margin-bottom: 8px; }
+    .modal-sub { font-size: 14px; color: var(--muted); margin-bottom: 32px; }
+    .modal-prop-img { height: 200px; border-radius: 16px; overflow: hidden; margin-bottom: 24px; }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 32px; right: 32px; background: var(--dark); color: var(--cream); padding: 16px 24px; border-radius: 14px; font-size: 14px; box-shadow: 0 8px 32px rgba(0,0,0,.3); z-index: 999; transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.22,1,.36,1); display: flex; align-items: center; gap: 10px; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ── WHATSAPP FLOAT ── */
+    .wa-float { position: fixed; bottom: 32px; left: 32px; width: 56px; height: 56px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 20px rgba(37,211,102,.4); z-index: 90; transition: transform .2s, box-shadow .2s; text-decoration: none; }
+    .wa-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,.5); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width: 1024px) {
+      .booking-grid, .payment-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .experience { grid-template-columns: 1fr; }
+      .exp-visual { min-height: 300px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media(max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links, .nav-cta { display: none; }
+      .nav-burger { display: flex; }
+      section { padding: 64px 24px; }
+      .stats { padding: 48px 24px; gap: 40px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .search-bar { flex-direction: column; }
+      .search-field { border-right: none; border-bottom: 1px solid var(--stone); }
+      .props-grid { grid-template-columns: 1fr; }
+      .modal { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- WhatsApp Float -->
+<a class="wa-float" href="https://wa.me/24106000000" target="_blank" title="Chat on WhatsApp">💬</a>
+
+<!-- Toast -->
+<div class="toast" id="toast"><span id="toastIcon">✅</span><span id="toastMsg">Done!</span></div>
+
+<!-- Video Lightbox -->
+<div class="video-overlay" id="videoOverlay">
+  <div class="video-wrap">
+    <div class="video-close" onclick="closeVideo()">✕</div>
+    <video id="videoEl" controls playsinline></video>
+    <!-- For YouTube/Vimeo embed instead: -->
+    <!-- <iframe id="videoFrame" frameborder="0" allowfullscreen></iframe> -->
+  </div>
+</div>
+
+<!-- Gallery Lightbox -->
+<div class="gallery-overlay" id="galleryOverlay">
+  <div class="gallery-close" onclick="closeGallery()">✕</div>
+  <div class="gallery-nav gallery-prev" onclick="galleryNav(-1)">‹</div>
+  <img class="gallery-img" id="galleryImg" src="" alt="Property photo" />
+  <div class="gallery-nav gallery-next" onclick="galleryNav(1)">›</div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">Eva<span>lia</span></div>
+  <ul class="nav-links">
+    <li><a href="#properties">Properties</a></li>
+    <li><a href="#booking">Book</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="openModal('general')">List your property</button>
+  <div class="nav-burger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <!-- HERO PHOTO: Upload a photo named 'evalia-hero' to your Cloudinary media library -->
+    <div class="hero-photo" id="heroPhotoBg" style="background-image:url('https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto,w_1920/evalia/hero.jpg')"></div>
+    <div class="hero-circle"></div>
+    <div class="hero-circle"></div>
+    <div class="hero-circle"></div>
+    <div class="hero-circle"></div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Curated vacation rentals · @evalia241</p>
+    <h1 class="hero-title">Stay in places<br>worth <em>remembering</em></h1>
+    <p class="hero-sub">Handpicked luxury properties for the discerning traveller. Seamless booking, memorable stays.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('properties').scrollIntoView({behavior:'smooth'})">Explore Properties</button>
+      <button class="btn-ghost" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">Book Now</button>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- SEARCH BAR -->
+<div class="search-wrap">
+  <div class="search-bar">
+    <input class="search-field" type="text" placeholder="📍  Destination" id="searchDest" />
+    <input class="search-field" type="date" id="searchIn" />
+    <input class="search-field" type="date" id="searchOut" />
+    <select class="search-field form-select" id="searchGuests">
+      <option value="">👤  Guests</option>
+      <option>1 Guest</option><option>2 Guests</option>
+      <option>3 Guests</option><option>4+ Guests</option>
+    </select>
+    <button class="search-btn" onclick="handleSearch()">Search</button>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><span class="stat-num" data-target="48">0<span>+</span></span><div class="stat-label">Premium Properties</div></div>
+  <div class="stat"><span class="stat-num" data-target="1200">0<span>+</span></span><div class="stat-label">Happy Guests</div></div>
+  <div class="stat"><span class="stat-num" data-target="12">0<span>+</span></span><div class="stat-label">Destinations</div></div>
+  <div class="stat"><span class="stat-num" data-target="98">0<span>%</span></span><div class="stat-label">Satisfaction Rate</div></div>
+</div>
+
+<!-- PROPERTIES -->
+<section id="properties">
+  <div class="props-header">
+    <div>
+      <p class="section-eyebrow">Our Portfolio</p>
+      <h2 class="section-title">Featured <em>Properties</em></h2>
+    </div>
+    <div class="filter-pills">
+      <button class="pill active" onclick="filterProps(this,'all')">All</button>
+      <button class="pill" onclick="filterProps(this,'villa')">Villas</button>
+      <button class="pill" onclick="filterProps(this,'apartment')">Apartments</button>
+      <button class="pill" onclick="filterProps(this,'chalet')">Chalets</button>
+      <button class="pill" onclick="filterProps(this,'beach')">Beachfront</button>
+    </div>
+  </div>
+  <div class="props-grid" id="propsGrid"></div>
+</section>
+
+<!-- EXPERIENCE -->
+<div class="experience">
+  <div class="exp-visual">
+    <!--
+      PHOTO SLOT: Replace the emoji with your brand photo:
+      <div class="exp-visual-photo" style="background-image:url('YOUR_BRAND_PHOTO_URL')"></div>
+    -->
+    <div class="exp-icon-big">🏡</div>
+  </div>
+  <div class="exp-text">
+    <p class="section-eyebrow">Why Evalia</p>
+    <h2 class="section-title">An <em>experience</em><br>beyond a stay</h2>
+    <div class="exp-features">
+      <div class="exp-feat"><div class="exp-feat-icon">🔑</div><div class="exp-feat-body"><h4>Handpicked Properties</h4><p>Every listing is personally vetted for quality, comfort, and that ineffable sense of place.</p></div></div>
+      <div class="exp-feat"><div class="exp-feat-icon">💬</div><div class="exp-feat-body"><h4>Concierge Support</h4><p>24/7 dedicated support before, during, and after your stay. Always just a message away.</p></div></div>
+      <div class="exp-feat"><div class="exp-feat-icon">🛡️</div><div class="exp-feat-body"><h4>Secure & Guaranteed</h4><p>Your payment is protected. If anything isn't as described, we'll make it right — no questions.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="booking-grid">
+    <div>
+      <div class="section-header">
+        <p class="section-eyebrow" style="color:var(--copper-light)">Reserve Your Stay</p>
+        <h2 class="section-title">Book in<br><em>minutes</em></h2>
+        <p class="section-sub">Simple, transparent, instant confirmation. No hidden fees.</p>
+      </div>
+      <div class="booking-steps">
+        <div class="booking-step"><div class="step-num">01</div><div class="step-body"><h4>Choose Your Property</h4><p>Browse our curated portfolio and find the perfect match for your trip.</p></div></div>
+        <div class="booking-step"><div class="step-num">02</div><div class="step-body"><h4>Select Your Dates</h4><p>Pick your check-in and check-out dates. Instant availability check.</p></div></div>
+        <div class="booking-step"><div class="step-num">03</div><div class="step-body"><h4>Secure Payment</h4><p>Pay securely via card, bank transfer, or digital wallet. Instant confirmation.</p></div></div>
+        <div class="booking-step"><div class="step-num">04</div><div class="step-body"><h4>Arrive & Enjoy</h4><p>Receive your key details, check in seamlessly, and relax.</p></div></div>
+      </div>
+    </div>
+    <!-- BOOKING FORM — sends to Formspree -->
+    <div class="booking-form-card">
+      <h3 class="form-title">Make a Reservation</h3>
+      <!--
+        ════════════════════════════════════════════════
+        FORMSPREE SETUP (1 minute):
+        1. Go to formspree.io → sign up free
+        2. Create a new form → copy your endpoint URL
+        3. Replace YOUR_FORMSPREE_BOOKING_ID below
+        ════════════════════════════════════════════════
+      -->
+      <form id="bookingForm" action="https://formspree.io/f/YOUR_FORMSPREE_BOOKING_ID" method="POST">
+        <input type="hidden" name="_subject" value="New Booking Request — Evalia" />
+        <input type="hidden" name="_next" value="" />
+        <div class="form-group">
+          <label class="form-label">Select Property</label>
+          <select class="form-select" name="property" id="bkProperty" required>
+            <option value="">Choose a property…</option>
+            <option>Villa Azura — Coastline</option>
+            <option>Maison Doré — Provence Hills</option>
+            <option>The Alpine Lodge — Mountain</option>
+            <option>Casa Blanca — Old Town</option>
+            <option>Sunset Penthouse — City</option>
+            <option>The Dune House — Beachfront</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Check-In</label><input class="form-input" type="date" name="checkin" id="bkIn" required onchange="calcPrice()" /></div>
+          <div class="form-group"><label class="form-label">Check-Out</label><input class="form-input" type="date" name="checkout" id="bkOut" required onchange="calcPrice()" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Guests</label>
+            <select class="form-select" name="guests" id="bkGuests">
+              <option>1 Guest</option><option>2 Guests</option><option>3 Guests</option><option>4 Guests</option><option>5+ Guests</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Your Name</label><input class="form-input" type="text" name="name" placeholder="Full name" id="bkName" required /></div>
+        </div>
+        <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" name="email" placeholder="you@email.com" id="bkEmail" required /></div>
+        <div class="form-group"><label class="form-label">Phone / WhatsApp</label><input class="form-input" type="tel" name="phone" placeholder="+241 06 00 00 00" /></div>
+        <input type="hidden" name="estimated_total" id="hiddenTotal" value="" />
+        <div class="price-summary">
+          <div class="price-row"><span>Nightly rate</span><span id="priceNight">–</span></div>
+          <div class="price-row"><span>Nights</span><span id="priceNights">–</span></div>
+          <div class="price-row"><span>Cleaning fee</span><span>€85</span></div>
+          <div class="price-row total"><span>Estimated Total</span><span id="priceTotal">–</span></div>
+        </div>
+        <button type="submit" class="btn-checkout" id="bkSubmitBtn">Confirm & Request Booking →</button>
+        <div class="form-status" id="bkStatus"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- PAYMENT -->
+<section id="payment">
+  <div class="section-header center">
+    <p class="section-eyebrow">Secure Payments</p>
+    <h2 class="section-title">Pay with<br><em>confidence</em></h2>
+    <p class="section-sub">Industry-leading encryption. Multiple payment methods. Instant confirmation.</p>
+  </div>
+  <div class="payment-grid" style="max-width:1000px;margin:0 auto;">
+    <div class="payment-card">
+      <div class="payment-tabs">
+        <button class="ptab active" onclick="switchTab(this,'card')">💳 Card</button>
+        <button class="ptab" onclick="switchTab(this,'bank')">🏦 Bank</button>
+        <button class="ptab" onclick="switchTab(this,'wallet')">📱 Wallet</button>
+      </div>
+      <div id="tabCard">
+        <div class="card-visual">
+          <div class="card-brand">Evalia</div>
+          <div class="card-chip">▦</div>
+          <div class="card-number">•••• •••• •••• <span id="cardLast">1234</span></div>
+          <div class="card-foot"><span id="cardName">YOUR NAME</span><span id="cardExp">MM / YY</span></div>
+        </div>
+        <div class="form-group"><label class="form-label">Cardholder Name</label><input class="form-input" type="text" placeholder="As it appears on card" oninput="document.getElementById('cardName').textContent=this.value.toUpperCase()||'YOUR NAME'" /></div>
+        <div class="form-group"><label class="form-label">Card Number</label><input class="form-input" type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)" /></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Expiry</label><input class="form-input" type="text" placeholder="MM / YY" maxlength="7" oninput="formatExp(this)" /></div>
+          <div class="form-group"><label class="form-label">CVV</label><input class="form-input" type="text" placeholder="•••" maxlength="3" /></div>
+        </div>
+      </div>
+      <div id="tabBank" style="display:none">
+        <div class="form-group"><label class="form-label">Account Holder</label><input class="form-input" type="text" placeholder="Full legal name" /></div>
+        <div class="form-group"><label class="form-label">IBAN</label><input class="form-input" type="text" placeholder="GB29 NWBK 6016 1331 9268 19" /></div>
+        <div class="form-group"><label class="form-label">BIC / SWIFT</label><input class="form-input" type="text" placeholder="NWBKGB2L" /></div>
+      </div>
+      <div id="tabWallet" style="display:none">
+        <div style="text-align:center;padding:20px 0">
+          <div style="font-size:60px;margin-bottom:16px">📲</div>
+          <p style="font-size:14px;color:var(--muted);margin-bottom:24px">Pay instantly with your digital wallet</p>
+        </div>
+        <div class="payment-methods" style="justify-content:center">
+          <div class="pm-badge" style="cursor:pointer" onclick="showToast('✅','Apple Pay selected')"><span>🍎</span> Apple Pay</div>
+          <div class="pm-badge" style="cursor:pointer" onclick="showToast('✅','Google Pay selected')"><span>G</span> Google Pay</div>
+          <div class="pm-badge" style="cursor:pointer" onclick="showToast('✅','PayPal selected')"><span>🅿</span> PayPal</div>
+        </div>
+      </div>
+      <button class="btn-checkout" style="margin-top:24px" onclick="handlePayment()">Complete Payment →</button>
+      <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--muted)">🔒 256-bit SSL · PCI DSS compliant</div>
+      <div class="payment-methods" style="justify-content:center;margin-top:16px">
+        <div class="pm-badge"><span>💳</span> Visa</div>
+        <div class="pm-badge"><span>💳</span> Mastercard</div>
+        <div class="pm-badge"><span>💳</span> Amex</div>
+        <div class="pm-badge"><span>🍎</span> Apple Pay</div>
+      </div>
+    </div>
+    <div class="payment-features">
+      <div class="pf-item"><div class="pf-icon">🔐</div><div class="pf-body"><h4>Bank-Level Security</h4><p>All transactions encrypted with 256-bit SSL. Your card data is never stored on our servers.</p></div></div>
+      <div class="pf-item"><div class="pf-icon">💰</div><div class="pf-body"><h4>Transparent Pricing</h4><p>No hidden fees. The price you see is the price you pay — cleaning and service included.</p></div></div>
+      <div class="pf-item"><div class="pf-icon">↩️</div><div class="pf-body"><h4>Flexible Refunds</h4><p>Cancel up to 7 days before check-in for a full refund. No awkward conversations.</p></div></div>
+      <div class="pf-item"><div class="pf-icon">🌍</div><div class="pf-body"><h4>Multi-Currency</h4><p>Pay in EUR, GBP, USD, XAF and more. No conversion surprises at checkout.</p></div></div>
+      <div class="pf-item"><div class="pf-icon">📄</div><div class="pf-body"><h4>Instant Invoice</h4><p>Receive a formal PDF invoice immediately after booking. Perfect for business travel.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-header center">
+    <p class="section-eyebrow">Guest Stories</p>
+    <h2 class="section-title">What guests <em>say</em></h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testi-text">"Villa Azura was absolutely breathtaking. Every detail was perfect — from the infinity pool to the sunrise views. Evalia made booking effortless."</p>
+      <div class="testi-author"><div class="testi-avatar">👩</div><div><div class="testi-name">Sophie Laurent</div><div class="testi-stay">Stayed at Villa Azura · March 2025</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testi-text">"The Alpine Lodge exceeded every expectation. Cosy, immaculate, and the Evalia team were available whenever we needed anything. Will return every winter."</p>
+      <div class="testi-author"><div class="testi-avatar">👨</div><div><div class="testi-name">Marcus Webb</div><div class="testi-stay">Stayed at Alpine Lodge · January 2025</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testi-text">"Maison Doré is a dream. Woke up to lavender fields and a glass of rosé waiting on the terrace. The booking process was seamless, payment instant."</p>
+      <div class="testi-author"><div class="testi-avatar">👩🏽</div><div><div class="testi-name">Amara Diallo</div><div class="testi-stay">Stayed at Maison Doré · July 2024</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div>
+      <div class="section-header">
+        <p class="section-eyebrow" style="color:var(--copper-light)">Get in Touch</p>
+        <h2 class="section-title">Let's plan your<br><em>perfect stay</em></h2>
+        <p class="section-sub">Have a question? Want a bespoke recommendation? Our team is here for you.</p>
+      </div>
+      <div class="contact-info">
+        <div class="ci-item"><div class="ci-icon">📧</div><div><div class="ci-label">Email</div><div class="ci-value"><a href="/cdn-cgi/l/email-protection#6f070a0303002f0a190e03060e410c00"><span class="__cf_email__" data-cfemail="adc5c8c1c1c2edc8dbccc1c4cc83cec2">[email&#160;protected]</span></a></div></div></div>
+        <div class="ci-item"><div class="ci-icon">📱</div><div><div class="ci-label">Phone / WhatsApp</div><div class="ci-value"><a href="https://wa.me/24106000000" target="_blank">+241 06 00 00 00</a></div></div></div>
+        <div class="ci-item"><div class="ci-icon">📸</div><div><div class="ci-label">Instagram</div><div class="ci-value"><a href="https://www.instagram.com/evalia241" target="_blank">@evalia241</a></div></div></div>
+        <div class="ci-item"><div class="ci-icon">👍</div><div><div class="ci-label">Facebook</div><div class="ci-value"><a href="https://www.facebook.com/evalia241" target="_blank">facebook.com/evalia241</a></div></div></div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <!--
+        ════════════════════════════════════════════════
+        FORMSPREE SETUP:
+        Replace YOUR_FORMSPREE_CONTACT_ID below with your
+        contact form endpoint from formspree.io
+        ════════════════════════════════════════════════
+      -->
+      <form id="contactForm" action="https://formspree.io/f/YOUR_FORMSPREE_CONTACT_ID" method="POST">
+        <input type="hidden" name="_subject" value="New Message — Evalia Website" />
+        <input class="cf-input" type="text" name="name" placeholder="Your name" id="cfName" required />
+        <input class="cf-input" type="email" name="email" placeholder="Email address" id="cfEmail" required />
+        <input class="cf-input" type="text" name="subject" placeholder="Subject" id="cfSubject" />
+        <textarea class="cf-input cf-textarea" name="message" placeholder="Tell us about your ideal stay…" id="cfMsg"></textarea>
+        <button type="submit" class="btn-send" id="cfSubmitBtn">Send Message →</button>
+        <div class="form-status" id="cfStatus"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">Eva<span>lia</span></div>
+      <p class="footer-desc">Curated vacation rentals for travellers who believe a stay should be as memorable as the destination.</p>
+      <div class="footer-socials">
+        <a class="soc" href="https://www.instagram.com/evalia241" target="_blank" title="Instagram">📸</a>
+        <a class="soc" href="https://www.facebook.com/evalia241" target="_blank" title="Facebook">👍</a>
+        <a class="soc" href="https://wa.me/24106000000" target="_blank" title="WhatsApp">💬</a>
+        <a class="soc" href="#" title="TikTok">🎵</a>
+      </div>
+    </div>
+    <div class="footer-col"><h5>Properties</h5><ul><li><a href="#">Villas</a></li><li><a href="#">Apartments</a></li><li><a href="#">Chalets</a></li><li><a href="#">Beachfront</a></li><li><a href="#">City Stays</a></li></ul></div>
+    <div class="footer-col"><h5>Company</h5><ul><li><a href="#">About Evalia</a></li><li><a href="#">How It Works</a></li><li><a href="#">List Property</a></li><li><a href="#">Press</a></li><li><a href="#">Careers</a></li></ul></div>
+    <div class="footer-col"><h5>Support</h5><ul><li><a href="#">Help Center</a></li><li><a href="#">Cancellation Policy</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li><li><a href="#contact">Contact Us</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 Evalia. All rights reserved.</p>
+    <p class="footer-copy">Designed with ♥ for the love of travel</p>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 class="modal-title" id="modalTitle">Book Property</h2>
+    <p class="modal-sub" id="modalSub">Complete the form below to reserve your stay</p>
+    <div class="modal-prop-img" id="modalImg" style="display:none">
+      <div id="modalImgInner" style="height:100%;background:linear-gradient(135deg,#3D2812,#1A1610);display:flex;align-items:center;justify-content:center;font-size:60px;border-radius:16px">🏡</div>
+    </div>
+    <!--
+      ════════════════════════════════════════════════
+      Same Formspree endpoint as booking form — or
+      create a separate one for quick modal bookings
+      ════════════════════════════════════════════════
+    -->
+    <form id="modalForm" action="https://formspree.io/f/YOUR_FORMSPREE_BOOKING_ID" method="POST">
+      <input type="hidden" name="_subject" value="Quick Booking Request — Evalia" />
+      <div class="form-group"><label class="form-label">Property</label>
+        <select class="form-select" name="property" id="modalProp">
+          <option>Villa Azura — Coastline</option>
+          <option>Maison Doré — Provence Hills</option>
+          <option>The Alpine Lodge — Mountain</option>
+          <option>Casa Blanca — Old Town</option>
+          <option>Sunset Penthouse — City</option>
+          <option>The Dune House — Beachfront</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Check-In</label><input class="form-input" type="date" name="checkin" id="modalIn" /></div>
+        <div class="form-group"><label class="form-label">Check-Out</label><input class="form-input" type="date" name="checkout" id="modalOut" /></div>
+      </div>
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" type="text" name="name" placeholder="Your name" id="modalName" required /></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" name="email" placeholder="you@email.com" id="modalEmail" required /></div>
+      <div class="form-group"><label class="form-label">Phone / WhatsApp</label><input class="form-input" type="tel" name="phone" placeholder="+241 06 00 00 00" /></div>
+      <button type="submit" class="btn-checkout">Request Booking →</button>
+      <div class="form-status" id="modalStatus"></div>
+    </form>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js">
+    // ══════════════════════════════════════════════
+    // CLOUDINARY CONFIG — cloud name: dueczmagh
+    // Upload photos/videos via: https://console.cloudinary.com
+    // Recommended folder structure:
+    //   evalia/hero.jpg
+    //   evalia/azura-1.jpg, azura-2.jpg, azura-3.jpg
+    //   evalia/maison-dore-1.jpg ...
+    //   evalia/azura-tour.mp4 (video)
+    // ══════════════════════════════════════════════
+    const CLOUDINARY_CLOUD = 'dueczmagh';
+
+    // Helper: build optimised Cloudinary URL
+    function cldUrl(path, opts = {}) {
+      const t = [
+        opts.w ? `w_${opts.w}` : '',
+        opts.h ? `h_${opts.h}` : '',
+        'q_auto', 'f_auto',
+        opts.extra || ''
+      ].filter(Boolean).join(',');
+      return `https://res.cloudinary.com/${CLOUDINARY_CLOUD}/image/upload/${t}/${path}`;
+    }
+    function cldVideo(path) {
+      return `https://res.cloudinary.com/${CLOUDINARY_CLOUD}/video/upload/q_auto/${path}`;
+    }
+
+    // ── CLOUDINARY UPLOAD WIDGET (Admin use) ─────
+    // Opens the Cloudinary upload widget so you can upload directly from the browser
+    // Requires: add your unsigned upload preset name below
+    const CLD_UPLOAD_PRESET = 'evalia_unsigned'; // Create this in Cloudinary → Settings → Upload Presets
+
+    function openCloudinaryUpload(onSuccess) {
+      if (!window.cloudinary) {
+        showToast('⚠️', 'Cloudinary widget loading, please try again');
+        // Load widget script on demand
+        const s = document.createElement('script');
+        s.src = 'https://upload-widget.cloudinary.com/global/all.js';
+        s.onload = () => openCloudinaryUpload(onSuccess);
+        document.head.appendChild(s);
+        return;
+      }
+      window.cloudinary.openUploadWidget({
+        cloudName: CLOUDINARY_CLOUD,
+        uploadPreset: CLD_UPLOAD_PRESET,
+        folder: 'evalia',
+        sources: ['local', 'camera', 'url', 'instagram', 'facebook'],
+        multiple: true,
+        resourceType: 'auto',
+        clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'mov'],
+        maxFileSize: 100000000,
+        styles: {
+          palette: {
+            window: '#FBF8F3',
+            windowBorder: '#D9CEBC',
+            tabIcon: '#B87544',
+            menuIcons: '#6B5F50',
+            textDark: '#1A1610',
+            textLight: '#FFFFFF',
+            link: '#B87544',
+            action: '#B87544',
+            inactiveTabIcon: '#6B5F50',
+            error: '#B85444',
+            inProgress: '#B87544',
+            complete: '#3D8B5E',
+            sourceBg: '#F5EFE4'
+          }
+        }
+      }, (error, result) => {
+        if (!error && result && result.event === 'success') {
+          const url = result.info.secure_url;
+          showToast('✅', 'Uploaded! URL copied to clipboard');
+          navigator.clipboard?.writeText(url);
+          if (onSuccess) onSuccess(url);
+        }
+      });
+    }
+
+  </script><script>
+// ══════════════════════════════════════════════
+// PROPERTY DATA
+// To add real photos: set the "photos" array with your image URLs
+// (Cloudinary, Instagram CDN, Google Drive direct link, etc.)
+// To add a video: set "videoUrl" to your video file URL or YouTube embed URL
+// ══════════════════════════════════════════════
+const properties = [
+  {
+    id: 1, name: 'Villa Azura', location: 'Coastline, South', type: 'villa',
+    beds: 4, baths: 3, guests: 8, price: 380, rating: 4.97, reviews: 86,
+    emoji: '🌊', badge: 'Available', badgeClass: 'avail',
+    colors: ['#2C3E50','#3D5A73'],
+    // ── PHOTO SLOTS ─────────────────────────────
+    // Replace these with your real Cloudinary or Instagram image URLs:
+    photos: [
+      // Add your uploaded Cloudinary URLs here, e.g.:
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/azura-1.jpg',
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/azura-2.jpg',
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/azura-3.jpg',
+    ],
+    videoUrl: null, // e.g. 'https://res.cloudinary.com/dueczmagh/video/upload/evalia/azura-tour.mp4'
+    hasVideo: true,
+    description: 'Infinity pool, sea views, 4 en-suite bedrooms. 5 min walk to beach.'
+  },
+  {
+    id: 2, name: 'Maison Doré', location: 'Provence Hills', type: 'villa',
+    beds: 3, baths: 2, guests: 6, price: 290, rating: 4.92, reviews: 62,
+    emoji: '🌿', badge: 'Popular', badgeClass: 'avail',
+    colors: ['#3D2812','#5C3D1E'],
+    photos: [
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/maison-dore-1.jpg',
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/maison-dore-2.jpg',
+    ],
+    videoUrl: null,
+    hasVideo: false,
+    description: 'Lavender fields, stone terrace, private wine cellar. Sleeps 6.'
+  },
+  {
+    id: 3, name: 'The Alpine Lodge', location: 'Mountain Retreat', type: 'chalet',
+    beds: 5, baths: 3, guests: 10, price: 440, rating: 4.98, reviews: 41,
+    emoji: '🏔️', badge: 'Available', badgeClass: 'avail',
+    colors: ['#2D3A2E','#4A6741'],
+    photos: [
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/alpine-lodge-1.jpg',
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/alpine-lodge-2.jpg',
+    ],
+    videoUrl: null, // e.g. 'https://res.cloudinary.com/dueczmagh/video/upload/evalia/alpine-lodge-tour.mp4'
+    hasVideo: true,
+    description: 'Ski-in ski-out. Sauna, fireplace, panoramic mountain views.'
+  },
+  {
+    id: 4, name: 'Casa Blanca', location: 'Old Town Quarter', type: 'apartment',
+    beds: 2, baths: 1, guests: 4, price: 165, rating: 4.88, reviews: 118,
+    emoji: '🏛️', badge: 'Available', badgeClass: 'avail',
+    colors: ['#2C2040','#4A3D6E'],
+    photos: [
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/casa-blanca-1.jpg',
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/casa-blanca-2.jpg',
+    ],
+    videoUrl: null,
+    hasVideo: false,
+    description: 'Historic building, rooftop terrace, steps from the market.'
+  },
+  {
+    id: 5, name: 'Sunset Penthouse', location: 'City Centre', type: 'apartment',
+    beds: 3, baths: 2, guests: 6, price: 320, rating: 4.91, reviews: 77,
+    emoji: '🌆', badge: 'Few Left', badgeClass: 'avail',
+    colors: ['#1A2040','#2E3870'],
+    photos: [
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/penthouse-1.jpg',
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/penthouse-2.jpg',
+    ],
+    videoUrl: null, // e.g. 'https://res.cloudinary.com/dueczmagh/video/upload/evalia/penthouse-tour.mp4'
+    hasVideo: true,
+    description: '360° city views, private gym, concierge. Floor 22.'
+  },
+  {
+    id: 6, name: 'The Dune House', location: 'Beachfront', type: 'beach',
+    beds: 4, baths: 3, guests: 8, price: 395, rating: 4.96, reviews: 53,
+    emoji: '🏖️', badge: 'Available', badgeClass: 'avail',
+    colors: ['#1A3040','#2E5870'],
+    photos: [
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/dune-house-1.jpg',
+      // 'https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/dune-house-2.jpg',
+    ],
+    videoUrl: null,
+    hasVideo: false,
+    description: 'Direct beach access, outdoor shower, sunset terrace. Sleeps 8.'
+  },
+];
+
+// ── RENDER CARDS ────────────────────────────────
+function renderCard(p) {
+  const [c1, c2] = p.colors;
+  const hasPhoto = p.photos && p.photos.length > 0;
+  const imgHTML = hasPhoto
+    ? `<img class="prop-photo" src="${p.photos[0]}" alt="${p.name}" loading="lazy" onclick="event.stopPropagation();openGallery(${p.id})" />`
+    : `<div class="prop-emoji-fallback" style="background:linear-gradient(135deg,${c1},${c2})">${p.emoji}</div>`;
+
+  return `
+    <div class="prop-card" data-type="${p.type}" onclick="openModal('${p.name}','${p.location}',${p.price},${p.id})">
+      <div class="prop-img-wrap">
+        ${imgHTML}
+        <span class="prop-badge ${p.badgeClass}">${p.badge}</span>
+        <div class="prop-fav" id="fav${p.id}" onclick="event.stopPropagation();toggleFav(${p.id})">🤍</div>
+        ${p.hasVideo ? `<div class="prop-video-badge" onclick="event.stopPropagation();openVideo(${p.id})">▶ Video Tour</div>` : ''}
+      </div>
+      <div class="prop-body">
+        <p class="prop-location">${p.location}</p>
+        <h3 class="prop-name">${p.name}</h3>
+        <div class="prop-amenities">
+          <span>🛏 ${p.beds} beds</span>
+          <span>🚿 ${p.baths} baths</span>
+          <span>👥 ${p.guests} guests</span>
+        </div>
+        <div class="prop-foot">
+          <div><div class="prop-price"><sup>€</sup>${p.price}</div><div class="prop-price-label">per night</div></div>
+          <div class="prop-stars"><span class="star">★</span> ${p.rating} <span style="color:var(--stone)">(${p.reviews})</span></div>
+          <button class="btn-book" onclick="event.stopPropagation();openModal('${p.name}','${p.location}',${p.price},${p.id})">Book</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderGrid(list) {
+  document.getElementById('propsGrid').innerHTML = list.map(renderCard).join('');
+}
+renderGrid(properties);
+
+function filterProps(btn, type) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid(type === 'all' ? properties : properties.filter(p => p.type === type));
+}
+
+// ── FAVOURITES ──────────────────────────────────
+const favs = new Set();
+function toggleFav(id) {
+  const el = document.getElementById('fav' + id);
+  if (!el) return;
+  if (favs.has(id)) { favs.delete(id); el.textContent = '🤍'; el.classList.remove('loved'); }
+  else { favs.add(id); el.textContent = '❤️'; el.classList.add('loved'); showToast('❤️', 'Saved to favourites'); }
+}
+
+// ── VIDEO PLAYER ─────────────────────────────────
+function openVideo(id) {
+  const prop = properties.find(p => p.id === id);
+  if (!prop) return;
+  const overlay = document.getElementById('videoOverlay');
+  const vid = document.getElementById('videoEl');
+  if (prop.videoUrl) {
+    vid.src = prop.videoUrl;
+    vid.play();
+  } else {
+    // No video yet — show toast
+    showToast('🎬', `Video tour for ${prop.name} coming soon!`);
+    return;
+  }
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeVideo() {
+  const overlay = document.getElementById('videoOverlay');
+  const vid = document.getElementById('videoEl');
+  vid.pause(); vid.src = '';
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── GALLERY ──────────────────────────────────────
+let galleryPhotos = [], galleryIdx = 0;
+function openGallery(id) {
+  const prop = properties.find(p => p.id === id);
+  if (!prop || !prop.photos.length) return;
+  galleryPhotos = prop.photos;
+  galleryIdx = 0;
+  document.getElementById('galleryImg').src = galleryPhotos[0];
+  document.getElementById('galleryOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function galleryNav(dir) {
+  galleryIdx = (galleryIdx + dir + galleryPhotos.length) % galleryPhotos.length;
+  document.getElementById('galleryImg').src = galleryPhotos[galleryIdx];
+}
+function closeGallery() {
+  document.getElementById('galleryOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── NAV SCROLL ───────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ── STAT COUNTER ─────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('[data-target]').forEach(el => {
+        const target = +el.dataset.target;
+        let cur = 0;
+        const step = Math.ceil(target / 40);
+        const timer = setInterval(() => {
+          cur = Math.min(cur + step, target);
+          el.childNodes[0].nodeValue = cur;
+          if (cur >= target) clearInterval(timer);
+        }, 30);
+      });
+      observer.disconnect();
+    }
+  });
+}, { threshold: .3 });
+observer.observe(document.querySelector('.stats'));
+
+// ── SEARCH ───────────────────────────────────────
+function handleSearch() {
+  const dest = document.getElementById('searchDest').value.trim();
+  if (!dest) { showToast('📍', 'Please enter a destination'); return; }
+  showToast('🔍', `Searching properties in ${dest}…`);
+  setTimeout(() => document.getElementById('properties').scrollIntoView({behavior:'smooth'}), 800);
+}
+
+// ── PRICE CALC ───────────────────────────────────
+const nightlyRates = {
+  'Villa Azura — Coastline': 380, 'Maison Doré — Provence Hills': 290,
+  'The Alpine Lodge — Mountain': 440, 'Casa Blanca — Old Town': 165,
+  'Sunset Penthouse — City': 320, 'The Dune House — Beachfront': 395
+};
+function calcPrice() {
+  const inD = new Date(document.getElementById('bkIn').value);
+  const outD = new Date(document.getElementById('bkOut').value);
+  const prop = document.getElementById('bkProperty').value;
+  if (!prop || isNaN(inD) || isNaN(outD)) return;
+  const nights = Math.round((outD - inD) / 86400000);
+  if (nights <= 0) return;
+  const rate = nightlyRates[prop] || 250;
+  const total = rate * nights + 85;
+  document.getElementById('priceNight').textContent = `€${rate}`;
+  document.getElementById('priceNights').textContent = nights;
+  document.getElementById('priceTotal').textContent = `€${total}`;
+  document.getElementById('hiddenTotal').value = `€${total}`;
+}
+document.getElementById('bkProperty').addEventListener('change', calcPrice);
+
+// ── FORMSPREE FORM SUBMISSION ─────────────────────
+function setupFormspreeForm(formId, statusId, submitBtnId, successMsg) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById(submitBtnId);
+    const status = document.getElementById(statusId);
+    const originalText = btn ? btn.textContent : '';
+    if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
+    status.className = 'form-status';
+    status.textContent = '';
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        status.className = 'form-status success';
+        status.textContent = successMsg;
+        form.reset();
+        showToast('✅', successMsg);
+      } else {
+        const data = await res.json();
+        throw new Error(data.error || 'Submission failed');
+      }
+    } catch (err) {
+      status.className = 'form-status error';
+      status.textContent = 'Something went wrong. Please email us directly at hello@evalia.co';
+      showToast('⚠️', 'Please try again or contact us directly');
+    } finally {
+      if (btn) { btn.textContent = originalText; btn.disabled = false; }
+    }
+  });
+}
+
+setupFormspreeForm('bookingForm', 'bkStatus', 'bkSubmitBtn',
+  '🎉 Booking request received! We\'ll confirm within 2 hours.');
+setupFormspreeForm('contactForm', 'cfStatus', 'cfSubmitBtn',
+  '✅ Message sent! We\'ll be in touch soon.');
+setupFormspreeForm('modalForm', 'modalStatus', null,
+  '🎉 Booking request sent! Check your email for confirmation.');
+
+// ── PAYMENT ──────────────────────────────────────
+function handlePayment() {
+  showToast('🎉', 'Payment processed securely! Confirmation sent.');
+}
+function formatCard(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.match(/.{1,4}/g)?.join(' ') || v;
+  document.getElementById('cardLast').textContent = v.slice(-4) || '••••';
+}
+function formatExp(el) {
+  let v = el.value.replace(/\D/g,'');
+  if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2,4);
+  el.value = v;
+  document.getElementById('cardExp').textContent = v || 'MM / YY';
+}
+function switchTab(btn, tab) {
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  ['tabCard','tabBank','tabWallet'].forEach(id => document.getElementById(id).style.display = 'none');
+  document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).style.display = 'block';
+}
+
+// ── MODAL ─────────────────────────────────────────
+function openModal(name, location, price, propId) {
+  if (name === 'general') {
+    document.getElementById('modalTitle').textContent = 'List Your Property';
+    document.getElementById('modalSub').textContent = 'Join the Evalia portfolio';
+    document.getElementById('modalImg').style.display = 'none';
+  } else {
+    document.getElementById('modalTitle').textContent = name;
+    document.getElementById('modalSub').textContent = `${location} · From €${price}/night`;
+    const prop = properties.find(p => p.id === propId);
+    const imgDiv = document.getElementById('modalImg');
+    const inner = document.getElementById('modalImgInner');
+    imgDiv.style.display = 'block';
+    if (prop && prop.photos.length > 0) {
+      inner.style.backgroundImage = `url('${prop.photos[0]}')`;
+      inner.style.backgroundSize = 'cover';
+      inner.style.backgroundPosition = 'center';
+      inner.textContent = '';
+    } else if (prop) {
+      inner.style.background = `linear-gradient(135deg,${prop.colors[0]},${prop.colors[1]})`;
+      inner.textContent = prop.emoji;
+    }
+    const sel = document.getElementById('modalProp');
+    for (let o of sel.options) { if (o.text.includes(name)) { sel.value = o.value; break; } }
+  }
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+// ── TOAST ─────────────────────────────────────────
+let toastTimer;
+function showToast(icon, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon || '✅';
+  document.getElementById('toastMsg').textContent = msg || icon;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── MOBILE MENU ───────────────────────────────────
+function toggleMobileMenu() {
+  const links = document.querySelector('.nav-links');
+  if (!links) return;
+  const vis = links.style.display === 'flex';
+  links.style.cssText = vis ? '' : 'display:flex;flex-direction:column;position:fixed;top:64px;left:0;right:0;background:var(--cream);padding:24px 24px 32px;gap:24px;border-bottom:1px solid var(--stone);z-index:99';
+}
+
+// ── KEYBOARD ──────────────────────────────────────
+doc
