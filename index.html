@@ -359,12 +359,13 @@
 <!-- ── HERO ── -->
 <section class="hero" id="home">
   <div class="hero-media">
-    <!--
-      ADD YOUR HERO PHOTO HERE:
-      Upload a photo of Mauritius to your GitHub repo as images/hero.jpg
-      Then replace this comment with:
-      <img src="images/hero.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.35">
-    -->
+    <!-- Hero slideshow: Hero.jpg, Hero1.jpg, Hero2.jpg, Hero3.jpg -->
+    <div id="heroSlideshow" style="position:absolute;inset:0">
+      <img src="images/Hero.jpg"  class="hero-slide active" alt="Mauritius" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease-in-out"/>
+      <img src="images/Hero1.jpg" class="hero-slide" alt="Mauritius" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease-in-out"/>
+      <img src="images/Hero2.jpg" class="hero-slide" alt="Mauritius" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease-in-out"/>
+      <img src="images/Hero3.jpg" class="hero-slide" alt="Mauritius" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease-in-out"/>
+    </div>
     <div id="heroParticles" class="hero-particles"></div>
   </div>
   <div class="hero-overlay"></div>
@@ -395,8 +396,8 @@
   </div>
   <div class="services-grid">
     <div class="svc-card" onclick="scrollTo('accommodation')">
-      <div class="svc-img svc-img-accommodation">
-        🏠
+      <div class="svc-img svc-img-accommodation" style="padding:0;background:none">
+        <img src="images/Hero1.jpg" alt="Accommodation" style="width:100%;height:100%;object-fit:cover;display:block"/>
         <div class="svc-tag">Accommodation</div>
       </div>
       <div class="svc-body">
@@ -409,8 +410,8 @@
       </div>
     </div>
     <div class="svc-card" onclick="openExpTab('boat')">
-      <div class="svc-img svc-img-boat">
-        ⛵
+      <div class="svc-img svc-img-boat" style="padding:0;background:none">
+        <img src="images/Hero2.jpg" alt="Boat Excursions" style="width:100%;height:100%;object-fit:cover;display:block"/>
         <div class="svc-tag">Water Activities</div>
       </div>
       <div class="svc-body">
@@ -451,8 +452,8 @@
       </div>
     </div>
     <div class="svc-card" onclick="scrollTo('booking')">
-      <div class="svc-img svc-img-concierge">
-        🎩
+      <div class="svc-img svc-img-concierge" style="padding:0;background:none">
+        <img src="images/Host.jpg" alt="Personal Concierge" style="width:100%;height:100%;object-fit:cover;display:block"/>
         <div class="svc-tag">Concierge</div>
       </div>
       <div class="svc-body">
@@ -490,17 +491,13 @@
   </div>
   <div class="acc-grid">
     <div class="acc-card">
-      <div class="acc-img acc-studio">
-        🏙️
-        <!--
-          ADD STUDIO PHOTO: Upload images/studio.jpg to GitHub repo
-          <img src="images/studio.jpg" style="width:100%;height:100%;object-fit:cover">
-        -->
+      <div class="acc-img acc-studio" style="padding:0;background:none">
+        <img src="images/Hero3.jpg" alt="Studio Evalia" style="width:100%;height:100%;object-fit:cover;display:block"/>
         <div class="acc-badge">Available Now</div>
       </div>
       <div class="acc-body">
         <div class="acc-loc">📍 Flic en Flac, West Mauritius</div>
-        <div class="acc-name">The Studio</div>
+        <div class="acc-name">Studio Evalia</div>
         <div class="acc-desc">A beautifully designed studio apartment steps from one of Mauritius' most beautiful beaches. Perfect for couples seeking a stylish, intimate retreat with everything within reach.</div>
         <div class="acc-amenities">
           <div class="amenity">🛏 1 Bed</div>
@@ -512,22 +509,22 @@
         </div>
         <div class="acc-foot">
           <div><div class="acc-price"><sup>€</sup>80</div><div class="acc-price-lbl">per night</div></div>
-          <button class="btn-acc" onclick="openBookingModal('The Studio', 80)">Book Studio →</button>
+          <button class="btn-acc" onclick="openBookingModal('Studio Evalia', 80)">Book Studio →</button>
         </div>
       </div>
     </div>
     <div class="acc-card">
-      <div class="acc-img acc-villa">
-        🌴
-        <!--
-          ADD VILLA PHOTO: Upload images/villa.jpg to GitHub repo
-          <img src="images/villa.jpg" style="width:100%;height:100%;object-fit:cover">
-        -->
+      <div class="acc-img acc-villa" style="padding:0;background:none;position:relative;overflow:hidden">
+        <!-- Main villa photo with hover to see pool -->
+        <img id="villaImg" src="images/Villa-pool.jpg" alt="Villa Evalia" style="width:100%;height:100%;object-fit:cover;display:block;transition:opacity .6s ease"
+             onmouseover="document.getElementById('villaImg').src='images/Villa-pool1.jpg'"
+             onmouseout="document.getElementById('villaImg').src='images/Villa-pool.jpg'"
+             onerror="this.src='images/Villa-pool.jpg'"/>
         <div class="acc-badge">Pool & Garden</div>
       </div>
       <div class="acc-body">
         <div class="acc-loc">📍 Grand Baie, North Mauritius</div>
-        <div class="acc-name">Villa Corail</div>
+        <div class="acc-name">Villa Evalia</div>
         <div class="acc-desc">A private 2-bedroom villa surrounded by a lush tropical garden with its own pool. Ideal for families or groups seeking privacy, space and the ultimate island living experience.</div>
         <div class="acc-amenities">
           <div class="amenity">🛏 2 Beds</div>
@@ -541,7 +538,7 @@
         </div>
         <div class="acc-foot">
           <div><div class="acc-price"><sup>€</sup>180</div><div class="acc-price-lbl">per night</div></div>
-          <button class="btn-acc" onclick="openBookingModal('Villa Corail', 180)">Book Villa →</button>
+          <button class="btn-acc" onclick="openBookingModal('Villa Evalia', 180)">Book Villa →</button>
         </div>
       </div>
     </div>
@@ -674,12 +671,12 @@
       <h3 style="font-family:var(--font-d);font-size:22px;font-weight:400;margin-bottom:6px">What would you like to book?</h3>
       <p style="font-size:14px;color:var(--muted);margin-bottom:24px">Select one or more — you can mix accommodation with experiences.</p>
       <div class="service-picker">
-        <div class="sp-item" onclick="toggleService(this,'Studio Apartment')" data-svc="Studio Apartment" data-price="80">
+        <div class="sp-item" onclick="toggleService(this,'Studio Evalia')" data-svc="Studio Evalia" data-price="80">
           <div class="sp-icon">🏙️</div><div class="sp-name">Studio</div><div class="sp-price">€80/night</div>
           <div class="sp-check">✓</div>
         </div>
-        <div class="sp-item" onclick="toggleService(this,'Villa Corail')" data-svc="Villa Corail" data-price="180">
-          <div class="sp-icon">🌴</div><div class="sp-name">Villa Corail</div><div class="sp-price">€180/night</div>
+        <div class="sp-item" onclick="toggleService(this,'Villa Evalia')" data-svc="Villa Evalia" data-price="180">
+          <div class="sp-icon">🌴</div><div class="sp-name">Villa Evalia</div><div class="sp-price">€180/night</div>
           <div class="sp-check">✓</div>
         </div>
         <div class="sp-item" onclick="toggleService(this,'Boat Excursion')" data-svc="Boat Excursion" data-price="65">
@@ -1072,6 +1069,21 @@ function openExpTab(cat) {
   }, 400);
 }
 
+
+// ── HERO SLIDESHOW ────────────────────────────
+(function() {
+  var slides = document.querySelectorAll('.hero-slide');
+  if (!slides.length) return;
+  var current = 0;
+  // Show first slide immediately
+  slides[0].style.opacity = '0.38';
+  setInterval(function() {
+    slides[current].style.opacity = '0';
+    current = (current + 1) % slides.length;
+    slides[current].style.opacity = '0.38';
+  }, 5000);
+})();
+
 // ── PARTICLES ────────────────────────────────
 (function(){
   const c = document.getElementById('heroParticles');
@@ -1122,8 +1134,8 @@ function calcTotal() {
   const nights = Math.max(1, Math.round((outD-inD)/86400000));
   let total = 0;
   selectedServices.forEach(s => {
-    const prices = {'Studio Apartment':80,'Villa Corail':180,'Boat Excursion':65,'Nature Tour':55,'Food Discovery':35,'Airport Transfer':30};
-    const isAccom = s==='Studio Apartment'||s==='Villa Corail';
+    const prices = {'Studio Evalia':80,'Villa Evalia':180,'Boat Excursion':65,'Nature Tour':55,'Food Discovery':35,'Airport Transfer':30};
+    const isAccom = s==='Studio Evalia'||s==='Villa Evalia';
     total += isAccom ? (prices[s]||0)*nights : (prices[s]||0)*guests;
   });
   document.getElementById('hiddenTotal').value = `€${total}`;

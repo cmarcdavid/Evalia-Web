@@ -8,7 +8,7 @@
 
 backend:
   name: github
-  repo: YOUR_GITHUB_USERNAME/evalia  # ← Replace with your GitHub username/repo
+  repo: cmarcdavid/evalia-web  # GitHub repo
   branch: main
 
 # Where uploaded photos get stored in your repo
