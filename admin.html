@@ -3,215 +3,208 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Evalia Admin — Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <title>Evalia Mauritius — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --bg:#F5EFE4;--sidebar:#1A1610;--card:#FFFFFF;
-      --copper:#B87544;--copper-l:#D4956A;
-      --dark:#1A1610;--muted:#6B5F50;--stone:#D9CEBC;
-      --green:#3D8B5E;--red:#B85444;
-      --font-d:'Cormorant Garamond',serif;--font-b:'DM Sans',sans-serif;
+      --ocean:#006B8F;--lagoon:#00A8CC;--sand:#F7F0E6;--cream:#FDFAF6;
+      --palm:#2D6A4F;--sunset:#E8855A;--dark:#1A1F2E;--muted:#5C6478;
+      --stone:#DDD8CE;--white:#FFFFFF;--green:#2D6A4F;--red:#C0392B;
+      --sidebar:#0d1520;
+      --font-d:'Playfair Display',serif;--font-b:'Outfit',sans-serif;
     }
-    body{font-family:var(--font-b);background:var(--bg);color:var(--dark);display:flex;min-height:100vh;overflow:hidden}
+    body{font-family:var(--font-b);background:var(--sand);color:var(--dark);display:flex;min-height:100vh;overflow:hidden}
 
     /* ── SIDEBAR ── */
     .sidebar{width:240px;background:var(--sidebar);padding:28px 16px;display:flex;flex-direction:column;gap:4px;flex-shrink:0;overflow-y:auto}
-    .s-logo{font-family:var(--font-d);font-size:24px;font-weight:600;color:#FBF8F3;margin-bottom:28px;padding:0 12px}
-    .s-logo span{color:var(--copper-l)}
-    .s-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;font-size:13px;color:rgba(245,239,228,.55);cursor:pointer;transition:all .18s;user-select:none}
-    .s-item:hover{background:rgba(184,117,68,.12);color:rgba(245,239,228,.85)}
-    .s-item.active{background:rgba(184,117,68,.22);color:var(--copper-l);font-weight:500}
+    .s-logo{font-family:var(--font-d);font-size:22px;font-weight:600;color:#fff;margin-bottom:28px;padding:0 12px;display:flex;align-items:center;gap:8px}
+    .s-logo span{color:var(--lagoon)}
+    .s-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.45);cursor:pointer;transition:all .18s;user-select:none}
+    .s-item:hover{background:rgba(0,168,204,.12);color:rgba(255,255,255,.85)}
+    .s-item.active{background:rgba(0,168,204,.2);color:var(--lagoon);font-weight:500}
     .s-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
     .s-divider{height:1px;background:rgba(255,255,255,.07);margin:12px 4px}
-    .s-section{font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,239,228,.22);padding:6px 12px 2px}
+    .s-section{font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:6px 12px 2px}
 
     /* ── MAIN ── */
     .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-    .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;background:rgba(251,248,243,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--stone);flex-shrink:0;z-index:10}
-    .page-title{font-family:var(--font-d);font-size:26px;font-weight:400}
-    .topbar-right{display:flex;align-items:center;gap:12px}
-    .topbar-btn{width:36px;height:36px;background:var(--card);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;border:1px solid var(--stone);position:relative;transition:border-color .2s}
-    .topbar-btn:hover{border-color:var(--copper)}
-    .notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--copper);border-radius:50%;border:2px solid var(--card)}
-    .avatar{width:36px;height:36px;background:var(--copper);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;color:#fff;font-weight:600;font-family:var(--font-b)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:rgba(253,250,246,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--stone);flex-shrink:0}
+    .page-title{font-family:var(--font-d);font-size:24px;font-weight:400}
+    .topbar-right{display:flex;align-items:center;gap:10px}
+    .topbar-btn{width:36px;height:36px;background:var(--white);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;border:1px solid var(--stone);position:relative;transition:border-color .2s;text-decoration:none}
+    .topbar-btn:hover{border-color:var(--ocean)}
+    .notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--sunset);border-radius:50%;border:2px solid var(--white)}
+    .avatar{width:36px;height:36px;background:var(--ocean);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;color:#fff;font-weight:600}
+    .content-wrap{flex:1;overflow-y:auto;padding:24px 28px}
 
-    /* ── CONTENT AREA ── */
-    .content-wrap{flex:1;overflow-y:auto;padding:28px 32px}
+    /* Page routing */
+    .page{display:none}.page.active{display:block}
 
-    /* All page sections hidden by default */
-    .page{display:none}
-    .page.active{display:block}
-
-    /* ── STATS ROW ── */
-    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px}
+    /* ── STATS ── */
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
     @media(max-width:1100px){.stats-row{grid-template-columns:repeat(2,1fr)}}
-    .stat-card{background:var(--card);border-radius:14px;padding:22px;box-shadow:0 2px 12px rgba(26,22,16,.06)}
-    .sc-label{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-    .sc-val{font-family:var(--font-d);font-size:36px;font-weight:300;color:var(--dark);line-height:1}
-    .sc-change{font-size:12px;margin-top:8px}
+    .stat-card{background:var(--white);border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(26,31,46,.06)}
+    .sc-label{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    .sc-val{font-family:var(--font-d);font-size:34px;font-weight:400;color:var(--dark);line-height:1}
+    .sc-change{font-size:12px;margin-top:6px}
     .up{color:var(--green)}.dn{color:var(--red)}
 
-    /* ── CARDS ── */
-    .card{background:var(--card);border-radius:14px;padding:26px;box-shadow:0 2px 12px rgba(26,22,16,.06);margin-bottom:24px}
-    .card-title{font-family:var(--font-d);font-size:20px;font-weight:400;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
-    .card-link{font-family:var(--font-b);font-size:12px;color:var(--copper);cursor:pointer;text-decoration:none;font-weight:500}
+    /* ── CARD ── */
+    .card{background:var(--white);border-radius:14px;padding:24px;box-shadow:0 2px 12px rgba(26,31,46,.06);margin-bottom:20px}
+    .card-title{font-family:var(--font-d);font-size:19px;font-weight:400;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+    .card-link{font-family:var(--font-b);font-size:12px;color:var(--ocean);cursor:pointer;font-weight:500}
     .card-link:hover{text-decoration:underline}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
     @media(max-width:900px){.grid2{grid-template-columns:1fr}}
 
     /* ── TABLE ── */
     .tbl-wrap{overflow-x:auto}
     table{width:100%;border-collapse:collapse;font-size:13px;min-width:500px}
-    th{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 12px 12px 0;text-align:left;border-bottom:1px solid var(--stone);white-space:nowrap}
-    td{padding:13px 12px 13px 0;border-bottom:1px solid rgba(217,206,188,.35);vertical-align:middle}
+    th{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 12px 10px 0;text-align:left;border-bottom:1px solid var(--stone);white-space:nowrap}
+    td{padding:12px 12px 12px 0;border-bottom:1px solid rgba(221,216,206,.4);vertical-align:middle}
     tr:last-child td{border:none}
-    .pill{display:inline-block;padding:3px 11px;border-radius:50px;font-size:11px;font-weight:500;letter-spacing:.04em;white-space:nowrap}
-    .pill-green{background:rgba(61,139,94,.12);color:var(--green)}
-    .pill-copper{background:rgba(184,117,68,.12);color:var(--copper)}
-    .pill-red{background:rgba(184,84,68,.1);color:var(--red)}
+    .pill{display:inline-block;padding:3px 11px;border-radius:50px;font-size:11px;font-weight:500;white-space:nowrap}
+    .pill-green{background:rgba(45,106,79,.12);color:var(--green)}
+    .pill-blue{background:rgba(0,107,143,.12);color:var(--ocean)}
+    .pill-red{background:rgba(192,57,43,.1);color:var(--red)}
+    .pill-orange{background:rgba(232,133,90,.12);color:var(--sunset)}
 
     /* ── CHART ── */
-    .chart-bars{display:flex;align-items:flex-end;gap:8px;height:130px;margin-top:12px}
+    .chart-bars{display:flex;align-items:flex-end;gap:8px;height:120px;margin-top:10px}
     .bar-wrap{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
-    .bar{background:linear-gradient(to top,var(--copper),var(--copper-l));border-radius:4px 4px 0 0;width:100%;transition:opacity .2s;cursor:pointer}
+    .bar{background:linear-gradient(to top,var(--ocean),var(--lagoon));border-radius:4px 4px 0 0;width:100%;transition:opacity .2s;cursor:pointer}
     .bar:hover{opacity:.7}
     .bar-lbl{font-size:10px;color:var(--muted)}
 
     /* ── PROPERTY ROW ── */
-    .prop-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(217,206,188,.35)}
+    .prop-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(221,216,206,.4)}
     .prop-row:last-child{border:none}
-    .prop-thumb{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;background:rgba(184,117,68,.1)}
+    .prop-thumb{width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:24px}
+    .prop-thumb img{width:100%;height:100%;object-fit:cover}
     .prop-info{flex:1;min-width:0}
     .prop-info strong{font-size:14px;font-weight:500;display:block}
     .prop-info span{font-size:12px;color:var(--muted)}
-    .prop-price-sm{font-family:var(--font-d);font-size:17px;font-weight:300;white-space:nowrap;margin-right:8px}
+    .prop-price-sm{font-family:var(--font-d);font-size:16px;font-weight:400;white-space:nowrap;margin-right:8px}
+
+    /* ── EXP ROW ── */
+    .exp-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(221,216,206,.4)}
+    .exp-row:last-child{border:none}
+    .exp-icon-box{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 
     /* ── BUTTONS ── */
-    .btn{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:var(--font-b);transition:all .18s}
-    .btn-primary{background:var(--dark);color:#FBF8F3}
-    .btn-primary:hover{background:var(--copper)}
-    .btn-copper{background:rgba(184,117,68,.12);color:var(--copper)}
-    .btn-copper:hover{background:rgba(184,117,68,.22)}
-    .btn-red{background:rgba(184,84,68,.1);color:var(--red)}
-    .btn-red:hover{background:rgba(184,84,68,.2)}
-    .btn-full{width:100%;padding:13px;border-radius:10px;font-size:14px}
+    .btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:var(--font-b);transition:all .18s}
+    .btn-primary{background:var(--dark);color:#fff}.btn-primary:hover{background:var(--ocean)}
+    .btn-ocean{background:rgba(0,107,143,.1);color:var(--ocean)}.btn-ocean:hover{background:rgba(0,107,143,.2)}
+    .btn-red{background:rgba(192,57,43,.1);color:var(--red)}.btn-red:hover{background:rgba(192,57,43,.18)}
+    .btn-green{background:rgba(45,106,79,.12);color:var(--green)}.btn-green:hover{background:rgba(45,106,79,.2)}
+    .btn-full{width:100%;padding:12px;border-radius:10px;font-size:14px}
 
     /* ── FORM ── */
-    .form-section{margin-bottom:28px}
-    .form-section h3{font-family:var(--font-d);font-size:20px;font-weight:400;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--stone)}
+    .form-section{margin-bottom:24px}
+    .form-section h3{font-family:var(--font-d);font-size:19px;font-weight:400;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--stone)}
     .fg{margin-bottom:14px}
     .fl{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
-    .fi{width:100%;padding:10px 13px;border:1.5px solid var(--stone);border-radius:10px;font-family:var(--font-b);font-size:14px;color:var(--dark);background:var(--card);outline:none;transition:border-color .2s;appearance:none}
-    .fi:focus{border-color:var(--copper);box-shadow:0 0 0 3px rgba(184,117,68,.1)}
-    .form-row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-    .form-row2-half{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .fi{width:100%;padding:10px 13px;border:1.5px solid var(--stone);border-radius:10px;font-family:var(--font-b);font-size:14px;color:var(--dark);background:var(--white);outline:none;transition:border-color .2s;appearance:none}
+    .fi:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(0,107,143,.1)}
+    .form-row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    .form-row2-half{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media(max-width:700px){.form-row2,.form-row2-half{grid-template-columns:1fr}}
-    .upload-zone{border:2px dashed var(--stone);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s}
-    .upload-zone:hover{border-color:var(--copper);background:rgba(184,117,68,.04)}
-    .upload-icon{font-size:36px;margin-bottom:10px}
-    .upload-text{font-size:13px;color:var(--muted);line-height:1.6}
-    .check-grid{display:flex;flex-wrap:wrap;gap:10px}
-    .check-item{display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;padding:7px 12px;border:1px solid var(--stone);border-radius:8px;transition:all .2s}
-    .check-item:hover{border-color:var(--copper)}
-    .check-item input{accent-color:var(--copper);width:14px;height:14px}
+    .upload-zone{border:2px dashed var(--stone);border-radius:12px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .2s}
+    .upload-zone:hover{border-color:var(--ocean);background:rgba(0,107,143,.03)}
+    .check-grid{display:flex;flex-wrap:wrap;gap:8px}
+    .check-item{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;padding:6px 11px;border:1px solid var(--stone);border-radius:8px;transition:all .2s}
+    .check-item:hover{border-color:var(--ocean)}
+    .check-item input{accent-color:var(--ocean);width:14px;height:14px}
+    .feedback-msg{display:none;margin-top:10px;padding:10px 14px;border-radius:8px;font-size:13px}
+    .feedback-msg.ok{background:rgba(45,106,79,.1);color:var(--green);display:block}
 
     /* ── CALENDAR ── */
-    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px}
     .cal-day{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;transition:opacity .15s}
-    .cal-day:hover{opacity:.75}
     .cal-head{font-size:10px;color:var(--muted);font-weight:600;cursor:default;aspect-ratio:auto;padding:4px 0}
     .cal-empty{background:transparent;cursor:default}
-    .cal-avail{background:rgba(61,139,94,.12);color:var(--green)}
-    .cal-booked{background:rgba(184,84,68,.1);color:var(--red)}
-    .cal-today{background:var(--copper);color:#fff;font-weight:600}
-    .cal-legend{display:flex;gap:16px;margin-bottom:12px;font-size:12px;color:var(--muted);flex-wrap:wrap}
-    .cal-legend span{display:flex;align-items:center;gap:6px}
+    .cal-avail{background:rgba(45,106,79,.1);color:var(--green)}
+    .cal-booked{background:rgba(232,133,90,.12);color:var(--sunset)}
+    .cal-today{background:var(--ocean);color:#fff;font-weight:600}
+    .cal-legend{display:flex;gap:14px;margin-bottom:10px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+    .cal-legend span{display:flex;align-items:center;gap:5px}
     .cal-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 
-    /* ── MEDIA GRID ── */
-    .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
-    .media-item{border-radius:10px;height:130px;display:flex;align-items:center;justify-content:center;font-size:40px;cursor:pointer;transition:transform .2s,opacity .2s;position:relative;overflow:hidden}
-    .media-item:hover{transform:scale(1.03)}
-    .media-item .media-overlay{position:absolute;inset:0;background:rgba(26,22,16,.5);display:flex;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity .2s}
-    .media-item:hover .media-overlay{opacity:1}
-    .media-overlay-btn{color:#fff;font-size:18px;cursor:pointer}
-    .media-add{border:2px dashed var(--stone);background:transparent!important;font-size:28px;color:var(--muted);flex-direction:column;gap:6px;font-family:var(--font-b);font-size:13px}
-    .media-add:hover{border-color:var(--copper);color:var(--copper)}
+    /* ── MEDIA ── */
+    .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+    .media-item{border-radius:10px;height:120px;display:flex;align-items:center;justify-content:center;font-size:36px;cursor:pointer;transition:transform .2s;position:relative;overflow:hidden}
+    .media-item:hover{transform:scale(1.04)}
+    .media-item img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+    .media-item .media-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(13,21,32,.6);color:#fff;font-size:10px;padding:4px 6px;font-weight:500}
+    .media-add{border:2px dashed var(--stone);background:transparent!important;font-size:24px;color:var(--muted);flex-direction:column;gap:5px;font-size:13px}
+    .media-add:hover{border-color:var(--ocean);color:var(--ocean)}
+
+    /* ── BOOKING REQUESTS ── */
+    .req-card{background:var(--white);border-radius:12px;padding:16px 20px;border-left:4px solid var(--ocean);margin-bottom:12px;display:flex;align-items:flex-start;gap:16px;box-shadow:0 1px 8px rgba(26,31,46,.05)}
+    .req-card.pending{border-color:var(--sunset)}
+    .req-card.confirmed{border-color:var(--green)}
+    .req-icon{font-size:24px;flex-shrink:0;margin-top:2px}
+    .req-info{flex:1}
+    .req-info strong{font-size:14px;font-weight:500;display:block;margin-bottom:2px}
+    .req-info p{font-size:12px;color:var(--muted);line-height:1.5}
+    .req-actions{display:flex;gap:6px;flex-shrink:0;flex-direction:column}
+
+    /* ── CONFIRM OVERLAY ── */
+    .overlay{position:fixed;inset:0;background:rgba(13,21,32,.6);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(6px)}
+    .overlay.open{opacity:1;pointer-events:all}
+    .modal{background:var(--white);border-radius:18px;padding:32px;max-width:380px;width:100%;transform:translateY(20px);transition:transform .25s}
+    .overlay.open .modal{transform:none}
+    .modal h3{font-family:var(--font-d);font-size:22px;margin-bottom:8px}
+    .modal p{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+    .modal-btns{display:flex;gap:8px;justify-content:flex-end}
 
     /* ── TOAST ── */
-    .toast{position:fixed;bottom:24px;right:24px;background:var(--dark);color:#FBF8F3;padding:13px 20px;border-radius:12px;font-size:13px;box-shadow:0 8px 28px rgba(0,0,0,.25);z-index:9999;transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;gap:8px;max-width:320px}
+    .toast{position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.22);z-index:9999;transform:translateY(60px);opacity:0;transition:all .3s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;gap:8px;max-width:300px}
     .toast.show{transform:translateY(0);opacity:1}
 
-    /* ── CONFIRM MODAL ── */
-    .overlay{position:fixed;inset:0;background:rgba(10,8,5,.6);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(6px)}
-    .overlay.open{opacity:1;pointer-events:all}
-    .modal{background:var(--card);border-radius:20px;padding:36px;max-width:400px;width:100%;transform:translateY(20px) scale(.97);transition:transform .25s cubic-bezier(.22,1,.36,1)}
-    .overlay.open .modal{transform:none}
-    .modal h3{font-family:var(--font-d);font-size:24px;font-weight:400;margin-bottom:8px}
-    .modal p{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6}
-    .modal-btns{display:flex;gap:10px;justify-content:flex-end}
+    /* ── NOTIFICATION BANNER ── */
+    .notif-banner{background:linear-gradient(135deg,var(--ocean),var(--lagoon));color:#fff;padding:12px 20px;border-radius:12px;margin-bottom:20px;display:flex;align-items:center;gap:12px;font-size:13px}
+    .notif-banner a{color:#fff;font-weight:600;text-decoration:underline}
   </style>
 </head>
 <body>
 
-<!-- TOAST -->
-<div class="toast" id="toast">
-  <span id="toastIcon">✅</span>
-  <span id="toastMsg">Done!</span>
-</div>
-
-<!-- CONFIRM MODAL -->
+<!-- Confirm overlay -->
 <div class="overlay" id="confirmOverlay">
   <div class="modal">
     <h3 id="confirmTitle">Are you sure?</h3>
-    <p id="confirmMsg">This action cannot be undone.</p>
+    <p id="confirmMsg">This cannot be undone.</p>
     <div class="modal-btns">
-      <button class="btn btn-copper" onclick="closeConfirm()">Cancel</button>
-      <button class="btn btn-red" id="confirmOkBtn">Delete</button>
+      <button class="btn btn-ocean" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-red" id="confirmOkBtn">Confirm</button>
     </div>
   </div>
 </div>
 
+<!-- Toast -->
+<div class="toast" id="toast"><span id="toastIcon">✅</span><span id="toastMsg"></span></div>
+
 <!-- SIDEBAR -->
 <aside class="sidebar">
-  <div class="s-logo">Eva<span>lia</span></div>
-
-  <div class="s-section">Main</div>
-  <div class="s-item active" data-page="dashboard" onclick="showPage('dashboard',this)">
-    <span class="s-icon">📊</span>Dashboard
-  </div>
-  <div class="s-item" data-page="properties" onclick="showPage('properties',this)">
-    <span class="s-icon">🏡</span>Properties
-  </div>
-  <div class="s-item" data-page="bookings" onclick="showPage('bookings',this)">
-    <span class="s-icon">📅</span>Bookings
-  </div>
-  <div class="s-item" data-page="payments" onclick="showPage('payments',this)">
-    <span class="s-icon">💰</span>Payments
-  </div>
-
+  <div class="s-logo">🌴 Eva<span>lia</span></div>
+  <div class="s-section">Overview</div>
+  <div class="s-item active" data-page="dashboard" onclick="showPage('dashboard',this)"><span class="s-icon">📊</span>Dashboard</div>
+  <div class="s-item" data-page="requests" onclick="showPage('requests',this)"><span class="s-icon">📩</span>Booking Requests <span style="background:var(--sunset);color:#fff;border-radius:50px;padding:1px 7px;font-size:10px;margin-left:auto">3</span></div>
+  <div class="s-item" data-page="bookings" onclick="showPage('bookings',this)"><span class="s-icon">📅</span>Bookings</div>
+  <div class="s-item" data-page="guests" onclick="showPage('guests',this)"><span class="s-icon">👥</span>Guests</div>
+  <div class="s-item" data-page="payments" onclick="showPage('payments',this)"><span class="s-icon">💰</span>Payments</div>
   <div class="s-divider"></div>
-  <div class="s-section">Manage</div>
-  <div class="s-item" data-page="addprop" onclick="showPage('addprop',this)">
-    <span class="s-icon">➕</span>Add Property
-  </div>
-  <div class="s-item" data-page="media" onclick="showPage('media',this)">
-    <span class="s-icon">📸</span>Media Library
-  </div>
-  <div class="s-item" data-page="calendar" onclick="showPage('calendar',this)">
-    <span class="s-icon">🗓</span>Availability
-  </div>
-
+  <div class="s-section">Content</div>
+  <div class="s-item" data-page="properties" onclick="showPage('properties',this)"><span class="s-icon">🏠</span>Properties</div>
+  <div class="s-item" data-page="experiences" onclick="showPage('experiences',this)"><span class="s-icon">🌴</span>Experiences</div>
+  <div class="s-item" data-page="addprop" onclick="showPage('addprop',this)"><span class="s-icon">➕</span>Add Property</div>
+  <div class="s-item" data-page="media" onclick="showPage('media',this)"><span class="s-icon">📸</span>Media Library</div>
+  <div class="s-item" data-page="calendar" onclick="showPage('calendar',this)"><span class="s-icon">🗓</span>Availability</div>
   <div class="s-divider"></div>
-  <div class="s-section">Settings</div>
-  <div class="s-item" data-page="settings" onclick="showPage('settings',this)">
-    <span class="s-icon">⚙️</span>Settings
-  </div>
-  <div class="s-item" onclick="window.open('index.html','_blank')">
-    <span class="s-icon">🌐</span>View Website
-  </div>
+  <div class="s-section">Config</div>
+  <div class="s-item" data-page="settings" onclick="showPage('settings',this)"><span class="s-icon">⚙️</span>Settings</div>
+  <div class="s-item" onclick="window.open('index.html','_blank')"><span class="s-icon">🌐</span>View Live Site</div>
 </aside>
 
 <!-- MAIN -->
@@ -219,7 +212,8 @@
   <div class="topbar">
     <div class="page-title" id="pageTitle">Dashboard</div>
     <div class="topbar-right">
-      <div class="topbar-btn">🔔<div class="notif-dot"></div></div>
+      <a class="topbar-btn" href="https://wa.me/23057242099" target="_blank" title="WhatsApp concierge">💬</a>
+      <div class="topbar-btn" onclick="showPage('requests',document.querySelector('[data-page=requests]'))" title="3 new requests">🔔<div class="notif-dot"></div></div>
       <div class="avatar">CD</div>
     </div>
   </div>
@@ -228,66 +222,75 @@
 
     <!-- ══ DASHBOARD ══ -->
     <div id="page-dashboard" class="page active">
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="sc-label">Total Revenue</div>
-          <div class="sc-val">€42,840</div>
-          <div class="sc-change up">↑ 18% vs last month</div>
-        </div>
-        <div class="stat-card">
-          <div class="sc-label">Active Bookings</div>
-          <div class="sc-val">14</div>
-          <div class="sc-change up">↑ 3 new today</div>
-        </div>
-        <div class="stat-card">
-          <div class="sc-label">Occupancy Rate</div>
-          <div class="sc-val">78%</div>
-          <div class="sc-change up">↑ 6% this week</div>
-        </div>
-        <div class="stat-card">
-          <div class="sc-label">Properties</div>
-          <div class="sc-val">6</div>
-          <div class="sc-change" style="color:var(--muted)">All active</div>
-        </div>
+      <div class="notif-banner">
+        📩 <strong>3 new booking requests</strong> waiting for confirmation — <span class="card-link" style="color:#fff;cursor:pointer" onclick="showPage('requests',document.querySelector('[data-page=requests]'))">Review now →</span>
       </div>
-
+      <div class="stats-row">
+        <div class="stat-card"><div class="sc-label">Total Revenue</div><div class="sc-val">€8,240</div><div class="sc-change up">↑ 22% this month</div></div>
+        <div class="stat-card"><div class="sc-label">Active Bookings</div><div class="sc-val">4</div><div class="sc-change up">↑ 2 this week</div></div>
+        <div class="stat-card"><div class="sc-label">Registered Guests</div><div class="sc-val">18</div><div class="sc-change up">↑ 5 new</div></div>
+        <div class="stat-card"><div class="sc-label">Occupancy</div><div class="sc-val">72%</div><div class="sc-change up">↑ 8%</div></div>
+      </div>
       <div class="grid2">
         <div class="card">
           <div class="card-title">Monthly Revenue</div>
           <div class="chart-bars">
-            <div class="bar-wrap"><div class="bar" style="height:52%"></div><div class="bar-lbl">Jan</div></div>
-            <div class="bar-wrap"><div class="bar" style="height:68%"></div><div class="bar-lbl">Feb</div></div>
-            <div class="bar-wrap"><div class="bar" style="height:44%"></div><div class="bar-lbl">Mar</div></div>
-            <div class="bar-wrap"><div class="bar" style="height:85%"></div><div class="bar-lbl">Apr</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:40%"></div><div class="bar-lbl">Jan</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:55%"></div><div class="bar-lbl">Feb</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:35%"></div><div class="bar-lbl">Mar</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:80%"></div><div class="bar-lbl">Apr</div></div>
             <div class="bar-wrap"><div class="bar" style="height:100%"></div><div class="bar-lbl">May</div></div>
-            <div class="bar-wrap"><div class="bar" style="height:90%"></div><div class="bar-lbl">Jun</div></div>
-            <div class="bar-wrap"><div class="bar" style="height:74%"></div><div class="bar-lbl">Jul</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:65%"></div><div class="bar-lbl">Jun</div></div>
           </div>
         </div>
         <div class="card">
-          <div class="card-title">Recent Bookings <span class="card-link" onclick="showPage('bookings', document.querySelector('[data-page=bookings]'))">See all →</span></div>
-          <div class="tbl-wrap">
-            <table>
-              <tr><th>Guest</th><th>Property</th><th>Dates</th><th>Status</th></tr>
-              <tr><td><strong>Sophie L.</strong></td><td style="color:var(--muted)">Villa Azura</td><td style="color:var(--muted)">12–18 May</td><td><span class="pill pill-green">Confirmed</span></td></tr>
-              <tr><td><strong>Marcus W.</strong></td><td style="color:var(--muted)">Alpine Lodge</td><td style="color:var(--muted)">20–27 May</td><td><span class="pill pill-green">Confirmed</span></td></tr>
-              <tr><td><strong>Amara D.</strong></td><td style="color:var(--muted)">Maison Doré</td><td style="color:var(--muted)">1–8 Jun</td><td><span class="pill pill-copper">Pending</span></td></tr>
-              <tr><td><strong>James T.</strong></td><td style="color:var(--muted)">Penthouse</td><td style="color:var(--muted)">3–6 Jun</td><td><span class="pill pill-copper">Pending</span></td></tr>
-              <tr><td><strong>Leila R.</strong></td><td style="color:var(--muted)">Dune House</td><td style="color:var(--muted)">10–17 Jun</td><td><span class="pill pill-red">Cancelled</span></td></tr>
-            </table>
-          </div>
+          <div class="card-title">Recent Bookings <span class="card-link" onclick="showPage('bookings',document.querySelector('[data-page=bookings]'))">See all →</span></div>
+          <div class="tbl-wrap"><table>
+            <tr><th>Guest</th><th>Service</th><th>Dates</th><th>Status</th></tr>
+            <tr><td><strong>Sophie L.</strong></td><td style="color:var(--muted)">Studio Evalia</td><td style="color:var(--muted)">14–18 Apr</td><td><span class="pill pill-green">Confirmed</span></td></tr>
+            <tr><td><strong>Marcus W.</strong></td><td style="color:var(--muted)">Villa Evalia</td><td style="color:var(--muted)">20–27 Apr</td><td><span class="pill pill-green">Confirmed</span></td></tr>
+            <tr><td><strong>Amara D.</strong></td><td style="color:var(--muted)">Boat Excursion</td><td style="color:var(--muted)">22 Apr</td><td><span class="pill pill-orange">Pending</span></td></tr>
+            <tr><td><strong>James T.</strong></td><td style="color:var(--muted)">Yoga Retreat</td><td style="color:var(--muted)">25 Apr</td><td><span class="pill pill-orange">Pending</span></td></tr>
+          </table></div>
         </div>
       </div>
     </div>
 
-    <!-- ══ PROPERTIES ══ -->
-    <div id="page-properties" class="page">
-      <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
-        <button class="btn btn-primary" onclick="showPage('addprop', document.querySelector('[data-page=addprop]'))">+ Add Property</button>
+    <!-- ══ BOOKING REQUESTS ══ -->
+    <div id="page-requests" class="page">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px">These come from the booking forms on the website (Formspree endpoint: mdayoknj). Confirm or decline each request — guest is notified via WhatsApp/email.</p>
+      <div class="req-card pending">
+        <div class="req-icon">📩</div>
+        <div class="req-info">
+          <strong>Amara Diallo — Boat Excursion</strong>
+          <p>📅 22 Apr 2026 · 👥 2 people · ✉️ amara@email.com · 📱 +230 5712 3456<br>💬 "Would love dolphin watching if available"</p>
+        </div>
+        <div class="req-actions">
+          <button class="btn btn-green" onclick="confirmReq(this)">✓ Confirm</button>
+          <button class="btn btn-red" onclick="declineReq(this)">✗ Decline</button>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-title">All Properties <span style="font-size:13px;color:var(--muted);font-family:var(--font-b)">6 active</span></div>
-        <div id="adminPropList"></div>
+      <div class="req-card pending">
+        <div class="req-icon">📩</div>
+        <div class="req-info">
+          <strong>James Taylor — Yoga & Nature Retreat</strong>
+          <p>📅 25 Apr 2026 · 👥 4 people · ✉️ james@email.com · 📱 +44 7911 123456<br>💬 "First time in Mauritius, very excited!"</p>
+        </div>
+        <div class="req-actions">
+          <button class="btn btn-green" onclick="confirmReq(this)">✓ Confirm</button>
+          <button class="btn btn-red" onclick="declineReq(this)">✗ Decline</button>
+        </div>
+      </div>
+      <div class="req-card pending">
+        <div class="req-icon">📩</div>
+        <div class="req-info">
+          <strong>Leila Rousseau — Villa Evalia</strong>
+          <p>📅 1–8 May 2026 · 👥 5 people · ✉️ leila@email.com · 📱 +33 6 98 76 54 32<br>💬 "Pool available all day? We have young children"</p>
+        </div>
+        <div class="req-actions">
+          <button class="btn btn-green" onclick="confirmReq(this)">✓ Confirm</button>
+          <button class="btn btn-red" onclick="declineReq(this)">✗ Decline</button>
+        </div>
       </div>
     </div>
 
@@ -295,73 +298,66 @@
     <div id="page-bookings" class="page">
       <div class="card">
         <div class="card-title">All Bookings</div>
-        <div class="tbl-wrap">
-          <table>
-            <tr><th>Guest</th><th>Email</th><th>Property</th><th>Check-in</th><th>Check-out</th><th>Total</th><th>Status</th><th>Action</th></tr>
-            <tr>
-              <td><strong>Sophie Laurent</strong></td>
-              <td style="color:var(--muted)">sophie@mail.com</td>
-              <td>Villa Azura</td><td>12 May</td><td>18 May</td>
-              <td><strong>€2,365</strong></td>
-              <td><span class="pill pill-green">Confirmed</span></td>
-              <td><button class="btn btn-copper">View</button></td>
-            </tr>
-            <tr>
-              <td><strong>Marcus Webb</strong></td>
-              <td style="color:var(--muted)">marcus@mail.com</td>
-              <td>Alpine Lodge</td><td>20 May</td><td>27 May</td>
-              <td><strong>€3,165</strong></td>
-              <td><span class="pill pill-green">Confirmed</span></td>
-              <td><button class="btn btn-copper">View</button></td>
-            </tr>
-            <tr>
-              <td><strong>Amara Diallo</strong></td>
-              <td style="color:var(--muted)">amara@mail.com</td>
-              <td>Maison Doré</td><td>1 Jun</td><td>8 Jun</td>
-              <td><strong>€2,115</strong></td>
-              <td><span class="pill pill-copper">Pending</span></td>
-              <td><button class="btn btn-primary" onclick="confirmBookingRow(this)">Confirm</button></td>
-            </tr>
-            <tr>
-              <td><strong>James Taylor</strong></td>
-              <td style="color:var(--muted)">james@mail.com</td>
-              <td>Penthouse</td><td>3 Jun</td><td>6 Jun</td>
-              <td><strong>€1,045</strong></td>
-              <td><span class="pill pill-copper">Pending</span></td>
-              <td><button class="btn btn-primary" onclick="confirmBookingRow(this)">Confirm</button></td>
-            </tr>
-            <tr>
-              <td><strong>Leila Rousseau</strong></td>
-              <td style="color:var(--muted)">leila@mail.com</td>
-              <td>Dune House</td><td>10 Jun</td><td>17 Jun</td>
-              <td><strong>€2,850</strong></td>
-              <td><span class="pill pill-red">Cancelled</span></td>
-              <td><button class="btn btn-red">Refund</button></td>
-            </tr>
-          </table>
-        </div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Guest</th><th>Email</th><th>Service</th><th>Check-in</th><th>Check-out</th><th>Guests</th><th>Total</th><th>Status</th><th>Action</th></tr>
+          <tr><td><strong>Sophie Laurent</strong></td><td style="color:var(--muted)">sophie@email.com</td><td>Studio Evalia</td><td>14 Apr</td><td>18 Apr</td><td>2</td><td><strong>€405</strong></td><td><span class="pill pill-green">Confirmed</span></td><td><button class="btn btn-ocean" onclick="openWhatsApp('+23057121111','Studio Evalia')">💬</button></td></tr>
+          <tr><td><strong>Marcus Webb</strong></td><td style="color:var(--muted)">marcus@email.com</td><td>Villa Evalia</td><td>20 Apr</td><td>27 Apr</td><td>4</td><td><strong>€1,345</strong></td><td><span class="pill pill-green">Confirmed</span></td><td><button class="btn btn-ocean" onclick="openWhatsApp('+23057122222','Villa Evalia')">💬</button></td></tr>
+          <tr><td><strong>Amara Diallo</strong></td><td style="color:var(--muted)">amara@email.com</td><td>Boat Excursion</td><td>22 Apr</td><td>22 Apr</td><td>2</td><td><strong>€130</strong></td><td><span class="pill pill-orange">Pending</span></td><td><button class="btn btn-green" onclick="confirmBookingRow(this)">Confirm</button></td></tr>
+          <tr><td><strong>James Taylor</strong></td><td style="color:var(--muted)">james@email.com</td><td>Yoga Retreat</td><td>25 Apr</td><td>25 Apr</td><td>4</td><td><strong>€260</strong></td><td><span class="pill pill-orange">Pending</span></td><td><button class="btn btn-green" onclick="confirmBookingRow(this)">Confirm</button></td></tr>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ══ GUESTS ══ -->
+    <div id="page-guests" class="page">
+      <div class="card">
+        <div class="card-title">Registered Guests <span style="font-size:13px;color:var(--muted);font-family:var(--font-b)">18 total</span></div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Name</th><th>Email</th><th>Phone</th><th>Nationality</th><th>Arrival</th><th>Party</th><th>Bookings</th><th>Action</th></tr>
+          <tr><td><strong>Sophie Laurent</strong></td><td style="color:var(--muted)">sophie@email.com</td><td style="color:var(--muted)">+33 6 11 22 33</td><td>🇫🇷 French</td><td>14 Apr</td><td>2</td><td>1</td><td><button class="btn btn-ocean">View</button></td></tr>
+          <tr><td><strong>Marcus Webb</strong></td><td style="color:var(--muted)">marcus@email.com</td><td style="color:var(--muted)">+44 77 11 22 33</td><td>🇬🇧 British</td><td>20 Apr</td><td>4</td><td>2</td><td><button class="btn btn-ocean">View</button></td></tr>
+          <tr><td><strong>Amara Diallo</strong></td><td style="color:var(--muted)">amara@email.com</td><td style="color:var(--muted)">+225 07 11 22</td><td>🇨🇮 Ivorian</td><td>22 Apr</td><td>2</td><td>1</td><td><button class="btn btn-ocean">View</button></td></tr>
+          <tr><td><strong>James Taylor</strong></td><td style="color:var(--muted)">james@email.com</td><td style="color:var(--muted)">+44 79 11 22 33</td><td>🇬🇧 British</td><td>25 Apr</td><td>4</td><td>1</td><td><button class="btn btn-ocean">View</button></td></tr>
+        </table></div>
       </div>
     </div>
 
     <!-- ══ PAYMENTS ══ -->
     <div id="page-payments" class="page">
       <div class="stats-row">
-        <div class="stat-card"><div class="sc-label">This Month</div><div class="sc-val">€14,620</div><div class="sc-change up">↑ 22%</div></div>
-        <div class="stat-card"><div class="sc-label">Pending Payouts</div><div class="sc-val">€3,840</div><div class="sc-change" style="color:var(--muted)">3 bookings</div></div>
-        <div class="stat-card"><div class="sc-label">Refunds</div><div class="sc-val">€850</div><div class="sc-change dn">↓ 1 refund</div></div>
-        <div class="stat-card"><div class="sc-label">Avg Booking</div><div class="sc-val">€2,180</div><div class="sc-change up">↑ 8%</div></div>
+        <div class="stat-card"><div class="sc-label">This Month</div><div class="sc-val">€8,240</div><div class="sc-change up">↑ 22%</div></div>
+        <div class="stat-card"><div class="sc-label">Pending</div><div class="sc-val">€390</div><div class="sc-change" style="color:var(--muted)">2 bookings</div></div>
+        <div class="stat-card"><div class="sc-label">Local Payments</div><div class="sc-val">€1,200</div><div class="sc-change" style="color:var(--muted)">MyT / MCB</div></div>
+        <div class="stat-card"><div class="sc-label">Avg Booking</div><div class="sc-val">€520</div><div class="sc-change up">↑ 12%</div></div>
       </div>
       <div class="card">
         <div class="card-title">Transaction History</div>
-        <div class="tbl-wrap">
-          <table>
-            <tr><th>Date</th><th>Guest</th><th>Property</th><th>Amount</th><th>Method</th><th>Status</th></tr>
-            <tr><td>May 12</td><td>Sophie L.</td><td>Villa Azura</td><td><strong>€2,365</strong></td><td>💳 Visa</td><td><span class="pill pill-green">Paid</span></td></tr>
-            <tr><td>Apr 28</td><td>Marcus W.</td><td>Alpine Lodge</td><td><strong>€3,165</strong></td><td>🍎 Apple Pay</td><td><span class="pill pill-green">Paid</span></td></tr>
-            <tr><td>Apr 15</td><td>Amara D.</td><td>Maison Doré</td><td><strong>€2,115</strong></td><td>💳 Mastercard</td><td><span class="pill pill-copper">Pending</span></td></tr>
-            <tr><td>Apr 2</td><td>Leila R.</td><td>Dune House</td><td><strong style="color:var(--red)">–€850</strong></td><td>↩ Refund</td><td><span class="pill pill-red">Refunded</span></td></tr>
-          </table>
-        </div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Date</th><th>Guest</th><th>Service</th><th>Amount</th><th>Method</th><th>Status</th></tr>
+          <tr><td>14 Apr</td><td>Sophie L.</td><td>Studio Evalia</td><td><strong>€405</strong></td><td>💳 Visa</td><td><span class="pill pill-green">Paid</span></td></tr>
+          <tr><td>13 Apr</td><td>Marcus W.</td><td>Villa Evalia</td><td><strong>€1,345</strong></td><td>🍎 Apple Pay</td><td><span class="pill pill-green">Paid</span></td></tr>
+          <tr><td>12 Apr</td><td>Amara D.</td><td>Boat Excursion</td><td><strong>€130</strong></td><td>💚 MyT Money</td><td><span class="pill pill-orange">Pending</span></td></tr>
+          <tr><td>11 Apr</td><td>James T.</td><td>Yoga Retreat</td><td><strong>€260</strong></td><td>🏦 MCB Juice</td><td><span class="pill pill-orange">Pending</span></td></tr>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ══ PROPERTIES ══ -->
+    <div id="page-properties" class="page">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="btn btn-primary" onclick="showPage('addprop',document.querySelector('[data-page=addprop]'))">+ Add Property</button>
+      </div>
+      <div class="card">
+        <div class="card-title">Properties <span style="font-size:13px;color:var(--muted);font-family:var(--font-b)">2 active</span></div>
+        <div id="adminPropList"></div>
+      </div>
+    </div>
+
+    <!-- ══ EXPERIENCES ══ -->
+    <div id="page-experiences" class="page">
+      <div class="card">
+        <div class="card-title">All Experiences <span style="font-size:13px;color:var(--muted);font-family:var(--font-b)">8 active</span></div>
+        <div id="adminExpList"></div>
       </div>
     </div>
 
@@ -371,30 +367,22 @@
         <div class="form-section">
           <h3>Property Details</h3>
           <div class="form-row2">
-            <div class="fg"><label class="fl">Property Name</label><input class="fi" type="text" id="newName" placeholder="e.g. Villa Azura"/></div>
-            <div class="fg"><label class="fl">Location</label><input class="fi" type="text" id="newLoc" placeholder="e.g. Coastline, South"/></div>
-            <div class="fg"><label class="fl">Type</label>
-              <select class="fi" id="newType">
-                <option value="">Select type…</option>
-                <option>Villa</option><option>Apartment</option><option>Chalet</option><option>Beachfront</option>
-              </select>
-            </div>
+            <div class="fg"><label class="fl">Property Name</label><input class="fi" id="newName" type="text" placeholder="e.g. Studio Evalia"/></div>
+            <div class="fg"><label class="fl">Location</label><input class="fi" id="newLoc" type="text" placeholder="e.g. Flic en Flac, West Mauritius"/></div>
+            <div class="fg"><label class="fl">Type</label><select class="fi" id="newType"><option>Studio</option><option>Villa</option><option>Apartment</option></select></div>
           </div>
-          <div class="fg"><label class="fl">Description</label>
-            <textarea class="fi" rows="3" id="newDesc" style="resize:vertical" placeholder="Describe this property in a few sentences…"></textarea>
+          <div class="fg"><label class="fl">Description</label><textarea class="fi" id="newDesc" rows="3" style="resize:vertical" placeholder="Describe this property…"></textarea></div>
+          <div class="form-row2">
+            <div class="fg"><label class="fl">Bedrooms</label><input class="fi" id="newBeds" type="number" min="1" placeholder="2"/></div>
+            <div class="fg"><label class="fl">Bathrooms</label><input class="fi" id="newBaths" type="number" min="1" placeholder="2"/></div>
+            <div class="fg"><label class="fl">Max Guests</label><input class="fi" id="newGuests" type="number" min="1" placeholder="6"/></div>
           </div>
           <div class="form-row2">
-            <div class="fg"><label class="fl">Bedrooms</label><input class="fi" type="number" min="1" id="newBeds" placeholder="4"/></div>
-            <div class="fg"><label class="fl">Bathrooms</label><input class="fi" type="number" min="1" id="newBaths" placeholder="3"/></div>
-            <div class="fg"><label class="fl">Max Guests</label><input class="fi" type="number" min="1" id="newGuests" placeholder="8"/></div>
-          </div>
-          <div class="form-row2">
-            <div class="fg"><label class="fl">Nightly Rate (€)</label><input class="fi" type="number" id="newRate" placeholder="380"/></div>
-            <div class="fg"><label class="fl">Cleaning Fee (€)</label><input class="fi" type="number" id="newClean" value="85"/></div>
-            <div class="fg"><label class="fl">Min Stay (nights)</label><input class="fi" type="number" id="newMin" value="2"/></div>
+            <div class="fg"><label class="fl">Nightly Rate (€)</label><input class="fi" id="newRate" type="number" placeholder="180"/></div>
+            <div class="fg"><label class="fl">Cleaning Fee (€)</label><input class="fi" id="newClean" type="number" value="40"/></div>
+            <div class="fg"><label class="fl">Min Stay (nights)</label><input class="fi" id="newMin" type="number" value="2"/></div>
           </div>
         </div>
-
         <div class="form-section">
           <h3>Amenities</h3>
           <div class="check-grid">
@@ -404,89 +392,73 @@
             <label class="check-item"><input type="checkbox" checked/> Air Con</label>
             <label class="check-item"><input type="checkbox" checked/> Kitchen</label>
             <label class="check-item"><input type="checkbox"/> BBQ</label>
-            <label class="check-item"><input type="checkbox"/> Gym</label>
             <label class="check-item"><input type="checkbox" checked/> Parking</label>
             <label class="check-item"><input type="checkbox"/> Sea View</label>
-            <label class="check-item"><input type="checkbox"/> Mountain View</label>
-            <label class="check-item"><input type="checkbox"/> Fireplace</label>
+            <label class="check-item"><input type="checkbox"/> Garden</label>
             <label class="check-item"><input type="checkbox"/> Pet Friendly</label>
           </div>
         </div>
-
         <div class="form-section">
-          <h3>Photos & Videos</h3>
-          <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Upload to your Cloudinary account (cloud: <strong>dueczmagh</strong>) under the <code style="background:var(--bg);padding:2px 6px;border-radius:4px">evalia/</code> folder, then paste the URLs into <code style="background:var(--bg);padding:2px 6px;border-radius:4px">index.html</code>.</p>
-          <div class="upload-zone" onclick="showToast('🔗', 'Go to cloudinary.com → cloud: dueczmagh → upload to evalia/ folder')">
-            <div class="upload-icon">📸</div>
-            <div class="upload-text">
-              <strong>Upload via Cloudinary</strong><br>
-              Log into cloudinary.com · cloud: dueczmagh · folder: evalia/<br>
-              Supports JPG, PNG, WebP, MP4, MOV
-            </div>
+          <h3>Photos</h3>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Drop photos into the <code style="background:var(--sand);padding:2px 6px;border-radius:4px">images/</code> folder in your GitHub repo, then add the filename in <code style="background:var(--sand);padding:2px 6px;border-radius:4px">index.html</code>.</p>
+          <div class="upload-zone" onclick="showToast('📂','Open your GitHub repo images/ folder and drag your photos in via GitHub Desktop')">
+            <div style="font-size:32px;margin-bottom:8px">📸</div>
+            <div style="font-size:13px;color:var(--muted)">Click for upload instructions</div>
           </div>
         </div>
-
-        <div style="display:flex;gap:12px;align-items:center">
-          <button class="btn btn-primary btn-full" onclick="saveProperty()" style="width:auto;padding:13px 40px">Save Property →</button>
-          <button class="btn btn-copper" onclick="showPage('properties', document.querySelector('[data-page=properties]'))">Cancel</button>
-        </div>
-        <div id="saveFeedback" style="margin-top:12px;font-size:13px;color:var(--green);display:none">✅ Property saved! Remember to add photos in index.html.</div>
+        <button class="btn btn-primary btn-full" onclick="saveProperty()">Save Property →</button>
+        <div class="feedback-msg" id="saveFeedback">✅ Property saved!</div>
       </div>
     </div>
 
     <!-- ══ MEDIA ══ -->
     <div id="page-media" class="page">
       <div class="card">
-        <div class="card-title">
-          Media Library
-          <span style="font-size:13px;color:var(--muted);font-family:var(--font-b)">Cloud: dueczmagh · Folder: evalia/</span>
-        </div>
-        <div style="background:rgba(184,117,68,.06);border:1px solid rgba(184,117,68,.2);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--muted)">
-          📌 Upload photos and videos at <strong><a href="https://cloudinary.com" target="_blank" style="color:var(--copper)">cloudinary.com</a></strong> under folder <code style="background:var(--bg);padding:2px 6px;border-radius:4px">evalia/</code>, then paste the URLs into the properties array in <code style="background:var(--bg);padding:2px 6px;border-radius:4px">index.html</code>.
+        <div class="card-title">Media Library <span style="font-size:13px;color:var(--muted);font-family:var(--font-b)">images/ folder · GitHub repo: cmarcdavid/evalia-web</span></div>
+        <div style="background:rgba(0,107,143,.06);border:1px solid rgba(0,107,143,.2);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:var(--muted)">
+          📌 To add photos: drop files into the <strong>images/</strong> folder via GitHub Desktop, then add the filename to <code style="background:var(--sand);padding:2px 5px;border-radius:4px">index.html</code> in the relevant property.
         </div>
         <div class="media-grid">
-          <div class="media-item" style="background:linear-gradient(135deg,#2C3E50,#3D5A73)">
-            🌊
-            <div class="media-overlay">
-              <span class="media-overlay-btn" onclick="copyToClip('https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/azura-1.jpg')" title="Copy URL">📋</span>
-            </div>
+          <div class="media-item">
+            <img src="images/Hero.jpg" alt="Hero" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#003d6b,#006B8F)">🌅</div>
+            <div class="media-lbl">Hero.jpg</div>
           </div>
-          <div class="media-item" style="background:linear-gradient(135deg,#3D2812,#5C3D1E)">
-            🌿
-            <div class="media-overlay">
-              <span class="media-overlay-btn" onclick="copyToClip('https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/maison-dore-1.jpg')" title="Copy URL">📋</span>
-            </div>
+          <div class="media-item">
+            <img src="images/Hero1.jpg" alt="Hero1" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#005a78,#00A8CC)">🌊</div>
+            <div class="media-lbl">Hero1.jpg</div>
           </div>
-          <div class="media-item" style="background:linear-gradient(135deg,#2D3A2E,#4A6741)">
-            🏔️
-            <div class="media-overlay">
-              <span class="media-overlay-btn" onclick="copyToClip('https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/alpine-lodge-1.jpg')" title="Copy URL">📋</span>
-            </div>
+          <div class="media-item">
+            <img src="images/Hero2.jpg" alt="Hero2" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#003d6b,#0077a8)">⛵</div>
+            <div class="media-lbl">Hero2.jpg</div>
           </div>
-          <div class="media-item" style="background:linear-gradient(135deg,#2C2040,#4A3D6E)">
-            🏛️
-            <div class="media-overlay">
-              <span class="media-overlay-btn" onclick="copyToClip('https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/casa-blanca-1.jpg')" title="Copy URL">📋</span>
-            </div>
+          <div class="media-item">
+            <img src="images/Hero3.jpg" alt="Hero3" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#1a4a2e,#2D6A4F)">🌿</div>
+            <div class="media-lbl">Hero3.jpg</div>
           </div>
-          <div class="media-item" style="background:linear-gradient(135deg,#1A2040,#2E3870)">
-            🌆
-            <div class="media-overlay">
-              <span class="media-overlay-btn" onclick="copyToClip('https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/penthouse-1.jpg')" title="Copy URL">📋</span>
-            </div>
+          <div class="media-item">
+            <img src="images/Host.jpg" alt="Host" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#3a2060,#6040a0)">🎩</div>
+            <div class="media-lbl">Host.jpg</div>
           </div>
-          <div class="media-item" style="background:linear-gradient(135deg,#1A3040,#2E5870)">
-            🏖️
-            <div class="media-overlay">
-              <span class="media-overlay-btn" onclick="copyToClip('https://res.cloudinary.com/dueczmagh/image/upload/q_auto,f_auto/evalia/dune-house-1.jpg')" title="Copy URL">📋</span>
-            </div>
+          <div class="media-item">
+            <img src="images/Villa-pool.jpg" alt="Villa pool" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#1a3a28,#2D6A4F)">🏊</div>
+            <div class="media-lbl">Villa-pool.jpg</div>
           </div>
-          <div class="media-item media-add" onclick="showToast('🔗', 'Go to cloudinary.com → cloud: dueczmagh → upload to evalia/')">
-            <span style="font-size:26px">+</span>
-            <span>Upload to Cloudinary</span>
+          <div class="media-item">
+            <img src="images/Villa-pool1.jpg" alt="Villa pool 2" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#1a4a2e,#3a8a5e)">🌴</div>
+            <div class="media-lbl">Villa-pool1.jpg</div>
+          </div>
+          <div class="media-item media-add" onclick="showToast('📂','Drag photos into images/ folder in GitHub Desktop → Commit → Push')">
+            <span style="font-size:24px">+</span>
+            <span>Add Photo</span>
           </div>
         </div>
-        <p style="font-size:12px;color:var(--muted);margin-top:16px">💡 Hover over any tile to copy its Cloudinary URL to clipboard.</p>
       </div>
     </div>
 
@@ -496,9 +468,9 @@
         <div class="card">
           <div class="card-title">April 2026 — Availability</div>
           <div class="cal-legend">
-            <span><span class="cal-dot" style="background:rgba(61,139,94,.2)"></span>Available</span>
-            <span><span class="cal-dot" style="background:rgba(184,84,68,.12)"></span>Booked</span>
-            <span><span class="cal-dot" style="background:var(--copper)"></span>Today</span>
+            <span><span class="cal-dot" style="background:rgba(45,106,79,.2)"></span>Available</span>
+            <span><span class="cal-dot" style="background:rgba(232,133,90,.15)"></span>Booked</span>
+            <span><span class="cal-dot" style="background:var(--ocean)"></span>Today</span>
           </div>
           <div class="cal-grid" id="calGrid"></div>
         </div>
@@ -506,19 +478,16 @@
           <div class="card-title">Block Dates</div>
           <div class="fg"><label class="fl">Property</label>
             <select class="fi">
-              <option value="">Select property…</option>
-              <option>Villa Azura</option><option>Maison Doré</option><option>Alpine Lodge</option>
-              <option>Casa Blanca</option><option>Sunset Penthouse</option><option>Dune House</option>
+              <option>Studio Evalia</option>
+              <option>Villa Evalia</option>
             </select>
           </div>
           <div class="form-row2-half">
             <div class="fg"><label class="fl">From</label><input class="fi" type="date"/></div>
             <div class="fg"><label class="fl">To</label><input class="fi" type="date"/></div>
           </div>
-          <div class="fg"><label class="fl">Reason (optional)</label>
-            <input class="fi" type="text" placeholder="Maintenance, personal use…"/>
-          </div>
-          <button class="btn btn-primary" onclick="showToast('🗓', 'Dates blocked successfully')">Block Dates</button>
+          <div class="fg"><label class="fl">Reason (optional)</label><input class="fi" type="text" placeholder="Maintenance, personal use…"/></div>
+          <button class="btn btn-primary" onclick="showToast('🗓','Dates blocked successfully')">Block Dates</button>
         </div>
       </div>
     </div>
@@ -529,35 +498,35 @@
         <div class="form-section">
           <h3>Business Information</h3>
           <div class="form-row2-half">
-            <div class="fg"><label class="fl">Business Name</label><input class="fi" type="text" value="Evalia"/></div>
-            <div class="fg"><label class="fl">Contact Email</label><input class="fi" type="email" value="hello@evalia.co"/></div>
+            <div class="fg"><label class="fl">Business Name</label><input class="fi" type="text" value="Evalia Mauritius"/></div>
+            <div class="fg"><label class="fl">Email</label><input class="fi" type="email" value="hello@evalia.mu"/></div>
           </div>
           <div class="form-row2-half">
-            <div class="fg"><label class="fl">WhatsApp / Phone</label><input class="fi" type="tel" value="+241 06 00 00 00"/></div>
-            <div class="fg"><label class="fl">Instagram Handle</label><input class="fi" type="text" value="@evalia241"/></div>
+            <div class="fg"><label class="fl">WhatsApp</label><input class="fi" type="tel" value="+230 5724 2099"/></div>
+            <div class="fg"><label class="fl">Instagram</label><input class="fi" type="text" value="@evalia241"/></div>
           </div>
-          <div class="fg" style="max-width:300px"><label class="fl">Currency</label>
-            <select class="fi"><option>EUR (€)</option><option>GBP (£)</option><option>USD ($)</option><option>XAF (FCFA)</option></select>
+          <div class="fg" style="max-width:280px"><label class="fl">Currency</label>
+            <select class="fi"><option>EUR (€)</option><option>GBP (£)</option><option>USD ($)</option><option>MUR (₨)</option></select>
           </div>
         </div>
-
         <div class="form-section">
-          <h3>Cloudinary Media</h3>
-          <div class="form-row2-half">
-            <div class="fg"><label class="fl">Cloud Name</label><input class="fi" type="text" value="dueczmagh" readonly style="background:#f5f0ea"/></div>
-            <div class="fg"><label class="fl">Upload Preset</label><input class="fi" type="text" value="evalia_unsigned"/></div>
-          </div>
-          <p style="font-size:12px;color:var(--muted)">⚠️ API Key and Secret must be added in <strong>Vercel Dashboard → Environment Variables</strong>, not here.</p>
+          <h3>Formspree (Booking Forms)</h3>
+          <div class="fg"><label class="fl">Active Endpoint</label><input class="fi" type="text" value="https://formspree.io/f/mdayoknj" readonly style="background:var(--sand)"/></div>
+          <div class="fg"><label class="fl">GitHub Repo</label><input class="fi" type="text" value="cmarcdavid/evalia-web" readonly style="background:var(--sand)"/></div>
+          <p style="font-size:12px;color:var(--muted)">Formspree submissions go to your registered email. Log in at formspree.io to view all submissions.</p>
         </div>
-
         <div class="form-section">
-          <h3>Payment Settings</h3>
+          <h3>Payments</h3>
           <div class="fg"><label class="fl">Stripe Publishable Key</label><input class="fi" type="text" placeholder="pk_live_…"/></div>
           <div class="fg"><label class="fl">Stripe Webhook Secret</label><input class="fi" type="password" placeholder="whsec_…"/></div>
-          <p style="font-size:12px;color:var(--muted)">⚠️ Stripe Secret Key must be added in <strong>Vercel Dashboard → Environment Variables</strong>.</p>
+          <p style="font-size:12px;color:var(--muted)">⚠️ Stripe Secret Key must be set in <strong>Vercel → Settings → Environment Variables</strong> only — never here.</p>
         </div>
-
-        <button class="btn btn-primary" style="padding:13px 40px" onclick="showToast('✅', 'Settings saved successfully')">Save Settings →</button>
+        <div class="form-section">
+          <h3>Nature & Wellness Partner</h3>
+          <div class="fg"><label class="fl">Instagram Partner</label><input class="fi" type="text" value="@bea_titudeyoga"/></div>
+          <div class="fg"><label class="fl">Partner Profile URL</label><input class="fi" type="text" value="https://www.instagram.com/bea_titudeyoga/"/></div>
+        </div>
+        <button class="btn btn-primary" style="padding:12px 36px" onclick="showToast('✅','Settings saved')">Save Settings →</button>
       </div>
     </div>
 
@@ -565,172 +534,191 @@
 </div><!-- /main -->
 
 <script>
-  // ── PAGE ROUTER ────────────────────────────────
-  const pageTitles = {
-    dashboard:'Dashboard', properties:'Properties', bookings:'Bookings',
-    payments:'Payments', addprop:'Add Property', media:'Media Library',
-    calendar:'Availability', settings:'Settings'
-  };
+// ── PAGE TITLES ─────────────────────────────────────────────
+const pageTitles = {
+  dashboard:'Dashboard', requests:'Booking Requests', bookings:'Bookings',
+  guests:'Guests', payments:'Payments', properties:'Properties',
+  experiences:'Experiences', addprop:'Add Property', media:'Media Library',
+  calendar:'Availability', settings:'Settings'
+};
 
-  function showPage(pageId, navEl) {
-    // Hide all pages
-    document.querySelectorAll('.page').forEach(p => {
-      p.classList.remove('active');
-    });
-    // Show target page
-    const target = document.getElementById('page-' + pageId);
-    if (target) {
-      target.classList.add('active');
-    } else {
-      console.warn('Page not found:', pageId);
-      return;
-    }
-    // Update page title
-    document.getElementById('pageTitle').textContent = pageTitles[pageId] || pageId;
-    // Update sidebar active state
-    document.querySelectorAll('.s-item').forEach(i => i.classList.remove('active'));
-    if (navEl) navEl.classList.add('active');
-    // Page-specific init
-    if (pageId === 'properties') renderAdminProps();
-    if (pageId === 'calendar') renderCal();
-    // Scroll content back to top
-    document.querySelector('.content-wrap').scrollTop = 0;
-  }
+function showPage(pageId, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const t = document.getElementById('page-' + pageId);
+  if (t) t.classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[pageId] || pageId;
+  document.querySelectorAll('.s-item[data-page]').forEach(i => i.classList.remove('active'));
+  if (navEl) navEl.classList.add('active');
+  if (pageId === 'properties') renderAdminProps();
+  if (pageId === 'experiences') renderAdminExp();
+  if (pageId === 'calendar') renderCal();
+  document.querySelector('.content-wrap').scrollTop = 0;
+}
 
-  // ── PROPERTY DATA ─────────────────────────────
-  const props = [
-    {name:'Villa Azura',       loc:'Coastline, South', emoji:'🌊', price:380, status:'Active',  color:'#2C3E50'},
-    {name:'Maison Doré',       loc:'Provence Hills',   emoji:'🌿', price:290, status:'Active',  color:'#3D2812'},
-    {name:'The Alpine Lodge',  loc:'Mountain Retreat', emoji:'🏔️', price:440, status:'Active',  color:'#2D3A2E'},
-    {name:'Casa Blanca',       loc:'Old Town Quarter', emoji:'🏛️', price:165, status:'Active',  color:'#2C2040'},
-    {name:'Sunset Penthouse',  loc:'City Centre',      emoji:'🌆', price:320, status:'Few Left', color:'#1A2040'},
-    {name:'The Dune House',    loc:'Beachfront',       emoji:'🏖️', price:395, status:'Active',  color:'#1A3040'},
-  ];
+// ── PROPERTIES (synced with index.html) ──────────────────────
+const props = [
+  {name:'Studio Evalia', loc:'Flic en Flac, West Mauritius', emoji:'🏙️',
+   photo:'images/Hero3.jpg', price:80, guests:2, beds:1, baths:1, status:'Active', color:'#006B8F'},
+  {name:'Villa Evalia',  loc:'Grand Baie, North Mauritius', emoji:'🌴',
+   photo:'images/Villa-pool.jpg', price:180, guests:6, beds:2, baths:2, status:'Active', color:'#2D6A4F'},
+];
 
-  function renderAdminProps() {
-    document.getElementById('adminPropList').innerHTML = props.map((p, i) => `
-      <div class="prop-row" id="proprow-${i}">
-        <div class="prop-thumb" style="background:${p.color}22;font-size:22px">${p.emoji}</div>
-        <div class="prop-info">
-          <strong>${p.name}</strong>
-          <span>${p.loc}</span>
-        </div>
-        <div class="prop-price-sm">€${p.price}<span style="font-size:12px;color:var(--muted)">/night</span></div>
-        <span class="pill ${p.status==='Active'?'pill-green':'pill-copper'}" style="margin:0 12px">${p.status}</span>
-        <button class="btn btn-copper" style="margin-right:6px" onclick="editProp(${i})">Edit</button>
-        <button class="btn btn-red" onclick="deleteProp(${i},'${p.name}')">Delete</button>
-      </div>`).join('');
-  }
+function renderAdminProps() {
+  document.getElementById('adminPropList').innerHTML = props.map((p, i) => `
+    <div class="prop-row">
+      <div class="prop-thumb">
+        <img src="${p.photo}" alt="${p.name}" onerror="this.style.display='none';this.parentNode.textContent='${p.emoji}'"/>
+      </div>
+      <div class="prop-info"><strong>${p.name}</strong><span>${p.loc}</span></div>
+      <div style="font-size:12px;color:var(--muted);margin-right:8px">🛏 ${p.beds} · 🚿 ${p.baths} · 👥 ${p.guests}</div>
+      <div class="prop-price-sm">€${p.price}<span style="font-size:12px;color:var(--muted)">/night</span></div>
+      <span class="pill pill-green" style="margin:0 10px">${p.status}</span>
+      <button class="btn btn-ocean" style="margin-right:6px" onclick="editProp(${i})">Edit</button>
+      <button class="btn btn-red" onclick="deleteProp(${i},'${p.name}')">Delete</button>
+    </div>`).join('');
+}
 
-  function editProp(i) {
-    const p = props[i];
-    document.getElementById('newName').value  = p.name;
-    document.getElementById('newLoc').value   = p.loc;
-    document.getElementById('newRate').value  = p.price;
-    showPage('addprop', document.querySelector('[data-page=addprop]'));
-    showToast('✏️', `Editing: ${p.name}`);
-  }
+// ── EXPERIENCES (synced with index.html) ─────────────────────
+const experiences = [
+  {name:'Sunrise Beach Yoga',      cat:'Nature & Wellness', icon:'🧘', price:35, dur:'90 min', ig:true},
+  {name:'Black River Gorges Hike', cat:'Nature',            icon:'🦜', price:55, dur:'Full day', ig:false},
+  {name:'Yoga & Nature Retreat',   cat:'Nature & Wellness', icon:'🌿', price:65, dur:'Half day', ig:true},
+  {name:'Chamarel 7-Colour Earth', cat:'Nature',            icon:'🌈', price:40, dur:'Half day', ig:false},
+  {name:'Mindful Garden Walk',     cat:'Nature & Wellness', icon:'🌺', price:30, dur:'2 hours',  ig:true},
+  {name:'Dolphin Watching Cruise', cat:'Boat & Water',      icon:'🐬', price:45, dur:'Half day', ig:false},
+  {name:'Île aux Cerfs Day Trip',  cat:'Boat & Water',      icon:'🏝️', price:75, dur:'Full day', ig:false},
+  {name:'Street Food Discovery',   cat:'Food & Culture',    icon:'🍛', price:35, dur:'3 hours',  ig:false},
+  {name:'Mauritian Cooking Class', cat:'Food & Culture',    icon:'👨‍🍳', price:50, dur:'3 hours',  ig:false},
+];
 
-  function deleteProp(i, name) {
-    showConfirm(`Delete "${name}"?`, 'This property will be removed from the website. This cannot be undone.', () => {
-      props.splice(i, 1);
-      renderAdminProps();
-      showToast('🗑', `${name} deleted`);
-    });
-  }
+const catColors = {
+  'Nature & Wellness':'rgba(45,106,79,.1)','Nature':'rgba(0,107,143,.08)',
+  'Boat & Water':'rgba(0,61,107,.08)','Food & Culture':'rgba(232,133,90,.1)'
+};
 
-  // ── SAVE PROPERTY ─────────────────────────────
-  function saveProperty() {
-    const name = document.getElementById('newName').value.trim();
-    const loc  = document.getElementById('newLoc').value.trim();
-    const rate = document.getElementById('newRate').value;
-    if (!name) { showToast('⚠️', 'Please enter a property name'); return; }
-    if (!loc)  { showToast('⚠️', 'Please enter a location'); return; }
-    if (!rate) { showToast('⚠️', 'Please enter a nightly rate'); return; }
-    // Add to local list
-    props.push({ name, loc, emoji: '🏡', price: +rate, status: 'Active', color: '#B87544' });
-    document.getElementById('saveFeedback').style.display = 'block';
-    showToast('✅', `"${name}" saved! Add photos in index.html.`);
-    // Reset form
-    ['newName','newLoc','newDesc','newBeds','newBaths','newGuests','newRate'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
-    document.getElementById('newClean').value = '85';
-    document.getElementById('newMin').value = '2';
-    setTimeout(() => { document.getElementById('saveFeedback').style.display = 'none'; }, 4000);
-  }
+function renderAdminExp() {
+  document.getElementById('adminExpList').innerHTML = experiences.map((e, i) => `
+    <div class="exp-row">
+      <div class="exp-icon-box" style="background:${catColors[e.cat]||'var(--sand)'}">${e.icon}</div>
+      <div style="flex:1;min-width:0">
+        <strong style="font-size:14px;font-weight:500">${e.name}</strong>
+        <span style="font-size:12px;color:var(--muted);display:block">${e.cat} · ⏱ ${e.dur}
+          ${e.ig ? ' · <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean)">📸 @bea_titudeyoga</a>' : ''}
+        </span>
+      </div>
+      <div style="font-family:var(--font-d);font-size:16px;margin-right:12px">€${e.price}<span style="font-size:12px;color:var(--muted)">/person</span></div>
+      <span class="pill pill-green">Active</span>
+      <button class="btn btn-ocean" style="margin-left:8px" onclick="showToast('✏️','Editing: ${e.name}')">Edit</button>
+    </div>`).join('');
+}
 
-  // ── BOOKING CONFIRM ────────────────────────────
-  function confirmBookingRow(btn) {
-    const row = btn.closest('tr');
-    const pill = row.querySelector('.pill');
-    pill.className = 'pill pill-green';
-    pill.textContent = 'Confirmed';
-    btn.remove();
-    showToast('✅', 'Booking confirmed — guest notified');
-  }
+// ── EDIT / DELETE PROPERTY ───────────────────────────────────
+function editProp(i) {
+  const p = props[i];
+  document.getElementById('newName').value = p.name;
+  document.getElementById('newLoc').value  = p.loc;
+  document.getElementById('newRate').value = p.price;
+  document.getElementById('newGuests').value = p.guests;
+  document.getElementById('newBeds').value = p.beds;
+  document.getElementById('newBaths').value = p.baths;
+  showPage('addprop', document.querySelector('[data-page=addprop]'));
+  showToast('✏️', 'Editing: ' + p.name);
+}
+function deleteProp(i, name) {
+  showConfirm('Delete "' + name + '"?',
+    'This will remove the property from your records. The live site still needs to be updated manually.',
+    function() { props.splice(i,1); renderAdminProps(); showToast('🗑', name + ' deleted'); });
+}
 
-  // ── CALENDAR ──────────────────────────────────
-  function renderCal() {
-    const booked = [3,4,5,12,13,14,19,20,21];
-    const todayDate = 2; // April 2
-    const days = ['Mo','Tu','We','Th','Fr','Sa','Su'];
-    // April 2026 starts on Wednesday = offset 2
-    const offset = 2;
-    let html = days.map(d => `<div class="cal-day cal-head">${d}</div>`).join('');
-    for (let i = 0; i < offset; i++) html += '<div class="cal-day cal-empty"></div>';
-    for (let d = 1; d <= 30; d++) {
-      let cls = 'cal-avail';
-      if (d === todayDate) cls = 'cal-today';
-      else if (booked.includes(d)) cls = 'cal-booked';
-      html += `<div class="cal-day ${cls}" title="April ${d}">${d}</div>`;
-    }
-    document.getElementById('calGrid').innerHTML = html;
-  }
+// ── SAVE PROPERTY ────────────────────────────────────────────
+function saveProperty() {
+  const name = document.getElementById('newName').value.trim();
+  const loc  = document.getElementById('newLoc').value.trim();
+  const rate = document.getElementById('newRate').value;
+  if (!name) { showToast('⚠️','Enter a property name'); return; }
+  if (!loc)  { showToast('⚠️','Enter a location'); return; }
+  if (!rate) { showToast('⚠️','Enter a nightly rate'); return; }
+  props.push({name, loc, emoji:'🏡', photo:'', price:+rate, guests:+document.getElementById('newGuests').value||2, beds:+document.getElementById('newBeds').value||1, baths:+document.getElementById('newBaths').value||1, status:'Active', color:'#006B8F'});
+  document.getElementById('saveFeedback').className = 'feedback-msg ok';
+  showToast('✅', '"' + name + '" saved!');
+  setTimeout(() => { document.getElementById('saveFeedback').className = 'feedback-msg'; }, 4000);
+}
 
-  // ── CONFIRM MODAL ─────────────────────────────
-  let confirmCallback = null;
-  function showConfirm(title, msg, cb) {
-    document.getElementById('confirmTitle').textContent = title;
-    document.getElementById('confirmMsg').textContent = msg;
-    confirmCallback = cb;
-    document.getElementById('confirmOverlay').classList.add('open');
-  }
-  function closeConfirm() {
-    document.getElementById('confirmOverlay').classList.remove('open');
-    confirmCallback = null;
-  }
-  document.getElementById('confirmOkBtn').addEventListener('click', () => {
-    if (confirmCallback) confirmCallback();
-    closeConfirm();
+// ── BOOKING ACTIONS ──────────────────────────────────────────
+function confirmReq(btn) {
+  const card = btn.closest('.req-card');
+  card.classList.remove('pending'); card.classList.add('confirmed');
+  btn.closest('.req-actions').innerHTML = '<span class="pill pill-green">✓ Confirmed</span>';
+  showToast('✅', 'Booking confirmed — guest notified');
+}
+function declineReq(btn) {
+  const card = btn.closest('.req-card');
+  showConfirm('Decline this booking?', 'The guest will be notified.', function() {
+    card.style.opacity = '0.4';
+    btn.closest('.req-actions').innerHTML = '<span class="pill pill-red">✗ Declined</span>';
+    showToast('🗑', 'Booking declined');
   });
+}
+function confirmBookingRow(btn) {
+  const row = btn.closest('tr');
+  row.querySelector('.pill').className = 'pill pill-green';
+  row.querySelector('.pill').textContent = 'Confirmed';
+  btn.remove();
+  showToast('✅', 'Booking confirmed');
+}
+function openWhatsApp(phone, service) {
+  const msg = encodeURIComponent('Hi, following up on your booking for ' + service + ' — is everything in order?');
+  window.open('https://wa.me/' + phone.replace(/\D/g,'') + '?text=' + msg, '_blank');
+}
 
-  // ── COPY TO CLIPBOARD ─────────────────────────
-  function copyToClip(text) {
-    navigator.clipboard?.writeText(text)
-      .then(() => showToast('📋', 'URL copied to clipboard!'))
-      .catch(() => showToast('📋', text));
+// ── CALENDAR ─────────────────────────────────────────────────
+function renderCal() {
+  const booked = [14,15,16,17,18,20,21,22,23,24,25,26,27];
+  const today = 13;
+  const days = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+  const offset = 2; // April 2026 starts Wednesday
+  let h = days.map(d => `<div class="cal-day cal-head">${d}</div>`).join('');
+  for (let i=0;i<offset;i++) h += '<div class="cal-day cal-empty"></div>';
+  for (let d=1;d<=30;d++) {
+    let cls = d===today ? 'cal-today' : booked.includes(d) ? 'cal-booked' : 'cal-avail';
+    h += `<div class="cal-day ${cls}" title="April ${d}">${d}</div>`;
   }
+  document.getElementById('calGrid').innerHTML = h;
+}
 
-  // ── TOAST ─────────────────────────────────────
-  let toastTimer;
-  function showToast(icon, msg) {
-    const t = document.getElementById('toast');
-    document.getElementById('toastIcon').textContent = icon || '✅';
-    document.getElementById('toastMsg').textContent = msg || icon;
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
-  }
+// ── CONFIRM MODAL ────────────────────────────────────────────
+let confirmCb = null;
+function showConfirm(title, msg, cb) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').textContent = msg;
+  confirmCb = cb;
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  confirmCb = null;
+}
+document.getElementById('confirmOkBtn').addEventListener('click', function() {
+  if (confirmCb) confirmCb();
+  closeConfirm();
+});
 
-  // ── KEYBOARD ──────────────────────────────────
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeConfirm();
-  });
+// ── TOAST ────────────────────────────────────────────────────
+let toastT;
+function showToast(icon, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(function() { t.classList.remove('show'); }, 3200);
+}
 
-  // ── INIT ──────────────────────────────────────
-  // Ensure dashboard is shown on load
-  showPage('dashboard', document.querySelector('[data-page=dashboard]'));
+// ── KEYBOARD ─────────────────────────────────────────────────
+document.addEventListener('keydown', function(e) { if(e.key==='Escape') closeConfirm(); });
+
+// ── INIT ─────────────────────────────────────────────────────
+showPage('dashboard', document.querySelector('[data-page=dashboard]'));
 </script>
 </body>
 </html>
