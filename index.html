@@ -405,7 +405,7 @@
         <div class="svc-desc">Studio apartment or a private 2-bedroom villa with pool and tropical garden — your home away from home.</div>
         <div class="svc-foot">
           <div><div class="svc-price"><sup>€</sup>80</div><div class="svc-price-lbl">per night from</div></div>
-          <button class="btn-svc">View Properties</button>
+          <button class="btn-svc" onclick="scrollToSection('accommodation')">View Properties</button>
         </div>
       </div>
     </div>
@@ -419,7 +419,7 @@
         <div class="svc-desc">Dolphin watching, snorkelling, Île aux Cerfs day trips and sunset cruises on the Indian Ocean.</div>
         <div class="svc-foot">
           <div><div class="svc-price"><sup>€</sup>45</div><div class="svc-price-lbl">per person from</div></div>
-          <button class="btn-svc">See Excursions</button>
+          <button class="btn-svc" onclick="openExpTab('boat')">See Excursions</button>
         </div>
       </div>
     </div>
@@ -433,7 +433,7 @@
         <div class="svc-desc">Hiking, yoga in nature, Black River Gorges, Chamarel and more — curated with local wellness expert <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.</div>
         <div class="svc-foot">
           <div><div class="svc-price"><sup>€</sup>40</div><div class="svc-price-lbl">per person from</div></div>
-          <button class="btn-svc">Explore Nature</button>
+          <button class="btn-svc" onclick="openExpTab('nature')">Explore Nature</button>
         </div>
       </div>
     </div>
@@ -447,7 +447,7 @@
         <div class="svc-desc">Street food tours, local market visits, traditional Mauritian cooking classes and curated restaurant recommendations.</div>
         <div class="svc-foot">
           <div><div class="svc-price"><sup>€</sup>35</div><div class="svc-price-lbl">per person from</div></div>
-          <button class="btn-svc">Discover Food</button>
+          <button class="btn-svc" onclick="openExpTab('food')">Discover Food</button>
         </div>
       </div>
     </div>
@@ -461,7 +461,7 @@
         <div class="svc-desc">Airport transfers, car rental, event tickets, SIM setup, personal shopping and anything else you need.</div>
         <div class="svc-foot">
           <div><div class="svc-price"><sup>€</sup>25</div><div class="svc-price-lbl">per service from</div></div>
-          <button class="btn-svc">Request Service</button>
+          <button class="btn-svc" onclick="scrollToSection('booking')">Request Service</button>
         </div>
       </div>
     </div>
@@ -475,7 +475,7 @@
         <div class="svc-desc">Healthcare referrals, clinic access, safety briefings, emergency contacts and 24/7 WhatsApp support throughout your stay.</div>
         <div class="svc-foot">
           <div><div class="svc-price">Free</div><div class="svc-price-lbl">with any booking</div></div>
-          <button class="btn-svc">Learn More</button>
+          <button class="btn-svc" onclick="window.open('https://wa.me/23057242099?text=Hi%20Evalia%2C%20I%20would%20like%20to%20know%20more%20about%20your%20safety%20and%20healthcare%20services.','_blank')">Learn More</button>
         </div>
       </div>
     </div>
@@ -797,8 +797,8 @@
           <div style="font-size:52px;margin-bottom:14px">📲</div>
           <p style="font-size:14px;color:var(--muted);margin-bottom:24px">Tap to pay with your digital wallet</p>
           <div style="display:flex;flex-direction:column;gap:10px">
-            <button style="background:#000;color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:10px" onclick="showToast('🍎','Apple Pay selected ✓')">🍎 Pay with Apple Pay</button>
-            <button style="background:#fff;color:#000;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:500;border:1.5px solid var(--stone);display:flex;align-items:center;justify-content:center;gap:10px" onclick="showToast('G','Google Pay selected ✓')"><span style="font-weight:700;color:#4285F4">G</span> Pay with Google Pay</button>
+            <button style="background:#000;color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:10px" onclick="switchPay(document.querySelector('.pay-method:nth-child(2)'),'wallet');scrollToSection('payment');showToast('🍎','Apple Pay selected — complete payment below')">🍎 Pay with Apple Pay</button>
+            <button style="background:#fff;color:#000;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:500;border:1.5px solid var(--stone);display:flex;align-items:center;justify-content:center;gap:10px" onclick="switchPay(document.querySelector('.pay-method:nth-child(2)'),'wallet');scrollToSection('payment');showToast('📱','Google Pay selected — complete payment below')"><span style="font-weight:700;color:#4285F4">G</span> Pay with Google Pay</button>
           </div>
         </div>
       </div>
@@ -806,15 +806,15 @@
       <!-- Local MU -->
       <div class="pay-panel" id="pay-local">
         <p style="font-size:13px;color:var(--muted);margin-bottom:18px">Pay with Mauritius local payment solutions — instant confirmation.</p>
-        <div class="local-option active" onclick="selectLocal(this)">
+        <div class="local-option active" onclick="selectLocal(this);window.open('https://wa.me/23057242099?text=Hi%2C%20I%20would%20like%20to%20pay%20via%20MyT%20Money%20for%20my%20Evalia%20booking.','_blank')">
           <div class="local-icon" style="background:rgba(0,107,143,.1)">💚</div>
           <div><div class="local-name">MyT Money</div><div class="local-desc">Pay instantly via MyT Money wallet (Mauritius Telecom)</div></div>
         </div>
-        <div class="local-option" onclick="selectLocal(this)">
+        <div class="local-option" onclick="selectLocal(this);window.open('https://wa.me/23057242099?text=Hi%2C%20I%20would%20like%20to%20pay%20via%20MCB%20Juice%20for%20my%20Evalia%20booking.','_blank')">
           <div class="local-icon" style="background:rgba(232,133,90,.1)">🏦</div>
           <div><div class="local-name">MCB Juice</div><div class="local-desc">Mauritius Commercial Bank mobile payment</div></div>
         </div>
-        <div class="local-option" onclick="selectLocal(this)">
+        <div class="local-option" onclick="selectLocal(this);window.open('https://wa.me/23057242099?text=Hi%2C%20I%20would%20like%20to%20pay%20via%20bank%20transfer%20for%20my%20Evalia%20booking.','_blank')">
           <div class="local-icon" style="background:rgba(45,106,79,.1)">🏧</div>
           <div><div class="local-name">Local Bank Transfer</div><div class="local-desc">SBM, MCB, Bank One, AfrAsia — MUR transfer</div></div>
         </div>
@@ -907,10 +907,10 @@
       <div class="footer-brand">Eval<span>ia</span> 🌴</div>
       <div class="footer-desc">Your one-stop concierge platform for the ultimate Mauritius experience. Accommodation, excursions, food discovery and 24/7 support — all in one place.</div>
       <div class="footer-socials">
-        <div class="fsoc" onclick="showToast('📸','@evalia_mu on Instagram')">📸</div>
-        <div class="fsoc" onclick="showToast('👍','Evalia Mauritius on Facebook')">👍</div>
+        <a class="fsoc" href="https://www.instagram.com/evalia241/" target="_blank" title="Instagram @evalia241">📸</a>
+        <a class="fsoc" href="https://www.facebook.com/evalia241" target="_blank" title="Facebook">👍</a>
         <a class="fsoc" href="https://wa.me/23057242099" target="_blank">💬</a>
-        <div class="fsoc" onclick="showToast('🎵','@evalia_mu on TikTok')">🎵</div>
+        <a class="fsoc" href="https://www.tiktok.com/@evalia241" target="_blank" title="TikTok @evalia241">🎵</a>
       </div>
     </div>
     <div class="footer-col">
@@ -937,9 +937,9 @@
       <ul>
         <li><a href="https://wa.me/23057242099" target="_blank">WhatsApp 24/7</a></li>
         <li><a href="mailto:hello@evalia.mu">hello@evalia.mu</a></li>
-        <li><a href="#">Cancellation Policy</a></li>
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Emergency Contacts</a></li>
+        <li><a href="#booking" onclick="scrollToSection('booking')">Cancellation Policy</a></li>
+        <li><a href="mailto:hello@evalia.mu?subject=Privacy%20Policy%20Request">Privacy Policy</a></li>
+        <li><a href="https://wa.me/23057242099?text=EMERGENCY%20-%20I%20need%20urgent%20assistance" target="_blank">Emergency Contacts 🆘</a></li>
       </ul>
     </div>
   </div>
@@ -1214,7 +1214,18 @@ function selectLocal(el) {
   document.querySelectorAll('.local-option').forEach(o => o.classList.remove('active'));
   el.classList.add('active');
 }
-function handlePayment() { showToast('🎉','Payment received! Confirmation sent to your email.'); }
+function handlePayment() {
+  // Validate a field is filled
+  var name = document.getElementById('cardHolder');
+  var nameVal = name ? name.textContent : '';
+  if (nameVal === 'YOUR NAME' || nameVal === '') {
+    showToast('⚠️','Please fill in your payment details first');
+    return;
+  }
+  // Show confirmation and scroll to booking to send the request
+  showToast('🎉','Payment details saved! Please confirm your booking below.');
+  setTimeout(function() { scrollToSection('booking'); }, 1200);
+}
 function fmtCard(el) {
   let v = el.value.replace(/\D/g,'').substring(0,16);
   el.value = v.match(/.{1,4}/g)?.join(' ')||v;
