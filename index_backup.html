@@ -594,63 +594,38 @@
     </div>
     <div class="reg-form-card">
       <div class="form-title">Create Your Profile</div>
-      <!-- Global success / error banners for registration form -->
-      <div data-fs-success style="display:none;background:rgba(45,106,79,.12);color:#2D6A4F;padding:14px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;text-align:center">
-        ✅ Profile created! Welcome to Evalia — watch for our WhatsApp welcome message.
-      </div>
-      <div data-fs-error style="display:none;background:rgba(232,133,90,.1);color:#c45a30;padding:14px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;text-align:center"></div>
-
-      <form id="regForm">
+      <!--
+        FORMSPREE: Replace YOUR_FORMSPREE_REGISTER_ID
+        1. Go to formspree.io → New Form → "Evalia Registration"
+        2. Copy the ID and replace below
+      -->
+      <form id="regForm" action="https://formspree.io/f/YOUR_FORMSPREE_REGISTER_ID" method="POST">
         <input type="hidden" name="_subject" value="New Guest Registration — Evalia Mauritius"/>
         <div class="form-row2">
-          <div class="fg">
-            <label class="fl">First Name</label>
-            <input class="fi" type="text" name="firstname" placeholder="Marie" required data-fs-field/>
-            <span data-fs-error="firstname" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-          </div>
-          <div class="fg">
-            <label class="fl">Last Name</label>
-            <input class="fi" type="text" name="lastname" placeholder="Dupont" required data-fs-field/>
-            <span data-fs-error="lastname" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-          </div>
+          <div class="fg"><label class="fl">First Name</label><input class="fi" type="text" name="firstname" placeholder="Marie" required/></div>
+          <div class="fg"><label class="fl">Last Name</label><input class="fi" type="text" name="lastname" placeholder="Dupont" required/></div>
         </div>
-        <div class="fg">
-          <label class="fl">Email Address</label>
-          <input class="fi" type="email" name="email" placeholder="marie@email.com" required data-fs-field/>
-          <span data-fs-error="email" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-        </div>
-        <div class="fg">
-          <label class="fl">Phone / WhatsApp</label>
-          <input class="fi" type="tel" name="phone" placeholder="+33 6 12 34 56 78" required data-fs-field/>
-          <span data-fs-error="phone" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-        </div>
+        <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" name="email" placeholder="marie@email.com" required/></div>
+        <div class="fg"><label class="fl">Phone / WhatsApp</label><input class="fi" type="tel" name="phone" placeholder="+33 6 12 34 56 78" required/></div>
         <div class="form-row2">
-          <div class="fg"><label class="fl">Nationality</label><input class="fi" type="text" name="nationality" placeholder="French" data-fs-field/></div>
+          <div class="fg"><label class="fl">Nationality</label><input class="fi" type="text" name="nationality" placeholder="French"/></div>
           <div class="fg"><label class="fl">Party Size</label>
-            <select class="fi" name="party_size" data-fs-field>
+            <select class="fi" name="party_size">
               <option>1 person</option><option selected>2 people</option><option>3 people</option>
               <option>4 people</option><option>5 people</option><option>6+ people</option>
             </select>
           </div>
         </div>
         <div class="form-row2">
-          <div class="fg">
-            <label class="fl">Arrival Date</label>
-            <input class="fi" type="date" name="arrival" required data-fs-field/>
-            <span data-fs-error="arrival" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-          </div>
-          <div class="fg">
-            <label class="fl">Departure Date</label>
-            <input class="fi" type="date" name="departure" required data-fs-field/>
-            <span data-fs-error="departure" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-          </div>
+          <div class="fg"><label class="fl">Arrival Date</label><input class="fi" type="date" name="arrival" required/></div>
+          <div class="fg"><label class="fl">Departure Date</label><input class="fi" type="date" name="departure" required/></div>
         </div>
-        <div class="fg">
-          <label class="fl">Special Requirements</label>
-          <textarea class="fi" name="requirements" rows="2" placeholder="Dietary needs, accessibility, medical info…" style="resize:vertical" data-fs-field></textarea>
+        <div class="fg"><label class="fl">Special Requirements</label>
+          <textarea class="fi" name="requirements" rows="2" placeholder="Dietary needs, accessibility, medical info…" style="resize:vertical"></textarea>
         </div>
-        <button type="submit" class="btn-register" data-fs-submit-btn>Create My Profile →</button>
-        <div class="form-note" style="margin-top:12px">🔒 Your data is private and secure. We never share your details.</div>
+        <button type="submit" class="btn-register" id="regBtn">Create My Profile →</button>
+        <div class="form-status" id="regStatus"></div>
+        <div class="form-note">🔒 Your data is private and secure. We never share your details.</div>
       </form>
     </div>
   </div>
@@ -709,22 +684,27 @@
     <div class="wizard-pane booking-card" id="step2">
       <h3 style="font-family:var(--font-d);font-size:22px;font-weight:400;margin-bottom:6px">When are you arriving?</h3>
       <p style="font-size:14px;color:var(--muted);margin-bottom:24px">Fill in your dates and we'll confirm availability within 2 hours.</p>
-      <form id="bookingForm">
+      <!--
+        FORMSPREE: Replace YOUR_FORMSPREE_BOOKING_ID
+        1. Go to formspree.io → New Form → "Evalia Booking"
+        2. Copy the ID and replace below
+      -->
+      <form id="bookingForm" action="https://formspree.io/f/YOUR_FORMSPREE_BOOKING_ID" method="POST">
         <input type="hidden" name="_subject" value="New Booking Request — Evalia Mauritius"/>
         <input type="hidden" name="services_selected" id="hiddenServices" value=""/>
         <input type="hidden" name="estimated_total" id="hiddenTotal" value=""/>
         <div class="date-row">
-          <div class="fg"><label class="fl">Check-In / Start</label><input class="fi" type="date" name="checkin" id="bkIn" onchange="calcTotal()" required data-fs-field/></div>
-          <div class="fg"><label class="fl">Check-Out / End</label><input class="fi" type="date" name="checkout" id="bkOut" onchange="calcTotal()" required data-fs-field/></div>
+          <div class="fg"><label class="fl">Check-In / Start</label><input class="fi" type="date" name="checkin" id="bkIn" onchange="calcTotal()" required/></div>
+          <div class="fg"><label class="fl">Check-Out / End</label><input class="fi" type="date" name="checkout" id="bkOut" onchange="calcTotal()" required/></div>
           <div class="fg"><label class="fl">Guests</label>
-            <select class="fi" name="guests" id="bkGuests" onchange="calcTotal()" data-fs-field>
+            <select class="fi" name="guests" id="bkGuests" onchange="calcTotal()">
               <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
             </select>
           </div>
         </div>
         <div class="form-row2">
-          <div class="fg"><label class="fl">Your Name</label><input class="fi" type="text" name="name" placeholder="Full name" required data-fs-field/></div>
-          <div class="fg"><label class="fl">Email</label><input class="fi" type="email" name="email" placeholder="you@email.com" required data-fs-field/></div>
+          <div class="fg"><label class="fl">Your Name</label><input class="fi" type="text" name="name" placeholder="Full name" required/></div>
+          <div class="fg"><label class="fl">Email</label><input class="fi" type="email" name="email" placeholder="you@email.com" required/></div>
         </div>
         <div class="fg"><label class="fl">Phone / WhatsApp</label><input class="fi" type="tel" name="phone" placeholder="+230 5700 0000 or international"/></div>
         <div class="fg"><label class="fl">Special Requests</label>
@@ -958,64 +938,28 @@
     <div class="modal-close" onclick="closeModal()">✕</div>
     <div class="modal-title" id="modalTitle">Book Property</div>
     <div class="modal-sub" id="modalSub">Fill in your details and we'll confirm within 2 hours</div>
-
-    <!-- Formspree Ajax success / error banners -->
-    <div data-fs-success style="display:none;background:rgba(45,106,79,.12);color:#2D6A4F;padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:14px;text-align:center">
-      🎉 Booking request sent! We'll confirm within 2 hours via WhatsApp or email.
-    </div>
-    <div data-fs-error style="display:none;background:rgba(232,133,90,.1);color:#c45a30;padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:14px;text-align:center"></div>
-
-    <form id="modalForm">
+    <form id="modalForm" action="https://formspree.io/f/YOUR_FORMSPREE_BOOKING_ID" method="POST">
       <input type="hidden" name="_subject" id="modalSubject" value="Quick Booking — Evalia Mauritius"/>
       <div class="form-row2">
-        <div class="fg">
-          <label class="fl">Check-In</label>
-          <input class="fi" type="date" name="checkin" required data-fs-field/>
-          <span data-fs-error="checkin" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-        </div>
-        <div class="fg">
-          <label class="fl">Check-Out</label>
-          <input class="fi" type="date" name="checkout" required data-fs-field/>
-          <span data-fs-error="checkout" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-        </div>
+        <div class="fg"><label class="fl">Check-In</label><input class="fi" type="date" name="checkin" required/></div>
+        <div class="fg"><label class="fl">Check-Out</label><input class="fi" type="date" name="checkout" required/></div>
       </div>
       <div class="form-row2">
-        <div class="fg">
-          <label class="fl">Guests</label>
-          <select class="fi" name="guests" data-fs-field>
-            <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
-          </select>
+        <div class="fg"><label class="fl">Guests</label>
+          <select class="fi" name="guests"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select>
         </div>
-        <div class="fg">
-          <label class="fl">Property</label>
-          <input class="fi" type="text" name="property" id="modalProperty" readonly style="background:var(--sand)" data-fs-field/>
+        <div class="fg"><label class="fl">Property</label>
+          <input class="fi" type="text" name="property" id="modalProperty" readonly style="background:var(--sand)"/>
         </div>
       </div>
-      <div class="fg">
-        <label class="fl">Your Name</label>
-        <input class="fi" type="text" name="name" placeholder="Full name" required data-fs-field/>
-        <span data-fs-error="name" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-      </div>
-      <div class="fg">
-        <label class="fl">Email</label>
-        <input class="fi" type="email" name="email" placeholder="you@email.com" required data-fs-field/>
-        <span data-fs-error="email" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-      </div>
-      <div class="fg">
-        <label class="fl">WhatsApp</label>
-        <input class="fi" type="tel" name="phone" placeholder="+230 or international number" data-fs-field/>
-      </div>
-      <button type="submit" class="btn-register" data-fs-submit-btn>Send Booking Request →</button>
+      <div class="fg"><label class="fl">Your Name</label><input class="fi" type="text" name="name" placeholder="Full name" required/></div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" type="email" name="email" placeholder="you@email.com" required/></div>
+      <div class="fg"><label class="fl">WhatsApp</label><input class="fi" type="tel" name="phone" placeholder="+230 or international number"/></div>
+      <button type="submit" class="btn-register" id="modalBtn">Send Booking Request →</button>
+      <div class="form-status" id="modalStatus"></div>
     </form>
   </div>
 </div>
-
-<script>
-  /* Formspree Ajax shim — must come before the library loads */
-  window.formspree = window.formspree || function() {
-    (formspree.q = formspree.q || []).push(arguments);
-  };
-</script>
 
 <script>
 // ═══════════════════════════════════════════════════
@@ -1150,7 +1094,7 @@ function submitBooking() {
   const status = document.getElementById('bookStatus');
   const btn = document.querySelector('#step3 .btn-wiz-next');
   btn.textContent = 'Sending…'; btn.disabled = true;
-  fetch('https://formspree.io/f/mdayoknj', { method:'POST', body:new FormData(form), headers:{'Accept':'application/json'} })
+  fetch(form.action, { method:'POST', body:new FormData(form), headers:{'Accept':'application/json'} })
     .then(r => {
       if (r.ok) {
         status.className='form-status success';
@@ -1166,15 +1110,33 @@ function submitBooking() {
     });
 }
 
-// ── FORMSPREE AJAX — initForm calls ────────────
-// Single endpoint mdayoknj handles all three forms
-// The @formspree/ajax library (loaded via CDN) manages state,
-// field errors, success banners and button disabled state automatically.
-formspree('initForm', { formElement: '#regForm',     formId: 'mdayoknj' });
-formspree('initForm', { formElement: '#modalForm',   formId: 'mdayoknj' });
-// bookingForm is submitted manually via submitBooking() below
-// but we still wire it so field errors work on steps 1-2
-formspree('initForm', { formElement: '#bookingForm', formId: 'mdayoknj' });
+// ── FORMSPREE FORMS ───────────────────────────
+function setupForm(formId, statusId, btnId, successMsg) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = btnId ? document.getElementById(btnId) : form.querySelector('[type=submit]');
+    const status = document.getElementById(statusId);
+    const orig = btn?.textContent||'Submit';
+    if (btn) { btn.textContent='Sending…'; btn.disabled=true; }
+    status.className='form-status'; status.textContent='';
+    try {
+      const r = await fetch(form.action, { method:'POST', body:new FormData(form), headers:{'Accept':'application/json'} });
+      if (r.ok) {
+        status.className='form-status success'; status.textContent=successMsg;
+        form.reset(); showToast('✅', successMsg.split('!')[0]+'!');
+      } else throw new Error();
+    } catch {
+      status.className='form-status error';
+      status.textContent='Something went wrong. Please WhatsApp us at +230 5700 0000';
+    } finally {
+      if (btn) { btn.textContent=orig; btn.disabled=false; }
+    }
+  });
+}
+setupForm('regForm','regStatus','regBtn','✅ Profile created! Welcome to Evalia — watch for our WhatsApp welcome message.');
+setupForm('modalForm','modalStatus','modalBtn','🎉 Booking request sent! We\'ll confirm within 2 hours.');
 
 // ── MODAL ─────────────────────────────────────
 function openBookingModal(name, price) {
@@ -1242,6 +1204,5 @@ function showToast(icon, msg) {
 // ── KEYBOARD ──────────────────────────────────
 document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
 </script>
-<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 </body>
 </html>
