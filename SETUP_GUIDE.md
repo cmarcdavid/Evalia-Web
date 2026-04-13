@@ -1,138 +1,114 @@
-# Evalia — Setup Guide
-## Two things to activate: Forms + Photos
+# Evalia Mauritius — Setup Guide v4
+## Getting live in 30 minutes
 
 ---
 
-## STEP 1 — Activate Email Forms (5 minutes, free)
+## PART 1 — Formspree Forms (10 min, free)
 
-Your booking form and contact form are wired up and ready.
-You just need to connect them to Formspree so submissions arrive in your inbox.
+You need 3 forms. Go to **formspree.io** → sign up → create each:
 
-### A. Create your Formspree account
-1. Go to **https://formspree.io** → Sign up free
-2. Click **"+ New Form"**
-3. Name it **"Evalia Booking"** → click Create
-4. Copy your endpoint — it looks like: `https://formspree.io/f/xwkgpqnj`
+| Form Name | Replace in index.html |
+|-----------|----------------------|
+| Evalia Registration | `YOUR_FORMSPREE_REGISTER_ID` |
+| Evalia Booking | `YOUR_FORMSPREE_BOOKING_ID` (appears 2×) |
 
-### B. Create a second form for contact
-1. Click **"+ New Form"** again
-2. Name it **"Evalia Contact"** → click Create
-3. Copy this endpoint too
+### How to find and replace:
+1. Open `index.html` in TextEdit (right-click → Open With → TextEdit)
+2. Press **Cmd+F** → search: `YOUR_FORMSPREE`
+3. Replace each one with your actual Formspree ID
+4. Save with **Cmd+S**
 
-### C. Paste into index.html
-Open `index.html` and find these two lines (search for `YOUR_FORMSPREE`):
+---
 
-```html
-<!-- Line ~430: Booking form -->
-<form id="bookingForm" action="https://formspree.io/f/YOUR_FORMSPREE_BOOKING_ID"
+## PART 2 — GitHub Desktop + Vercel (10 min)
 
-<!-- Line ~510: Contact form -->  
-<form id="contactForm" action="https://formspree.io/f/YOUR_FORMSPREE_CONTACT_ID"
+1. Install **GitHub Desktop** from desktop.github.com
+2. Create a new repo called `evalia`
+3. Drag all files into the repo folder
+4. Commit → Push
+5. Go to **vercel.com** → New Project → Import GitHub repo → Deploy
 
-<!-- Line ~545: Modal booking form -->
-<form id="modalForm" action="https://formspree.io/f/YOUR_FORMSPREE_BOOKING_ID"
+Your site will be live at `evalia.vercel.app` (or your custom domain)
+
+---
+
+## PART 3 — Decap CMS (No-code admin panel — 5 min)
+
+This replaces Cloudinary entirely. You get a visual admin at `/admin`.
+
+### A. Fix the config
+Open `admin/config.yml` and replace:
+```
+repo: YOUR_GITHUB_USERNAME/evalia
+```
+With your actual GitHub username, e.g.:
+```
+repo: christopherdavid/evalia
 ```
 
-Replace `YOUR_FORMSPREE_BOOKING_ID` and `YOUR_FORMSPREE_CONTACT_ID` with your actual IDs.
+### B. Enable GitHub OAuth on Vercel
+1. Go to **github.com → Settings → Developer Settings → OAuth Apps → New OAuth App**
+2. Fill in:
+   - Application name: `Evalia CMS`
+   - Homepage URL: `https://evalia.vercel.app`
+   - Authorization callback URL: `https://api.netlify.com/auth/done`
+3. Copy the **Client ID** and **Client Secret**
+4. Go to **vercel.com → Project → Settings → Environment Variables**
+5. Add: `GITHUB_CLIENT_ID` = your client ID
+6. Add: `GITHUB_CLIENT_SECRET` = your client secret
 
-### D. Deploy
-Push the updated `index.html` to GitHub → Vercel auto-deploys in ~30 seconds.
-
-### What you'll receive per booking request:
-```
-From: guest@email.com
-Subject: New Booking Request — Evalia
-
-name: Sophie Laurent
-email: sophie@email.com
-phone: +33 6 12 34 56 78
-property: Villa Azura — Coastline
-checkin: 2025-06-12
-checkout: 2025-06-18
-guests: 2 Guests
-estimated_total: €2,365
-```
-
----
-
-## STEP 2 — Add Real Property Photos & Videos
-
-Your site has photo/video slots ready. You just need to drop in your URLs.
-
-### Option A — Use Cloudinary (recommended, free tier)
-1. Go to **https://cloudinary.com** → sign up free
-2. Upload your photos/videos to the Media Library
-3. Click any asset → Copy URL
-4. URLs look like: `https://res.cloudinary.com/YOUR_CLOUD/image/upload/v1/evalia/photo.jpg`
-
-### Option B — Use your Instagram photos
-1. Open your Instagram photo on desktop
-2. Right-click the image → "Copy image address"
-3. Use that URL directly
-
-### Option C — Any direct image URL
-Any public image URL works (Google Drive shared link, Dropbox, etc.)
+### C. Use the CMS
+1. Go to `https://evalia.vercel.app/admin`
+2. Click **Login with GitHub**
+3. You'll see a visual dashboard to:
+   - ✅ Add/edit properties with photo uploads
+   - ✅ Add/edit experiences
+   - ✅ Change site settings, hero text, phone number
+   - ✅ Everything saves automatically to GitHub → Vercel redeploys in 30 seconds
 
 ---
 
-### How to add photos to a property
+## PART 4 — Add Photos Without CMS (simpler option)
 
-Open `index.html` and find the properties array (~line 600).
-Each property has a `photos` array. Add your URLs:
+If you don't want to set up the CMS yet, just add photos directly:
 
-```javascript
-{
-  id: 1, name: 'Villa Azura', ...
-  photos: [
-    'https://res.cloudinary.com/evalia/image/upload/v1/azura-pool.jpg',
-    'https://res.cloudinary.com/evalia/image/upload/v1/azura-bedroom.jpg',
-    'https://res.cloudinary.com/evalia/image/upload/v1/azura-terrace.jpg',
-  ],
-  videoUrl: 'https://res.cloudinary.com/evalia/video/upload/v1/azura-tour.mp4',
-  hasVideo: true,
-}
-```
-
-- **First photo** = shown on the card thumbnail
-- **All photos** = open in the gallery lightbox when clicked
-- **videoUrl** = plays in the video lightbox when "▶ Video Tour" is clicked
-
-### How to add the hero background photo
-
-Find this comment near line ~200 in index.html:
-
-```html
-<!--
-  PHOTO SLOT: To add your hero background image, uncomment this line and set the URL:
-  <div class="hero-photo" style="background-image:url('YOUR_IMAGE_URL_HERE')"></div>
--->
-```
-
-Uncomment it and add your hero image URL.
+1. Drop any `.jpg` photo into the `images/` folder in your GitHub repo
+2. In `index.html`, find the `<!-- ADD PHOTO -->` comment for each property
+3. Uncomment the `<img>` tag and set `src="images/your-photo.jpg"`
+4. Push → Vercel deploys → photo appears live
 
 ---
 
-## STEP 3 — Update your WhatsApp number
+## PART 5 — WhatsApp Number
 
-Find and replace `24106000000` with your actual WhatsApp number (no + or spaces):
-
-- Line ~130: `<a class="wa-float" href="https://wa.me/24106000000"`
-- Line ~510: `<a href="https://wa.me/24106000000"`
-- Line ~560: `<a href="https://wa.me/24106000000"`
+Search `23057000000` in `index.html` and replace with your real Mauritius number (no + or spaces).
 
 ---
 
-## Quick Checklist
+## PART 6 — Payments (when ready for live bookings)
 
-- [ ] Create Formspree account and replace the 2 endpoint IDs
-- [ ] Upload photos to Cloudinary and add URLs to properties array
-- [ ] Upload videos to Cloudinary and add URLs
-- [ ] Add hero background photo
-- [ ] Update WhatsApp number
-- [ ] Push to GitHub → Vercel deploys automatically
+Add your Stripe keys in **Vercel → Settings → Environment Variables**:
+- `STRIPE_PUBLISHABLE_KEY` = pk_live_...
+- `STRIPE_SECRET_KEY` = sk_live_... (never in code!)
 
-That's it — your site will be fully operational! 🚀
+MyT Money and MCB Juice: the booking flow already sends requests via WhatsApp/email.
+When you integrate directly, add the API keys the same way.
 
 ---
 
-*Questions? Email hello@evalia.co or WhatsApp +241 06 00 00 00*
+## Quick File Reference
+
+| File | Purpose |
+|------|---------|
+| `index.html` | Main website — edit text/prices here |
+| `admin/index.html` | CMS panel (do not edit) |
+| `admin/config.yml` | CMS structure — edit repo name here |
+| `images/` | Drop your photos here |
+| `.env.example` | Environment variable template |
+| `.gitignore` | Keeps secrets out of GitHub |
+| `ARCHITECTURE.md` | Technical documentation |
+| `PRD.md` | Product requirements |
+
+---
+
+*Evalia Mauritius — v4 — April 2026*

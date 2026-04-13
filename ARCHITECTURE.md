@@ -1,189 +1,138 @@
-# Evalia — Website Architecture & Documentation
+# Evalia Mauritius — Platform Architecture v4.0
+## "Your Mauritius, Perfectly Arranged"
 
-## Overview
-Evalia is a curated vacation rental platform with a stylish property showcase, integrated booking system, and secure payment module.
+---
+
+## Vision
+Evalia is a one-stop concierge platform for tourists visiting Mauritius, offering:
+- Accommodation (Studio + 2-bed villa with pool/garden)
+- Boat excursions & water activities
+- Nature excursions & island tours
+- Local food discovery experiences
+- Wide-ranging concierge services (healthcare, transport, safety)
+- Guest registration, booking, scheduling & payment
+
+---
+
+## CMS: Netlify CMS (now Decap CMS) — FREE, No-Code, Git-based
+
+### Why Netlify/Decap CMS over Cloudinary
+| Feature | Cloudinary | Decap CMS |
+|---------|-----------|-----------|
+| Photo upload | ✅ | ✅ built-in |
+| Edit text/prices | ❌ need code | ✅ visual editor |
+| Add new services | ❌ need code | ✅ no-code |
+| Manage bookings view | ❌ | ✅ |
+| Cost | Free (25GB) | Free forever |
+| Technical skill needed | Medium | None |
+| Works with Vercel+GitHub | Partial | ✅ Native |
+
+### How it works
+1. You go to: yourdomain.com/admin
+2. Log in with your GitHub account (one click)
+3. See a visual CMS — edit property descriptions, prices, photos, services
+4. Click Save → automatically pushes to GitHub → Vercel deploys in 30 seconds
+5. No code. No command line. No URL copying.
 
 ---
 
 ## Tech Stack
 
-### Frontend (Delivered)
-- Pure HTML5 / CSS3 / Vanilla JavaScript (zero dependencies)
-- Google Fonts: Cormorant Garamond (display) + DM Sans (body)
-- Fully responsive: mobile, tablet, desktop
-
-### Recommended Production Stack
-| Layer | Technology |
-|-------|-----------|
-| Frontend Framework | React 18 + Vite |
-| Styling | Tailwind CSS + custom design tokens |
-| Backend API | Node.js + Express OR Next.js (API routes) |
-| Database | PostgreSQL (properties, bookings, users) |
-| Auth | Clerk or NextAuth.js |
-| Payments | Stripe (cards, wallets, bank) |
-| Media Storage | Cloudinary (images + videos) |
-| Email | Resend or SendGrid |
-| Hosting | Vercel (frontend) + Railway (backend) |
+| Layer | Technology | Why |
+|-------|-----------|-----|
+| Frontend | HTML5 / CSS3 / Vanilla JS | Zero dependencies, fast |
+| CMS | Decap CMS (Netlify CMS) | Free, Git-based, no-code admin |
+| Forms/Bookings | Formspree | Email + submissions |
+| Payments | Stripe + MyT Money (Mauritius) | Local + international |
+| Hosting | Vercel | Free, auto-deploy |
+| Version Control | GitHub | Auto-deploys to Vercel |
+| Media | Decap CMS media uploads | Direct to GitHub repo |
 
 ---
 
 ## Site Structure
 
 ```
-/                        → Hero + Search + Stats
-/properties              → Property grid with filters
-/properties/:slug        → Individual property detail + photo gallery + video tour
-/booking                 → Booking wizard (property → dates → guests → confirm)
-/payment                 → Stripe checkout (card / Apple Pay / Google Pay / bank)
-/confirmation            → Booking confirmation + PDF invoice
-/admin                   → Property management dashboard (CMS)
-/admin/properties/new    → Add/edit property with media upload
-/admin/bookings          → Booking calendar + guest management
+/                     → Home (hero, services overview, testimonials)
+/accommodation        → Studio + Villa listings with booking
+/excursions           → Boat, nature, food discovery
+/services             → Concierge, healthcare, transport, safety
+/booking              → Unified booking + scheduling system
+/register             → Guest registration
+/payment              → Checkout with Stripe + MyT Money
+/confirmation         → Booking confirmed + itinerary
+/admin                → Decap CMS (no-code content management)
 ```
 
 ---
 
-## Key Features
+## Services Offered
 
-### 1. Property Showcase
-- Masonry/grid layout with lazy-loaded images
-- Video tour player (Cloudinary HLS stream)
-- Amenities filter (villa, apartment, chalet, beachfront)
-- Property detail modal with full gallery lightbox
-- Favourite / save to wishlist
+### 1. Accommodation
+- Studio apartment (sleeps 2)
+- 2-bedroom villa with pool & garden (sleeps 4-6)
 
-### 2. Booking System
-- Real-time availability calendar (react-day-picker)
-- Dynamic price calculator (base rate × nights + cleaning fee)
-- Guest count selector with max-capacity validation
-- Booking request → confirmation email (SendGrid template)
-- Admin approval workflow OR instant book toggle
+### 2. Experiences
+- Boat excursions (snorkelling, dolphin watching, île aux cerfs)
+- Nature excursions (Black River Gorges, Chamarel, Pamplemousses)
+- Local food discovery (street food tours, market visits, cooking classes)
 
-### 3. Payment Module
-- Stripe Payment Intents (PCI-compliant, no card data on server)
-- Supported methods: Visa, Mastercard, Amex, Apple Pay, Google Pay, SEPA bank transfer
-- 3D Secure (SCA compliant for EU)
-- Automatic receipt + PDF invoice (PDFKit)
-- Refund workflow via Stripe dashboard
-- Multi-currency: EUR, GBP, USD, XAF
-
-### 4. Admin CMS
-- Add / edit / delete properties
-- Upload images & videos (drag & drop → Cloudinary)
-- Set nightly rates, minimum stay, availability
-- View all bookings with status (pending / confirmed / checked-in / completed)
-- Revenue analytics dashboard
+### 3. Concierge Services
+- Airport transfers
+- Car/scooter rental
+- Healthcare access (clinic referrals, pharmacy)
+- Safety & security briefings
+- SIM card & connectivity
+- Event tickets & reservations
+- Personal shopping
 
 ---
 
-## Database Schema (PostgreSQL)
+## Payment Architecture
 
-```sql
--- Properties
-CREATE TABLE properties (
-  id          SERIAL PRIMARY KEY,
-  slug        TEXT UNIQUE NOT NULL,
-  name        TEXT NOT NULL,
-  location    TEXT,
-  type        TEXT,          -- villa | apartment | chalet | beach
-  description TEXT,
-  beds        INT,
-  baths       INT,
-  max_guests  INT,
-  price_night NUMERIC(10,2),
-  cleaning_fee NUMERIC(10,2) DEFAULT 85,
-  available   BOOLEAN DEFAULT TRUE,
-  created_at  TIMESTAMPTZ DEFAULT NOW()
-);
+### Stripe (International)
+- Visa, Mastercard, Amex
+- Apple Pay, Google Pay
+- 3D Secure / SCA compliant
 
--- Media
-CREATE TABLE media (
-  id          SERIAL PRIMARY KEY,
-  property_id INT REFERENCES properties(id),
-  url         TEXT NOT NULL,
-  type        TEXT,          -- image | video
-  order_index INT DEFAULT 0
-);
-
--- Bookings
-CREATE TABLE bookings (
-  id          SERIAL PRIMARY KEY,
-  property_id INT REFERENCES properties(id),
-  guest_name  TEXT,
-  guest_email TEXT,
-  check_in    DATE,
-  check_out   DATE,
-  guests      INT,
-  total       NUMERIC(10,2),
-  status      TEXT DEFAULT 'pending',  -- pending | confirmed | cancelled | completed
-  stripe_id   TEXT,
-  created_at  TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Blocked Dates
-CREATE TABLE blocked_dates (
-  id          SERIAL PRIMARY KEY,
-  property_id INT REFERENCES properties(id),
-  date        DATE NOT NULL
-);
-```
+### MyT Money (Mauritius Local)
+- MCB Juice integration
+- MyT Money wallet
+- Local bank transfer (Bank One, SBM, MCB, AfrAsia)
+- Cash on arrival option (with deposit)
 
 ---
 
-## Environment Variables
+## Guest Registration & Booking Flow
+
+1. **Register** → Name, email, phone, nationality, arrival date
+2. **Browse** → Choose accommodation + add-on experiences
+3. **Schedule** → Pick dates/times for each service
+4. **Review** → Full itinerary summary with pricing
+5. **Pay** → Stripe (international) or MyT Money (local)
+6. **Confirm** → Email confirmation + WhatsApp notification
+7. **Concierge** → Dedicated WhatsApp support throughout stay
+
+---
+
+## Environment Variables (Vercel)
 
 ```env
-# Stripe
-STRIPE_SECRET_KEY=sk_live_...
+FORMSPREE_BOOKING_ID=your_id
 STRIPE_PUBLISHABLE_KEY=pk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-
-# Database
-DATABASE_URL=postgresql://user:pass@host:5432/evalia
-
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=evalia
-CLOUDINARY_API_KEY=...
-CLOUDINARY_API_SECRET=...
-
-# Email
-SENDGRID_API_KEY=SG.xxx
-FROM_EMAIL=hello@evalia.co
-
-# Auth
-NEXTAUTH_SECRET=...
-NEXTAUTH_URL=https://evalia.co
+STRIPE_SECRET_KEY=sk_live_...        # Vercel env only
+STRIPE_WEBHOOK_SECRET=whsec_...      # Vercel env only
+NEXT_PUBLIC_WHATSAPP=23057000000
 ```
 
 ---
 
-## Deployment (Vercel)
+## Deployment
 
-1. Push code to GitHub
-2. Connect repo to Vercel
-3. Set environment variables in Vercel dashboard
-4. Set up PostgreSQL via Vercel Postgres or Neon
-5. Configure Stripe webhook endpoint: `https://evalia.co/api/webhooks/stripe`
-6. Custom domain: point DNS A record to Vercel
+GitHub repo → Vercel auto-deploy on every push
+Admin: yourdomain.com/admin (Decap CMS, GitHub OAuth)
+Live: yourdomain.com
 
 ---
 
-## SEO & Performance
-
-- Next.js ISR for property pages (revalidate every 60s)
-- Open Graph tags per property (og:image from Cloudinary)
-- Sitemap auto-generated
-- Core Web Vitals target: LCP < 2.5s, FID < 100ms, CLS < 0.1
-
----
-
-## Social Media Integration
-
-- Instagram feed widget (Instagram Basic Display API)
-- Facebook Page plugin in footer
-- Share buttons on property pages
-- Auto-post to Instagram/Facebook on new property listing (via Zapier or Make)
-
----
-
-*Generated for Evalia — @evalia241 · April 2025*
+*Evalia Mauritius — v4.0 — April 2026*

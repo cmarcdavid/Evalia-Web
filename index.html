@@ -1,334 +1,1208 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2299.77">
-  <style type="text/css">
-    body {background-color: #f9f4ec}
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 28.0px 'Apple Color Emoji'; color: #0000e9; -webkit-text-stroke: #100f0d}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Apple Color Emoji'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec}
-    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px 'Zapf Dingbats'; color: #ffffff; -webkit-text-stroke: #ffffff}
-    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #ffffff; -webkit-text-stroke: #ffffff}
-    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 20.0px 'Helvetica Neue'; color: #ffffff; -webkit-text-stroke: #ffffff}
-    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 28.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d}
-    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #463c30; -webkit-text-stroke: #463c30}
-    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 13.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec; background-color: #100f0d}
-    p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d; min-height: 14.0px}
-    p.p11 {margin: 0.0px 0.0px 20.0px 0.0px; text-align: center; font: 11.0px 'Helvetica Neue'; color: #bc6e45; -webkit-text-stroke: #bc6e45}
-    p.p13 {margin: 0.0px 0.0px 48.0px 0.0px; text-align: center; font: 16.0px 'Helvetica Neue'; color: #efe6d6; color: rgba(239, 230, 214, 0.7); -webkit-text-stroke: rgba(239, 230, 214, 0.7)}
-    p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 14.0px 'Helvetica Neue'; color: #ffffff; -webkit-text-stroke: #ffffff; background-color: #964d28}
-    p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 14.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec; background-color: #ffffff; background-color: rgba(255, 255, 255, 0.1)}
-    p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px 'Helvetica Neue'; color: #efe6d6; color: rgba(239, 230, 214, 0.4); -webkit-text-stroke: rgba(239, 230, 214, 0.4)}
-    p.p17 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d; background-color: #ffffff; min-height: 16.0px}
-    p.p18 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times; color: #100f0d; -webkit-text-stroke: #100f0d; background-color: #ffffff}
-    p.p19 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 52.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec}
-    p.p20 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px 'Helvetica Neue'; color: #463c30; -webkit-text-stroke: #463c30}
-    p.p21 {margin: 0.0px 0.0px 16.0px 0.0px; font: 11.0px 'Helvetica Neue'; color: #964d28; -webkit-text-stroke: #964d28}
-    p.p23 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 13.0px 'Helvetica Neue'; color: #463c30; -webkit-text-stroke: #463c30}
-    p.p24 {margin: 0.0px 0.0px 0.0px 0.0px; font: 120.0px 'Apple Color Emoji'; color: #100f0d; -webkit-text-stroke: #100f0d}
-    p.p26 {margin: 0.0px 0.0px 0.0px 0.0px; font: 22.0px 'Apple Color Emoji'; color: #100f0d; -webkit-text-stroke: #100f0d}
-    p.p28 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #463c30; -webkit-text-stroke: #463c30}
-    p.p29 {margin: 0.0px 0.0px 16.0px 0.0px; font: 11.0px 'Helvetica Neue'; color: #bc6e45; -webkit-text-stroke: #bc6e45}
-    p.p31 {margin: 0.0px 0.0px 0.0px 0.0px; font: 15.0px 'Helvetica Neue'; color: #efe6d6; color: rgba(239, 230, 214, 0.6); -webkit-text-stroke: rgba(239, 230, 214, 0.6)}
-    p.p32 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px 'Helvetica Neue'; color: #bc6e45; -webkit-text-stroke: #bc6e45}
-    p.p34 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #efe6d6; color: rgba(239, 230, 214, 0.55); -webkit-text-stroke: rgba(239, 230, 214, 0.55)}
-    p.p36 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #463c30; -webkit-text-stroke: #463c30; background-color: #f9f4ec}
-    p.p37 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d; min-height: 16.0px}
-    p.p38 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #463c30; -webkit-text-stroke: #463c30}
-    p.p39 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d}
-    p.p40 {margin: 0.0px 0.0px 0.0px 0.0px; font: 15.0px 'Helvetica Neue'; color: #ffffff; -webkit-text-stroke: #ffffff}
-    p.p41 {margin: 0.0px 0.0px 16.0px 0.0px; text-align: center; font: 11.0px 'Helvetica Neue'; color: #964d28; -webkit-text-stroke: #964d28}
-    p.p43 {margin: 0.0px 89.0px 0.0px 89.0px; text-align: center; text-indent: -89.0px; font: 15.0px 'Helvetica Neue'; color: #463c30; -webkit-text-stroke: #463c30}
-    p.p44 {margin: 0.0px 0.0px 0.0px 0.0px; font: 22.0px 'Helvetica Neue'; color: #bc6e45; -webkit-text-stroke: #bc6e45}
-    p.p45 {margin: 0.0px 0.0px 0.0px 0.0px; font: 30.0px 'Apple SD Gothic Neo'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec}
-    p.p46 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec}
-    p.p47 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec}
-    p.p48 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px 'Apple Color Emoji'; color: #463c30; -webkit-text-stroke: #463c30}
-    p.p49 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #463c30; -webkit-text-stroke: #463c30; background-color: #ffffff}
-    p.p50 {margin: 0.0px 0.0px 0.0px 0.0px; font: 20.0px 'Apple Color Emoji'; color: #100f0d; -webkit-text-stroke: #100f0d}
-    p.p53 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px 'Apple Color Emoji'; color: #100f0d; -webkit-text-stroke: #100f0d}
-    p.p54 {margin: 0.0px 0.0px 24.0px 0.0px; font: 18.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d}
-    p.p55 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d}
-    p.p56 {margin: 0.0px 0.0px 0.0px 0.0px; font: 20.0px 'Apple Color Emoji'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec}
-    p.p57 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #bc6e45; -webkit-text-stroke: #bc6e45}
-    p.p58 {margin: 0.0px 0.0px 0.0px 0.0px; font: 15.0px 'Helvetica Neue'; color: #0000e9; -webkit-text-stroke: #bc6e45}
-    p.p59 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #ffffff; -webkit-text-stroke: #ffffff}
-    p.p60 {margin: 0.0px 0.0px 0.0px 0.0px; font: 28.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec}
-    p.p61 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #efe6d6; color: rgba(239, 230, 214, 0.4); -webkit-text-stroke: rgba(239, 230, 214, 0.4)}
-    p.p62 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d}
-    p.p65 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #efe6d6; color: rgba(239, 230, 214, 0.25); -webkit-text-stroke: rgba(239, 230, 214, 0.25)}
-    p.p66 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px 'Zapf Dingbats'; color: #463c30; -webkit-text-stroke: #463c30}
-    p.p68 {margin: 0.0px 0.0px 32.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #463c30; -webkit-text-stroke: #463c30}
-    li.li8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #463c30; -webkit-text-stroke: #463c30}
-    li.li64 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #efe6d6; color: rgba(239, 230, 214, 0.45); -webkit-text-stroke: rgba(239, 230, 214, 0.45)}
-    span.s1 {text-decoration: underline ; font-kerning: none; background-color: #29c842}
-    span.s2 {text-decoration: underline ; font-kerning: none}
-    span.s3 {font-kerning: none; background-color: #100f0d}
-    span.s4 {font-kerning: none; background-color: rgba(255, 255, 255, 0.15)}
-    span.s5 {font: 18.0px 'Zapf Dingbats'; font-kerning: none; background-color: rgba(255, 255, 255, 0.15)}
-    span.s6 {font-kerning: none; color: #100f0d; background-color: rgba(10, 10, 7, 0.95); -webkit-text-stroke: 0px #100f0d}
-    span.s7 {font: 20.0px 'Helvetica Neue'; font-kerning: none; background-color: rgba(255, 255, 255, 0.15)}
-    span.s8 {font-kerning: none; background-color: rgba(249, 244, 236, 0.92)}
-    span.s9 {font-kerning: none; color: #964d28; background-color: rgba(249, 244, 236, 0.92); -webkit-text-stroke: 0px #964d28}
-    span.s10 {background-color: rgba(249, 244, 236, 0.92); -webkit-text-stroke: 0px #000000}
-    span.s11 {font-kerning: none}
-    span.s12 {font-kerning: none; color: #bc6e45; -webkit-text-stroke: 0px #bc6e45}
-    span.s13 {font: 14.0px 'Helvetica Neue'; font-kerning: none}
-    span.s14 {font: 14.0px 'Apple Color Emoji'; font-kerning: none}
-    span.s15 {font-kerning: none; color: #bc6e45; background-color: #100f0d; -webkit-text-stroke: 0px #bc6e45}
-    span.s16 {font-kerning: none; background-color: #f9f4ec}
-    span.s17 {font-kerning: none; color: #100f0d; background-color: #f9f4ec; -webkit-text-stroke: 0px #100f0d}
-    span.s18 {font-kerning: none; background-color: #efe6d6}
-    span.s19 {font-kerning: none; color: #964d28; background-color: #efe6d6; -webkit-text-stroke: 0px #964d28}
-    span.s20 {font-kerning: none; background-color: #ffffff}
-    span.s21 {font-kerning: none; color: #964d28; background-color: #100f0d; -webkit-text-stroke: 0px #964d28}
-    span.s22 {font-kerning: none; background-color: #964d28}
-    span.s23 {font: 15.0px 'Lucida Grande'; font-kerning: none; background-color: #964d28}
-    span.s24 {font-kerning: none; color: #100f0d; -webkit-text-stroke: 0px #100f0d}
-    span.s25 {font: 13.0px 'Apple Color Emoji'; font-kerning: none; color: #f9f4ec; background-color: #100f0d; -webkit-text-stroke: 0px #f9f4ec}
-    span.s26 {font-kerning: none; color: #f9f4ec; background-color: #100f0d; -webkit-text-stroke: 0px #f9f4ec}
-    span.s27 {font: 12.0px 'Helvetica Neue'; font-kerning: none; color: #100f0d; background-color: #ffffff; -webkit-text-stroke: 0px #100f0d}
-    span.s28 {font: 13.0px 'Apple Color Emoji'; font-kerning: none; background-color: #ffffff}
-    span.s29 {font: 12.0px 'Apple Color Emoji'; font-kerning: none; background-color: #ffffff}
-    span.s30 {font-kerning: none; background-color: #c5b79e}
-    span.s31 {text-decoration: underline ; font-kerning: none; background-color: #100f0d}
-    span.s32 {font: 14.0px 'Lucida Grande'; font-kerning: none; background-color: #964d28}
-    span.s33 {font-kerning: none; background-color: #0c0b0a}
-    span.s34 {font-kerning: none; color: #964d28; background-color: #0c0b0a; -webkit-text-stroke: 0px #964d28}
-    span.s35 {font: 18.0px 'Apple Color Emoji'; text-decoration: underline ; font-kerning: none; color: #0000e9; background-color: #0c0b0a}
-    span.s36 {font: 18.0px 'Apple Color Emoji'; text-decoration: underline ; font-kerning: none; color: #100f0d; -webkit-text-stroke: 0px #100f0d}
-    span.s37 {font: 18.0px 'Apple Color Emoji'; font-kerning: none; background-color: #0c0b0a}
-    span.s38 {background-color: #0c0b0a; -webkit-text-stroke: 0px #000000}
-    span.s39 {font: 13.0px 'Hiragino Sans'; font-kerning: none; background-color: #0c0b0a}
-    ul.ul1 {list-style-type: none}
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Evalia Mauritius — Your Island, Perfectly Arranged</title>
+  <meta name="description" content="Evalia — Premium concierge, accommodation, boat excursions, nature tours and local food discovery in Mauritius. Book everything in one place."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --ocean:   #006B8F;
+      --lagoon:  #00A8CC;
+      --sand:    #F7F0E6;
+      --cream:   #FDFAF6;
+      --palm:    #2D6A4F;
+      --sunset:  #E8855A;
+      --sunset-l:#F4A97A;
+      --dark:    #1A1F2E;
+      --muted:   #5C6478;
+      --stone:   #DDD8CE;
+      --white:   #FFFFFF;
+      --radius:  14px;
+      --shadow:  0 4px 32px rgba(0,107,143,.12);
+      --font-d:  'Playfair Display', serif;
+      --font-b:  'Outfit', sans-serif;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font-b);background:var(--cream);color:var(--dark);overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    img{display:block;width:100%;object-fit:cover}
+    button{cursor:pointer;border:none;font-family:var(--font-b)}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-thumb{background:var(--stone);border-radius:3px}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(253,250,246,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(221,216,206,.5);transition:padding .3s}
+    nav.scrolled{padding:12px 48px;box-shadow:0 2px 20px rgba(26,31,46,.06)}
+    .nav-logo{display:flex;align-items:center;gap:10px}
+    .nav-logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--ocean),var(--lagoon));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .nav-logo-text{font-family:var(--font-d);font-size:22px;font-weight:600;color:var(--dark)}
+    .nav-logo-text span{color:var(--ocean)}
+    .nav-links{display:flex;gap:32px;list-style:none}
+    .nav-links a{font-size:13px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+    .nav-links a:hover{color:var(--dark)}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .btn-outline{padding:9px 20px;border-radius:50px;border:1.5px solid var(--ocean);color:var(--ocean);font-size:13px;font-weight:500;transition:all .2s;background:transparent}
+    .btn-outline:hover{background:var(--ocean);color:#fff}
+    .btn-fill{padding:9px 20px;border-radius:50px;background:var(--ocean);color:#fff;font-size:13px;font-weight:500;transition:all .2s}
+    .btn-fill:hover{background:#005a78;transform:translateY(-1px)}
+    .nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer}
+    .nav-burger span{width:22px;height:2px;background:var(--dark);border-radius:2px;transition:.3s}
+
+    /* ── HERO ── */
+    .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:linear-gradient(160deg,#001f3f 0%,#003d6b 40%,#006B8F 100%)}
+    .hero-media{position:absolute;inset:0;overflow:hidden}
+    /* ── IMAGE SLOT: replace with your real photo ──
+       <img src="your-mauritius-hero.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.35">
+    */
+    .hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,31,63,.85) 0%,rgba(0,61,107,.4) 60%,transparent 100%)}
+    .hero-particles{position:absolute;inset:0;overflow:hidden}
+    .particle{position:absolute;border-radius:50%;animation:drift linear infinite;opacity:.15}
+    .hero-content{position:relative;z-index:2;padding:0 48px;max-width:720px;animation:fadeUp .9s cubic-bezier(.22,1,.36,1) both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes drift{from{transform:translateY(100vh) rotate(0deg)}to{transform:translateY(-100px) rotate(360deg)}}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,168,204,.2);border:1px solid rgba(0,168,204,.4);color:var(--lagoon);padding:6px 16px;border-radius:50px;font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;margin-bottom:24px}
+    .hero-title{font-family:var(--font-d);font-size:clamp(44px,6vw,82px);font-weight:400;color:#fff;line-height:1.08;margin-bottom:20px}
+    .hero-title em{font-style:italic;color:var(--lagoon)}
+    .hero-sub{font-size:17px;font-weight:300;color:rgba(255,255,255,.72);line-height:1.75;max-width:520px;margin-bottom:40px}
+    .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+    .btn-hero-primary{background:var(--sunset);color:#fff;padding:16px 36px;border-radius:50px;font-size:15px;font-weight:500;box-shadow:0 6px 28px rgba(232,133,90,.45);transition:all .2s}
+    .btn-hero-primary:hover{background:#d4693e;transform:translateY(-2px);box-shadow:0 10px 36px rgba(232,133,90,.55)}
+    .btn-hero-ghost{background:rgba(255,255,255,.1);color:#fff;padding:16px 36px;border-radius:50px;font-size:15px;font-weight:500;border:1px solid rgba(255,255,255,.25);transition:all .2s}
+    .btn-hero-ghost:hover{background:rgba(255,255,255,.18);transform:translateY(-2px)}
+    .hero-stats{position:absolute;bottom:48px;left:48px;right:48px;z-index:2;display:flex;gap:40px;flex-wrap:wrap}
+    .hstat{text-align:center}
+    .hstat-num{font-family:var(--font-d);font-size:32px;font-weight:400;color:#fff;line-height:1}
+    .hstat-lbl{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:4px}
+    .hero-scroll{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:rgba(255,255,255,.35);font-size:10px;letter-spacing:.15em;text-transform:uppercase;animation:scrollBounce 2s ease-in-out infinite;z-index:2}
+    .hero-scroll::before{content:'';width:1px;height:32px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.3))}
+    @keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+    /* ── SECTION SHARED ── */
+    section{padding:96px 48px}
+    .s-eyebrow{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ocean);margin-bottom:14px}
+    .s-title{font-family:var(--font-d);font-size:clamp(32px,4vw,52px);font-weight:400;line-height:1.1;color:var(--dark)}
+    .s-title em{font-style:italic;color:var(--ocean)}
+    .s-sub{margin-top:14px;font-size:15px;font-weight:300;color:var(--muted);line-height:1.75;max-width:500px}
+    .s-header{margin-bottom:56px}
+    .s-header.center{text-align:center}
+    .s-header.center .s-sub{margin:14px auto 0}
+
+    /* ── SERVICES GRID ── */
+    #services{background:var(--cream)}
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .svc-card{border-radius:20px;overflow:hidden;background:var(--white);box-shadow:0 2px 20px rgba(26,31,46,.06);transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s;cursor:pointer}
+    .svc-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(26,31,46,.14)}
+    .svc-img{height:220px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:64px}
+    /* ── IMAGE SLOTS: add background-image to each .svc-img ── */
+    .svc-img-accommodation{background:linear-gradient(135deg,#006B8F,#00A8CC)}
+    .svc-img-boat{background:linear-gradient(135deg,#003d6b,#0077a8)}
+    .svc-img-nature{background:linear-gradient(135deg,#1a4a2e,#2D6A4F)}
+    .svc-img-food{background:linear-gradient(135deg,#7a2010,#c4451e)}
+    .svc-img-concierge{background:linear-gradient(135deg,#3a2060,#6040a0)}
+    .svc-img-safety{background:linear-gradient(135deg,#1a1f2e,#2d3550)}
+    .svc-tag{position:absolute;top:14px;left:14px;background:rgba(0,0,0,.45);color:#fff;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:50px;backdrop-filter:blur(4px)}
+    .svc-body{padding:22px}
+    .svc-name{font-family:var(--font-d);font-size:20px;font-weight:400;margin-bottom:8px}
+    .svc-desc{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:16px}
+    .svc-foot{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--sand)}
+    .svc-price{font-family:var(--font-d);font-size:22px;font-weight:400;color:var(--dark)}
+    .svc-price sup{font-size:13px;font-weight:600}
+    .svc-price-lbl{font-size:11px;color:var(--muted)}
+    .btn-svc{background:var(--ocean);color:#fff;padding:8px 20px;border-radius:50px;font-size:12px;font-weight:500;transition:all .2s}
+    .btn-svc:hover{background:#005a78;transform:translateY(-1px)}
+
+    /* ── ACCOMMODATION ── */
+    #accommodation{background:var(--sand)}
+    .acc-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+    .acc-card{background:var(--white);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);transition:transform .3s,box-shadow .3s}
+    .acc-card:hover{transform:translateY(-6px);box-shadow:0 24px 56px rgba(0,107,143,.18)}
+    .acc-img{height:280px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:80px}
+    /* ── IMAGE SLOTS for accommodation ── */
+    .acc-studio{background:linear-gradient(135deg,#006B8F 0%,#00A8CC 100%)}
+    .acc-villa{background:linear-gradient(135deg,#2D6A4F 0%,#52b788 100%)}
+    .acc-badge{position:absolute;top:16px;left:16px;background:var(--ocean);color:#fff;font-size:11px;font-weight:600;padding:5px 14px;border-radius:50px;letter-spacing:.06em}
+    .acc-body{padding:28px}
+    .acc-name{font-family:var(--font-d);font-size:26px;font-weight:400;margin-bottom:8px}
+    .acc-loc{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ocean);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+    .acc-desc{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+    .acc-amenities{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+    .amenity{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);background:var(--sand);padding:5px 10px;border-radius:8px}
+    .acc-foot{display:flex;align-items:center;justify-content:space-between;padding-top:18px;border-top:1px solid var(--sand)}
+    .acc-price{font-family:var(--font-d);font-size:32px;font-weight:400}
+    .acc-price sup{font-size:16px;font-weight:600}
+    .acc-price-lbl{font-size:12px;color:var(--muted)}
+    .btn-acc{background:var(--ocean);color:#fff;padding:12px 28px;border-radius:50px;font-size:13px;font-weight:500;transition:all .2s}
+    .btn-acc:hover{background:#005a78;transform:translateY(-1px)}
+
+    /* ── REGISTRATION ── */
+    #register{background:var(--dark);color:#fff}
+    #register .s-title{color:#fff}
+    #register .s-sub{color:rgba(255,255,255,.55)}
+    #register .s-eyebrow{color:var(--lagoon)}
+    .reg-grid{display:grid;grid-template-columns:1fr 480px;gap:64px;align-items:start}
+    .reg-benefits{margin-top:40px;display:flex;flex-direction:column;gap:24px}
+    .reg-benefit{display:flex;gap:16px;align-items:flex-start}
+    .rb-icon{width:44px;height:44px;flex-shrink:0;background:rgba(0,168,204,.15);border:1px solid rgba(0,168,204,.3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+    .rb-body h4{font-size:15px;font-weight:500;margin-bottom:4px;color:#fff}
+    .rb-body p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6}
+    .reg-form-card{background:var(--cream);border-radius:24px;padding:36px;color:var(--dark);box-shadow:0 32px 80px rgba(0,0,0,.35)}
+    .form-title{font-family:var(--font-d);font-size:26px;font-weight:400;margin-bottom:24px;color:var(--dark)}
+    .fg{margin-bottom:16px}
+    .fl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
+    .fi{width:100%;padding:11px 14px;border:1.5px solid var(--stone);border-radius:10px;font-family:var(--font-b);font-size:14px;color:var(--dark);background:#fff;outline:none;transition:border-color .2s,box-shadow .2s;appearance:none}
+    .fi:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(0,107,143,.1)}
+    .form-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .btn-register{width:100%;background:var(--ocean);color:#fff;padding:14px;border-radius:12px;font-size:15px;font-weight:500;transition:all .2s;letter-spacing:.03em}
+    .btn-register:hover{background:#005a78;transform:translateY(-1px)}
+    .form-status{margin-top:12px;padding:12px 16px;border-radius:10px;font-size:13px;display:none;text-align:center}
+    .form-status.success{background:rgba(45,106,79,.12);color:var(--palm);display:block}
+    .form-status.error{background:rgba(232,133,90,.1);color:#c45a30;display:block}
+    .form-note{text-align:center;font-size:12px;color:var(--muted);margin-top:12px}
+
+    /* ── BOOKING ── */
+    #booking{background:var(--cream)}
+    .booking-wizard{max-width:860px;margin:0 auto}
+    .wizard-steps{display:flex;gap:0;margin-bottom:48px;position:relative}
+    .wizard-steps::before{content:'';position:absolute;top:20px;left:20px;right:20px;height:2px;background:var(--stone);z-index:0}
+    .wizard-step{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;position:relative;z-index:1;cursor:pointer}
+    .ws-circle{width:40px;height:40px;border-radius:50%;border:2px solid var(--stone);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--muted);transition:all .3s}
+    .ws-label{font-size:11px;font-weight:500;color:var(--muted);text-align:center;letter-spacing:.04em}
+    .wizard-step.active .ws-circle{border-color:var(--ocean);background:var(--ocean);color:#fff}
+    .wizard-step.active .ws-label{color:var(--ocean)}
+    .wizard-step.done .ws-circle{border-color:var(--palm);background:var(--palm);color:#fff}
+    .wizard-pane{display:none}
+    .wizard-pane.active{display:block}
+    .booking-card{background:var(--white);border-radius:20px;padding:36px;box-shadow:var(--shadow)}
+    .service-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+    .sp-item{border:2px solid var(--stone);border-radius:14px;padding:16px;cursor:pointer;transition:all .2s;text-align:center}
+    .sp-item:hover{border-color:var(--lagoon)}
+    .sp-item.selected{border-color:var(--ocean);background:rgba(0,107,143,.05)}
+    .sp-icon{font-size:28px;margin-bottom:8px}
+    .sp-name{font-size:13px;font-weight:500;color:var(--dark);margin-bottom:4px}
+    .sp-price{font-size:12px;color:var(--ocean);font-weight:600}
+    .sp-check{display:none;font-size:18px;color:var(--ocean)}
+    .sp-item.selected .sp-check{display:block}
+    .date-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+    .summary-rows{border:1px solid var(--stone);border-radius:14px;overflow:hidden;margin-bottom:20px}
+    .sum-row{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--stone);font-size:14px}
+    .sum-row:last-child{border:none;font-weight:600;font-size:16px;background:var(--sand)}
+    .sum-lbl{color:var(--muted)}
+    .sum-val{font-weight:500;color:var(--dark)}
+    .wizard-nav{display:flex;gap:12px;justify-content:space-between;margin-top:24px}
+    .btn-wiz-back{background:var(--sand);color:var(--muted);padding:12px 28px;border-radius:50px;font-size:14px;font-weight:500;transition:all .2s}
+    .btn-wiz-back:hover{background:var(--stone)}
+    .btn-wiz-next{background:var(--ocean);color:#fff;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:500;transition:all .2s}
+    .btn-wiz-next:hover{background:#005a78;transform:translateY(-1px)}
+
+    /* ── PAYMENT ── */
+    #payment{background:var(--sand)}
+    .pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;max-width:900px;margin:0 auto}
+    .pay-card{background:var(--white);border-radius:20px;padding:36px;box-shadow:var(--shadow)}
+    .pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px}
+    .pay-method{border:2px solid var(--stone);border-radius:12px;padding:14px 12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500}
+    .pay-method:hover{border-color:var(--lagoon)}
+    .pay-method.active{border-color:var(--ocean);background:rgba(0,107,143,.05);color:var(--ocean)}
+    .pay-method-icon{font-size:20px;flex-shrink:0}
+    .pay-panel{display:none}
+    .pay-panel.active{display:block}
+    .card-preview{background:linear-gradient(135deg,#001f3f,#006B8F);border-radius:16px;padding:24px;color:#fff;margin-bottom:24px;height:160px;position:relative;overflow:hidden}
+    .card-preview::before{content:'';position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(0,168,204,.2)}
+    .card-chip{font-size:24px;margin-bottom:14px}
+    .card-num{font-size:16px;letter-spacing:.15em;opacity:.8;margin-bottom:16px}
+    .card-foot{display:flex;justify-content:space-between;font-size:11px;opacity:.55;letter-spacing:.06em;text-transform:uppercase}
+    .card-brand{position:absolute;top:20px;right:20px;font-family:var(--font-d);font-size:18px;font-weight:600;color:var(--lagoon)}
+    .local-option{border:1.5px solid var(--stone);border-radius:12px;padding:18px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px}
+    .local-option:hover{border-color:var(--ocean)}
+    .local-option.active{border-color:var(--ocean);background:rgba(0,107,143,.04)}
+    .local-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .local-name{font-size:14px;font-weight:500;margin-bottom:2px}
+    .local-desc{font-size:12px;color:var(--muted)}
+    .pay-summary{background:var(--sand);border-radius:14px;padding:20px}
+    .pay-sum-row{display:flex;justify-content:space-between;font-size:14px;color:var(--muted);padding:5px 0}
+    .pay-sum-total{border-top:1.5px solid var(--stone);margin-top:10px;padding-top:14px;font-weight:600;font-size:17px;color:var(--dark)}
+    .btn-pay{width:100%;background:var(--sunset);color:#fff;padding:15px;border-radius:12px;font-size:15px;font-weight:500;transition:all .2s;margin-top:20px;box-shadow:0 4px 20px rgba(232,133,90,.35)}
+    .btn-pay:hover{background:#d4693e;transform:translateY(-1px)}
+    .pay-secure{text-align:center;font-size:12px;color:var(--muted);margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+
+    /* ── EXPERIENCES ── */
+    #experiences{background:var(--white)}
+    .exp-tabs{display:flex;gap:8px;margin-bottom:40px;flex-wrap:wrap}
+    .exp-tab{padding:9px 22px;border-radius:50px;border:1.5px solid var(--stone);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s}
+    .exp-tab.active,.exp-tab:hover{background:var(--ocean);border-color:var(--ocean);color:#fff}
+    .exp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+    .exp-card{border-radius:16px;overflow:hidden;background:var(--white);border:1.5px solid var(--stone);transition:all .3s;cursor:pointer}
+    .exp-card:hover{border-color:var(--lagoon);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,107,143,.12)}
+    .exp-img{height:200px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;overflow:hidden}
+    .exp-body{padding:20px}
+    .exp-cat{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ocean);margin-bottom:6px}
+    .exp-name{font-family:var(--font-d);font-size:18px;font-weight:400;margin-bottom:6px}
+    .exp-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+    .exp-foot{display:flex;align-items:center;justify-content:space-between}
+    .exp-meta{display:flex;gap:12px;font-size:12px;color:var(--muted)}
+    .exp-price{font-family:var(--font-d);font-size:20px;font-weight:400;color:var(--ocean)}
+
+    /* ── TESTIMONIALS ── */
+    #testimonials{background:var(--sand)}
+    .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .testi-card{background:var(--white);border-radius:16px;padding:28px;box-shadow:0 2px 16px rgba(26,31,46,.05)}
+    .testi-stars{display:flex;gap:3px;margin-bottom:16px;color:var(--sunset);font-size:16px}
+    .testi-text{font-family:var(--font-d);font-size:17px;font-weight:400;font-style:italic;line-height:1.65;color:var(--dark);margin-bottom:20px}
+    .testi-author{display:flex;align-items:center;gap:12px}
+    .testi-avatar{width:40px;height:40px;border-radius:50%;background:var(--ocean);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;font-weight:600;font-family:var(--font-b)}
+    .testi-name{font-size:14px;font-weight:500}
+    .testi-origin{font-size:12px;color:var(--muted)}
+
+    /* ── CONCIERGE STRIP ── */
+    .concierge-strip{background:linear-gradient(135deg,var(--ocean),var(--lagoon));padding:64px 48px;text-align:center;color:#fff}
+    .cs-title{font-family:var(--font-d);font-size:clamp(28px,4vw,44px);font-weight:400;margin-bottom:14px}
+    .cs-sub{font-size:15px;font-weight:300;opacity:.8;max-width:500px;margin:0 auto 32px}
+    .btn-whatsapp{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:14px 32px;border-radius:50px;font-size:15px;font-weight:600;box-shadow:0 4px 24px rgba(37,211,102,.4);transition:all .2s;text-decoration:none}
+    .btn-whatsapp:hover{background:#1fa855;transform:translateY(-2px);box-shadow:0 8px 32px rgba(37,211,102,.5)}
+
+    /* ── FOOTER ── */
+    footer{background:#0d1520;padding:56px 48px 28px;color:#fff}
+    .footer-grid{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr;gap:48px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:28px}
+    .footer-brand{font-family:var(--font-d);font-size:24px;font-weight:600;margin-bottom:12px}
+    .footer-brand span{color:var(--lagoon)}
+    .footer-desc{font-size:13px;color:rgba(255,255,255,.4);line-height:1.75;margin-bottom:20px}
+    .footer-socials{display:flex;gap:10px}
+    .fsoc{width:36px;height:36px;border:1px solid rgba(255,255,255,.15);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s;cursor:pointer}
+    .fsoc:hover{border-color:var(--lagoon);background:rgba(0,168,204,.1)}
+    .footer-col h5{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--lagoon);margin-bottom:16px}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+    .footer-col a{font-size:13px;color:rgba(255,255,255,.4);transition:color .2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .footer-copy{font-size:12px;color:rgba(255,255,255,.2)}
+
+    /* ── MODAL ── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(13,21,32,.8);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(10px)}
+    .modal-overlay.open{opacity:1;pointer-events:all}
+    .modal{background:var(--cream);border-radius:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;padding:44px;position:relative;transform:translateY(20px) scale(.97);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+    .modal-overlay.open .modal{transform:none}
+    .modal-close{position:absolute;top:18px;right:18px;width:34px;height:34px;background:var(--sand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--muted);cursor:pointer;transition:background .2s}
+    .modal-close:hover{background:var(--stone)}
+    .modal-title{font-family:var(--font-d);font-size:28px;font-weight:400;margin-bottom:6px}
+    .modal-sub{font-size:14px;color:var(--muted);margin-bottom:28px}
+
+    /* ── TOAST ── */
+    .toast{position:fixed;bottom:28px;right:28px;background:var(--dark);color:#fff;padding:14px 22px;border-radius:12px;font-size:13px;box-shadow:0 8px 28px rgba(0,0,0,.25);z-index:999;transform:translateY(70px);opacity:0;transition:all .35s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;gap:9px;max-width:320px}
+    .toast.show{transform:translateY(0);opacity:1}
+
+    /* ── WA FLOAT ── */
+    .wa-btn{position:fixed;bottom:28px;left:28px;width:54px;height:54px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 20px rgba(37,211,102,.4);z-index:90;transition:all .2s;text-decoration:none}
+    .wa-btn:hover{transform:scale(1.1);box-shadow:0 8px 30px rgba(37,211,102,.55)}
+    .wa-tooltip{position:absolute;left:64px;background:var(--dark);color:#fff;font-size:12px;font-weight:500;padding:6px 12px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+    .wa-btn:hover .wa-tooltip{opacity:1}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1024px){
+      .services-grid{grid-template-columns:repeat(2,1fr)}
+      .acc-grid,.reg-grid,.pay-grid{grid-template-columns:1fr;gap:32px}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .testi-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:768px){
+      nav{padding:14px 20px}
+      .nav-links,.nav-actions{display:none}
+      .nav-burger{display:flex}
+      section{padding:64px 20px}
+      .hero-content{padding:0 20px}
+      .hero-stats{left:20px;right:20px;gap:24px}
+      .services-grid,.exp-grid,.testi-grid{grid-template-columns:1fr}
+      .service-picker,.date-row,.pay-methods{grid-template-columns:1fr 1fr}
+      .footer-grid{grid-template-columns:1fr}
+      .modal{padding:28px 20px}
+      .concierge-strip{padding:48px 20px}
+    }
+    @media(max-width:480px){
+      .service-picker{grid-template-columns:1fr 1fr}
+      .pay-methods{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
-<p class="p1"><span class="s1"><a href="https://wa.me/24106000000">💬<span class="s2"></span></a></span></p>
-<p class="p2"><span class="s3">✅</span></p>
-<p class="p3"><span class="s3">Done!</span></p>
-<p class="p4"><span class="s4">✕</span></p>
-<p class="p5"><span class="s5">✕</span><span class="s6"> </span><span class="s7">‹</span></p>
-<p class="p6"><span class="s4">›</span></p>
-<p class="p7"><span class="s8">Eva</span><span class="s9">lia</span></p>
-<ul class="ul1">
-  <li class="li8"><span class="s10"></span><span class="s8">PROPERTIES</span></li>
-  <li class="li8"><span class="s10"></span><span class="s8">BOOK</span></li>
-  <li class="li8"><span class="s10"></span><span class="s8">REVIEWS</span></li>
-  <li class="li8"><span class="s10"></span><span class="s8">CONTACT</span></li>
-</ul>
-<p class="p9"><span class="s11">List your property</span></p>
-<p class="p10"><span class="s11"></span><br></p>
-<p class="p10"><span class="s11"></span><br></p>
-<p class="p10"><span class="s11"></span><br></p>
-<p class="p10"><span class="s11"></span><br></p>
-<p class="p10"><span class="s11"></span><br></p>
-<p class="p11"><span class="s11">CURATED VACATION RENTALS · @EVALIA241</span></p>
-<h1 style="margin: 0.0px 0.0px 24.0px 0.0px; text-align: center; font: 56.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec"><span class="s11">Stay in places<br>
-worth </span><span class="s12">remembering</span></h1>
-<p class="p13"><span class="s11">Handpicked luxury properties for the discerning traveller. Seamless booking, memorable stays.</span></p>
-<p class="p14"><span class="s11">Explore Properties</span></p>
-<p class="p15"><span class="s11">Book Now</span></p>
-<p class="p16"><span class="s11">SCROLL</span></p>
-<p class="p17"><span class="s11"></span><br></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">      </span></span><span class="s14">👤</span><span class="s11"><span class="Apple-converted-space">  </span>Guests</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">      </span></span><span class="s11">1 Guest2 Guests</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">      </span></span><span class="s11">3 Guests4+ Guests</span></p>
-<p class="p17"><span class="s11"><span class="Apple-converted-space">    </span></span></p>
-<p class="p14"><span class="s11">Search</span></p>
-<p class="p19"><span class="s3">0</span><span class="s15">+</span></p>
-<p class="p20"><span class="s3">PREMIUM PROPERTIES</span></p>
-<p class="p19"><span class="s3">0</span><span class="s15">+</span></p>
-<p class="p20"><span class="s3">HAPPY GUESTS</span></p>
-<p class="p19"><span class="s3">0</span><span class="s15">+</span></p>
-<p class="p20"><span class="s3">DESTINATIONS</span></p>
-<p class="p19"><span class="s3">0</span><span class="s15">%</span></p>
-<p class="p20"><span class="s3">SATISFACTION RATE</span></p>
-<p class="p21"><span class="s16">OUR PORTFOLIO</span></p>
-<h2 style="margin: 0.0px 0.0px 0.0px 0.0px; font: 36.0px 'Helvetica Neue'; color: #964d28; -webkit-text-stroke: #964d28"><span class="s17">Featured </span><span class="s16">Properties</span></h2>
-<p class="p9"><span class="s11">All</span></p>
-<p class="p23"><span class="s16">Villas</span></p>
-<p class="p23"><span class="s16">Apartments</span></p>
-<p class="p23"><span class="s16">Chalets</span></p>
-<p class="p23"><span class="s16">Beachfront</span></p>
-<p class="p24"><span class="s18">🏡</span></p>
-<p class="p21"><span class="s18">WHY EVALIA</span></p>
-<h2 style="margin: 0.0px 0.0px 0.0px 0.0px; font: 36.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s18">An </span><span class="s19">experience</span><span class="s11"><br>
-</span><span class="s18">beyond a stay</span></h2>
-<p class="p26"><span class="s20">🔑</span></p>
-<h4 style="margin: 0.0px 0.0px 4.0px 0.0px; font: 19.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s18">Handpicked Properties</span></h4>
-<p class="p28"><span class="s18">Every listing is personally vetted for quality, comfort, and that ineffable sense of place.</span></p>
-<p class="p26"><span class="s20">💬</span></p>
-<h4 style="margin: 0.0px 0.0px 4.0px 0.0px; font: 19.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s18">Concierge Support</span></h4>
-<p class="p28"><span class="s18">24/7 dedicated support before, during, and after your stay. Always just a message away.</span></p>
-<p class="p26"><span class="s20">🛡️</span></p>
-<h4 style="margin: 0.0px 0.0px 4.0px 0.0px; font: 19.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s18">Secure &amp; Guaranteed</span></h4>
-<p class="p28"><span class="s18">Your payment is protected. If anything isn't as described, we'll make it right — no questions.</span></p>
-<p class="p29"><span class="s3">RESERVE YOUR STAY</span></p>
-<h2 style="margin: 0.0px 0.0px 0.0px 0.0px; font: 36.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec"><span class="s3">Book in</span><span class="s11"><br>
-</span><span class="s21">minutes</span></h2>
-<p class="p31"><span class="s3">Simple, transparent, instant confirmation. No hidden fees.</span></p>
-<p class="p32"><span class="s3">01</span></p>
-<h4 style="margin: 0.0px 0.0px 6.0px 0.0px; font: 20.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec"><span class="s3">Choose Your Property</span></h4>
-<p class="p34"><span class="s3">Browse our curated portfolio and find the perfect match for your trip.</span></p>
-<p class="p32"><span class="s3">02</span></p>
-<h4 style="margin: 0.0px 0.0px 6.0px 0.0px; font: 20.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec"><span class="s3">Select Your Dates</span></h4>
-<p class="p34"><span class="s3">Pick your check-in and check-out dates. Instant availability check.</span></p>
-<p class="p32"><span class="s3">03</span></p>
-<h4 style="margin: 0.0px 0.0px 6.0px 0.0px; font: 20.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec"><span class="s3">Secure Payment</span></h4>
-<p class="p34"><span class="s3">Pay securely via card, bank transfer, or digital wallet. Instant confirmation.</span></p>
-<p class="p32"><span class="s3">04</span></p>
-<h4 style="margin: 0.0px 0.0px 6.0px 0.0px; font: 20.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec"><span class="s3">Arrive &amp; Enjoy</span></h4>
-<p class="p34"><span class="s3">Receive your key details, check in seamlessly, and relax.</span></p>
-<h3 style="margin: 0.0px 0.0px 28.0px 0.0px; font: 26.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s16">Make a Reservation</span></h3>
-<p class="p36"><span class="s11">SELECT PROPERTY</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">            </span></span><span class="s11">Choose a property…</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">            </span></span><span class="s11">Villa Azura — Coastline</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">            </span></span><span class="s11">Maison Doré — Provence Hills</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">            </span></span><span class="s11">The Alpine Lodge — Mountain</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">            </span></span><span class="s11">Casa Blanca — Old Town</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">            </span></span><span class="s11">Sunset Penthouse — City</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">            </span></span><span class="s11">The Dune House — Beachfront</span></p>
-<p class="p37"><span class="s20"><span class="Apple-converted-space">          </span></span></p>
-<p class="p38"><span class="s16">CHECK-IN</span></p>
-<p class="p38"><span class="s16">CHECK-OUT</span></p>
-<p class="p36"><span class="s11">GUESTS</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">              </span></span><span class="s11">1 Guest2 Guests3 Guests4 Guests5+ Guests</span></p>
-<p class="p37"><span class="s20"><span class="Apple-converted-space">            </span></span></p>
-<p class="p38"><span class="s16">YOUR NAME</span></p>
-<p class="p38"><span class="s16">EMAIL ADDRESS</span></p>
-<p class="p38"><span class="s16">PHONE / WHATSAPP</span></p>
-<p class="p28"><span class="s18">Nightly rate</span></p>
-<p class="p28"><span class="s18">–</span></p>
-<p class="p28"><span class="s18">Nights</span></p>
-<p class="p28"><span class="s18">–</span></p>
-<p class="p28"><span class="s18">Cleaning fee</span></p>
-<p class="p28"><span class="s18">€85</span></p>
-<p class="p39"><span class="s18">Estimated Total</span></p>
-<p class="p39"><span class="s18">–</span></p>
-<p class="p40"><span class="s22">Confirm &amp; Request Booking </span><span class="s23">→</span></p>
-<p class="p41"><span class="s16">SECURE PAYMENTS</span></p>
-<h2 style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 36.0px 'Helvetica Neue'; color: #964d28; -webkit-text-stroke: #964d28"><span class="s17">Pay with</span><span class="s24"><br>
-</span><span class="s16">confidence</span></h2>
-<p class="p43"><span class="s16">Industry-leading encryption. Multiple payment methods. Instant confirmation.</span></p>
-<p class="p8"><span class="s25">💳</span><span class="s26"> Card</span><span class="s27"> </span><span class="s28">🏦</span><span class="s20"> Bank</span><span class="s27"> </span><span class="s28">📱</span><span class="s20"> Wallet</span></p>
-<p class="p44"><span class="s20">Evalia</span></p>
-<p class="p45"><span class="s20">▦</span></p>
-<p class="p46"><span class="s20">•••• •••• •••• 1234</span></p>
-<p class="p47"><span class="s20">YOUR NAME</span></p>
-<p class="p47"><span class="s20">MM / YY</span></p>
-<p class="p38"><span class="s20">CARDHOLDER NAME</span></p>
-<p class="p38"><span class="s20">CARD NUMBER</span></p>
-<p class="p38"><span class="s20">EXPIRY</span></p>
-<p class="p38"><span class="s20">CVV</span></p>
-<p class="p40"><span class="s22">Complete Payment </span><span class="s23">→</span></p>
-<p class="p20"><span class="s29">🔒</span><span class="s20"> 256-bit SSL · PCI DSS compliant</span></p>
-<p class="p48"><span class="s20">💳</span></p>
-<p class="p38"><span class="s20">Visa</span></p>
-<p class="p48"><span class="s20">💳</span></p>
-<p class="p38"><span class="s20">Mastercard</span></p>
-<p class="p48"><span class="s20">💳</span></p>
-<p class="p38"><span class="s20">Amex</span></p>
-<p class="p48"><span class="s20">🍎</span></p>
-<p class="p49"><span class="s11">Apple Pay</span></p>
-<p class="p50"><span class="s16">🔐</span></p>
-<h4 style="margin: 0.0px 0.0px 4.0px 0.0px; font: 15.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s16">Bank-Level Security</span></h4>
-<p class="p8"><span class="s16">All transactions encrypted with 256-bit SSL. Your card data is never stored on our servers.</span></p>
-<p class="p50"><span class="s16">💰</span></p>
-<h4 style="margin: 0.0px 0.0px 4.0px 0.0px; font: 15.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s16">Transparent Pricing</span></h4>
-<p class="p8"><span class="s16">No hidden fees. The price you see is the price you pay — cleaning and service included.</span></p>
-<p class="p50"><span class="s16">↩️</span></p>
-<h4 style="margin: 0.0px 0.0px 4.0px 0.0px; font: 15.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s16">Flexible Refunds</span></h4>
-<p class="p8"><span class="s16">Cancel up to 7 days before check-in for a full refund. No awkward conversations.</span></p>
-<p class="p50"><span class="s16">🌍</span></p>
-<h4 style="margin: 0.0px 0.0px 4.0px 0.0px; font: 15.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s16">Multi-Currency</span></h4>
-<p class="p8"><span class="s16">Pay in EUR, GBP, USD, XAF and more. No conversion surprises at checkout.</span></p>
-<p class="p50"><span class="s16">📄</span></p>
-<h4 style="margin: 0.0px 0.0px 4.0px 0.0px; font: 15.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s16">Instant Invoice</span></h4>
-<p class="p8"><span class="s16">Receive a formal PDF invoice immediately after booking. Perfect for business travel.</span></p>
-<p class="p41"><span class="s18">GUEST STORIES</span></p>
-<h2 style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 36.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s18">What guests </span><span class="s19">say</span></h2>
-<p class="p53"><span class="s20">⭐⭐⭐⭐⭐</span></p>
-<p class="p54"><span class="s20">"Villa Azura was absolutely breathtaking. Every detail was perfect — from the infinity pool to the sunrise views. Evalia made booking effortless."</span></p>
-<p class="p50"><span class="s30">👩</span></p>
-<p class="p55"><span class="s20">Sophie Laurent</span></p>
-<p class="p38"><span class="s20">Stayed at Villa Azura · March 2025</span></p>
-<p class="p53"><span class="s20">⭐⭐⭐⭐⭐</span></p>
-<p class="p54"><span class="s20">"The Alpine Lodge exceeded every expectation. Cosy, immaculate, and the Evalia team were available whenever we needed anything. Will return every winter."</span></p>
-<p class="p50"><span class="s30">👨</span></p>
-<p class="p55"><span class="s20">Marcus Webb</span></p>
-<p class="p38"><span class="s20">Stayed at Alpine Lodge · January 2025</span></p>
-<p class="p53"><span class="s20">⭐⭐⭐⭐⭐</span></p>
-<p class="p54"><span class="s20">"Maison Doré is a dream. Woke up to lavender fields and a glass of rosé waiting on the terrace. The booking process was seamless, payment instant."</span></p>
-<p class="p50"><span class="s30">👩🏽</span></p>
-<p class="p55"><span class="s20">Amara Diallo</span></p>
-<p class="p38"><span class="s20">Stayed at Maison Doré · July 2024</span></p>
-<p class="p29"><span class="s3">GET IN TOUCH</span></p>
-<h2 style="margin: 0.0px 0.0px 0.0px 0.0px; font: 36.0px 'Helvetica Neue'; color: #f9f4ec; -webkit-text-stroke: #f9f4ec"><span class="s3">Let's plan your</span><span class="s11"><br>
-</span><span class="s21">perfect stay</span></h2>
-<p class="p31"><span class="s3">Have a question? Want a bespoke recommendation? Our team is here for you.</span></p>
-<p class="p56"><span class="s3">📧</span></p>
-<p class="p57"><span class="s3">EMAIL</span></p>
-<p class="p58"><span class="s31"><a href="file:///cdn-cgi/l/email-protection#6f070a0303002f0a190e03060e410c00">[email protected]<span class="s2"></span></a></span></p>
-<p class="p56"><span class="s3">📱</span></p>
-<p class="p57"><span class="s3">PHONE / WHATSAPP</span></p>
-<p class="p58"><span class="s31"><a href="https://wa.me/23057242099">+241 06 00 00 00<span class="s2"></span></a></span></p>
-<p class="p56"><span class="s3">📸</span></p>
-<p class="p57"><span class="s3">INSTAGRAM</span></p>
-<p class="p58"><span class="s31"><a href="https://www.instagram.com/evalia241">@evalia241<span class="s2"></span></a></span></p>
-<p class="p56"><span class="s3">👍</span></p>
-<p class="p57"><span class="s3">FACEBOOK</span></p>
-<p class="p58"><span class="s31"><a href="https://www.facebook.com/evalia241">facebook.com/evalia241<span class="s2"></span></a></span></p>
-<p class="p59"><span class="s22">Send Message </span><span class="s32">→</span></p>
-<p class="p60"><span class="s33">Eva</span><span class="s34">lia</span></p>
-<p class="p61"><span class="s33">Curated vacation rentals for travellers who believe a stay should be as memorable as the destination.</span></p>
-<p class="p62"><span class="s35"><a href="https://www.instagram.com/evalia241">📸</a></span><span class="s33"> <a href="https://www.facebook.com/evalia241"><span class="s36">👍</span></a> <a href="https://wa.me/24106000000"><span class="s36">💬</span></a> </span><span class="s37">🎵</span></p>
-<h5 style="margin: 0.0px 0.0px 20.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #bc6e45; -webkit-text-stroke: #bc6e45"><span class="s33">PROPERTIES</span></h5>
-<ul class="ul1">
-  <li class="li64"><span class="s38"></span><span class="s33">Villas</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">Apartments</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">Chalets</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">Beachfront</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">City Stays</span></li>
-</ul>
-<h5 style="margin: 0.0px 0.0px 20.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #bc6e45; -webkit-text-stroke: #bc6e45"><span class="s33">COMPANY</span></h5>
-<ul class="ul1">
-  <li class="li64"><span class="s38"></span><span class="s33">About Evalia</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">How It Works</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">List Property</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">Press</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">Careers</span></li>
-</ul>
-<h5 style="margin: 0.0px 0.0px 20.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #bc6e45; -webkit-text-stroke: #bc6e45"><span class="s33">SUPPORT</span></h5>
-<ul class="ul1">
-  <li class="li64"><span class="s38"></span><span class="s33">Help Center</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">Cancellation Policy</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">Privacy Policy</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">Terms of Service</span></li>
-  <li class="li64"><span class="s38"></span><span class="s33">Contact Us</span></li>
-</ul>
-<p class="p65"><span class="s33">© 2025 Evalia. All rights reserved.</span></p>
-<p class="p65"><span class="s33">Designed with </span><span class="s39">♥</span><span class="s33"> for the love of travel</span></p>
-<p class="p66"><span class="s18">✕</span></p>
-<h2 style="margin: 0.0px 0.0px 8.0px 0.0px; font: 32.0px 'Helvetica Neue'; color: #100f0d; -webkit-text-stroke: #100f0d"><span class="s16">Book Property</span></h2>
-<p class="p68"><span class="s16">Complete the form below to reserve your stay</span></p>
-<p class="p36"><span class="s11">PROPERTY</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">          </span></span><span class="s11">Villa Azura — Coastline</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">          </span></span><span class="s11">Maison Doré — Provence Hills</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">          </span></span><span class="s11">The Alpine Lodge — Mountain</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">          </span></span><span class="s11">Casa Blanca — Old Town</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">          </span></span><span class="s11">Sunset Penthouse — City</span></p>
-<p class="p18"><span class="s13"><span class="Apple-converted-space">          </span></span><span class="s11">The Dune House — Beachfront</span></p>
-<p class="p37"><span class="s20"><span class="Apple-converted-space">        </span></span></p>
-<p class="p38"><span class="s16">CHECK-IN</span></p>
-<p class="p38"><span class="s16">CHECK-OUT</span></p>
-<p class="p38"><span class="s16">FULL NAME</span></p>
-<p class="p38"><span class="s16">EMAIL</span></p>
-<p class="p38"><span class="s16">PHONE / WHATSAPP</span></p>
-<p class="p40"><span class="s22">Request Booking </span><span class="s23">→</span></p>
+
+<!-- WhatsApp Float -->
+<a class="wa-btn" href="https://wa.me/23057000000" target="_blank" title="WhatsApp Concierge">
+  💬
+  <span class="wa-tooltip">Chat with us 24/7</span>
+</a>
+
+<!-- Toast -->
+<div class="toast" id="toast"><span id="toastIcon">✅</span><span id="toastMsg"></span></div>
+
+<!-- ── NAV ── -->
+<nav id="mainNav">
+  <div class="nav-logo">
+    <div class="nav-logo-mark">🌴</div>
+    <div class="nav-logo-text">Eval<span>ia</span></div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#accommodation">Stay</a></li>
+    <li><a href="#experiences">Experiences</a></li>
+    <li><a href="#booking">Book</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="btn-outline" onclick="scrollTo('register')">Register</button>
+    <button class="btn-fill" onclick="scrollTo('booking')">Book Now</button>
+  </div>
+  <div class="nav-burger" onclick="toggleMobile()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="home">
+  <div class="hero-media">
+    <!--
+      ADD YOUR HERO PHOTO HERE:
+      Upload a photo of Mauritius to your GitHub repo as images/hero.jpg
+      Then replace this comment with:
+      <img src="images/hero.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.35">
+    -->
+    <div id="heroParticles" class="hero-particles"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🌴 Mauritius · Est. 2024</div>
+    <h1 class="hero-title">Your Mauritius,<br><em>Perfectly Arranged</em></h1>
+    <p class="hero-sub">From your villa to the open ocean — accommodation, excursions, food discovery and 24/7 concierge, all in one trusted platform.</p>
+    <div class="hero-btns">
+      <button class="btn-hero-primary" onclick="scrollTo('booking')">Book Your Stay →</button>
+      <button class="btn-hero-ghost" onclick="scrollTo('services')">Explore Services</button>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-num">50+</div><div class="hstat-lbl">Happy Guests</div></div>
+    <div class="hstat"><div class="hstat-num">12+</div><div class="hstat-lbl">Experiences</div></div>
+    <div class="hstat"><div class="hstat-num">24/7</div><div class="hstat-lbl">Concierge</div></div>
+    <div class="hstat"><div class="hstat-num">100%</div><div class="hstat-lbl">Satisfaction</div></div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="s-header center">
+    <div class="s-eyebrow">Everything in One Place</div>
+    <h2 class="s-title">The complete<br><em>Mauritius experience</em></h2>
+    <p class="s-sub">Every service you need for a perfect stay — handpicked, vetted and arranged for you.</p>
+  </div>
+  <div class="services-grid">
+    <div class="svc-card" onclick="scrollTo('accommodation')">
+      <div class="svc-img svc-img-accommodation">
+        🏠
+        <div class="svc-tag">Accommodation</div>
+      </div>
+      <div class="svc-body">
+        <div class="svc-name">Stay with Us</div>
+        <div class="svc-desc">Studio apartment or a private 2-bedroom villa with pool and tropical garden — your home away from home.</div>
+        <div class="svc-foot">
+          <div><div class="svc-price"><sup>€</sup>80</div><div class="svc-price-lbl">per night from</div></div>
+          <button class="btn-svc">View Properties</button>
+        </div>
+      </div>
+    </div>
+    <div class="svc-card" onclick="openExpTab('boat')">
+      <div class="svc-img svc-img-boat">
+        ⛵
+        <div class="svc-tag">Water Activities</div>
+      </div>
+      <div class="svc-body">
+        <div class="svc-name">Boat Excursions</div>
+        <div class="svc-desc">Dolphin watching, snorkelling, Île aux Cerfs day trips and sunset cruises on the Indian Ocean.</div>
+        <div class="svc-foot">
+          <div><div class="svc-price"><sup>€</sup>45</div><div class="svc-price-lbl">per person from</div></div>
+          <button class="btn-svc">See Excursions</button>
+        </div>
+      </div>
+    </div>
+    <div class="svc-card" onclick="openExpTab('nature')">
+      <div class="svc-img svc-img-nature">
+        🌿
+        <div class="svc-tag">Island Exploration</div>
+      </div>
+      <div class="svc-body">
+        <div class="svc-name">Nature Excursions</div>
+        <div class="svc-desc">Discover Black River Gorges, Chamarel's 7-coloured earth, Pamplemousses garden and more.</div>
+        <div class="svc-foot">
+          <div><div class="svc-price"><sup>€</sup>40</div><div class="svc-price-lbl">per person from</div></div>
+          <button class="btn-svc">Explore Nature</button>
+        </div>
+      </div>
+    </div>
+    <div class="svc-card" onclick="openExpTab('food')">
+      <div class="svc-img svc-img-food">
+        🍛
+        <div class="svc-tag">Culinary</div>
+      </div>
+      <div class="svc-body">
+        <div class="svc-name">Food Discovery</div>
+        <div class="svc-desc">Street food tours, local market visits, traditional Mauritian cooking classes and curated restaurant recommendations.</div>
+        <div class="svc-foot">
+          <div><div class="svc-price"><sup>€</sup>35</div><div class="svc-price-lbl">per person from</div></div>
+          <button class="btn-svc">Discover Food</button>
+        </div>
+      </div>
+    </div>
+    <div class="svc-card" onclick="scrollTo('booking')">
+      <div class="svc-img svc-img-concierge">
+        🎩
+        <div class="svc-tag">Concierge</div>
+      </div>
+      <div class="svc-body">
+        <div class="svc-name">Personal Concierge</div>
+        <div class="svc-desc">Airport transfers, car rental, event tickets, SIM setup, personal shopping and anything else you need.</div>
+        <div class="svc-foot">
+          <div><div class="svc-price"><sup>€</sup>25</div><div class="svc-price-lbl">per service from</div></div>
+          <button class="btn-svc">Request Service</button>
+        </div>
+      </div>
+    </div>
+    <div class="svc-card" onclick="scrollTo('booking')">
+      <div class="svc-img svc-img-safety">
+        🛡️
+        <div class="svc-tag">Safety & Care</div>
+      </div>
+      <div class="svc-body">
+        <div class="svc-name">Healthcare & Safety</div>
+        <div class="svc-desc">Healthcare referrals, clinic access, safety briefings, emergency contacts and 24/7 WhatsApp support throughout your stay.</div>
+        <div class="svc-foot">
+          <div><div class="svc-price">Free</div><div class="svc-price-lbl">with any booking</div></div>
+          <button class="btn-svc">Learn More</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ACCOMMODATION ── -->
+<section id="accommodation">
+  <div class="s-header">
+    <div class="s-eyebrow">Where You'll Stay</div>
+    <h2 class="s-title">Your private<br><em>island retreat</em></h2>
+    <p class="s-sub">Two carefully curated properties in Mauritius — intimate, beautiful and fully supported by your personal concierge.</p>
+  </div>
+  <div class="acc-grid">
+    <div class="acc-card">
+      <div class="acc-img acc-studio">
+        🏙️
+        <!--
+          ADD STUDIO PHOTO: Upload images/studio.jpg to GitHub repo
+          <img src="images/studio.jpg" style="width:100%;height:100%;object-fit:cover">
+        -->
+        <div class="acc-badge">Available Now</div>
+      </div>
+      <div class="acc-body">
+        <div class="acc-loc">📍 Flic en Flac, West Mauritius</div>
+        <div class="acc-name">The Studio</div>
+        <div class="acc-desc">A beautifully designed studio apartment steps from one of Mauritius' most beautiful beaches. Perfect for couples seeking a stylish, intimate retreat with everything within reach.</div>
+        <div class="acc-amenities">
+          <div class="amenity">🛏 1 Bed</div>
+          <div class="amenity">🚿 1 Bath</div>
+          <div class="amenity">👥 2 Guests</div>
+          <div class="amenity">📶 WiFi</div>
+          <div class="amenity">❄️ A/C</div>
+          <div class="amenity">🍳 Kitchenette</div>
+        </div>
+        <div class="acc-foot">
+          <div><div class="acc-price"><sup>€</sup>80</div><div class="acc-price-lbl">per night</div></div>
+          <button class="btn-acc" onclick="openBookingModal('The Studio', 80)">Book Studio →</button>
+        </div>
+      </div>
+    </div>
+    <div class="acc-card">
+      <div class="acc-img acc-villa">
+        🌴
+        <!--
+          ADD VILLA PHOTO: Upload images/villa.jpg to GitHub repo
+          <img src="images/villa.jpg" style="width:100%;height:100%;object-fit:cover">
+        -->
+        <div class="acc-badge">Pool & Garden</div>
+      </div>
+      <div class="acc-body">
+        <div class="acc-loc">📍 Grand Baie, North Mauritius</div>
+        <div class="acc-name">Villa Corail</div>
+        <div class="acc-desc">A private 2-bedroom villa surrounded by a lush tropical garden with its own pool. Ideal for families or groups seeking privacy, space and the ultimate island living experience.</div>
+        <div class="acc-amenities">
+          <div class="amenity">🛏 2 Beds</div>
+          <div class="amenity">🚿 2 Baths</div>
+          <div class="amenity">👥 6 Guests</div>
+          <div class="amenity">🏊 Pool</div>
+          <div class="amenity">🌿 Garden</div>
+          <div class="amenity">🚗 Parking</div>
+          <div class="amenity">📶 WiFi</div>
+          <div class="amenity">🍳 Kitchen</div>
+        </div>
+        <div class="acc-foot">
+          <div><div class="acc-price"><sup>€</sup>180</div><div class="acc-price-lbl">per night</div></div>
+          <button class="btn-acc" onclick="openBookingModal('Villa Corail', 180)">Book Villa →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EXPERIENCES ── -->
+<section id="experiences">
+  <div class="s-header">
+    <div class="s-eyebrow">Curated Experiences</div>
+    <h2 class="s-title">Discover the<br><em>real Mauritius</em></h2>
+    <p class="s-sub">Handpicked excursions led by local experts. Every experience is vetted for safety, quality and authenticity.</p>
+  </div>
+  <div class="exp-tabs">
+    <button class="exp-tab active" onclick="filterExp(this,'all')">All</button>
+    <button class="exp-tab" onclick="filterExp(this,'boat')">⛵ Boat & Water</button>
+    <button class="exp-tab" onclick="filterExp(this,'nature')">🌿 Nature</button>
+    <button class="exp-tab" onclick="filterExp(this,'food')">🍛 Food</button>
+  </div>
+  <div class="exp-grid" id="expGrid"></div>
+</section>
+
+<!-- ── REGISTER ── -->
+<section id="register">
+  <div class="reg-grid">
+    <div>
+      <div class="s-header">
+        <div class="s-eyebrow" style="color:var(--lagoon)">Guest Registration</div>
+        <h2 class="s-title">Start your<br><em>Mauritius journey</em></h2>
+        <p class="s-sub">Register once, book everything. Your profile saves your details so every booking takes seconds.</p>
+      </div>
+      <div class="reg-benefits">
+        <div class="reg-benefit">
+          <div class="rb-icon">⚡</div>
+          <div class="rb-body"><h4>Instant Booking</h4><p>Your details are saved — book any service in under 60 seconds.</p></div>
+        </div>
+        <div class="reg-benefit">
+          <div class="rb-icon">🎩</div>
+          <div class="rb-body"><h4>Dedicated Concierge</h4><p>From the moment you register, you have a personal WhatsApp contact.</p></div>
+        </div>
+        <div class="reg-benefit">
+          <div class="rb-icon">🛡️</div>
+          <div class="rb-body"><h4>Safety First</h4><p>Your emergency contact and healthcare preferences are always on file.</p></div>
+        </div>
+        <div class="reg-benefit">
+          <div class="rb-icon">📅</div>
+          <div class="rb-body"><h4>Your Itinerary</h4><p>All your bookings in one place — a day-by-day plan emailed to you.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="reg-form-card">
+      <div class="form-title">Create Your Profile</div>
+      <!--
+        FORMSPREE: Replace YOUR_FORMSPREE_REGISTER_ID
+        1. Go to formspree.io → New Form → "Evalia Registration"
+        2. Copy the ID and replace below
+      -->
+      <form id="regForm" action="https://formspree.io/f/YOUR_FORMSPREE_REGISTER_ID" method="POST">
+        <input type="hidden" name="_subject" value="New Guest Registration — Evalia Mauritius"/>
+        <div class="form-row2">
+          <div class="fg"><label class="fl">First Name</label><input class="fi" type="text" name="firstname" placeholder="Marie" required/></div>
+          <div class="fg"><label class="fl">Last Name</label><input class="fi" type="text" name="lastname" placeholder="Dupont" required/></div>
+        </div>
+        <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" name="email" placeholder="marie@email.com" required/></div>
+        <div class="fg"><label class="fl">Phone / WhatsApp</label><input class="fi" type="tel" name="phone" placeholder="+33 6 12 34 56 78" required/></div>
+        <div class="form-row2">
+          <div class="fg"><label class="fl">Nationality</label><input class="fi" type="text" name="nationality" placeholder="French"/></div>
+          <div class="fg"><label class="fl">Party Size</label>
+            <select class="fi" name="party_size">
+              <option>1 person</option><option selected>2 people</option><option>3 people</option>
+              <option>4 people</option><option>5 people</option><option>6+ people</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row2">
+          <div class="fg"><label class="fl">Arrival Date</label><input class="fi" type="date" name="arrival" required/></div>
+          <div class="fg"><label class="fl">Departure Date</label><input class="fi" type="date" name="departure" required/></div>
+        </div>
+        <div class="fg"><label class="fl">Special Requirements</label>
+          <textarea class="fi" name="requirements" rows="2" placeholder="Dietary needs, accessibility, medical info…" style="resize:vertical"></textarea>
+        </div>
+        <button type="submit" class="btn-register" id="regBtn">Create My Profile →</button>
+        <div class="form-status" id="regStatus"></div>
+        <div class="form-note">🔒 Your data is private and secure. We never share your details.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── BOOKING WIZARD ── -->
+<section id="booking" style="background:var(--sand)">
+  <div class="s-header center">
+    <div class="s-eyebrow">Reserve Your Experience</div>
+    <h2 class="s-title">Book in<br><em>3 easy steps</em></h2>
+  </div>
+  <div class="booking-wizard">
+    <div class="wizard-steps">
+      <div class="wizard-step active" id="ws1" onclick="goStep(1)"><div class="ws-circle">1</div><div class="ws-label">Choose Services</div></div>
+      <div class="wizard-step" id="ws2" onclick="goStep(2)"><div class="ws-circle">2</div><div class="ws-label">Dates & Details</div></div>
+      <div class="wizard-step" id="ws3" onclick="goStep(3)"><div class="ws-circle">3</div><div class="ws-label">Confirm & Send</div></div>
+    </div>
+
+    <!-- Step 1: Choose services -->
+    <div class="wizard-pane active booking-card" id="step1">
+      <h3 style="font-family:var(--font-d);font-size:22px;font-weight:400;margin-bottom:6px">What would you like to book?</h3>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:24px">Select one or more — you can mix accommodation with experiences.</p>
+      <div class="service-picker">
+        <div class="sp-item" onclick="toggleService(this,'Studio Apartment')" data-svc="Studio Apartment" data-price="80">
+          <div class="sp-icon">🏙️</div><div class="sp-name">Studio</div><div class="sp-price">€80/night</div>
+          <div class="sp-check">✓</div>
+        </div>
+        <div class="sp-item" onclick="toggleService(this,'Villa Corail')" data-svc="Villa Corail" data-price="180">
+          <div class="sp-icon">🌴</div><div class="sp-name">Villa Corail</div><div class="sp-price">€180/night</div>
+          <div class="sp-check">✓</div>
+        </div>
+        <div class="sp-item" onclick="toggleService(this,'Boat Excursion')" data-svc="Boat Excursion" data-price="65">
+          <div class="sp-icon">⛵</div><div class="sp-name">Boat Excursion</div><div class="sp-price">€65/person</div>
+          <div class="sp-check">✓</div>
+        </div>
+        <div class="sp-item" onclick="toggleService(this,'Nature Tour')" data-svc="Nature Tour" data-price="55">
+          <div class="sp-icon">🌿</div><div class="sp-name">Nature Tour</div><div class="sp-price">€55/person</div>
+          <div class="sp-check">✓</div>
+        </div>
+        <div class="sp-item" onclick="toggleService(this,'Food Discovery')" data-svc="Food Discovery" data-price="35">
+          <div class="sp-icon">🍛</div><div class="sp-name">Food Tour</div><div class="sp-price">€35/person</div>
+          <div class="sp-check">✓</div>
+        </div>
+        <div class="sp-item" onclick="toggleService(this,'Airport Transfer')" data-svc="Airport Transfer" data-price="30">
+          <div class="sp-icon">✈️</div><div class="sp-name">Airport Transfer</div><div class="sp-price">€30</div>
+          <div class="sp-check">✓</div>
+        </div>
+      </div>
+      <div class="wizard-nav">
+        <div></div>
+        <button class="btn-wiz-next" onclick="goStep(2)">Next: Dates & Details →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Dates & details -->
+    <div class="wizard-pane booking-card" id="step2">
+      <h3 style="font-family:var(--font-d);font-size:22px;font-weight:400;margin-bottom:6px">When are you arriving?</h3>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:24px">Fill in your dates and we'll confirm availability within 2 hours.</p>
+      <!--
+        FORMSPREE: Replace YOUR_FORMSPREE_BOOKING_ID
+        1. Go to formspree.io → New Form → "Evalia Booking"
+        2. Copy the ID and replace below
+      -->
+      <form id="bookingForm" action="https://formspree.io/f/YOUR_FORMSPREE_BOOKING_ID" method="POST">
+        <input type="hidden" name="_subject" value="New Booking Request — Evalia Mauritius"/>
+        <input type="hidden" name="services_selected" id="hiddenServices" value=""/>
+        <input type="hidden" name="estimated_total" id="hiddenTotal" value=""/>
+        <div class="date-row">
+          <div class="fg"><label class="fl">Check-In / Start</label><input class="fi" type="date" name="checkin" id="bkIn" onchange="calcTotal()" required/></div>
+          <div class="fg"><label class="fl">Check-Out / End</label><input class="fi" type="date" name="checkout" id="bkOut" onchange="calcTotal()" required/></div>
+          <div class="fg"><label class="fl">Guests</label>
+            <select class="fi" name="guests" id="bkGuests" onchange="calcTotal()">
+              <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row2">
+          <div class="fg"><label class="fl">Your Name</label><input class="fi" type="text" name="name" placeholder="Full name" required/></div>
+          <div class="fg"><label class="fl">Email</label><input class="fi" type="email" name="email" placeholder="you@email.com" required/></div>
+        </div>
+        <div class="fg"><label class="fl">Phone / WhatsApp</label><input class="fi" type="tel" name="phone" placeholder="+230 5700 0000 or international"/></div>
+        <div class="fg"><label class="fl">Special Requests</label>
+          <textarea class="fi" name="requests" rows="2" placeholder="Airport pickup time, dietary needs, room preferences…" style="resize:vertical"></textarea>
+        </div>
+        <div class="wizard-nav">
+          <button type="button" class="btn-wiz-back" onclick="goStep(1)">← Back</button>
+          <button type="button" class="btn-wiz-next" onclick="goStep(3)">Review Booking →</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Step 3: Confirm -->
+    <div class="wizard-pane booking-card" id="step3">
+      <h3 style="font-family:var(--font-d);font-size:22px;font-weight:400;margin-bottom:20px">Review your booking</h3>
+      <div class="summary-rows" id="summaryRows">
+        <div class="sum-row"><span class="sum-lbl">Services</span><span class="sum-val" id="sumServices">—</span></div>
+        <div class="sum-row"><span class="sum-lbl">Dates</span><span class="sum-val" id="sumDates">—</span></div>
+        <div class="sum-row"><span class="sum-lbl">Guests</span><span class="sum-val" id="sumGuests">—</span></div>
+        <div class="sum-row total"><span>Estimated Total</span><span id="sumTotal">—</span></div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px">💬 After submitting, our team will confirm availability via WhatsApp or email within 2 hours. Payment is completed on confirmation.</p>
+      <div class="wizard-nav">
+        <button class="btn-wiz-back" onclick="goStep(2)">← Back</button>
+        <button class="btn-wiz-next" onclick="submitBooking()">Send Booking Request ✓</button>
+      </div>
+      <div class="form-status" id="bookStatus"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── PAYMENT ── -->
+<section id="payment">
+  <div class="s-header center">
+    <div class="s-eyebrow">Secure Payments</div>
+    <h2 class="s-title">Pay your way,<br><em>local or global</em></h2>
+    <p class="s-sub">International cards, Apple Pay, MyT Money and MCB Juice — whichever works best for you.</p>
+  </div>
+  <div class="pay-grid">
+    <div class="pay-card">
+      <div class="pay-methods">
+        <div class="pay-method active" onclick="switchPay(this,'card')"><span class="pay-method-icon">💳</span>Card</div>
+        <div class="pay-method" onclick="switchPay(this,'wallet')"><span class="pay-method-icon">📱</span>Digital Wallet</div>
+        <div class="pay-method" onclick="switchPay(this,'local')"><span class="pay-method-icon">🇲🇺</span>MU Local</div>
+        <div class="pay-method" onclick="switchPay(this,'cash')"><span class="pay-method-icon">💵</span>Cash + Deposit</div>
+      </div>
+
+      <!-- Card -->
+      <div class="pay-panel active" id="pay-card">
+        <div class="card-preview">
+          <div class="card-brand">Evalia</div>
+          <div class="card-chip">▦</div>
+          <div class="card-num">•••• •••• •••• <span id="cardLast4">1234</span></div>
+          <div class="card-foot"><span id="cardHolder">YOUR NAME</span><span id="cardExpiry">MM / YY</span></div>
+        </div>
+        <div class="fg"><label class="fl">Cardholder Name</label><input class="fi" type="text" placeholder="As on your card" oninput="document.getElementById('cardHolder').textContent=this.value.toUpperCase()||'YOUR NAME'"/></div>
+        <div class="fg"><label class="fl">Card Number</label><input class="fi" type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this)"/></div>
+        <div class="form-row2">
+          <div class="fg"><label class="fl">Expiry</label><input class="fi" type="text" placeholder="MM / YY" maxlength="7" oninput="fmtExp(this)"/></div>
+          <div class="fg"><label class="fl">CVV</label><input class="fi" type="text" placeholder="•••" maxlength="3"/></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);background:var(--sand);padding:6px 12px;border-radius:8px">💳 Visa</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);background:var(--sand);padding:6px 12px;border-radius:8px">💳 Mastercard</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);background:var(--sand);padding:6px 12px;border-radius:8px">💳 Amex</div>
+        </div>
+      </div>
+
+      <!-- Digital Wallet -->
+      <div class="pay-panel" id="pay-wallet">
+        <div style="text-align:center;padding:24px 0">
+          <div style="font-size:52px;margin-bottom:14px">📲</div>
+          <p style="font-size:14px;color:var(--muted);margin-bottom:24px">Tap to pay with your digital wallet</p>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <button style="background:#000;color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:10px" onclick="showToast('🍎','Apple Pay selected ✓')">🍎 Pay with Apple Pay</button>
+            <button style="background:#fff;color:#000;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:500;border:1.5px solid var(--stone);display:flex;align-items:center;justify-content:center;gap:10px" onclick="showToast('G','Google Pay selected ✓')"><span style="font-weight:700;color:#4285F4">G</span> Pay with Google Pay</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Local MU -->
+      <div class="pay-panel" id="pay-local">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:18px">Pay with Mauritius local payment solutions — instant confirmation.</p>
+        <div class="local-option active" onclick="selectLocal(this)">
+          <div class="local-icon" style="background:rgba(0,107,143,.1)">💚</div>
+          <div><div class="local-name">MyT Money</div><div class="local-desc">Pay instantly via MyT Money wallet (Mauritius Telecom)</div></div>
+        </div>
+        <div class="local-option" onclick="selectLocal(this)">
+          <div class="local-icon" style="background:rgba(232,133,90,.1)">🏦</div>
+          <div><div class="local-name">MCB Juice</div><div class="local-desc">Mauritius Commercial Bank mobile payment</div></div>
+        </div>
+        <div class="local-option" onclick="selectLocal(this)">
+          <div class="local-icon" style="background:rgba(45,106,79,.1)">🏧</div>
+          <div><div class="local-name">Local Bank Transfer</div><div class="local-desc">SBM, MCB, Bank One, AfrAsia — MUR transfer</div></div>
+        </div>
+        <div id="localPayNote" style="background:rgba(0,107,143,.06);border:1px solid rgba(0,107,143,.2);border-radius:10px;padding:14px;margin-top:14px;font-size:13px;color:var(--muted)">
+          📱 After selecting, you'll receive payment instructions via WhatsApp to <strong>+230 5700 0000</strong>
+        </div>
+      </div>
+
+      <!-- Cash -->
+      <div class="pay-panel" id="pay-cash">
+        <div style="background:rgba(45,106,79,.06);border:1px solid rgba(45,106,79,.2);border-radius:14px;padding:20px;margin-bottom:20px">
+          <div style="font-size:20px;margin-bottom:8px">💵 Cash on Arrival</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.65">Pay the full amount in cash (EUR, GBP or MUR) when you arrive. A <strong>30% deposit</strong> is required online to secure your booking.</p>
+        </div>
+        <div class="fg"><label class="fl">Deposit Amount</label><input class="fi" type="text" value="€54.00 (30% of €180)" readonly style="background:var(--sand)"/></div>
+        <p style="font-size:12px;color:var(--muted)">Deposit is refundable if cancelled 7+ days before arrival.</p>
+      </div>
+
+      <button class="btn-pay" onclick="handlePayment()">Complete Payment →</button>
+      <div class="pay-secure">🔒 256-bit SSL · PCI DSS Compliant · Your card is never stored</div>
+    </div>
+
+    <div class="pay-summary">
+      <h3 style="font-family:var(--font-d);font-size:22px;font-weight:400;margin-bottom:20px">Order Summary</h3>
+      <div class="pay-sum-row"><span>Studio (3 nights)</span><span>€240</span></div>
+      <div class="pay-sum-row"><span>Boat Excursion × 2</span><span>€130</span></div>
+      <div class="pay-sum-row"><span>Airport Transfer</span><span>€30</span></div>
+      <div class="pay-sum-row"><span>Cleaning fee</span><span>€40</span></div>
+      <div class="pay-sum-row pay-sum-total"><span>Total</span><span>€440</span></div>
+      <div style="margin-top:20px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted)">
+          <span>🛡️</span><span>Booking protected — full refund if cancelled 7+ days before arrival</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted)">
+          <span>💬</span><span>24/7 WhatsApp concierge included with every booking</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted)">
+          <span>🏥</span><span>Free healthcare referral network access throughout your stay</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section id="testimonials">
+  <div class="s-header center">
+    <div class="s-eyebrow">Guest Stories</div>
+    <h2 class="s-title">What our guests <em>say</em></h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Evalia arranged everything for our honeymoon — the villa was stunning and the boat trip to Île aux Cerfs was the highlight of our trip. The concierge even organised a beach dinner surprise!"</div>
+      <div class="testi-author">
+        <div class="testi-avatar">SL</div>
+        <div><div class="testi-name">Sophie & Laurent</div><div class="testi-origin">Paris, France · February 2025</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Travelling with two young kids, we needed everything sorted. Evalia handled airport transfer, activities, and even found us a pediatrician when our daughter got a small fever. Absolute lifesavers."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">JW</div>
+        <div><div class="testi-name">James & Priya Webb</div><div class="testi-origin">London, UK · January 2025</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"The food discovery tour was incredible — we ate things we'd never have found on our own. And the villa with the pool was perfect for our family of four. We paid via MCB Juice with zero hassle."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">AD</div>
+        <div><div class="testi-name">Amara Diallo</div><div class="testi-origin">Abidjan, Côte d'Ivoire · December 2024</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONCIERGE STRIP ── -->
+<div class="concierge-strip">
+  <div class="cs-title">Need something right now? 🌴</div>
+  <div class="cs-sub">Our concierge team is available 24/7 on WhatsApp. From restaurant reservations to last-minute transfers — we make it happen.</div>
+  <a class="btn-whatsapp" href="https://wa.me/23057000000" target="_blank">💬 Chat on WhatsApp</a>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Eval<span>ia</span> 🌴</div>
+      <div class="footer-desc">Your one-stop concierge platform for the ultimate Mauritius experience. Accommodation, excursions, food discovery and 24/7 support — all in one place.</div>
+      <div class="footer-socials">
+        <div class="fsoc" onclick="showToast('📸','@evalia_mu on Instagram')">📸</div>
+        <div class="fsoc" onclick="showToast('👍','Evalia Mauritius on Facebook')">👍</div>
+        <a class="fsoc" href="https://wa.me/23057000000" target="_blank">💬</a>
+        <div class="fsoc" onclick="showToast('🎵','@evalia_mu on TikTok')">🎵</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="#accommodation">Accommodation</a></li>
+        <li><a href="#experiences">Boat Excursions</a></li>
+        <li><a href="#experiences">Nature Tours</a></li>
+        <li><a href="#experiences">Food Discovery</a></li>
+        <li><a href="#services">Concierge</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Plan Your Trip</h5>
+      <ul>
+        <li><a href="#register">Register</a></li>
+        <li><a href="#booking">Book Now</a></li>
+        <li><a href="#payment">Payments</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Support</h5>
+      <ul>
+        <li><a href="https://wa.me/23057000000" target="_blank">WhatsApp 24/7</a></li>
+        <li><a href="mailto:hello@evalia.mu">hello@evalia.mu</a></li>
+        <li><a href="#">Cancellation Policy</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Emergency Contacts</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Evalia Mauritius. All rights reserved.</div>
+    <div class="footer-copy">🏝️ Made with love for the Island of Mauritius</div>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL (quick) -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModal()">✕</div>
+    <div class="modal-title" id="modalTitle">Book Property</div>
+    <div class="modal-sub" id="modalSub">Fill in your details and we'll confirm within 2 hours</div>
+    <form id="modalForm" action="https://formspree.io/f/YOUR_FORMSPREE_BOOKING_ID" method="POST">
+      <input type="hidden" name="_subject" id="modalSubject" value="Quick Booking — Evalia Mauritius"/>
+      <div class="form-row2">
+        <div class="fg"><label class="fl">Check-In</label><input class="fi" type="date" name="checkin" required/></div>
+        <div class="fg"><label class="fl">Check-Out</label><input class="fi" type="date" name="checkout" required/></div>
+      </div>
+      <div class="form-row2">
+        <div class="fg"><label class="fl">Guests</label>
+          <select class="fi" name="guests"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select>
+        </div>
+        <div class="fg"><label class="fl">Property</label>
+          <input class="fi" type="text" name="property" id="modalProperty" readonly style="background:var(--sand)"/>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Your Name</label><input class="fi" type="text" name="name" placeholder="Full name" required/></div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" type="email" name="email" placeholder="you@email.com" required/></div>
+      <div class="fg"><label class="fl">WhatsApp</label><input class="fi" type="tel" name="phone" placeholder="+230 or international number"/></div>
+      <button type="submit" class="btn-register" id="modalBtn">Send Booking Request →</button>
+      <div class="form-status" id="modalStatus"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// EXPERIENCES DATA
+// To add photos: add background-image style to each .exp-img
+// Upload images to your GitHub repo under /images/
+// ═══════════════════════════════════════════════════
+const experiences = [
+  {id:1, cat:'boat', name:'Dolphin Watching Cruise',    icon:'🐬', color:'linear-gradient(135deg,#003d6b,#0077a8)', desc:'Meet wild dolphins in their natural habitat in the crystal-clear waters off the west coast.', duration:'Half day', price:45, unit:'person'},
+  {id:2, cat:'boat', name:'Île aux Cerfs Day Trip',      icon:'🏝️', color:'linear-gradient(135deg,#005a78,#00A8CC)', desc:'A full day on the most stunning island in Mauritius — white sand, turquoise lagoon, water sports.', duration:'Full day', price:75, unit:'person'},
+  {id:3, cat:'boat', name:'Sunset Catamaran Cruise',     icon:'🌅', color:'linear-gradient(135deg,#7a2010,#E8855A)', desc:'Sail into a golden sunset with cocktails, snorkelling and an unforgettable Indian Ocean backdrop.', duration:'4 hours', price:65, unit:'person'},
+  {id:4, cat:'nature', name:'Black River Gorges Hike',   icon:'🦜', color:'linear-gradient(135deg,#1a4a2e,#2D6A4F)', desc:'Explore Mauritius\'s largest national park — waterfalls, endemic birds and stunning valley views.', duration:'Full day', price:55, unit:'person'},
+  {id:5, cat:'nature', name:'Chamarel 7-Colour Earth',   icon:'🌈', color:'linear-gradient(135deg,#2a1a4e,#6040a0)', desc:'See the famous multicoloured earth, Chamarel waterfall and visit the rum distillery.', duration:'Half day', price:40, unit:'person'},
+  {id:6, cat:'nature', name:'Pamplemousses Garden',      icon:'🌺', color:'linear-gradient(135deg,#1a3a1a,#3a7a3a)', desc:'Discover one of the oldest botanical gardens in the southern hemisphere — home to the giant water lily.', duration:'2 hours', price:25, unit:'person'},
+  {id:7, cat:'food', name:'Street Food Discovery Tour',  icon:'🍛', color:'linear-gradient(135deg,#7a3010,#c4651e)', desc:'Explore local markets and street stalls, tasting dholl puri, gato piment, alouda and more.', duration:'3 hours', price:35, unit:'person'},
+  {id:8, cat:'food', name:'Mauritian Cooking Class',     icon:'👨‍🍳', color:'linear-gradient(135deg,#5a1010,#a02020)', desc:'Learn to cook traditional Mauritian dishes with a local family — octopus curry, biryani, rougaille.', duration:'3 hours', price:50, unit:'person'},
+  {id:9, cat:'food', name:'Market & Rum Tasting',        icon:'🥃', color:'linear-gradient(135deg,#3a1a05,#8a4010)', desc:'Visit Port Louis Central Market then sample premium Mauritian rum at a local distillery.', duration:'Half day', price:45, unit:'person'},
+];
+
+function renderExp(filter) {
+  const list = filter==='all' ? experiences : experiences.filter(e => e.cat===filter);
+  document.getElementById('expGrid').innerHTML = list.map(e => `
+    <div class="exp-card">
+      <div class="exp-img" style="background:${e.color}">
+        ${e.icon}
+        <!-- ADD PHOTO: <img src="images/exp-${e.id}.jpg" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"> -->
+      </div>
+      <div class="exp-body">
+        <div class="exp-cat">${e.cat==='boat'?'⛵ Boat & Water':e.cat==='nature'?'🌿 Nature':'🍛 Food & Culture'}</div>
+        <div class="exp-name">${e.name}</div>
+        <div class="exp-desc">${e.desc}</div>
+        <div class="exp-foot">
+          <div class="exp-meta"><span>⏱ ${e.duration}</span></div>
+          <div class="exp-price">€${e.price}<span style="font-size:12px;color:var(--muted);font-family:var(--font-b)">/${e.unit}</span></div>
+        </div>
+        <button class="btn-svc" style="margin-top:12px;width:100%" onclick="openBookingModal('${e.name}',${e.price})">Book This →</button>
+      </div>
+    </div>`).join('');
+}
+renderExp('all');
+
+function filterExp(btn, cat) {
+  document.querySelectorAll('.exp-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderExp(cat);
+}
+
+function openExpTab(cat) {
+  document.getElementById('experiences').scrollIntoView({behavior:'smooth'});
+  setTimeout(() => {
+    document.querySelectorAll('.exp-tab').forEach(t => {
+      if (t.onclick?.toString().includes(`'${cat}'`)) t.click();
+    });
+  }, 400);
+}
+
+// ── PARTICLES ────────────────────────────────
+(function(){
+  const c = document.getElementById('heroParticles');
+  if (!c) return;
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    const size = Math.random() * 120 + 40;
+    p.className = 'particle';
+    p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;bottom:-200px;background:rgba(0,168,204,${Math.random()*.08+.04});animation-duration:${Math.random()*20+15}s;animation-delay:${Math.random()*-20}s`;
+    c.appendChild(p);
+  }
+})();
+
+// ── NAV SCROLL ────────────────────────────────
+window.addEventListener('scroll',()=>document.getElementById('mainNav').classList.toggle('scrolled',scrollY>50));
+
+// ── BOOKING WIZARD ────────────────────────────
+let selectedServices = [];
+let currentStep = 1;
+
+function toggleService(el, name) {
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) {
+    if (!selectedServices.includes(name)) selectedServices.push(name);
+  } else {
+    selectedServices = selectedServices.filter(s => s !== name);
+  }
+}
+
+function goStep(n) {
+  if (n===2 && selectedServices.length===0) { showToast('⚠️','Please select at least one service'); return; }
+  if (n===3) { buildSummary(); }
+  currentStep = n;
+  document.querySelectorAll('.wizard-pane').forEach((p,i) => p.classList.toggle('active', i===n-1));
+  document.querySelectorAll('.wizard-step').forEach((s,i) => {
+    s.classList.toggle('active', i===n-1);
+    s.classList.toggle('done', i<n-1);
+  });
+  document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+}
+
+function calcTotal() {
+  // Simple estimate — in production this would be a real calc
+  const inD = new Date(document.getElementById('bkIn').value);
+  const outD = new Date(document.getElementById('bkOut').value);
+  const guests = +document.getElementById('bkGuests').value || 2;
+  if (isNaN(inD)||isNaN(outD)) return;
+  const nights = Math.max(1, Math.round((outD-inD)/86400000));
+  let total = 0;
+  selectedServices.forEach(s => {
+    const prices = {'Studio Apartment':80,'Villa Corail':180,'Boat Excursion':65,'Nature Tour':55,'Food Discovery':35,'Airport Transfer':30};
+    const isAccom = s==='Studio Apartment'||s==='Villa Corail';
+    total += isAccom ? (prices[s]||0)*nights : (prices[s]||0)*guests;
+  });
+  document.getElementById('hiddenTotal').value = `€${total}`;
+  document.getElementById('hiddenServices').value = selectedServices.join(', ');
+}
+
+function buildSummary() {
+  const inV = document.getElementById('bkIn').value;
+  const outV = document.getElementById('bkOut').value;
+  const guests = document.getElementById('bkGuests').value;
+  document.getElementById('sumServices').textContent = selectedServices.length ? selectedServices.join(', ') : '—';
+  document.getElementById('sumDates').textContent = inV && outV ? `${inV} → ${outV}` : '—';
+  document.getElementById('sumGuests').textContent = guests;
+  document.getElementById('sumTotal').textContent = document.getElementById('hiddenTotal').value || 'TBD';
+}
+
+function submitBooking() {
+  const form = document.getElementById('bookingForm');
+  const name = form.querySelector('[name=name]').value;
+  const email = form.querySelector('[name=email]').value;
+  if (!name||!email) { showToast('⚠️','Please fill in your name and email in step 2'); goStep(2); return; }
+  if (selectedServices.length===0) { showToast('⚠️','Please select at least one service'); goStep(1); return; }
+  document.getElementById('hiddenServices').value = selectedServices.join(', ');
+  const status = document.getElementById('bookStatus');
+  const btn = document.querySelector('#step3 .btn-wiz-next');
+  btn.textContent = 'Sending…'; btn.disabled = true;
+  fetch(form.action, { method:'POST', body:new FormData(form), headers:{'Accept':'application/json'} })
+    .then(r => {
+      if (r.ok) {
+        status.className='form-status success';
+        status.textContent='🎉 Booking request sent! We\'ll confirm via WhatsApp or email within 2 hours.';
+        btn.textContent='Request Sent ✓'; btn.style.background='var(--palm)';
+        showToast('🎉','Booking sent! Watch for our WhatsApp message.');
+      } else { throw new Error(); }
+    })
+    .catch(() => {
+      status.className='form-status error';
+      status.textContent='Something went wrong. Please WhatsApp us at +230 5700 0000';
+      btn.textContent='Send Booking Request ✓'; btn.disabled=false;
+    });
+}
+
+// ── FORMSPREE FORMS ───────────────────────────
+function setupForm(formId, statusId, btnId, successMsg) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = btnId ? document.getElementById(btnId) : form.querySelector('[type=submit]');
+    const status = document.getElementById(statusId);
+    const orig = btn?.textContent||'Submit';
+    if (btn) { btn.textContent='Sending…'; btn.disabled=true; }
+    status.className='form-status'; status.textContent='';
+    try {
+      const r = await fetch(form.action, { method:'POST', body:new FormData(form), headers:{'Accept':'application/json'} });
+      if (r.ok) {
+        status.className='form-status success'; status.textContent=successMsg;
+        form.reset(); showToast('✅', successMsg.split('!')[0]+'!');
+      } else throw new Error();
+    } catch {
+      status.className='form-status error';
+      status.textContent='Something went wrong. Please WhatsApp us at +230 5700 0000';
+    } finally {
+      if (btn) { btn.textContent=orig; btn.disabled=false; }
+    }
+  });
+}
+setupForm('regForm','regStatus','regBtn','✅ Profile created! Welcome to Evalia — watch for our WhatsApp welcome message.');
+setupForm('modalForm','modalStatus','modalBtn','🎉 Booking request sent! We\'ll confirm within 2 hours.');
+
+// ── MODAL ─────────────────────────────────────
+function openBookingModal(name, price) {
+  document.getElementById('modalTitle').textContent = `Book: ${name}`;
+  document.getElementById('modalSub').textContent = `From €${price} · We'll confirm within 2 hours via WhatsApp or email`;
+  document.getElementById('modalProperty').value = name;
+  document.getElementById('modalSubject').value = `Booking: ${name} — Evalia Mauritius`;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeModalOnBg(e) { if (e.target===document.getElementById('modalOverlay')) closeModal(); }
+
+// ── PAYMENT ───────────────────────────────────
+function switchPay(btn, id) {
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.pay-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('pay-'+id).classList.add('active');
+}
+function selectLocal(el) {
+  document.querySelectorAll('.local-option').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+}
+function handlePayment() { showToast('🎉','Payment received! Confirmation sent to your email.'); }
+function fmtCard(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.match(/.{1,4}/g)?.join(' ')||v;
+  document.getElementById('cardLast4').textContent = v.slice(-4)||'1234';
+}
+function fmtExp(el) {
+  let v = el.value.replace(/\D/g,'');
+  if (v.length>=2) v = v.substring(0,2)+' / '+v.substring(2,4);
+  el.value=v;
+  document.getElementById('cardExpiry').textContent = v||'MM / YY';
+}
+
+// ── SCROLL HELPERS ────────────────────────────
+function scrollTo(id) { document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); }
+
+// ── MOBILE NAV ────────────────────────────────
+function toggleMobile() {
+  const links = document.querySelector('.nav-links');
+  const actions = document.querySelector('.nav-actions');
+  const open = links.style.display==='flex';
+  [links, actions].forEach(el => {
+    el.style.cssText = open ? '' : 'display:flex;flex-direction:column;position:fixed;top:60px;left:0;right:0;background:var(--cream);padding:20px 24px 28px;gap:18px;border-bottom:1px solid var(--stone);z-index:99;align-items:flex-start';
+  });
+  if (!open && actions) {
+    actions.style.cssText += 'flex-direction:row;top:auto;position:relative;padding:0;border:none;background:transparent;';
+  }
+}
+
+// ── TOAST ─────────────────────────────────────
+let toastT;
+function showToast(icon, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>t.classList.remove('show'), 3500);
+}
+
+// ── KEYBOARD ──────────────────────────────────
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+</script>
 </body>
 </html>

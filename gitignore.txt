@@ -1,37 +1,9 @@
-# ══════════════════════════════════════════
-# EVALIA — .gitignore
-# ══════════════════════════════════════════
-
-# Environment variables — NEVER commit these
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Dependencies
+.env.*.local
 node_modules/
-.npm
-
-# Build outputs
 .next/
-out/
-dist/
-build/
-
-# Vercel
 .vercel
-
-# OS files
 .DS_Store
 Thumbs.db
-
-# Editor
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Logs
 *.log
-npm-debug.log*
