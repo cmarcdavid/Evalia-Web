@@ -1,0 +1,15 @@
+{
+  "name": "Villa Evalia",
+  "type": "Villa",
+  "location": "Grand Baie, North Mauritius",
+  "description": "A private 2-bedroom villa surrounded by a lush tropical garden with its own pool. Ideal for families or groups seeking privacy, space and the ultimate island living experience.",
+  "price": 180,
+  "max_guests": 6,
+  "bedrooms": 2,
+  "bathrooms": 2,
+  "photo": "/images/Villa-pool.jpg",
+  "photo_alt": "/images/Villa-pool1.jpg",
+  "badge": "Pool & Garden",
+  "available": true,
+  "amenities": ["Pool", "Garden", "WiFi", "Kitchen", "Parking", "Air Con", "2 Beds", "2 Baths", "6 Guests"]
+}

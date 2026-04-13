@@ -490,7 +490,7 @@
     <p class="s-sub">Two carefully curated properties in Mauritius — intimate, beautiful and fully supported by your personal concierge.</p>
   </div>
   <div class="acc-grid">
-    <div class="acc-card">
+    <div class="acc-card" id="studioCard">
       <div class="acc-img acc-studio" style="padding:0;background:none">
         <img src="images/Hero3.jpg" alt="Studio Evalia" style="width:100%;height:100%;object-fit:cover;display:block"/>
         <div class="acc-badge">Available Now</div>
@@ -513,7 +513,7 @@
         </div>
       </div>
     </div>
-    <div class="acc-card">
+    <div class="acc-card" id="villaCard">
       <div class="acc-img acc-villa" style="padding:0;background:none;position:relative;overflow:hidden">
         <!-- Main villa photo with hover to see pool -->
         <img id="villaImg" src="images/Villa-pool.jpg" alt="Villa Evalia" style="width:100%;height:100%;object-fit:cover;display:block;transition:opacity .6s ease"
@@ -1015,47 +1015,192 @@
 </script>
 
 <script>
-// ═══════════════════════════════════════════════════
-// EXPERIENCES DATA
-// To add photos: add background-image style to each .exp-img
-// Upload images to your GitHub repo under /images/
-// ═══════════════════════════════════════════════════
-const experiences = [
-  {id:1, cat:'boat', name:'Dolphin Watching Cruise',    icon:'🐬', color:'linear-gradient(135deg,#003d6b,#0077a8)', desc:'Meet wild dolphins in their natural habitat in the crystal-clear waters off the west coast.', duration:'Half day', price:45, unit:'person'},
-  {id:2, cat:'boat', name:'Île aux Cerfs Day Trip',      icon:'🏝️', color:'linear-gradient(135deg,#005a78,#00A8CC)', desc:'A full day on the most stunning island in Mauritius — white sand, turquoise lagoon, water sports.', duration:'Full day', price:75, unit:'person'},
-  {id:3, cat:'boat', name:'Sunset Catamaran Cruise',     icon:'🌅', color:'linear-gradient(135deg,#7a2010,#E8855A)', desc:'Sail into a golden sunset with cocktails, snorkelling and an unforgettable Indian Ocean backdrop.', duration:'4 hours', price:65, unit:'person'},
-  {id:4, cat:'nature', name:'Sunrise Beach Yoga', icon:'🧘', color:'linear-gradient(135deg,#1a4a2e,#2D6A4F)', desc:'Start your day with a beachside yoga session at sunrise led by local wellness expert @bea_titudeyoga. All levels welcome.', duration:'90 min', price:35, unit:'person', instagram:'https://www.instagram.com/bea_titudeyoga/'},
-  {id:5, cat:'nature', name:'Black River Gorges Hike', icon:'🦜', color:'linear-gradient(135deg,#0d3320,#1a5c38)', desc:"Explore Mauritius's largest national park — waterfalls, endemic birds and stunning valley views.", duration:'Full day', price:55, unit:'person'},
-  {id:6, cat:'nature', name:'Yoga & Nature Retreat', icon:'🌿', color:'linear-gradient(135deg,#1a3a28,#2D6A4F)', desc:'A half-day combining forest yoga, breathwork and a guided nature walk through tropical landscapes — with @bea_titudeyoga.', duration:'Half day', price:65, unit:'person', instagram:'https://www.instagram.com/bea_titudeyoga/'},
-  {id:7, cat:'nature', name:'Chamarel 7-Colour Earth', icon:'🌈', color:'linear-gradient(135deg,#2a1a4e,#6040a0)', desc:'See the famous multicoloured earth, Chamarel waterfall and visit the rum distillery on this iconic tour.', duration:'Half day', price:40, unit:'person'},
-  {id:8, cat:'nature', name:'Mindful Garden Walk', icon:'🌺', color:'linear-gradient(135deg,#1a3a1a,#3a7a3a)', desc:'A mindful walk through Pamplemousses botanical garden with meditation stops, guided by @bea_titudeyoga.', duration:'2 hours', price:30, unit:'person', instagram:'https://www.instagram.com/bea_titudeyoga/'},
-  {id:11, cat:'food', name:'Street Food Discovery Tour',  icon:'🍛', color:'linear-gradient(135deg,#7a3010,#c4651e)', desc:'Explore local markets and street stalls, tasting dholl puri, gato piment, alouda and more.', duration:'3 hours', price:35, unit:'person'},
-  {id:10, cat:'food', name:'Mauritian Cooking Class',     icon:'👨‍🍳', color:'linear-gradient(135deg,#5a1010,#a02020)', desc:'Learn to cook traditional Mauritian dishes with a local family — octopus curry, biryani, rougaille.', duration:'3 hours', price:50, unit:'person'},
-  {id:11, cat:'food', name:'Market & Rum Tasting',        icon:'🥃', color:'linear-gradient(135deg,#3a1a05,#8a4010)', desc:'Visit Port Louis Central Market then sample premium Mauritian rum at a local distillery.', duration:'Half day', price:45, unit:'person'},
-];
+// ═══════════════════════════════════════════════════════════════
+// CONTENT ENGINE — all data loaded from _data/*.json
+// Edit in Admin (admin.html) → saves to GitHub → Vercel
+// rebuilds → this page reloads with the updated content.
+// ═══════════════════════════════════════════════════════════════
 
+const CAT_COLORS = {
+  boat:      'linear-gradient(135deg,#003d6b,#0077a8)',
+  nature:    'linear-gradient(135deg,#1a4a2e,#2D6A4F)',
+  food:      'linear-gradient(135deg,#7a3010,#c4651e)',
+  concierge: 'linear-gradient(135deg,#3a2060,#6040a0)',
+};
+const CAT_LABELS = {
+  boat:'⛵ Boat & Water', nature:'🌿 Nature & Wellness',
+  food:'🍛 Food & Culture', concierge:'🎩 Concierge',
+};
+
+// Live data store — populated by loadCMSContent()
+let siteExperiences = [];
+let siteProperties  = [];
+
+// Render experiences from live data
 function renderExp(filter) {
-  const list = filter==='all' ? experiences : experiences.filter(e => e.cat===filter);
-  document.getElementById('expGrid').innerHTML = list.map(e => `
+  const data = siteExperiences.length ? siteExperiences : [];
+  const list = filter === 'all' ? data : data.filter(e => e.category === filter || e.cat === filter);
+  if (!list.length) {
+    document.getElementById('expGrid').innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">No experiences found.</div>';
+    return;
+  }
+  document.getElementById('expGrid').innerHTML = list.map(e => {
+    const cat    = e.category || e.cat || 'nature';
+    const photo  = e.photo || '';
+    const color  = CAT_COLORS[cat] || 'linear-gradient(135deg,#1A1F2E,#2d3550)';
+    const imgHtml = photo
+      ? `<img src="${photo}" alt="${e.name}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/>`
+      : (e.icon || '🌴');
+    return `
     <div class="exp-card">
-      <div class="exp-img" style="background:${e.color}">
-        ${e.icon}
-        <!-- ADD PHOTO: <img src="images/exp-${e.id}.jpg" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"> -->
+      <div class="exp-img" style="background:${color};position:relative">
+        ${imgHtml}
       </div>
       <div class="exp-body">
-        <div class="exp-cat">${e.cat==='boat'?'⛵ Boat & Water':e.cat==='nature'?'🌿 Nature':'🍛 Food & Culture'}</div>
+        <div class="exp-cat">${CAT_LABELS[cat] || cat}</div>
         <div class="exp-name">${e.name}</div>
-        <div class="exp-desc">${e.desc}</div>
+        <div class="exp-desc">${e.description || e.desc || ''}</div>
+        ${e.instagram ? `<a href="${e.instagram}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ocean);margin-top:8px;margin-bottom:2px;font-weight:500;text-decoration:none">📸 @bea_titudeyoga</a>` : ''}
         <div class="exp-foot">
-          <div class="exp-meta"><span>⏱ ${e.duration}</span></div>
-          <div class="exp-price">€${e.price}<span style="font-size:12px;color:var(--muted);font-family:var(--font-b)">/${e.unit}</span></div>
+          <div class="exp-meta"><span>⏱ ${e.duration || ''}</span></div>
+          <div class="exp-price">€${e.price}<span style="font-size:12px;color:var(--muted);font-family:var(--font-b)">/${e.unit || 'person'}</span></div>
         </div>
-        \${e.instagram ? '<a href="'+e.instagram+'" target="_blank" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ocean);margin-top:8px;margin-bottom:2px;font-weight:500;text-decoration:none">📸 @bea_titudeyoga</a>' : ''}
-        <button class="btn-svc" style="margin-top:8px;width:100%" onclick="openBookingModal('${e.name}',${e.price})">Book This →</button>
+        <button class="btn-svc" style="margin-top:8px;width:100%" onclick="openBookingModal('${(e.name||'').replace(/'/g,"\\'")}',${e.price})">Book This →</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
-renderExp('all');
+
+// Render accommodation cards from live data
+function renderProperties() {
+  if (!siteProperties.length) return;
+  siteProperties.forEach(p => {
+    const cardId = p._slug && p._slug.includes('studio') ? 'studioCard' : 'villaCard';
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    // Photo
+    if (p.photo) {
+      const img = card.querySelector('.acc-img img, #villaImg');
+      if (img) img.src = p.photo;
+      if (img && img.id === 'villaImg') {
+        img.setAttribute('onmouseover', `this.src='${p.photo_alt || p.photo}'`);
+        img.setAttribute('onmouseout',  `this.src='${p.photo}'`);
+      }
+    }
+    // Text fields
+    const set = (sel, val) => { const el = card.querySelector(sel); if(el && val) el.textContent = val; };
+    set('.acc-name', p.name);
+    set('.acc-desc', p.description);
+    set('.acc-loc',  p.location ? '📍 ' + p.location : null);
+    set('.acc-badge', p.badge);
+    // Price
+    const priceEl = card.querySelector('.acc-price');
+    if (priceEl && p.price) priceEl.innerHTML = '<sup>€</sup>' + p.price;
+    // Amenities
+    if (p.amenities && p.amenities.length) {
+      const ICONS = {WiFi:'📶',Pool:'🏊',Garden:'🌿',Parking:'🚗','Air Con':'❄️',
+                     Kitchen:'🍳',Kitchenette:'🍳',BBQ:'🍖','Sea View':'🌊'};
+      const amenEl = card.querySelector('.acc-amenities');
+      if (amenEl) amenEl.innerHTML = p.amenities.map(a => `<div class="amenity">${ICONS[a]||'✓'} ${a}</div>`).join('');
+    }
+    // Book button
+    const btn = card.querySelector('.btn-acc');
+    if (btn && p.name) btn.setAttribute('onclick', `openBookingModal('${p.name}',${p.price})`);
+    // Booking wizard picker label + price
+    const spItem = document.querySelector(`[data-svc="${p.name}"]`);
+    if (spItem) {
+      const spPrice = spItem.querySelector('.sp-price');
+      if (spPrice) spPrice.textContent = '€' + p.price + '/night';
+    }
+  });
+}
+
+// Apply settings (WhatsApp, hero text etc) from _data/settings.json
+function applySettings(s) {
+  if (!s) return;
+  // WhatsApp links
+  if (s.whatsapp) {
+    const num = s.whatsapp.replace(/\D/g,'');
+    document.querySelectorAll('a[href*="wa.me"]').forEach(a => {
+      const qs = a.href.includes('?') ? '?' + a.href.split('?')[1] : '';
+      a.href = 'https://wa.me/' + num + qs;
+    });
+  }
+  // Hero title
+  if (s.hero_line1) {
+    const t = document.querySelector('.hero-title');
+    if (t) t.innerHTML = s.hero_line1 + '<br><em>' + (s.hero_line2 || 'Perfectly Arranged') + '</em>';
+  }
+  // Hero subtitle
+  if (s.hero_sub) {
+    const sub = document.querySelector('.hero-sub');
+    if (sub) sub.textContent = s.hero_sub;
+  }
+  // Hero photos for slideshow
+  const heroPhotos = [s.hero_photo, s.hero_photo2, s.hero_photo3, s.hero_photo4].filter(Boolean);
+  if (heroPhotos.length) {
+    const slides = document.querySelectorAll('.hero-slide');
+    heroPhotos.forEach((src, i) => { if (slides[i]) slides[i].src = src; });
+  }
+  // Email
+  if (s.email) {
+    document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
+      if (a.textContent.includes('@') || a.textContent.includes('evalia')) a.textContent = s.email;
+      a.href = 'mailto:' + s.email;
+    });
+  }
+}
+
+// Main loader — fetches all _data/*.json files
+async function loadCMSContent() {
+  try {
+    const EXP_SLUGS = [
+      'dolphin-watching-cruise','ile-aux-cerfs-day-trip',
+      'sunrise-beach-yoga','black-river-gorges-hike',
+      'yoga-nature-retreat','chamarel-7-colour-earth',
+      'mindful-garden-walk','street-food-discovery',
+      'mauritian-cooking-class',
+    ];
+
+    const [settingsRes, studioRes, villaRes, ...expResults] = await Promise.allSettled([
+      fetch('/_data/settings.json').then(r => r.ok ? r.json() : null),
+      fetch('/_data/properties/studio-evalia.json').then(r => r.ok ? r.json() : null),
+      fetch('/_data/properties/villa-evalia.json').then(r => r.ok ? r.json() : null),
+      ...EXP_SLUGS.map(s => fetch('/_data/experiences/'+s+'.json').then(r => r.ok ? r.json() : null)),
+    ]);
+
+    // Settings
+    const settings = settingsRes.status === 'fulfilled' ? settingsRes.value : null;
+    if (settings) applySettings(settings);
+
+    // Properties
+    const studio = studioRes.status === 'fulfilled' ? studioRes.value : null;
+    const villa  = villaRes.status  === 'fulfilled' ? villaRes.value  : null;
+    if (studio) { studio._slug = 'studio-evalia'; siteProperties.push(studio); }
+    if (villa)  { villa._slug  = 'villa-evalia';  siteProperties.push(villa); }
+    if (siteProperties.length) renderProperties();
+
+    // Experiences
+    const exps = expResults
+      .map(r => r.status === 'fulfilled' ? r.value : null)
+      .filter(Boolean)
+      .filter(e => e.active !== false);
+    if (exps.length) {
+      siteExperiences = exps;
+      renderExp('all');
+    }
+
+  } catch(err) {
+    // Silent fail — hardcoded fallbacks remain visible
+    console.log('CMS load skipped:', err.message);
+  }
+}
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', loadCMSContent);
+// Also run immediately (in case DOM already ready)
+if (document.readyState !== 'loading') loadCMSContent();
 
 function filterExp(btn, cat) {
   document.querySelectorAll('.exp-tab').forEach(t => t.classList.remove('active'));
@@ -1269,5 +1414,7 @@ function showToast(icon, msg) {
 document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
 </script>
 <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+
+
 </body>
 </html>

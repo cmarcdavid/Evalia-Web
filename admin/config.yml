@@ -1,74 +1,124 @@
-# ═══════════════════════════════════════════════
-# EVALIA MAURITIUS — Decap CMS Configuration
-# ═══════════════════════════════════════════════
-# This gives you a visual no-code admin panel at:
-# yourdomain.com/admin
-# Log in with your GitHub account — no password needed
-# ═══════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
+# EVALIA MAURITIUS — Decap CMS
+# ═══════════════════════════════════════════════════════════════
+# HOW IT WORKS:
+# 1. Go to evalia-web.vercel.app/admin
+# 2. Log in with your GitHub account (one click — no password)
+# 3. Edit any content, upload photos/videos
+# 4. Click Publish → saves to GitHub → Vercel updates in ~30 sec
+#
+# The content manager NEVER needs to touch code or GitHub Desktop.
+# ═══════════════════════════════════════════════════════════════
 
 backend:
   name: github
-  repo: cmarcdavid/evalia-web  # GitHub repo
+  repo: cmarcdavid/evalia-web
   branch: main
+  commit_messages:
+    create: 'content: add {{collection}} "{{slug}}"'
+    update: 'content: update {{collection}} "{{slug}}"'
+    delete: 'content: delete {{collection}} "{{slug}}"'
+    uploadMedia: 'media: upload "{{path}}"'
+    deleteMedia: 'media: delete "{{path}}"'
 
-# Where uploaded photos get stored in your repo
+# ── MEDIA LIBRARY ──────────────────────────────────────────────
+# Photos and videos are stored directly in the images/ folder.
+# The content manager uploads here — no GitHub Desktop needed.
 media_folder: "images"
 public_folder: "/images"
 
+# Allowed file types for upload
+media_library:
+  max_file_size: 52428800  # 50MB max per file
+
+# ── SITE SETTINGS ──────────────────────────────────────────────
+locale: en
+
 collections:
 
-  # ── PROPERTIES ────────────────────────────────
+  # ── PROPERTIES ──────────────────────────────────────────────
   - name: "properties"
     label: "🏠 Properties"
+    label_singular: "Property"
     folder: "_data/properties"
     create: true
+    delete: true
     slug: "{{slug}}"
+    identifier_field: "name"
+    summary: "{{name}} — €{{price}}/night — {{location}}"
     fields:
-      - {label: "Property Name", name: "name", widget: "string"}
-      - {label: "Type", name: "type", widget: "select", options: ["Studio", "Villa", "Apartment"]}
-      - {label: "Location", name: "location", widget: "string"}
-      - {label: "Description", name: "description", widget: "text"}
-      - {label: "Price per Night (€)", name: "price", widget: "number"}
-      - {label: "Max Guests", name: "max_guests", widget: "number"}
-      - {label: "Bedrooms", name: "bedrooms", widget: "number"}
-      - {label: "Bathrooms", name: "bathrooms", widget: "number"}
-      - {label: "Main Photo", name: "photo", widget: "image", required: false}
-      - {label: "Available", name: "available", widget: "boolean", default: true}
+      - {label: "Property Name",      name: "name",        widget: "string",   hint: "e.g. Studio Evalia"}
+      - {label: "Type",               name: "type",        widget: "select",   options: ["Studio","Villa","Apartment","Penthouse"]}
+      - {label: "Location",           name: "location",    widget: "string",   hint: "e.g. Flic en Flac, West Mauritius"}
+      - {label: "Short Badge",        name: "badge",       widget: "string",   hint: "e.g. Available Now, Pool & Garden", required: false}
+      - {label: "Description",        name: "description", widget: "text"}
+      - {label: "Price per Night (€)",name: "price",       widget: "number",   value_type: "int"}
+      - {label: "Max Guests",         name: "max_guests",  widget: "number",   value_type: "int"}
+      - {label: "Bedrooms",           name: "bedrooms",    widget: "number",   value_type: "int"}
+      - {label: "Bathrooms",          name: "bathrooms",   widget: "number",   value_type: "int"}
+      - {label: "Main Photo",         name: "photo",       widget: "image",    required: false,
+         hint: "Drag & drop or click to upload. Recommended: 1200×800px JPG"}
+      - {label: "Second Photo (hover)", name: "photo_alt", widget: "image",    required: false,
+         hint: "Optional — shown on hover (e.g. pool view)"}
+      - label: "Photo Gallery"
+        name: "gallery"
+        widget: "list"
+        required: false
+        hint: "Additional photos shown in the lightbox gallery"
+        field: {label: "Photo", name: "photo", widget: "image"}
+      - {label: "Video Tour URL",     name: "video",       widget: "string",   required: false,
+         hint: "Upload video to images/ folder then paste the filename here e.g. villa-tour.mp4"}
+      - {label: "Available for Booking", name: "available", widget: "boolean", default: true}
       - label: "Amenities"
         name: "amenities"
         widget: "list"
+        hint: "One amenity per line e.g. WiFi, Pool, Air Con"
         field: {label: "Amenity", name: "amenity", widget: "string"}
 
-  # ── EXPERIENCES ───────────────────────────────
+  # ── EXPERIENCES ─────────────────────────────────────────────
   - name: "experiences"
     label: "🌴 Experiences"
+    label_singular: "Experience"
     folder: "_data/experiences"
     create: true
+    delete: true
     slug: "{{slug}}"
+    identifier_field: "name"
+    summary: "{{name}} — €{{price}}/{{unit}} — {{category}}"
     fields:
-      - {label: "Name", name: "name", widget: "string"}
-      - {label: "Category", name: "category", widget: "select", options: ["boat", "nature", "food", "concierge"]}
-      - {label: "Description", name: "description", widget: "text"}
-      - {label: "Price (€)", name: "price", widget: "number"}
-      - {label: "Price Unit", name: "unit", widget: "select", options: ["person", "group", "service"]}
-      - {label: "Duration", name: "duration", widget: "string", hint: "e.g. Half day, Full day, 3 hours"}
-      - {label: "Photo", name: "photo", widget: "image", required: false}
-      - {label: "Active", name: "active", widget: "boolean", default: true}
+      - {label: "Name",               name: "name",        widget: "string"}
+      - {label: "Category",           name: "category",    widget: "select",
+         options: [{label:"⛵ Boat & Water", value:"boat"},{label:"🌿 Nature & Wellness", value:"nature"},{label:"🍛 Food & Culture", value:"food"},{label:"🎩 Concierge", value:"concierge"}]}
+      - {label: "Icon (emoji)",       name: "icon",        widget: "string",   hint: "e.g. 🐬 🌿 🍛", required: false}
+      - {label: "Description",        name: "description", widget: "text"}
+      - {label: "Price (€)",          name: "price",       widget: "number",   value_type: "int"}
+      - {label: "Price Per",          name: "unit",        widget: "select",   options: ["person","group","service"], default: "person"}
+      - {label: "Duration",           name: "duration",    widget: "string",   hint: "e.g. Half day, Full day, 90 min"}
+      - {label: "Photo",              name: "photo",       widget: "image",    required: false,
+         hint: "Drag & drop or click to upload"}
+      - {label: "Instagram Partner URL", name: "instagram", widget: "string",  required: false,
+         hint: "e.g. https://www.instagram.com/bea_titudeyoga/"}
+      - {label: "Active (show on site)", name: "active",   widget: "boolean",  default: true}
 
-  # ── SITE SETTINGS ─────────────────────────────
+  # ── SITE SETTINGS ────────────────────────────────────────────
   - name: "settings"
     label: "⚙️ Site Settings"
     files:
-      - label: "General Settings"
+      - label: "General"
         name: "general"
         file: "_data/settings.json"
         fields:
-          - {label: "Business Name", name: "name", widget: "string", default: "Evalia Mauritius"}
-          - {label: "WhatsApp Number", name: "whatsapp", widget: "string", default: "+23057000000"}
-          - {label: "Email", name: "email", widget: "string", default: "hello@evalia.mu"}
-          - {label: "Instagram Handle", name: "instagram", widget: "string"}
-          - {label: "Facebook Page", name: "facebook", widget: "string"}
-          - {label: "Hero Title Line 1", name: "hero_line1", widget: "string", default: "Your Mauritius,"}
-          - {label: "Hero Title Line 2 (italic)", name: "hero_line2", widget: "string", default: "Perfectly Arranged"}
-          - {label: "Hero Subtitle", name: "hero_sub", widget: "text"}
-          - {label: "Hero Background Photo", name: "hero_photo", widget: "image", required: false}
+          - {label: "Business Name",       name: "name",       widget: "string",  default: "Evalia Mauritius"}
+          - {label: "WhatsApp Number",     name: "whatsapp",   widget: "string",  hint: "Include country code e.g. +23057242099"}
+          - {label: "Email",               name: "email",      widget: "string"}
+          - {label: "Instagram Handle",    name: "instagram",  widget: "string",  hint: "e.g. @evalia241"}
+          - {label: "Facebook Page",       name: "facebook",   widget: "string",  hint: "e.g. evalia241"}
+          - {label: "TikTok Handle",       name: "tiktok",     widget: "string",  required: false}
+          - {label: "Hero Title Line 1",   name: "hero_line1", widget: "string"}
+          - {label: "Hero Title (italic)", name: "hero_line2", widget: "string"}
+          - {label: "Hero Subtitle",       name: "hero_sub",   widget: "text"}
+          - {label: "Hero Photo 1",        name: "hero_photo", widget: "image",   required: false,
+             hint: "Main hero background — drag & drop to upload"}
+          - {label: "Hero Photo 2",        name: "hero_photo2",widget: "image",   required: false}
+          - {label: "Hero Photo 3",        name: "hero_photo3",widget: "image",   required: false}
+          - {label: "Hero Photo 4",        name: "hero_photo4",widget: "image",   required: false}

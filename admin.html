@@ -3,293 +3,284 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Evalia Mauritius — Admin</title>
+  <title>Evalia Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --ocean:#006B8F;--lagoon:#00A8CC;--sand:#F7F0E6;--cream:#FDFAF6;
       --palm:#2D6A4F;--sunset:#E8855A;--dark:#1A1F2E;--muted:#5C6478;
-      --stone:#DDD8CE;--white:#FFFFFF;--green:#2D6A4F;--red:#C0392B;
-      --sidebar:#0d1520;
+      --stone:#DDD8CE;--white:#FFFFFF;--sidebar:#0d1520;
       --font-d:'Playfair Display',serif;--font-b:'Outfit',sans-serif;
     }
     body{font-family:var(--font-b);background:var(--sand);color:var(--dark);display:flex;min-height:100vh;overflow:hidden}
+    a{color:inherit;text-decoration:none}
 
-    /* ── SIDEBAR ── */
-    .sidebar{width:240px;background:var(--sidebar);padding:28px 16px;display:flex;flex-direction:column;gap:4px;flex-shrink:0;overflow-y:auto}
-    .s-logo{font-family:var(--font-d);font-size:22px;font-weight:600;color:#fff;margin-bottom:28px;padding:0 12px;display:flex;align-items:center;gap:8px}
+    /* SIDEBAR */
+    .sidebar{width:230px;background:var(--sidebar);padding:24px 14px;display:flex;flex-direction:column;gap:3px;flex-shrink:0;overflow-y:auto}
+    .s-logo{font-family:var(--font-d);font-size:21px;font-weight:600;color:#fff;margin-bottom:24px;padding:0 10px;display:flex;align-items:center;gap:8px}
     .s-logo span{color:var(--lagoon)}
-    .s-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.45);cursor:pointer;transition:all .18s;user-select:none}
-    .s-item:hover{background:rgba(0,168,204,.12);color:rgba(255,255,255,.85)}
-    .s-item.active{background:rgba(0,168,204,.2);color:var(--lagoon);font-weight:500}
-    .s-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
-    .s-divider{height:1px;background:rgba(255,255,255,.07);margin:12px 4px}
-    .s-section{font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:6px 12px 2px}
+    .s-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;font-size:13px;color:rgba(255,255,255,.42);cursor:pointer;transition:all .15s;user-select:none}
+    .s-item:hover{background:rgba(0,168,204,.1);color:rgba(255,255,255,.8)}
+    .s-item.active{background:rgba(0,168,204,.18);color:var(--lagoon);font-weight:500}
+    .s-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+    .s-div{height:1px;background:rgba(255,255,255,.06);margin:10px 4px}
+    .s-sec{font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.18);padding:5px 10px 2px}
+    .s-badge{background:var(--sunset);color:#fff;border-radius:50px;padding:1px 7px;font-size:10px;margin-left:auto}
 
-    /* ── MAIN ── */
+    /* MAIN */
     .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-    .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:rgba(253,250,246,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--stone);flex-shrink:0}
-    .page-title{font-family:var(--font-d);font-size:24px;font-weight:400}
-    .topbar-right{display:flex;align-items:center;gap:10px}
-    .topbar-btn{width:36px;height:36px;background:var(--white);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;border:1px solid var(--stone);position:relative;transition:border-color .2s;text-decoration:none}
-    .topbar-btn:hover{border-color:var(--ocean)}
-    .notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--sunset);border-radius:50%;border:2px solid var(--white)}
-    .avatar{width:36px;height:36px;background:var(--ocean);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;color:#fff;font-weight:600}
-    .content-wrap{flex:1;overflow-y:auto;padding:24px 28px}
-
-    /* Page routing */
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:rgba(253,250,246,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--stone);flex-shrink:0}
+    .page-title{font-family:var(--font-d);font-size:22px;font-weight:400}
+    .topbar-r{display:flex;align-items:center;gap:10px}
+    .tb-btn{height:34px;padding:0 14px;background:var(--white);border-radius:8px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--stone);transition:all .2s;color:var(--dark)}
+    .tb-btn:hover{border-color:var(--ocean);color:var(--ocean)}
+    .tb-btn.primary{background:var(--ocean);color:#fff;border-color:var(--ocean)}
+    .tb-btn.primary:hover{background:#005a78}
+    .sync-dot{width:8px;height:8px;border-radius:50%;background:#aaa;flex-shrink:0}
+    .sync-dot.ok{background:var(--palm)}
+    .sync-dot.busy{background:var(--sunset);animation:pulse-dot 1s infinite}
+    .sync-dot.err{background:#e74c3c}
+    @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
+    .content{flex:1;overflow-y:auto;padding:22px 24px}
     .page{display:none}.page.active{display:block}
 
-    /* ── STATS ── */
-    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
-    @media(max-width:1100px){.stats-row{grid-template-columns:repeat(2,1fr)}}
-    .stat-card{background:var(--white);border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(26,31,46,.06)}
-    .sc-label{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-    .sc-val{font-family:var(--font-d);font-size:34px;font-weight:400;color:var(--dark);line-height:1}
-    .sc-change{font-size:12px;margin-top:6px}
-    .up{color:var(--green)}.dn{color:var(--red)}
-
-    /* ── CARD ── */
-    .card{background:var(--white);border-radius:14px;padding:24px;box-shadow:0 2px 12px rgba(26,31,46,.06);margin-bottom:20px}
-    .card-title{font-family:var(--font-d);font-size:19px;font-weight:400;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
-    .card-link{font-family:var(--font-b);font-size:12px;color:var(--ocean);cursor:pointer;font-weight:500}
-    .card-link:hover{text-decoration:underline}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    /* CARDS */
+    .card{background:var(--white);border-radius:14px;padding:22px;box-shadow:0 2px 12px rgba(26,31,46,.06);margin-bottom:18px}
+    .card-title{font-family:var(--font-d);font-size:18px;font-weight:400;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     @media(max-width:900px){.grid2{grid-template-columns:1fr}}
 
-    /* ── TABLE ── */
-    .tbl-wrap{overflow-x:auto}
-    table{width:100%;border-collapse:collapse;font-size:13px;min-width:500px}
-    th{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 12px 10px 0;text-align:left;border-bottom:1px solid var(--stone);white-space:nowrap}
-    td{padding:12px 12px 12px 0;border-bottom:1px solid rgba(221,216,206,.4);vertical-align:middle}
-    tr:last-child td{border:none}
-    .pill{display:inline-block;padding:3px 11px;border-radius:50px;font-size:11px;font-weight:500;white-space:nowrap}
-    .pill-green{background:rgba(45,106,79,.12);color:var(--green)}
-    .pill-blue{background:rgba(0,107,143,.12);color:var(--ocean)}
-    .pill-red{background:rgba(192,57,43,.1);color:var(--red)}
-    .pill-orange{background:rgba(232,133,90,.12);color:var(--sunset)}
+    /* STATS */
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+    @media(max-width:1100px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+    .stat-card{background:var(--white);border-radius:12px;padding:18px;box-shadow:0 2px 12px rgba(26,31,46,.05)}
+    .sc-label{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    .sc-val{font-family:var(--font-d);font-size:32px;font-weight:400;color:var(--dark);line-height:1}
+    .sc-delta{font-size:12px;margin-top:5px;color:var(--palm)}
 
-    /* ── CHART ── */
-    .chart-bars{display:flex;align-items:flex-end;gap:8px;height:120px;margin-top:10px}
-    .bar-wrap{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
-    .bar{background:linear-gradient(to top,var(--ocean),var(--lagoon));border-radius:4px 4px 0 0;width:100%;transition:opacity .2s;cursor:pointer}
+    /* TABLES */
+    .tbl-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;min-width:480px}
+    th{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:0 10px 10px 0;text-align:left;border-bottom:1px solid var(--stone)}
+    td{padding:11px 10px 11px 0;border-bottom:1px solid rgba(221,216,206,.4);vertical-align:middle}
+    tr:last-child td{border:none}
+    .pill{display:inline-block;padding:2px 10px;border-radius:50px;font-size:11px;font-weight:500}
+    .pill-green{background:rgba(45,106,79,.12);color:var(--palm)}
+    .pill-blue{background:rgba(0,107,143,.1);color:var(--ocean)}
+    .pill-orange{background:rgba(232,133,90,.12);color:var(--sunset)}
+    .pill-red{background:rgba(231,76,60,.1);color:#e74c3c}
+
+    /* BUTTONS */
+    .btn{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:var(--font-b);transition:all .15s}
+    .btn-sm{padding:4px 10px;font-size:11px}
+    .btn-primary{background:var(--dark);color:#fff}.btn-primary:hover{background:var(--ocean)}
+    .btn-ocean{background:rgba(0,107,143,.1);color:var(--ocean)}.btn-ocean:hover{background:rgba(0,107,143,.2)}
+    .btn-red{background:rgba(231,76,60,.1);color:#e74c3c}.btn-red:hover{background:rgba(231,76,60,.18)}
+    .btn-green{background:rgba(45,106,79,.1);color:var(--palm)}.btn-green:hover{background:rgba(45,106,79,.18)}
+    .btn-full{width:100%;padding:12px;border-radius:10px;font-size:14px;text-align:center}
+
+    /* FORMS */
+    .fg{margin-bottom:13px}
+    .fl{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
+    .fi{width:100%;padding:9px 12px;border:1.5px solid var(--stone);border-radius:9px;font-family:var(--font-b);font-size:13px;color:var(--dark);background:var(--white);outline:none;transition:border-color .2s;appearance:none}
+    .fi:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(0,107,143,.08)}
+    .fi:disabled{background:var(--sand);color:var(--muted);cursor:not-allowed}
+    .fr2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    @media(max-width:700px){.fr2,.fr3{grid-template-columns:1fr}}
+    .form-sec{margin-bottom:22px}
+    .form-sec-title{font-family:var(--font-d);font-size:17px;font-weight:400;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--stone)}
+    .check-group{display:flex;flex-wrap:wrap;gap:7px}
+    .check-pill{display:flex;align-items:center;gap:5px;padding:5px 11px;border:1px solid var(--stone);border-radius:7px;cursor:pointer;font-size:12px;transition:all .15s}
+    .check-pill:hover{border-color:var(--ocean)}
+    .check-pill input{accent-color:var(--ocean);width:13px;height:13px}
+
+    /* MEDIA GRID */
+    .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+    .media-thumb{border-radius:10px;height:120px;position:relative;overflow:hidden;cursor:pointer;background:var(--sand);transition:transform .2s}
+    .media-thumb:hover{transform:scale(1.03)}
+    .media-thumb img,.media-thumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .media-thumb .thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(13,21,32,.7);color:#fff;font-size:10px;padding:4px 7px;line-height:1.3}
+    .media-thumb .thumb-del{position:absolute;top:5px;right:5px;width:22px;height:22px;background:rgba(231,76,60,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;cursor:pointer;opacity:0;transition:opacity .2s;border:none}
+    .media-thumb:hover .thumb-del{opacity:1}
+    .media-thumb .thumb-use{position:absolute;top:5px;left:5px;background:rgba(0,107,143,.85);color:#fff;font-size:10px;padding:2px 7px;border-radius:50px;cursor:pointer;opacity:0;transition:opacity .2s;border:none;font-family:var(--font-b)}
+    .media-thumb:hover .thumb-use{opacity:1}
+    .drop-zone{border:2px dashed var(--stone);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s}
+    .drop-zone:hover,.drop-zone.dragover{border-color:var(--ocean);background:rgba(0,107,143,.03)}
+    .upload-progress{display:none;margin-top:14px}
+    .prog-bar-wrap{height:5px;background:var(--sand);border-radius:50px;overflow:hidden;margin:6px 0 4px}
+    .prog-bar{height:100%;background:var(--ocean);border-radius:50px;width:0;transition:width .3s}
+
+    /* PROPERTY / EXP ITEM */
+    .content-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(221,216,206,.4)}
+    .content-item:last-child{border:none}
+    .item-thumb{width:56px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:26px}
+    .item-thumb img{width:100%;height:100%;object-fit:cover}
+    .item-info{flex:1;min-width:0}
+    .item-info strong{font-size:14px;font-weight:500;display:block}
+    .item-info span{font-size:12px;color:var(--muted)}
+    .item-price{font-family:var(--font-d);font-size:15px;margin-right:10px;white-space:nowrap}
+
+    /* INLINE EDIT PANEL */
+    .edit-panel{background:var(--sand);border-radius:12px;padding:18px;margin-top:10px;display:none}
+    .edit-panel.open{display:block}
+
+    /* TOAST & OVERLAY */
+    .toast{position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.22);z-index:9999;transform:translateY(60px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;max-width:320px}
+    .toast.show{transform:translateY(0);opacity:1}
+    .overlay{position:fixed;inset:0;background:rgba(13,21,32,.6);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(6px)}
+    .overlay.open{opacity:1;pointer-events:all}
+    .modal{background:var(--white);border-radius:16px;padding:28px;max-width:420px;width:100%;transform:translateY(20px);transition:transform .25s}
+    .overlay.open .modal{transform:none}
+
+    /* CHART */
+    .chart-bars{display:flex;align-items:flex-end;gap:7px;height:110px;margin-top:8px}
+    .bar-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+    .bar{background:linear-gradient(to top,var(--ocean),var(--lagoon));border-radius:3px 3px 0 0;width:100%;transition:opacity .2s;cursor:pointer}
     .bar:hover{opacity:.7}
     .bar-lbl{font-size:10px;color:var(--muted)}
 
-    /* ── PROPERTY ROW ── */
-    .prop-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(221,216,206,.4)}
-    .prop-row:last-child{border:none}
-    .prop-thumb{width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:24px}
-    .prop-thumb img{width:100%;height:100%;object-fit:cover}
-    .prop-info{flex:1;min-width:0}
-    .prop-info strong{font-size:14px;font-weight:500;display:block}
-    .prop-info span{font-size:12px;color:var(--muted)}
-    .prop-price-sm{font-family:var(--font-d);font-size:16px;font-weight:400;white-space:nowrap;margin-right:8px}
-
-    /* ── EXP ROW ── */
-    .exp-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(221,216,206,.4)}
-    .exp-row:last-child{border:none}
-    .exp-icon-box{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-
-    /* ── BUTTONS ── */
-    .btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:var(--font-b);transition:all .18s}
-    .btn-primary{background:var(--dark);color:#fff}.btn-primary:hover{background:var(--ocean)}
-    .btn-ocean{background:rgba(0,107,143,.1);color:var(--ocean)}.btn-ocean:hover{background:rgba(0,107,143,.2)}
-    .btn-red{background:rgba(192,57,43,.1);color:var(--red)}.btn-red:hover{background:rgba(192,57,43,.18)}
-    .btn-green{background:rgba(45,106,79,.12);color:var(--green)}.btn-green:hover{background:rgba(45,106,79,.2)}
-    .btn-full{width:100%;padding:12px;border-radius:10px;font-size:14px}
-
-    /* ── FORM ── */
-    .form-section{margin-bottom:24px}
-    .form-section h3{font-family:var(--font-d);font-size:19px;font-weight:400;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--stone)}
-    .fg{margin-bottom:14px}
-    .fl{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
-    .fi{width:100%;padding:10px 13px;border:1.5px solid var(--stone);border-radius:10px;font-family:var(--font-b);font-size:14px;color:var(--dark);background:var(--white);outline:none;transition:border-color .2s;appearance:none}
-    .fi:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(0,107,143,.1)}
-    .form-row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-    .form-row2-half{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    @media(max-width:700px){.form-row2,.form-row2-half{grid-template-columns:1fr}}
-    .upload-zone{border:2px dashed var(--stone);border-radius:12px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .2s}
-    .upload-zone:hover{border-color:var(--ocean);background:rgba(0,107,143,.03)}
-    .check-grid{display:flex;flex-wrap:wrap;gap:8px}
-    .check-item{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;padding:6px 11px;border:1px solid var(--stone);border-radius:8px;transition:all .2s}
-    .check-item:hover{border-color:var(--ocean)}
-    .check-item input{accent-color:var(--ocean);width:14px;height:14px}
-    .feedback-msg{display:none;margin-top:10px;padding:10px 14px;border-radius:8px;font-size:13px}
-    .feedback-msg.ok{background:rgba(45,106,79,.1);color:var(--green);display:block}
-
-    /* ── CALENDAR ── */
+    /* CAL */
     .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px}
-    .cal-day{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;transition:opacity .15s}
-    .cal-head{font-size:10px;color:var(--muted);font-weight:600;cursor:default;aspect-ratio:auto;padding:4px 0}
+    .cal-day{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer}
+    .cal-head{font-size:10px;color:var(--muted);font-weight:600;cursor:default;aspect-ratio:auto;padding:3px 0}
     .cal-empty{background:transparent;cursor:default}
-    .cal-avail{background:rgba(45,106,79,.1);color:var(--green)}
+    .cal-avail{background:rgba(45,106,79,.1);color:var(--palm)}
     .cal-booked{background:rgba(232,133,90,.12);color:var(--sunset)}
     .cal-today{background:var(--ocean);color:#fff;font-weight:600}
-    .cal-legend{display:flex;gap:14px;margin-bottom:10px;font-size:12px;color:var(--muted);flex-wrap:wrap}
-    .cal-legend span{display:flex;align-items:center;gap:5px}
-    .cal-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 
-    /* ── MEDIA ── */
-    .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
-    .media-item{border-radius:10px;height:120px;display:flex;align-items:center;justify-content:center;font-size:36px;cursor:pointer;transition:transform .2s;position:relative;overflow:hidden}
-    .media-item:hover{transform:scale(1.04)}
-    .media-item img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-    .media-item .media-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(13,21,32,.6);color:#fff;font-size:10px;padding:4px 6px;font-weight:500}
-    .media-add{border:2px dashed var(--stone);background:transparent!important;font-size:24px;color:var(--muted);flex-direction:column;gap:5px;font-size:13px}
-    .media-add:hover{border-color:var(--ocean);color:var(--ocean)}
-
-    /* ── BOOKING REQUESTS ── */
-    .req-card{background:var(--white);border-radius:12px;padding:16px 20px;border-left:4px solid var(--ocean);margin-bottom:12px;display:flex;align-items:flex-start;gap:16px;box-shadow:0 1px 8px rgba(26,31,46,.05)}
-    .req-card.pending{border-color:var(--sunset)}
-    .req-card.confirmed{border-color:var(--green)}
-    .req-icon{font-size:24px;flex-shrink:0;margin-top:2px}
-    .req-info{flex:1}
-    .req-info strong{font-size:14px;font-weight:500;display:block;margin-bottom:2px}
-    .req-info p{font-size:12px;color:var(--muted);line-height:1.5}
-    .req-actions{display:flex;gap:6px;flex-shrink:0;flex-direction:column}
-
-    /* ── CONFIRM OVERLAY ── */
-    .overlay{position:fixed;inset:0;background:rgba(13,21,32,.6);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(6px)}
-    .overlay.open{opacity:1;pointer-events:all}
-    .modal{background:var(--white);border-radius:18px;padding:32px;max-width:380px;width:100%;transform:translateY(20px);transition:transform .25s}
-    .overlay.open .modal{transform:none}
-    .modal h3{font-family:var(--font-d);font-size:22px;margin-bottom:8px}
-    .modal p{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6}
-    .modal-btns{display:flex;gap:8px;justify-content:flex-end}
-
-    /* ── TOAST ── */
-    .toast{position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.22);z-index:9999;transform:translateY(60px);opacity:0;transition:all .3s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;gap:8px;max-width:300px}
-    .toast.show{transform:translateY(0);opacity:1}
-
-    /* ── NOTIFICATION BANNER ── */
-    .notif-banner{background:linear-gradient(135deg,var(--ocean),var(--lagoon));color:#fff;padding:12px 20px;border-radius:12px;margin-bottom:20px;display:flex;align-items:center;gap:12px;font-size:13px}
-    .notif-banner a{color:#fff;font-weight:600;text-decoration:underline}
+    /* SAVE BANNER */
+    .save-banner{position:fixed;top:0;left:0;right:0;z-index:800;background:var(--ocean);color:#fff;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;font-size:13px;transform:translateY(-100%);transition:transform .3s}
+    .save-banner.show{transform:translateY(0)}
   </style>
 </head>
 <body>
 
+<!-- Unsaved changes banner -->
+<div class="save-banner" id="saveBanner">
+  <span>⚠️ You have unsaved changes</span>
+  <div style="display:flex;gap:8px">
+    <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3)" onclick="discardChanges()">Discard</button>
+    <button class="btn btn-sm" style="background:#fff;color:var(--ocean)" onclick="publishChanges()">Publish to Live Site →</button>
+  </div>
+</div>
+
 <!-- Confirm overlay -->
 <div class="overlay" id="confirmOverlay">
   <div class="modal">
-    <h3 id="confirmTitle">Are you sure?</h3>
-    <p id="confirmMsg">This cannot be undone.</p>
-    <div class="modal-btns">
+    <h3 id="confirmTitle" style="font-family:var(--font-d);font-size:20px;margin-bottom:8px">Confirm</h3>
+    <p id="confirmMsg" style="font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6"></p>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
       <button class="btn btn-ocean" onclick="closeConfirm()">Cancel</button>
-      <button class="btn btn-red" id="confirmOkBtn">Confirm</button>
+      <button class="btn btn-red" id="confirmOk">Confirm</button>
     </div>
   </div>
 </div>
 
 <!-- Toast -->
-<div class="toast" id="toast"><span id="toastIcon">✅</span><span id="toastMsg"></span></div>
+<div class="toast" id="toast"><span id="tIcon">✅</span><span id="tMsg"></span></div>
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="s-logo">🌴 Eva<span>lia</span></div>
-  <div class="s-section">Overview</div>
-  <div class="s-item active" data-page="dashboard" onclick="showPage('dashboard',this)"><span class="s-icon">📊</span>Dashboard</div>
-  <div class="s-item" data-page="requests" onclick="showPage('requests',this)"><span class="s-icon">📩</span>Booking Requests <span style="background:var(--sunset);color:#fff;border-radius:50px;padding:1px 7px;font-size:10px;margin-left:auto">3</span></div>
-  <div class="s-item" data-page="bookings" onclick="showPage('bookings',this)"><span class="s-icon">📅</span>Bookings</div>
-  <div class="s-item" data-page="guests" onclick="showPage('guests',this)"><span class="s-icon">👥</span>Guests</div>
-  <div class="s-item" data-page="payments" onclick="showPage('payments',this)"><span class="s-icon">💰</span>Payments</div>
-  <div class="s-divider"></div>
-  <div class="s-section">Content</div>
-  <div class="s-item" data-page="properties" onclick="showPage('properties',this)"><span class="s-icon">🏠</span>Properties</div>
-  <div class="s-item" data-page="experiences" onclick="showPage('experiences',this)"><span class="s-icon">🌴</span>Experiences</div>
-  <div class="s-item" data-page="addprop" onclick="showPage('addprop',this)"><span class="s-icon">➕</span>Add Property</div>
-  <div class="s-item" data-page="media" onclick="showPage('media',this)"><span class="s-icon">📸</span>Media Library</div>
-  <div class="s-item" data-page="calendar" onclick="showPage('calendar',this)"><span class="s-icon">🗓</span>Availability</div>
-  <div class="s-divider"></div>
-  <div class="s-section">Config</div>
-  <div class="s-item" data-page="settings" onclick="showPage('settings',this)"><span class="s-icon">⚙️</span>Settings</div>
-  <div class="s-item" onclick="window.open('index.html','_blank')"><span class="s-icon">🌐</span>View Live Site</div>
+  <div class="s-sec">Overview</div>
+  <div class="s-item active" data-page="dashboard" onclick="goPage('dashboard',this)"><span class="s-icon">📊</span>Dashboard</div>
+  <div class="s-item" data-page="requests" onclick="goPage('requests',this)"><span class="s-icon">📩</span>Requests<span class="s-badge" id="reqBadge">0</span></div>
+  <div class="s-item" data-page="bookings" onclick="goPage('bookings',this)"><span class="s-icon">📅</span>Bookings</div>
+  <div class="s-item" data-page="guests" onclick="goPage('guests',this)"><span class="s-icon">👥</span>Guests</div>
+  <div class="s-div"></div>
+  <div class="s-sec">Content</div>
+  <div class="s-item" data-page="properties" onclick="goPage('properties',this)"><span class="s-icon">🏠</span>Properties</div>
+  <div class="s-item" data-page="experiences" onclick="goPage('experiences',this)"><span class="s-icon">🌴</span>Experiences</div>
+  <div class="s-item" data-page="media" onclick="goPage('media',this)"><span class="s-icon">📸</span>Media Library</div>
+  <div class="s-item" data-page="settings" onclick="goPage('settings',this)"><span class="s-icon">⚙️</span>Settings</div>
+  <div class="s-div"></div>
+  <div class="s-item" onclick="window.open('https://evalia-web.vercel.app','_blank')"><span class="s-icon">🌐</span>View Live Site</div>
+  <div class="s-item" onclick="window.open('https://evalia-web.vercel.app/admin','_blank')"><span class="s-icon">✏️</span>CMS Editor</div>
 </aside>
 
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
     <div class="page-title" id="pageTitle">Dashboard</div>
-    <div class="topbar-right">
-      <a class="topbar-btn" href="https://wa.me/23057242099" target="_blank" title="WhatsApp concierge">💬</a>
-      <div class="topbar-btn" onclick="showPage('requests',document.querySelector('[data-page=requests]'))" title="3 new requests">🔔<div class="notif-dot"></div></div>
-      <div class="avatar">CD</div>
+    <div class="topbar-r">
+      <div id="syncStatus" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+        <div class="sync-dot" id="syncDot"></div>
+        <span id="syncLabel">Connecting…</span>
+      </div>
+      <button class="tb-btn" onclick="loadAllData(true)">🔄 Refresh</button>
+      <button class="tb-btn primary" onclick="publishChanges()" id="publishBtn" style="display:none">Publish →</button>
+      <a class="tb-btn" href="https://wa.me/23057242099" target="_blank">💬 WhatsApp</a>
     </div>
   </div>
 
-  <div class="content-wrap">
+  <div class="content">
 
-    <!-- ══ DASHBOARD ══ -->
-    <div id="page-dashboard" class="page active">
-      <div class="notif-banner">
-        📩 <strong>3 new booking requests</strong> waiting for confirmation — <span class="card-link" style="color:#fff;cursor:pointer" onclick="showPage('requests',document.querySelector('[data-page=requests]'))">Review now →</span>
-      </div>
-      <div class="stats-row">
-        <div class="stat-card"><div class="sc-label">Total Revenue</div><div class="sc-val">€8,240</div><div class="sc-change up">↑ 22% this month</div></div>
-        <div class="stat-card"><div class="sc-label">Active Bookings</div><div class="sc-val">4</div><div class="sc-change up">↑ 2 this week</div></div>
-        <div class="stat-card"><div class="sc-label">Registered Guests</div><div class="sc-val">18</div><div class="sc-change up">↑ 5 new</div></div>
-        <div class="stat-card"><div class="sc-label">Occupancy</div><div class="sc-val">72%</div><div class="sc-change up">↑ 8%</div></div>
-      </div>
-      <div class="grid2">
-        <div class="card">
-          <div class="card-title">Monthly Revenue</div>
-          <div class="chart-bars">
-            <div class="bar-wrap"><div class="bar" style="height:40%"></div><div class="bar-lbl">Jan</div></div>
-            <div class="bar-wrap"><div class="bar" style="height:55%"></div><div class="bar-lbl">Feb</div></div>
-            <div class="bar-wrap"><div class="bar" style="height:35%"></div><div class="bar-lbl">Mar</div></div>
-            <div class="bar-wrap"><div class="bar" style="height:80%"></div><div class="bar-lbl">Apr</div></div>
-            <div class="bar-wrap"><div class="bar" style="height:100%"></div><div class="bar-lbl">May</div></div>
-            <div class="bar-wrap"><div class="bar" style="height:65%"></div><div class="bar-lbl">Jun</div></div>
+    <!-- ══ CONNECT SCREEN ══ -->
+    <div id="page-connect" class="page active">
+      <div style="max-width:480px;margin:60px auto;text-align:center">
+        <div style="font-size:60px;margin-bottom:20px">🔐</div>
+        <h2 style="font-family:var(--font-d);font-size:28px;font-weight:400;margin-bottom:12px">Connect to GitHub</h2>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.7">The admin reads and saves content directly to your GitHub repo. Enter your GitHub Personal Access Token once — it stays in your browser only.</p>
+        <div class="card" style="text-align:left">
+          <div class="fg">
+            <label class="fl">GitHub Personal Access Token</label>
+            <input class="fi" type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"/>
           </div>
-        </div>
-        <div class="card">
-          <div class="card-title">Recent Bookings <span class="card-link" onclick="showPage('bookings',document.querySelector('[data-page=bookings]'))">See all →</span></div>
-          <div class="tbl-wrap"><table>
-            <tr><th>Guest</th><th>Service</th><th>Dates</th><th>Status</th></tr>
-            <tr><td><strong>Sophie L.</strong></td><td style="color:var(--muted)">Studio Evalia</td><td style="color:var(--muted)">14–18 Apr</td><td><span class="pill pill-green">Confirmed</span></td></tr>
-            <tr><td><strong>Marcus W.</strong></td><td style="color:var(--muted)">Villa Evalia</td><td style="color:var(--muted)">20–27 Apr</td><td><span class="pill pill-green">Confirmed</span></td></tr>
-            <tr><td><strong>Amara D.</strong></td><td style="color:var(--muted)">Boat Excursion</td><td style="color:var(--muted)">22 Apr</td><td><span class="pill pill-orange">Pending</span></td></tr>
-            <tr><td><strong>James T.</strong></td><td style="color:var(--muted)">Yoga Retreat</td><td style="color:var(--muted)">25 Apr</td><td><span class="pill pill-orange">Pending</span></td></tr>
-          </table></div>
+          <div style="background:rgba(0,107,143,.05);border:1px solid rgba(0,107,143,.15);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.65">
+            <strong>How to get your token (takes 2 minutes):</strong><br>
+            1. Go to <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--ocean)">github.com/settings/tokens/new</a><br>
+            2. Note: "Evalia Admin" · Expiration: No expiration<br>
+            3. Tick <strong>repo</strong> (full repository access)<br>
+            4. Click Generate token → copy and paste above
+          </div>
+          <button class="btn btn-primary btn-full" onclick="connectGitHub()">Connect →</button>
+          <div id="connectError" style="display:none;margin-top:10px;color:#e74c3c;font-size:12px;text-align:center"></div>
         </div>
       </div>
     </div>
 
-    <!-- ══ BOOKING REQUESTS ══ -->
+    <!-- ══ DASHBOARD ══ -->
+    <div id="page-dashboard" class="page">
+      <div class="stats-row">
+        <div class="stat-card"><div class="sc-label">Properties</div><div class="sc-val" id="statProps">–</div><div class="sc-delta" id="statPropsLbl"></div></div>
+        <div class="stat-card"><div class="sc-label">Experiences</div><div class="sc-val" id="statExps">–</div><div class="sc-delta">Active on site</div></div>
+        <div class="stat-card"><div class="sc-label">Media Files</div><div class="sc-val" id="statMedia">–</div><div class="sc-delta">In images/</div></div>
+        <div class="stat-card"><div class="sc-label">Last Updated</div><div class="sc-val" style="font-size:18px" id="statUpdated">–</div><div class="sc-delta" id="statBranch"></div></div>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">Quick Actions</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn btn-ocean btn-full" onclick="goPage('properties',document.querySelector('[data-page=properties]'))">🏠 Edit Properties</button>
+            <button class="btn btn-ocean btn-full" onclick="goPage('experiences',document.querySelector('[data-page=experiences]'))">🌴 Edit Experiences</button>
+            <button class="btn btn-ocean btn-full" onclick="goPage('media',document.querySelector('[data-page=media]'))">📸 Upload Photos</button>
+            <button class="btn btn-ocean btn-full" onclick="goPage('settings',document.querySelector('[data-page=settings]'))">⚙️ Site Settings</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">How Publishing Works</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--muted)">
+            <div style="display:flex;gap:10px"><span style="font-size:18px;flex-shrink:0">1️⃣</span><span>Edit any property, experience, photo or setting below</span></div>
+            <div style="display:flex;gap:10px"><span style="font-size:18px;flex-shrink:0">2️⃣</span><span>Click <strong style="color:var(--dark)">"Publish to Live Site →"</strong> — saves to GitHub</span></div>
+            <div style="display:flex;gap:10px"><span style="font-size:18px;flex-shrink:0">3️⃣</span><span>Vercel detects the change and rebuilds in <strong style="color:var(--dark)">~30 seconds</strong></span></div>
+            <div style="display:flex;gap:10px"><span style="font-size:18px;flex-shrink:0">✅</span><span>Live site at <a href="https://evalia-web.vercel.app" target="_blank" style="color:var(--ocean)">evalia-web.vercel.app</a> updates automatically</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ REQUESTS ══ -->
     <div id="page-requests" class="page">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:20px">These come from the booking forms on the website (Formspree endpoint: mdayoknj). Confirm or decline each request — guest is notified via WhatsApp/email.</p>
-      <div class="req-card pending">
-        <div class="req-icon">📩</div>
-        <div class="req-info">
-          <strong>Amara Diallo — Boat Excursion</strong>
-          <p>📅 22 Apr 2026 · 👥 2 people · ✉️ amara@email.com · 📱 +230 5712 3456<br>💬 "Would love dolphin watching if available"</p>
-        </div>
-        <div class="req-actions">
-          <button class="btn btn-green" onclick="confirmReq(this)">✓ Confirm</button>
-          <button class="btn btn-red" onclick="declineReq(this)">✗ Decline</button>
-        </div>
-      </div>
-      <div class="req-card pending">
-        <div class="req-icon">📩</div>
-        <div class="req-info">
-          <strong>James Taylor — Yoga & Nature Retreat</strong>
-          <p>📅 25 Apr 2026 · 👥 4 people · ✉️ james@email.com · 📱 +44 7911 123456<br>💬 "First time in Mauritius, very excited!"</p>
-        </div>
-        <div class="req-actions">
-          <button class="btn btn-green" onclick="confirmReq(this)">✓ Confirm</button>
-          <button class="btn btn-red" onclick="declineReq(this)">✗ Decline</button>
-        </div>
-      </div>
-      <div class="req-card pending">
-        <div class="req-icon">📩</div>
-        <div class="req-info">
-          <strong>Leila Rousseau — Villa Evalia</strong>
-          <p>📅 1–8 May 2026 · 👥 5 people · ✉️ leila@email.com · 📱 +33 6 98 76 54 32<br>💬 "Pool available all day? We have young children"</p>
-        </div>
-        <div class="req-actions">
-          <button class="btn btn-green" onclick="confirmReq(this)">✓ Confirm</button>
-          <button class="btn btn-red" onclick="declineReq(this)">✗ Decline</button>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Booking requests submitted via the website forms (Formspree). Log in at <a href="https://formspree.io" target="_blank" style="color:var(--ocean)">formspree.io</a> to see all submissions in your inbox.</p>
+      <div class="card">
+        <div class="card-title">Pending Requests</div>
+        <div id="reqList">
+          <div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">
+            📩 Booking requests arrive in your email via Formspree (endpoint: mdayoknj).<br>
+            <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank" style="color:var(--ocean);margin-top:8px;display:inline-block">View all submissions on Formspree →</a>
+          </div>
         </div>
       </div>
     </div>
@@ -297,197 +288,77 @@
     <!-- ══ BOOKINGS ══ -->
     <div id="page-bookings" class="page">
       <div class="card">
-        <div class="card-title">All Bookings</div>
-        <div class="tbl-wrap"><table>
-          <tr><th>Guest</th><th>Email</th><th>Service</th><th>Check-in</th><th>Check-out</th><th>Guests</th><th>Total</th><th>Status</th><th>Action</th></tr>
-          <tr><td><strong>Sophie Laurent</strong></td><td style="color:var(--muted)">sophie@email.com</td><td>Studio Evalia</td><td>14 Apr</td><td>18 Apr</td><td>2</td><td><strong>€405</strong></td><td><span class="pill pill-green">Confirmed</span></td><td><button class="btn btn-ocean" onclick="openWhatsApp('+23057121111','Studio Evalia')">💬</button></td></tr>
-          <tr><td><strong>Marcus Webb</strong></td><td style="color:var(--muted)">marcus@email.com</td><td>Villa Evalia</td><td>20 Apr</td><td>27 Apr</td><td>4</td><td><strong>€1,345</strong></td><td><span class="pill pill-green">Confirmed</span></td><td><button class="btn btn-ocean" onclick="openWhatsApp('+23057122222','Villa Evalia')">💬</button></td></tr>
-          <tr><td><strong>Amara Diallo</strong></td><td style="color:var(--muted)">amara@email.com</td><td>Boat Excursion</td><td>22 Apr</td><td>22 Apr</td><td>2</td><td><strong>€130</strong></td><td><span class="pill pill-orange">Pending</span></td><td><button class="btn btn-green" onclick="confirmBookingRow(this)">Confirm</button></td></tr>
-          <tr><td><strong>James Taylor</strong></td><td style="color:var(--muted)">james@email.com</td><td>Yoga Retreat</td><td>25 Apr</td><td>25 Apr</td><td>4</td><td><strong>€260</strong></td><td><span class="pill pill-orange">Pending</span></td><td><button class="btn btn-green" onclick="confirmBookingRow(this)">Confirm</button></td></tr>
-        </table></div>
+        <div class="card-title">Bookings</div>
+        <div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">
+          All booking requests are sent to your email via Formspree.<br>
+          <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank" style="color:var(--ocean);margin-top:8px;display:inline-block">View on Formspree →</a>
+          <br><br>
+          <a href="https://wa.me/23057242099" target="_blank" class="btn btn-green">💬 Open WhatsApp to follow up</a>
+        </div>
       </div>
     </div>
 
     <!-- ══ GUESTS ══ -->
     <div id="page-guests" class="page">
       <div class="card">
-        <div class="card-title">Registered Guests <span style="font-size:13px;color:var(--muted);font-family:var(--font-b)">18 total</span></div>
-        <div class="tbl-wrap"><table>
-          <tr><th>Name</th><th>Email</th><th>Phone</th><th>Nationality</th><th>Arrival</th><th>Party</th><th>Bookings</th><th>Action</th></tr>
-          <tr><td><strong>Sophie Laurent</strong></td><td style="color:var(--muted)">sophie@email.com</td><td style="color:var(--muted)">+33 6 11 22 33</td><td>🇫🇷 French</td><td>14 Apr</td><td>2</td><td>1</td><td><button class="btn btn-ocean">View</button></td></tr>
-          <tr><td><strong>Marcus Webb</strong></td><td style="color:var(--muted)">marcus@email.com</td><td style="color:var(--muted)">+44 77 11 22 33</td><td>🇬🇧 British</td><td>20 Apr</td><td>4</td><td>2</td><td><button class="btn btn-ocean">View</button></td></tr>
-          <tr><td><strong>Amara Diallo</strong></td><td style="color:var(--muted)">amara@email.com</td><td style="color:var(--muted)">+225 07 11 22</td><td>🇨🇮 Ivorian</td><td>22 Apr</td><td>2</td><td>1</td><td><button class="btn btn-ocean">View</button></td></tr>
-          <tr><td><strong>James Taylor</strong></td><td style="color:var(--muted)">james@email.com</td><td style="color:var(--muted)">+44 79 11 22 33</td><td>🇬🇧 British</td><td>25 Apr</td><td>4</td><td>1</td><td><button class="btn btn-ocean">View</button></td></tr>
-        </table></div>
-      </div>
-    </div>
-
-    <!-- ══ PAYMENTS ══ -->
-    <div id="page-payments" class="page">
-      <div class="stats-row">
-        <div class="stat-card"><div class="sc-label">This Month</div><div class="sc-val">€8,240</div><div class="sc-change up">↑ 22%</div></div>
-        <div class="stat-card"><div class="sc-label">Pending</div><div class="sc-val">€390</div><div class="sc-change" style="color:var(--muted)">2 bookings</div></div>
-        <div class="stat-card"><div class="sc-label">Local Payments</div><div class="sc-val">€1,200</div><div class="sc-change" style="color:var(--muted)">MyT / MCB</div></div>
-        <div class="stat-card"><div class="sc-label">Avg Booking</div><div class="sc-val">€520</div><div class="sc-change up">↑ 12%</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Transaction History</div>
-        <div class="tbl-wrap"><table>
-          <tr><th>Date</th><th>Guest</th><th>Service</th><th>Amount</th><th>Method</th><th>Status</th></tr>
-          <tr><td>14 Apr</td><td>Sophie L.</td><td>Studio Evalia</td><td><strong>€405</strong></td><td>💳 Visa</td><td><span class="pill pill-green">Paid</span></td></tr>
-          <tr><td>13 Apr</td><td>Marcus W.</td><td>Villa Evalia</td><td><strong>€1,345</strong></td><td>🍎 Apple Pay</td><td><span class="pill pill-green">Paid</span></td></tr>
-          <tr><td>12 Apr</td><td>Amara D.</td><td>Boat Excursion</td><td><strong>€130</strong></td><td>💚 MyT Money</td><td><span class="pill pill-orange">Pending</span></td></tr>
-          <tr><td>11 Apr</td><td>James T.</td><td>Yoga Retreat</td><td><strong>€260</strong></td><td>🏦 MCB Juice</td><td><span class="pill pill-orange">Pending</span></td></tr>
-        </table></div>
+        <div class="card-title">Guest Registrations</div>
+        <div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">
+          Guest registrations are sent to your email via Formspree.<br>
+          <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank" style="color:var(--ocean);margin-top:8px;display:inline-block">View all registrations on Formspree →</a>
+        </div>
       </div>
     </div>
 
     <!-- ══ PROPERTIES ══ -->
     <div id="page-properties" class="page">
-      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
-        <button class="btn btn-primary" onclick="showPage('addprop',document.querySelector('[data-page=addprop]'))">+ Add Property</button>
-      </div>
       <div class="card">
-        <div class="card-title">Properties <span style="font-size:13px;color:var(--muted);font-family:var(--font-b)">2 active</span></div>
-        <div id="adminPropList"></div>
+        <div class="card-title">Properties
+          <button class="btn btn-primary btn-sm" onclick="addNewProperty()">+ Add Property</button>
+        </div>
+        <div id="propList">
+          <div style="text-align:center;padding:24px;color:var(--muted)">Loading…</div>
+        </div>
       </div>
     </div>
 
     <!-- ══ EXPERIENCES ══ -->
     <div id="page-experiences" class="page">
       <div class="card">
-        <div class="card-title">All Experiences <span style="font-size:13px;color:var(--muted);font-family:var(--font-b)">8 active</span></div>
-        <div id="adminExpList"></div>
-      </div>
-    </div>
-
-    <!-- ══ ADD PROPERTY ══ -->
-    <div id="page-addprop" class="page">
-      <div class="card">
-        <div class="form-section">
-          <h3>Property Details</h3>
-          <div class="form-row2">
-            <div class="fg"><label class="fl">Property Name</label><input class="fi" id="newName" type="text" placeholder="e.g. Studio Evalia"/></div>
-            <div class="fg"><label class="fl">Location</label><input class="fi" id="newLoc" type="text" placeholder="e.g. Flic en Flac, West Mauritius"/></div>
-            <div class="fg"><label class="fl">Type</label><select class="fi" id="newType"><option>Studio</option><option>Villa</option><option>Apartment</option></select></div>
-          </div>
-          <div class="fg"><label class="fl">Description</label><textarea class="fi" id="newDesc" rows="3" style="resize:vertical" placeholder="Describe this property…"></textarea></div>
-          <div class="form-row2">
-            <div class="fg"><label class="fl">Bedrooms</label><input class="fi" id="newBeds" type="number" min="1" placeholder="2"/></div>
-            <div class="fg"><label class="fl">Bathrooms</label><input class="fi" id="newBaths" type="number" min="1" placeholder="2"/></div>
-            <div class="fg"><label class="fl">Max Guests</label><input class="fi" id="newGuests" type="number" min="1" placeholder="6"/></div>
-          </div>
-          <div class="form-row2">
-            <div class="fg"><label class="fl">Nightly Rate (€)</label><input class="fi" id="newRate" type="number" placeholder="180"/></div>
-            <div class="fg"><label class="fl">Cleaning Fee (€)</label><input class="fi" id="newClean" type="number" value="40"/></div>
-            <div class="fg"><label class="fl">Min Stay (nights)</label><input class="fi" id="newMin" type="number" value="2"/></div>
-          </div>
+        <div class="card-title">Experiences
+          <button class="btn btn-primary btn-sm" onclick="addNewExperience()">+ Add Experience</button>
         </div>
-        <div class="form-section">
-          <h3>Amenities</h3>
-          <div class="check-grid">
-            <label class="check-item"><input type="checkbox" checked/> WiFi</label>
-            <label class="check-item"><input type="checkbox" checked/> Pool</label>
-            <label class="check-item"><input type="checkbox"/> Hot Tub</label>
-            <label class="check-item"><input type="checkbox" checked/> Air Con</label>
-            <label class="check-item"><input type="checkbox" checked/> Kitchen</label>
-            <label class="check-item"><input type="checkbox"/> BBQ</label>
-            <label class="check-item"><input type="checkbox" checked/> Parking</label>
-            <label class="check-item"><input type="checkbox"/> Sea View</label>
-            <label class="check-item"><input type="checkbox"/> Garden</label>
-            <label class="check-item"><input type="checkbox"/> Pet Friendly</label>
-          </div>
+        <div id="expList">
+          <div style="text-align:center;padding:24px;color:var(--muted)">Loading…</div>
         </div>
-        <div class="form-section">
-          <h3>Photos</h3>
-          <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Drop photos into the <code style="background:var(--sand);padding:2px 6px;border-radius:4px">images/</code> folder in your GitHub repo, then add the filename in <code style="background:var(--sand);padding:2px 6px;border-radius:4px">index.html</code>.</p>
-          <div class="upload-zone" onclick="showToast('📂','Open your GitHub repo images/ folder and drag your photos in via GitHub Desktop')">
-            <div style="font-size:32px;margin-bottom:8px">📸</div>
-            <div style="font-size:13px;color:var(--muted)">Click for upload instructions</div>
-          </div>
-        </div>
-        <button class="btn btn-primary btn-full" onclick="saveProperty()">Save Property →</button>
-        <div class="feedback-msg" id="saveFeedback">✅ Property saved!</div>
       </div>
     </div>
 
     <!-- ══ MEDIA ══ -->
     <div id="page-media" class="page">
       <div class="card">
-        <div class="card-title">Media Library <span style="font-size:13px;color:var(--muted);font-family:var(--font-b)">images/ folder · GitHub repo: cmarcdavid/evalia-web</span></div>
-        <div style="background:rgba(0,107,143,.06);border:1px solid rgba(0,107,143,.2);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:var(--muted)">
-          📌 To add photos: drop files into the <strong>images/</strong> folder via GitHub Desktop, then add the filename to <code style="background:var(--sand);padding:2px 5px;border-radius:4px">index.html</code> in the relevant property.
+        <div class="card-title">Upload Photos & Videos
+          <span style="font-size:12px;color:var(--muted);font-family:var(--font-b)">JPG · PNG · WebP · MP4 · Max 50MB</span>
         </div>
-        <div class="media-grid">
-          <div class="media-item">
-            <img src="images/Hero.jpg" alt="Hero" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
-            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#003d6b,#006B8F)">🌅</div>
-            <div class="media-lbl">Hero.jpg</div>
-          </div>
-          <div class="media-item">
-            <img src="images/Hero1.jpg" alt="Hero1" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
-            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#005a78,#00A8CC)">🌊</div>
-            <div class="media-lbl">Hero1.jpg</div>
-          </div>
-          <div class="media-item">
-            <img src="images/Hero2.jpg" alt="Hero2" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
-            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#003d6b,#0077a8)">⛵</div>
-            <div class="media-lbl">Hero2.jpg</div>
-          </div>
-          <div class="media-item">
-            <img src="images/Hero3.jpg" alt="Hero3" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
-            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#1a4a2e,#2D6A4F)">🌿</div>
-            <div class="media-lbl">Hero3.jpg</div>
-          </div>
-          <div class="media-item">
-            <img src="images/Host.jpg" alt="Host" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
-            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#3a2060,#6040a0)">🎩</div>
-            <div class="media-lbl">Host.jpg</div>
-          </div>
-          <div class="media-item">
-            <img src="images/Villa-pool.jpg" alt="Villa pool" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
-            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#1a3a28,#2D6A4F)">🏊</div>
-            <div class="media-lbl">Villa-pool.jpg</div>
-          </div>
-          <div class="media-item">
-            <img src="images/Villa-pool1.jpg" alt="Villa pool 2" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
-            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#1a4a2e,#3a8a5e)">🌴</div>
-            <div class="media-lbl">Villa-pool1.jpg</div>
-          </div>
-          <div class="media-item media-add" onclick="showToast('📂','Drag photos into images/ folder in GitHub Desktop → Commit → Push')">
-            <span style="font-size:24px">+</span>
-            <span>Add Photo</span>
-          </div>
+        <div class="drop-zone" id="dropZone"
+             ondragover="dzOver(event)" ondrop="dzDrop(event)" ondragleave="dzLeave(event)"
+             onclick="document.getElementById('fileIn').click()">
+          <div style="font-size:44px;margin-bottom:10px">📸</div>
+          <div style="font-size:14px;font-weight:500;margin-bottom:4px">Drag & drop photos or videos here</div>
+          <div style="font-size:12px;color:var(--muted)">or click to browse — files save directly to GitHub</div>
+        </div>
+        <input type="file" id="fileIn" style="display:none" multiple accept="image/*,video/mp4" onchange="handleFiles(event.target.files)"/>
+        <div class="upload-progress" id="uploadProg">
+          <div id="uploadStatus" style="font-size:12px;color:var(--muted);margin-bottom:4px">Uploading…</div>
+          <div class="prog-bar-wrap"><div class="prog-bar" id="progBar"></div></div>
+          <div id="uploadFile" style="font-size:11px;color:var(--muted)"></div>
         </div>
       </div>
-    </div>
-
-    <!-- ══ CALENDAR ══ -->
-    <div id="page-calendar" class="page">
-      <div class="grid2">
-        <div class="card">
-          <div class="card-title">April 2026 — Availability</div>
-          <div class="cal-legend">
-            <span><span class="cal-dot" style="background:rgba(45,106,79,.2)"></span>Available</span>
-            <span><span class="cal-dot" style="background:rgba(232,133,90,.15)"></span>Booked</span>
-            <span><span class="cal-dot" style="background:var(--ocean)"></span>Today</span>
-          </div>
-          <div class="cal-grid" id="calGrid"></div>
+      <div class="card">
+        <div class="card-title">Media Library
+          <span id="mediaCount" style="font-size:12px;color:var(--muted);font-family:var(--font-b)">Loading…</span>
         </div>
-        <div class="card">
-          <div class="card-title">Block Dates</div>
-          <div class="fg"><label class="fl">Property</label>
-            <select class="fi">
-              <option>Studio Evalia</option>
-              <option>Villa Evalia</option>
-            </select>
-          </div>
-          <div class="form-row2-half">
-            <div class="fg"><label class="fl">From</label><input class="fi" type="date"/></div>
-            <div class="fg"><label class="fl">To</label><input class="fi" type="date"/></div>
-          </div>
-          <div class="fg"><label class="fl">Reason (optional)</label><input class="fi" type="text" placeholder="Maintenance, personal use…"/></div>
-          <button class="btn btn-primary" onclick="showToast('🗓','Dates blocked successfully')">Block Dates</button>
+        <div class="media-grid" id="mediaGrid">
+          <div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;grid-column:1/-1">Loading media…</div>
         </div>
       </div>
     </div>
@@ -495,199 +366,711 @@
     <!-- ══ SETTINGS ══ -->
     <div id="page-settings" class="page">
       <div class="card">
-        <div class="form-section">
-          <h3>Business Information</h3>
-          <div class="form-row2-half">
-            <div class="fg"><label class="fl">Business Name</label><input class="fi" type="text" value="Evalia Mauritius"/></div>
-            <div class="fg"><label class="fl">Email</label><input class="fi" type="email" value="hello@evalia.mu"/></div>
+        <div class="form-sec">
+          <div class="form-sec-title">Business Information</div>
+          <div class="fr2">
+            <div class="fg"><label class="fl">Business Name</label><input class="fi" id="s_name" type="text" oninput="markDirty()"/></div>
+            <div class="fg"><label class="fl">Email</label><input class="fi" id="s_email" type="email" oninput="markDirty()"/></div>
           </div>
-          <div class="form-row2-half">
-            <div class="fg"><label class="fl">WhatsApp</label><input class="fi" type="tel" value="+230 5724 2099"/></div>
-            <div class="fg"><label class="fl">Instagram</label><input class="fi" type="text" value="@evalia241"/></div>
+          <div class="fr2">
+            <div class="fg"><label class="fl">WhatsApp (with +country code)</label><input class="fi" id="s_whatsapp" type="tel" oninput="markDirty()"/></div>
+            <div class="fg"><label class="fl">Instagram Handle</label><input class="fi" id="s_instagram" type="text" oninput="markDirty()"/></div>
           </div>
-          <div class="fg" style="max-width:280px"><label class="fl">Currency</label>
-            <select class="fi"><option>EUR (€)</option><option>GBP (£)</option><option>USD ($)</option><option>MUR (₨)</option></select>
+          <div class="fr2">
+            <div class="fg"><label class="fl">Facebook Page</label><input class="fi" id="s_facebook" type="text" oninput="markDirty()"/></div>
+            <div class="fg"><label class="fl">TikTok Handle</label><input class="fi" id="s_tiktok" type="text" oninput="markDirty()"/></div>
           </div>
         </div>
-        <div class="form-section">
-          <h3>Formspree (Booking Forms)</h3>
-          <div class="fg"><label class="fl">Active Endpoint</label><input class="fi" type="text" value="https://formspree.io/f/mdayoknj" readonly style="background:var(--sand)"/></div>
-          <div class="fg"><label class="fl">GitHub Repo</label><input class="fi" type="text" value="cmarcdavid/evalia-web" readonly style="background:var(--sand)"/></div>
-          <p style="font-size:12px;color:var(--muted)">Formspree submissions go to your registered email. Log in at formspree.io to view all submissions.</p>
+        <div class="form-sec">
+          <div class="form-sec-title">Hero Section</div>
+          <div class="fr2">
+            <div class="fg"><label class="fl">Title Line 1</label><input class="fi" id="s_hero1" type="text" oninput="markDirty()"/></div>
+            <div class="fg"><label class="fl">Title Line 2 (italic)</label><input class="fi" id="s_hero2" type="text" oninput="markDirty()"/></div>
+          </div>
+          <div class="fg"><label class="fl">Hero Subtitle</label><textarea class="fi" id="s_herosub" rows="2" style="resize:vertical" oninput="markDirty()"></textarea></div>
         </div>
-        <div class="form-section">
-          <h3>Payments</h3>
-          <div class="fg"><label class="fl">Stripe Publishable Key</label><input class="fi" type="text" placeholder="pk_live_…"/></div>
-          <div class="fg"><label class="fl">Stripe Webhook Secret</label><input class="fi" type="password" placeholder="whsec_…"/></div>
-          <p style="font-size:12px;color:var(--muted)">⚠️ Stripe Secret Key must be set in <strong>Vercel → Settings → Environment Variables</strong> only — never here.</p>
-        </div>
-        <div class="form-section">
-          <h3>Nature & Wellness Partner</h3>
-          <div class="fg"><label class="fl">Instagram Partner</label><input class="fi" type="text" value="@bea_titudeyoga"/></div>
-          <div class="fg"><label class="fl">Partner Profile URL</label><input class="fi" type="text" value="https://www.instagram.com/bea_titudeyoga/"/></div>
-        </div>
-        <button class="btn btn-primary" style="padding:12px 36px" onclick="showToast('✅','Settings saved')">Save Settings →</button>
+        <button class="btn btn-primary" style="padding:11px 32px" onclick="saveSettings()">Save & Publish Settings →</button>
       </div>
     </div>
 
-  </div><!-- /content-wrap -->
+  </div><!-- /content -->
 </div><!-- /main -->
 
 <script>
-// ── PAGE TITLES ─────────────────────────────────────────────
-const pageTitles = {
-  dashboard:'Dashboard', requests:'Booking Requests', bookings:'Bookings',
-  guests:'Guests', payments:'Payments', properties:'Properties',
-  experiences:'Experiences', addprop:'Add Property', media:'Media Library',
-  calendar:'Availability', settings:'Settings'
-};
+// ═══════════════════════════════════════════════════════════════════
+// EVALIA ADMIN — GitHub API Content Manager
+// All content is read from and written to GitHub directly.
+// No backend, no database — GitHub is the source of truth.
+// ═══════════════════════════════════════════════════════════════════
 
-function showPage(pageId, navEl) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const t = document.getElementById('page-' + pageId);
-  if (t) t.classList.add('active');
-  document.getElementById('pageTitle').textContent = pageTitles[pageId] || pageId;
-  document.querySelectorAll('.s-item[data-page]').forEach(i => i.classList.remove('active'));
-  if (navEl) navEl.classList.add('active');
-  if (pageId === 'properties') renderAdminProps();
-  if (pageId === 'experiences') renderAdminExp();
-  if (pageId === 'calendar') renderCal();
-  document.querySelector('.content-wrap').scrollTop = 0;
+const REPO  = 'cmarcdavid/evalia-web';
+const BRANCH = 'main';
+const API    = 'https://api.github.com';
+
+// In-memory state
+let token    = localStorage.getItem('ev_token') || '';
+let dirty    = false;
+let allData  = { properties: [], experiences: [], settings: {}, media: [] };
+let pendingWrites = {}; // path → {content, sha}
+let confirmCb = null;
+
+// ── AUTH ──────────────────────────────────────────────────────────
+async function connectGitHub() {
+  const t = document.getElementById('tokenInput').value.trim();
+  if (!t) { showConnectError('Please paste your token'); return; }
+  setSyncBusy('Verifying…');
+  try {
+    const r = await ghFetch(`/repos/${REPO}`, t);
+    if (!r.ok) throw new Error('Invalid token or repo not found');
+    token = t;
+    localStorage.setItem('ev_token', t);
+    setSyncOk('Connected');
+    await loadAllData();
+    goPage('dashboard', document.querySelector('[data-page=dashboard]'));
+  } catch(e) {
+    setSyncErr('Failed');
+    showConnectError(e.message);
+  }
 }
 
-// ── PROPERTIES (synced with index.html) ──────────────────────
-const props = [
-  {name:'Studio Evalia', loc:'Flic en Flac, West Mauritius', emoji:'🏙️',
-   photo:'images/Hero3.jpg', price:80, guests:2, beds:1, baths:1, status:'Active', color:'#006B8F'},
-  {name:'Villa Evalia',  loc:'Grand Baie, North Mauritius', emoji:'🌴',
-   photo:'images/Villa-pool.jpg', price:180, guests:6, beds:2, baths:2, status:'Active', color:'#2D6A4F'},
-];
-
-function renderAdminProps() {
-  document.getElementById('adminPropList').innerHTML = props.map((p, i) => `
-    <div class="prop-row">
-      <div class="prop-thumb">
-        <img src="${p.photo}" alt="${p.name}" onerror="this.style.display='none';this.parentNode.textContent='${p.emoji}'"/>
-      </div>
-      <div class="prop-info"><strong>${p.name}</strong><span>${p.loc}</span></div>
-      <div style="font-size:12px;color:var(--muted);margin-right:8px">🛏 ${p.beds} · 🚿 ${p.baths} · 👥 ${p.guests}</div>
-      <div class="prop-price-sm">€${p.price}<span style="font-size:12px;color:var(--muted)">/night</span></div>
-      <span class="pill pill-green" style="margin:0 10px">${p.status}</span>
-      <button class="btn btn-ocean" style="margin-right:6px" onclick="editProp(${i})">Edit</button>
-      <button class="btn btn-red" onclick="deleteProp(${i},'${p.name}')">Delete</button>
-    </div>`).join('');
-}
-
-// ── EXPERIENCES (synced with index.html) ─────────────────────
-const experiences = [
-  {name:'Sunrise Beach Yoga',      cat:'Nature & Wellness', icon:'🧘', price:35, dur:'90 min', ig:true},
-  {name:'Black River Gorges Hike', cat:'Nature',            icon:'🦜', price:55, dur:'Full day', ig:false},
-  {name:'Yoga & Nature Retreat',   cat:'Nature & Wellness', icon:'🌿', price:65, dur:'Half day', ig:true},
-  {name:'Chamarel 7-Colour Earth', cat:'Nature',            icon:'🌈', price:40, dur:'Half day', ig:false},
-  {name:'Mindful Garden Walk',     cat:'Nature & Wellness', icon:'🌺', price:30, dur:'2 hours',  ig:true},
-  {name:'Dolphin Watching Cruise', cat:'Boat & Water',      icon:'🐬', price:45, dur:'Half day', ig:false},
-  {name:'Île aux Cerfs Day Trip',  cat:'Boat & Water',      icon:'🏝️', price:75, dur:'Full day', ig:false},
-  {name:'Street Food Discovery',   cat:'Food & Culture',    icon:'🍛', price:35, dur:'3 hours',  ig:false},
-  {name:'Mauritian Cooking Class', cat:'Food & Culture',    icon:'👨‍🍳', price:50, dur:'3 hours',  ig:false},
-];
-
-const catColors = {
-  'Nature & Wellness':'rgba(45,106,79,.1)','Nature':'rgba(0,107,143,.08)',
-  'Boat & Water':'rgba(0,61,107,.08)','Food & Culture':'rgba(232,133,90,.1)'
-};
-
-function renderAdminExp() {
-  document.getElementById('adminExpList').innerHTML = experiences.map((e, i) => `
-    <div class="exp-row">
-      <div class="exp-icon-box" style="background:${catColors[e.cat]||'var(--sand)'}">${e.icon}</div>
-      <div style="flex:1;min-width:0">
-        <strong style="font-size:14px;font-weight:500">${e.name}</strong>
-        <span style="font-size:12px;color:var(--muted);display:block">${e.cat} · ⏱ ${e.dur}
-          ${e.ig ? ' · <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean)">📸 @bea_titudeyoga</a>' : ''}
-        </span>
-      </div>
-      <div style="font-family:var(--font-d);font-size:16px;margin-right:12px">€${e.price}<span style="font-size:12px;color:var(--muted)">/person</span></div>
-      <span class="pill pill-green">Active</span>
-      <button class="btn btn-ocean" style="margin-left:8px" onclick="showToast('✏️','Editing: ${e.name}')">Edit</button>
-    </div>`).join('');
-}
-
-// ── EDIT / DELETE PROPERTY ───────────────────────────────────
-function editProp(i) {
-  const p = props[i];
-  document.getElementById('newName').value = p.name;
-  document.getElementById('newLoc').value  = p.loc;
-  document.getElementById('newRate').value = p.price;
-  document.getElementById('newGuests').value = p.guests;
-  document.getElementById('newBeds').value = p.beds;
-  document.getElementById('newBaths').value = p.baths;
-  showPage('addprop', document.querySelector('[data-page=addprop]'));
-  showToast('✏️', 'Editing: ' + p.name);
-}
-function deleteProp(i, name) {
-  showConfirm('Delete "' + name + '"?',
-    'This will remove the property from your records. The live site still needs to be updated manually.',
-    function() { props.splice(i,1); renderAdminProps(); showToast('🗑', name + ' deleted'); });
-}
-
-// ── SAVE PROPERTY ────────────────────────────────────────────
-function saveProperty() {
-  const name = document.getElementById('newName').value.trim();
-  const loc  = document.getElementById('newLoc').value.trim();
-  const rate = document.getElementById('newRate').value;
-  if (!name) { showToast('⚠️','Enter a property name'); return; }
-  if (!loc)  { showToast('⚠️','Enter a location'); return; }
-  if (!rate) { showToast('⚠️','Enter a nightly rate'); return; }
-  props.push({name, loc, emoji:'🏡', photo:'', price:+rate, guests:+document.getElementById('newGuests').value||2, beds:+document.getElementById('newBeds').value||1, baths:+document.getElementById('newBaths').value||1, status:'Active', color:'#006B8F'});
-  document.getElementById('saveFeedback').className = 'feedback-msg ok';
-  showToast('✅', '"' + name + '" saved!');
-  setTimeout(() => { document.getElementById('saveFeedback').className = 'feedback-msg'; }, 4000);
-}
-
-// ── BOOKING ACTIONS ──────────────────────────────────────────
-function confirmReq(btn) {
-  const card = btn.closest('.req-card');
-  card.classList.remove('pending'); card.classList.add('confirmed');
-  btn.closest('.req-actions').innerHTML = '<span class="pill pill-green">✓ Confirmed</span>';
-  showToast('✅', 'Booking confirmed — guest notified');
-}
-function declineReq(btn) {
-  const card = btn.closest('.req-card');
-  showConfirm('Decline this booking?', 'The guest will be notified.', function() {
-    card.style.opacity = '0.4';
-    btn.closest('.req-actions').innerHTML = '<span class="pill pill-red">✗ Declined</span>';
-    showToast('🗑', 'Booking declined');
+function ghFetch(path, tok, opts={}) {
+  return fetch(API + path, {
+    ...opts,
+    headers: {
+      'Authorization': 'Bearer ' + (tok || token),
+      'Accept': 'application/vnd.github.v3+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      ...(opts.headers || {})
+    }
   });
 }
-function confirmBookingRow(btn) {
-  const row = btn.closest('tr');
-  row.querySelector('.pill').className = 'pill pill-green';
-  row.querySelector('.pill').textContent = 'Confirmed';
-  btn.remove();
-  showToast('✅', 'Booking confirmed');
-}
-function openWhatsApp(phone, service) {
-  const msg = encodeURIComponent('Hi, following up on your booking for ' + service + ' — is everything in order?');
-  window.open('https://wa.me/' + phone.replace(/\D/g,'') + '?text=' + msg, '_blank');
-}
 
-// ── CALENDAR ─────────────────────────────────────────────────
-function renderCal() {
-  const booked = [14,15,16,17,18,20,21,22,23,24,25,26,27];
-  const today = 13;
-  const days = ['Mo','Tu','We','Th','Fr','Sa','Su'];
-  const offset = 2; // April 2026 starts Wednesday
-  let h = days.map(d => `<div class="cal-day cal-head">${d}</div>`).join('');
-  for (let i=0;i<offset;i++) h += '<div class="cal-day cal-empty"></div>';
-  for (let d=1;d<=30;d++) {
-    let cls = d===today ? 'cal-today' : booked.includes(d) ? 'cal-booked' : 'cal-avail';
-    h += `<div class="cal-day ${cls}" title="April ${d}">${d}</div>`;
+// ── LOAD ALL DATA FROM GITHUB ─────────────────────────────────────
+async function loadAllData(showFeedback = false) {
+  if (!token) return;
+  setSyncBusy('Loading…');
+  try {
+    const [props, exps, settings, media] = await Promise.all([
+      loadFolder('_data/properties'),
+      loadFolder('_data/experiences'),
+      loadFile('_data/settings.json'),
+      loadMediaList(),
+    ]);
+    allData.properties  = props;
+    allData.experiences = exps;
+    allData.settings    = settings;
+    allData.media       = media;
+
+    renderDashboard();
+    renderProperties();
+    renderExperiences();
+    renderMediaGrid();
+    fillSettings();
+
+    setSyncOk('Synced');
+    if (showFeedback) toast('✅', 'Data refreshed from GitHub');
+  } catch(e) {
+    setSyncErr('Error');
+    toast('⚠️', 'Load error: ' + e.message);
   }
-  document.getElementById('calGrid').innerHTML = h;
 }
 
-// ── CONFIRM MODAL ────────────────────────────────────────────
-let confirmCb = null;
+async function loadFolder(path) {
+  const r = await ghFetch(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+  if (!r.ok) return [];
+  const files = await r.json();
+  const items = await Promise.all(
+    files.filter(f => f.name.endsWith('.json')).map(async f => {
+      const fr = await ghFetch(`/repos/${REPO}/contents/${f.path}?ref=${BRANCH}`);
+      const fd = await fr.json();
+      const data = JSON.parse(atob(fd.content.replace(/\s/g, '')));
+      return { ...data, _path: f.path, _sha: fd.sha, _slug: f.name.replace('.json','') };
+    })
+  );
+  return items;
+}
+
+async function loadFile(path) {
+  const r = await ghFetch(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+  if (!r.ok) return {};
+  const f = await r.json();
+  return { ...JSON.parse(atob(f.content.replace(/\s/g, ''))), _path: path, _sha: f.sha };
+}
+
+async function loadMediaList() {
+  const r = await ghFetch(`/repos/${REPO}/contents/images?ref=${BRANCH}`);
+  if (!r.ok) return [];
+  const files = await r.json();
+  return files.filter(f => /\.(jpg|jpeg|png|gif|webp|mp4|mov)$/i.test(f.name))
+              .map(f => ({ name: f.name, path: f.path, sha: f.sha, download_url: f.download_url }));
+}
+
+// ── WRITE FILE TO GITHUB ──────────────────────────────────────────
+async function ghWriteFile(path, content, sha, commitMsg) {
+  const body = {
+    message: commitMsg || `admin: update ${path}`,
+    content: btoa(unescape(encodeURIComponent(content))),
+    branch: BRANCH,
+  };
+  if (sha) body.sha = sha;
+  const r = await ghFetch(`/repos/${REPO}/contents/${path}`, token, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) {
+    const err = await r.json();
+    throw new Error(err.message || 'Write failed');
+  }
+  return r.json();
+}
+
+// ── UPLOAD BINARY FILE (photo/video) ─────────────────────────────
+async function uploadMedia(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async e => {
+      try {
+        const b64 = e.target.result.split(',')[1];
+        const path = `images/${file.name}`;
+        // Check if file exists (to get sha for update)
+        let sha = null;
+        const check = await ghFetch(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+        if (check.ok) { const d = await check.json(); sha = d.sha; }
+
+        const body = {
+          message: `media: upload ${file.name}`,
+          content: b64,
+          branch: BRANCH,
+        };
+        if (sha) body.sha = sha;
+        const r = await ghFetch(`/repos/${REPO}/contents/${path}`, token, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        if (!r.ok) { const e2 = await r.json(); throw new Error(e2.message); }
+        resolve(await r.json());
+      } catch(err) { reject(err); }
+    };
+    reader.onerror = () => reject(new Error('File read failed'));
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────
+function renderDashboard() {
+  document.getElementById('statProps').textContent   = allData.properties.length;
+  document.getElementById('statExps').textContent    = allData.experiences.filter(e=>e.active!==false).length;
+  document.getElementById('statMedia').textContent   = allData.media.length;
+  document.getElementById('statPropsLbl').textContent = allData.properties.map(p=>p.name).join(' · ') || '–';
+  const now = new Date();
+  document.getElementById('statUpdated').textContent = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('statBranch').textContent  = 'Branch: ' + BRANCH;
+}
+
+// ── PROPERTIES ────────────────────────────────────────────────────
+function renderProperties() {
+  const el = document.getElementById('propList');
+  if (!allData.properties.length) {
+    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">No properties yet. Add one below.</div>';
+    return;
+  }
+  el.innerHTML = allData.properties.map((p, i) => `
+    <div class="content-item" id="propItem${i}">
+      <div class="item-thumb">
+        ${p.photo ? `<img src="${p.photo}" onerror="this.parentNode.innerHTML='🏠'"/>` : '🏠'}
+      </div>
+      <div class="item-info">
+        <strong>${p.name || 'Unnamed'}</strong>
+        <span>📍 ${p.location || '–'} · ${p.bedrooms||'–'} bed · ${p.max_guests||'–'} guests</span>
+      </div>
+      <div class="item-price">€${p.price}<span style="font-size:11px;color:var(--muted)">/night</span></div>
+      <span class="pill ${p.available!==false ? 'pill-green':'pill-orange'}">${p.available!==false?'Active':'Hidden'}</span>
+      <button class="btn btn-ocean btn-sm" style="margin-left:8px" onclick="openPropEdit(${i})">Edit</button>
+      <button class="btn btn-red btn-sm" style="margin-left:4px" onclick="deleteProp(${i})">Delete</button>
+    </div>
+    <div class="edit-panel" id="propEdit${i}">
+      ${propEditForm(p, i)}
+    </div>
+  `).join('');
+}
+
+function propEditForm(p, i) {
+  const amenStr = (p.amenities || []).join(', ');
+  return `
+    <div class="fr2">
+      <div class="fg"><label class="fl">Property Name</label><input class="fi" id="pe_name_${i}" value="${esc(p.name||'')}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Location</label><input class="fi" id="pe_loc_${i}" value="${esc(p.location||'')}" oninput="markDirty()"/></div>
+    </div>
+    <div class="fg"><label class="fl">Description</label><textarea class="fi" id="pe_desc_${i}" rows="3" style="resize:vertical" oninput="markDirty()">${esc(p.description||'')}</textarea></div>
+    <div class="fr3">
+      <div class="fg"><label class="fl">Price/night (€)</label><input class="fi" id="pe_price_${i}" type="number" value="${p.price||''}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Max Guests</label><input class="fi" id="pe_guests_${i}" type="number" value="${p.max_guests||''}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Bedrooms</label><input class="fi" id="pe_beds_${i}" type="number" value="${p.bedrooms||''}" oninput="markDirty()"/></div>
+    </div>
+    <div class="fr2">
+      <div class="fg">
+        <label class="fl">Main Photo</label>
+        <select class="fi" id="pe_photo_${i}" onchange="markDirty();updatePropPhotoPreview(${i})">
+          <option value="">— no photo —</option>
+          ${allData.media.filter(m=>/\.(jpg|jpeg|png|webp)/i.test(m.name)).map(m=>`<option value="/images/${m.name}" ${p.photo==='/images/'+m.name||p.photo===m.name?'selected':''}>${m.name}</option>`).join('')}
+        </select>
+        <div id="pe_photoPreview_${i}" style="margin-top:8px;height:80px;border-radius:8px;overflow:hidden;background:var(--sand);display:${p.photo?'block':'none'}">
+          <img id="pe_photoImg_${i}" src="${p.photo||''}" style="width:100%;height:100%;object-fit:cover"/>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Hover Photo (optional)</label>
+        <select class="fi" id="pe_photo2_${i}" onchange="markDirty()">
+          <option value="">— none —</option>
+          ${allData.media.filter(m=>/\.(jpg|jpeg|png|webp)/i.test(m.name)).map(m=>`<option value="/images/${m.name}" ${p.photo_alt==='/images/'+m.name?'selected':''}>${m.name}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Amenities (comma separated)</label><input class="fi" id="pe_amen_${i}" value="${esc(amenStr)}" placeholder="WiFi, Pool, Air Con, Kitchen…" oninput="markDirty()"/></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="pe_avail_${i}" ${p.available!==false?'checked':''} onchange="markDirty()" style="accent-color:var(--ocean)"/> Active (show on site)
+      </label>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-primary" onclick="saveProp(${i})">Save & Publish →</button>
+      <button class="btn btn-ocean" onclick="closePropEdit(${i})">Cancel</button>
+    </div>
+  `;
+}
+
+function openPropEdit(i) {
+  document.querySelectorAll('.edit-panel').forEach(p => p.classList.remove('open'));
+  document.getElementById('propEdit'+i).classList.add('open');
+}
+function closePropEdit(i) {
+  document.getElementById('propEdit'+i).classList.remove('open');
+}
+function updatePropPhotoPreview(i) {
+  const val = document.getElementById('pe_photo_'+i)?.value;
+  const preview = document.getElementById('pe_photoPreview_'+i);
+  const img = document.getElementById('pe_photoImg_'+i);
+  if (val && preview && img) { img.src = val; preview.style.display = 'block'; }
+  else if (preview) preview.style.display = 'none';
+}
+
+async function saveProp(i) {
+  const p = allData.properties[i];
+  const updated = {
+    ...p,
+    name:        document.getElementById('pe_name_'+i)?.value.trim(),
+    location:    document.getElementById('pe_loc_'+i)?.value.trim(),
+    description: document.getElementById('pe_desc_'+i)?.value.trim(),
+    price:       Number(document.getElementById('pe_price_'+i)?.value),
+    max_guests:  Number(document.getElementById('pe_guests_'+i)?.value),
+    bedrooms:    Number(document.getElementById('pe_beds_'+i)?.value),
+    photo:       document.getElementById('pe_photo_'+i)?.value,
+    photo_alt:   document.getElementById('pe_photo2_'+i)?.value,
+    amenities:   (document.getElementById('pe_amen_'+i)?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
+    available:   document.getElementById('pe_avail_'+i)?.checked,
+  };
+  // Remove internal fields before saving
+  const { _path, _sha, _slug, ...clean } = updated;
+  setSyncBusy('Saving…');
+  try {
+    await ghWriteFile(_path, JSON.stringify(clean, null, 2), _sha, `admin: update property "${clean.name}"`);
+    allData.properties[i] = { ...clean, _path, _sha, _slug };
+    closePropEdit(i);
+    renderProperties();
+    setSyncOk('Saved');
+    dirty = false;
+    document.getElementById('saveBanner').classList.remove('show');
+    document.getElementById('publishBtn').style.display = 'none';
+    toast('✅', `"${clean.name}" saved — live site updating`);
+    await loadAllData(); // refresh to get new SHA
+  } catch(e) {
+    setSyncErr('Error');
+    toast('⚠️', 'Save failed: ' + e.message);
+  }
+}
+
+function addNewProperty() {
+  const newProp = {
+    name:'New Property', location:'', description:'', price:0, max_guests:2,
+    bedrooms:1, bathrooms:1, photo:'', amenities:[], available:true,
+    _path:`_data/properties/new-property-${Date.now()}.json`, _sha:null, _slug:'new-property'
+  };
+  allData.properties.push(newProp);
+  renderProperties();
+  openPropEdit(allData.properties.length - 1);
+}
+
+async function deleteProp(i) {
+  const p = allData.properties[i];
+  showConfirm(`Delete "${p.name}"?`, 'This removes it from your repo and the live site.', async () => {
+    setSyncBusy('Deleting…');
+    try {
+      await ghFetch(`/repos/${REPO}/contents/${p._path}`, token, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `admin: delete property "${p.name}"`, sha: p._sha, branch: BRANCH }),
+      });
+      allData.properties.splice(i, 1);
+      renderProperties();
+      setSyncOk('Deleted');
+      toast('🗑', `"${p.name}" deleted`);
+    } catch(e) { toast('⚠️', 'Delete failed: ' + e.message); setSyncErr('Error'); }
+  });
+}
+
+// ── EXPERIENCES ───────────────────────────────────────────────────
+function renderExperiences() {
+  const el = document.getElementById('expList');
+  if (!allData.experiences.length) {
+    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">No experiences yet.</div>';
+    return;
+  }
+  const catColors = {boat:'rgba(0,61,107,.08)',nature:'rgba(45,106,79,.08)',food:'rgba(232,133,90,.1)',concierge:'rgba(60,40,100,.06)'};
+  const catLabels = {boat:'⛵ Boat & Water',nature:'🌿 Nature',food:'🍛 Food',concierge:'🎩 Concierge'};
+  el.innerHTML = allData.experiences.map((e, i) => `
+    <div class="content-item" id="expItem${i}">
+      <div class="item-thumb" style="background:${catColors[e.category]||'var(--sand)'}">
+        ${e.photo ? `<img src="${e.photo}" onerror="this.parentNode.innerHTML='${e.icon||'🌴'}'"/>` : (e.icon||'🌴')}
+      </div>
+      <div class="item-info">
+        <strong>${e.name||'Unnamed'}</strong>
+        <span>${catLabels[e.category]||e.category||'–'} · ⏱ ${e.duration||'–'}${e.instagram?' · <a href="'+e.instagram+'" target="_blank" style="color:var(--ocean)">📸</a>':''}</span>
+      </div>
+      <div class="item-price">€${e.price}<span style="font-size:11px;color:var(--muted)">/${e.unit||'person'}</span></div>
+      <span class="pill ${e.active!==false?'pill-green':'pill-orange'}">${e.active!==false?'Active':'Hidden'}</span>
+      <button class="btn btn-ocean btn-sm" style="margin-left:8px" onclick="openExpEdit(${i})">Edit</button>
+      <button class="btn btn-red btn-sm" style="margin-left:4px" onclick="deleteExp(${i})">Delete</button>
+    </div>
+    <div class="edit-panel" id="expEdit${i}">
+      ${expEditForm(e, i)}
+    </div>
+  `).join('');
+}
+
+function expEditForm(e, i) {
+  return `
+    <div class="fr2">
+      <div class="fg"><label class="fl">Name</label><input class="fi" id="ee_name_${i}" value="${esc(e.name||'')}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Category</label>
+        <select class="fi" id="ee_cat_${i}" onchange="markDirty()">
+          <option value="boat" ${e.category==='boat'?'selected':''}>⛵ Boat & Water</option>
+          <option value="nature" ${e.category==='nature'?'selected':''}>🌿 Nature & Wellness</option>
+          <option value="food" ${e.category==='food'?'selected':''}>🍛 Food & Culture</option>
+          <option value="concierge" ${e.category==='concierge'?'selected':''}>🎩 Concierge</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Description</label><textarea class="fi" id="ee_desc_${i}" rows="3" style="resize:vertical" oninput="markDirty()">${esc(e.description||'')}</textarea></div>
+    <div class="fr3">
+      <div class="fg"><label class="fl">Price (€)</label><input class="fi" id="ee_price_${i}" type="number" value="${e.price||''}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Price Per</label>
+        <select class="fi" id="ee_unit_${i}" onchange="markDirty()">
+          <option value="person" ${e.unit==='person'?'selected':''}>person</option>
+          <option value="group" ${e.unit==='group'?'selected':''}>group</option>
+          <option value="service" ${e.unit==='service'?'selected':''}>service</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Duration</label><input class="fi" id="ee_dur_${i}" value="${esc(e.duration||'')}" placeholder="e.g. Half day" oninput="markDirty()"/></div>
+    </div>
+    <div class="fr2">
+      <div class="fg">
+        <label class="fl">Photo</label>
+        <select class="fi" id="ee_photo_${i}" onchange="markDirty();updateExpPhotoPreview(${i})">
+          <option value="">— no photo —</option>
+          ${allData.media.filter(m=>/\.(jpg|jpeg|png|webp)/i.test(m.name)).map(m=>`<option value="/images/${m.name}" ${e.photo==='/images/'+m.name?'selected':''}>${m.name}</option>`).join('')}
+        </select>
+        <div id="ee_photoPreview_${i}" style="margin-top:8px;height:70px;border-radius:8px;overflow:hidden;background:var(--sand);display:${e.photo?'block':'none'}">
+          <img id="ee_photoImg_${i}" src="${e.photo||''}" style="width:100%;height:100%;object-fit:cover"/>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Instagram URL (optional)</label><input class="fi" id="ee_ig_${i}" value="${esc(e.instagram||'')}" placeholder="https://instagram.com/…" oninput="markDirty()"/></div>
+    </div>
+    <div class="fg"><label class="fl">Icon (emoji)</label><input class="fi" id="ee_icon_${i}" value="${esc(e.icon||'')}" placeholder="🌿" style="width:80px" oninput="markDirty()"/></div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin-bottom:12px">
+      <input type="checkbox" id="ee_active_${i}" ${e.active!==false?'checked':''} onchange="markDirty()" style="accent-color:var(--ocean)"/>
+      <label for="ee_active_${i}">Active (show on site)</label>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="saveExp(${i})">Save & Publish →</button>
+      <button class="btn btn-ocean" onclick="closeExpEdit(${i})">Cancel</button>
+    </div>
+  `;
+}
+
+function openExpEdit(i) {
+  document.querySelectorAll('.edit-panel').forEach(p => p.classList.remove('open'));
+  document.getElementById('expEdit'+i).classList.add('open');
+}
+function closeExpEdit(i) { document.getElementById('expEdit'+i).classList.remove('open'); }
+function updateExpPhotoPreview(i) {
+  const val = document.getElementById('ee_photo_'+i)?.value;
+  const preview = document.getElementById('ee_photoPreview_'+i);
+  const img = document.getElementById('ee_photoImg_'+i);
+  if (val && preview && img) { img.src = val; preview.style.display='block'; }
+  else if (preview) preview.style.display = 'none';
+}
+
+async function saveExp(i) {
+  const e = allData.experiences[i];
+  const updated = {
+    ...e,
+    name:        document.getElementById('ee_name_'+i)?.value.trim(),
+    category:    document.getElementById('ee_cat_'+i)?.value,
+    description: document.getElementById('ee_desc_'+i)?.value.trim(),
+    price:       Number(document.getElementById('ee_price_'+i)?.value),
+    unit:        document.getElementById('ee_unit_'+i)?.value,
+    duration:    document.getElementById('ee_dur_'+i)?.value.trim(),
+    photo:       document.getElementById('ee_photo_'+i)?.value,
+    instagram:   document.getElementById('ee_ig_'+i)?.value.trim(),
+    icon:        document.getElementById('ee_icon_'+i)?.value.trim(),
+    active:      document.getElementById('ee_active_'+i)?.checked,
+  };
+  const { _path, _sha, _slug, ...clean } = updated;
+  setSyncBusy('Saving…');
+  try {
+    await ghWriteFile(_path, JSON.stringify(clean, null, 2), _sha, `admin: update experience "${clean.name}"`);
+    allData.experiences[i] = { ...clean, _path, _sha, _slug };
+    closeExpEdit(i);
+    renderExperiences();
+    setSyncOk('Saved');
+    dirty = false;
+    hideSaveBanner();
+    toast('✅', `"${clean.name}" saved — live site updating`);
+    await loadAllData();
+  } catch(e) {
+    setSyncErr('Error');
+    toast('⚠️', 'Save failed: ' + e.message);
+  }
+}
+
+function addNewExperience() {
+  const slug = 'new-experience-' + Date.now();
+  const newExp = {
+    name:'New Experience', category:'nature', description:'', price:0, unit:'person',
+    duration:'', photo:'', instagram:'', icon:'🌴', active:true,
+    _path:`_data/experiences/${slug}.json`, _sha:null, _slug:slug,
+  };
+  allData.experiences.push(newExp);
+  renderExperiences();
+  openExpEdit(allData.experiences.length - 1);
+}
+
+async function deleteExp(i) {
+  const e = allData.experiences[i];
+  showConfirm(`Delete "${e.name}"?`, 'This removes it from your repo and live site.', async () => {
+    setSyncBusy('Deleting…');
+    try {
+      await ghFetch(`/repos/${REPO}/contents/${e._path}`, token, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `admin: delete experience "${e.name}"`, sha: e._sha, branch: BRANCH }),
+      });
+      allData.experiences.splice(i, 1);
+      renderExperiences();
+      setSyncOk('Deleted');
+      toast('🗑', `"${e.name}" deleted`);
+    } catch(e) { toast('⚠️', 'Delete failed: ' + e.message); }
+  });
+}
+
+// ── MEDIA LIBRARY ─────────────────────────────────────────────────
+function renderMediaGrid() {
+  const grid = document.getElementById('mediaGrid');
+  const count = document.getElementById('mediaCount');
+  if (!allData.media.length) {
+    grid.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;grid-column:1/-1">No media yet. Upload photos above.</div>';
+    if (count) count.textContent = '0 files';
+    return;
+  }
+  if (count) count.textContent = allData.media.length + ' files';
+  grid.innerHTML = allData.media.map(m => {
+    const isVideo = /\.(mp4|mov)/i.test(m.name);
+    const url = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${m.path}`;
+    return `
+      <div class="media-thumb" title="${m.name}">
+        ${isVideo
+          ? `<video src="${url}" muted style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>`
+          : `<img src="${url}" loading="lazy" onerror="this.style.display='none'">`}
+        <div class="thumb-lbl"><strong>${m.name}</strong></div>
+        <button class="thumb-use" onclick="copyPath('/images/${m.name}','${m.name}')">📋 Copy path</button>
+        <button class="thumb-del" onclick="deleteMedia('${m.path}','${m.sha}','${m.name}')" title="Delete">✕</button>
+      </div>`;
+  }).join('') + `
+    <div class="media-thumb" style="background:var(--sand);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;border:2px dashed var(--stone)" onclick="document.getElementById('fileIn').click()">
+      <span style="font-size:28px">+</span>
+      <span style="font-size:12px;color:var(--muted)">Upload</span>
+    </div>`;
+}
+
+function copyPath(path, name) {
+  navigator.clipboard?.writeText(path).then(() => toast('📋', 'Copied: ' + name));
+}
+
+async function deleteMedia(path, sha, name) {
+  showConfirm(`Delete "${name}"?`, 'This permanently removes the file from GitHub. Any properties using this photo will show a broken image until you assign a new one.', async () => {
+    setSyncBusy('Deleting…');
+    try {
+      await ghFetch(`/repos/${REPO}/contents/${path}`, token, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `media: delete ${name}`, sha, branch: BRANCH }),
+      });
+      allData.media = allData.media.filter(m => m.path !== path);
+      renderMediaGrid();
+      setSyncOk('Deleted');
+      toast('🗑', name + ' deleted');
+    } catch(e) { toast('⚠️', 'Delete failed: ' + e.message); }
+  });
+}
+
+// ── FILE UPLOAD ────────────────────────────────────────────────────
+function dzOver(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.add('dragover');
+}
+function dzLeave(e) {
+  document.getElementById('dropZone').classList.remove('dragover');
+}
+function dzDrop(e) {
+  e.preventDefault();
+  dzLeave(e);
+  handleFiles(e.dataTransfer.files);
+}
+async function handleFiles(files) {
+  const arr = Array.from(files);
+  if (!arr.length) return;
+  if (!token) { toast('⚠️', 'Connect GitHub first'); return; }
+  const prog = document.getElementById('uploadProg');
+  const bar  = document.getElementById('progBar');
+  const stat = document.getElementById('uploadStatus');
+  const fileLabel = document.getElementById('uploadFile');
+  prog.style.display = 'block';
+  let done = 0;
+  for (const file of arr) {
+    fileLabel.textContent = file.name + ' (' + (file.size/1024).toFixed(0) + 'KB)';
+    stat.textContent = `Uploading ${done+1} of ${arr.length}…`;
+    setSyncBusy('Uploading…');
+    try {
+      await uploadMedia(file);
+      done++;
+      bar.style.width = Math.round(done/arr.length*100) + '%';
+    } catch(e) {
+      toast('⚠️', 'Upload failed: ' + file.name + ' — ' + e.message);
+    }
+  }
+  stat.textContent = `✅ ${done} file(s) uploaded`;
+  setSyncOk('Uploaded');
+  toast('✅', done + ' photo(s) uploaded to GitHub');
+  await loadAllData(); // refresh media list + re-render photo dropdowns
+  setTimeout(() => { prog.style.display='none'; bar.style.width='0'; }, 3000);
+}
+
+// ── SETTINGS ──────────────────────────────────────────────────────
+function fillSettings() {
+  const s = allData.settings;
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.value = val||''; };
+  set('s_name',    s.name);
+  set('s_email',   s.email);
+  set('s_whatsapp',s.whatsapp);
+  set('s_instagram',s.instagram);
+  set('s_facebook',s.facebook);
+  set('s_tiktok',  s.tiktok);
+  set('s_hero1',   s.hero_line1);
+  set('s_hero2',   s.hero_line2);
+  set('s_herosub', s.hero_sub);
+}
+
+async function saveSettings() {
+  const s = allData.settings;
+  const get = id => document.getElementById(id)?.value.trim();
+  const updated = {
+    name:       get('s_name'),
+    email:      get('s_email'),
+    whatsapp:   get('s_whatsapp'),
+    instagram:  get('s_instagram'),
+    facebook:   get('s_facebook'),
+    tiktok:     get('s_tiktok'),
+    hero_line1: get('s_hero1'),
+    hero_line2: get('s_hero2'),
+    hero_sub:   get('s_herosub'),
+    hero_photo:  s.hero_photo || '',
+    hero_photo2: s.hero_photo2 || '',
+    hero_photo3: s.hero_photo3 || '',
+    hero_photo4: s.hero_photo4 || '',
+  };
+  setSyncBusy('Saving…');
+  try {
+    await ghWriteFile('_data/settings.json', JSON.stringify(updated, null, 2), s._sha, 'admin: update site settings');
+    allData.settings = { ...updated, _path: '_data/settings.json', _sha: s._sha };
+    setSyncOk('Saved');
+    dirty = false;
+    hideSaveBanner();
+    toast('✅', 'Settings saved — live site updating');
+    await loadAllData();
+  } catch(e) {
+    setSyncErr('Error');
+    toast('⚠️', 'Save failed: ' + e.message);
+  }
+}
+
+// ── DIRTY / PUBLISH ───────────────────────────────────────────────
+function markDirty() {
+  dirty = true;
+  document.getElementById('saveBanner').classList.add('show');
+  document.getElementById('publishBtn').style.display = 'flex';
+}
+function hideSaveBanner() {
+  dirty = false;
+  document.getElementById('saveBanner').classList.remove('show');
+  document.getElementById('publishBtn').style.display = 'none';
+}
+function discardChanges() {
+  if (confirm('Discard all unsaved changes?')) {
+    loadAllData();
+    hideSaveBanner();
+  }
+}
+function publishChanges() {
+  toast('💡', 'Click "Save & Publish →" on the item you edited to save it to GitHub');
+}
+
+// ── UI HELPERS ────────────────────────────────────────────────────
+function setSyncBusy(msg) {
+  document.getElementById('syncDot').className = 'sync-dot busy';
+  document.getElementById('syncLabel').textContent = msg;
+}
+function setSyncOk(msg) {
+  document.getElementById('syncDot').className = 'sync-dot ok';
+  document.getElementById('syncLabel').textContent = msg;
+}
+function setSyncErr(msg) {
+  document.getElementById('syncDot').className = 'sync-dot err';
+  document.getElementById('syncLabel').textContent = msg;
+}
+function showConnectError(msg) {
+  const el = document.getElementById('connectError');
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+  setSyncErr('Failed');
+}
+
+const pageTitles = {
+  connect:'Connect', dashboard:'Dashboard', requests:'Booking Requests',
+  bookings:'Bookings', guests:'Guests', properties:'Properties',
+  experiences:'Experiences', media:'Media Library', settings:'Settings'
+};
+
+function goPage(id, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page-'+id);
+  if (pg) pg.classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[id] || id;
+  document.querySelectorAll('.s-item[data-page]').forEach(el => el.classList.remove('active'));
+  if (navEl) navEl.classList.add('active');
+  document.querySelector('.content').scrollTop = 0;
+}
+
 function showConfirm(title, msg, cb) {
   document.getElementById('confirmTitle').textContent = title;
   document.getElementById('confirmMsg').textContent = msg;
@@ -698,27 +1081,50 @@ function closeConfirm() {
   document.getElementById('confirmOverlay').classList.remove('open');
   confirmCb = null;
 }
-document.getElementById('confirmOkBtn').addEventListener('click', function() {
+document.getElementById('confirmOk').addEventListener('click', () => {
   if (confirmCb) confirmCb();
   closeConfirm();
 });
 
-// ── TOAST ────────────────────────────────────────────────────
+function esc(s) { return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
 let toastT;
-function showToast(icon, msg) {
+function toast(icon, msg) {
+  document.getElementById('tIcon').textContent = icon;
+  document.getElementById('tMsg').textContent = msg;
   const t = document.getElementById('toast');
-  document.getElementById('toastIcon').textContent = icon;
-  document.getElementById('toastMsg').textContent = msg;
   t.classList.add('show');
   clearTimeout(toastT);
-  toastT = setTimeout(function() { t.classList.remove('show'); }, 3200);
+  toastT = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-// ── KEYBOARD ─────────────────────────────────────────────────
-document.addEventListener('keydown', function(e) { if(e.key==='Escape') closeConfirm(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeConfirm(); });
 
-// ── INIT ─────────────────────────────────────────────────────
-showPage('dashboard', document.querySelector('[data-page=dashboard]'));
+// ── INIT ──────────────────────────────────────────────────────────
+(function init() {
+  if (token) {
+    // Token already saved — auto-connect
+    setSyncBusy('Connecting…');
+    ghFetch(`/repos/${REPO}`).then(r => {
+      if (r.ok) {
+        setSyncOk('Connected');
+        loadAllData();
+        goPage('dashboard', document.querySelector('[data-page=dashboard]'));
+      } else {
+        token = '';
+        localStorage.removeItem('ev_token');
+        goPage('connect', null);
+        setSyncErr('Token expired');
+      }
+    }).catch(() => {
+      goPage('connect', null);
+      setSyncErr('Offline');
+    });
+  } else {
+    goPage('connect', null);
+    document.getElementById('syncLabel').textContent = 'Not connected';
+  }
+})();
 </script>
 </body>
 </html>
