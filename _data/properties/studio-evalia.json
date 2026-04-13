@@ -10,5 +10,14 @@
   "photo": "/images/Hero3.jpg",
   "badge": "Available Now",
   "available": true,
-  "amenities": ["WiFi", "Air Con", "Kitchenette", "1 Bed", "1 Bath", "2 Guests"]
+  "amenities": [
+    "WiFi",
+    "Air Con",
+    "Kitchenette",
+    "1 Bed",
+    "1 Bath",
+    "2 Guests"
+  ],
+  "min_stay": 2,
+  "cleaning_fee": 30
 }

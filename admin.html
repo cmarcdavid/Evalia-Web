@@ -518,13 +518,30 @@ async function loadMediaList() {
 }
 
 // ── WRITE FILE TO GITHUB ──────────────────────────────────────────
-async function ghWriteFile(path, content, sha, commitMsg) {
+// Always fetches the LIVE SHA from GitHub immediately before writing.
+// This prevents "does not match" errors caused by stale cached SHAs
+// (which happen after any save, background update, or CMS edit).
+async function ghWriteFile(path, content, _ignoredSha, commitMsg) {
+  // Step 1: Get the current live SHA for this file
+  let liveSha = null;
+  try {
+    const check = await ghFetch(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+    if (check.ok) {
+      const existing = await check.json();
+      liveSha = existing.sha;
+    }
+  } catch(e) {
+    // File doesn't exist yet (new file) — sha stays null, that's correct
+  }
+
+  // Step 2: Write with the live SHA (or null for new files)
   const body = {
     message: commitMsg || `admin: update ${path}`,
     content: btoa(unescape(encodeURIComponent(content))),
-    branch: BRANCH,
+    branch:  BRANCH,
   };
-  if (sha) body.sha = sha;
+  if (liveSha) body.sha = liveSha;
+
   const r = await ghFetch(`/repos/${REPO}/contents/${path}`, token, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -534,7 +551,21 @@ async function ghWriteFile(path, content, sha, commitMsg) {
     const err = await r.json();
     throw new Error(err.message || 'Write failed');
   }
-  return r.json();
+  const result = await r.json();
+
+  // Step 3: Update our local cache with the new SHA returned by GitHub
+  // so the next save in the same session also works without a reload
+  if (result.content && result.content.sha) {
+    // Update any matching entry in allData
+    ['properties','experiences'].forEach(key => {
+      allData[key].forEach(item => {
+        if (item._path === path) item._sha = result.content.sha;
+      });
+    });
+    if (allData.settings._path === path) allData.settings._sha = result.content.sha;
+  }
+
+  return result;
 }
 
 // ── UPLOAD BINARY FILE (photo/video) ─────────────────────────────
@@ -621,6 +652,11 @@ function propEditForm(p, i) {
       <div class="fg"><label class="fl">Max Guests</label><input class="fi" id="pe_guests_${i}" type="number" value="${p.max_guests||''}" oninput="markDirty()"/></div>
       <div class="fg"><label class="fl">Bedrooms</label><input class="fi" id="pe_beds_${i}" type="number" value="${p.bedrooms||''}" oninput="markDirty()"/></div>
     </div>
+    <div class="fr3">
+      <div class="fg"><label class="fl">Bathrooms</label><input class="fi" id="pe_baths_${i}" type="number" value="${p.bathrooms||''}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Min Stay (nights)</label><input class="fi" id="pe_minstay_${i}" type="number" min="1" value="${p.min_stay||2}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Cleaning Fee (€)</label><input class="fi" id="pe_clean_${i}" type="number" value="${p.cleaning_fee||40}" oninput="markDirty()"/></div>
+    </div>
     <div class="fr2">
       <div class="fg">
         <label class="fl">Main Photo</label>
@@ -672,34 +708,57 @@ async function saveProp(i) {
   const p = allData.properties[i];
   const updated = {
     ...p,
-    name:        document.getElementById('pe_name_'+i)?.value.trim(),
-    location:    document.getElementById('pe_loc_'+i)?.value.trim(),
-    description: document.getElementById('pe_desc_'+i)?.value.trim(),
-    price:       Number(document.getElementById('pe_price_'+i)?.value),
-    max_guests:  Number(document.getElementById('pe_guests_'+i)?.value),
-    bedrooms:    Number(document.getElementById('pe_beds_'+i)?.value),
-    photo:       document.getElementById('pe_photo_'+i)?.value,
-    photo_alt:   document.getElementById('pe_photo2_'+i)?.value,
-    amenities:   (document.getElementById('pe_amen_'+i)?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
-    available:   document.getElementById('pe_avail_'+i)?.checked,
+    name:         document.getElementById('pe_name_'+i)?.value.trim(),
+    location:     document.getElementById('pe_loc_'+i)?.value.trim(),
+    description:  document.getElementById('pe_desc_'+i)?.value.trim(),
+    price:        Number(document.getElementById('pe_price_'+i)?.value),
+    max_guests:   Number(document.getElementById('pe_guests_'+i)?.value),
+    bedrooms:     Number(document.getElementById('pe_beds_'+i)?.value),
+    bathrooms:    Number(document.getElementById('pe_baths_'+i)?.value),
+    min_stay:     Number(document.getElementById('pe_minstay_'+i)?.value) || 2,
+    cleaning_fee: Number(document.getElementById('pe_clean_'+i)?.value) || 40,
+    photo:        document.getElementById('pe_photo_'+i)?.value,
+    photo_alt:    document.getElementById('pe_photo2_'+i)?.value,
+    amenities:    (document.getElementById('pe_amen_'+i)?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
+    available:    document.getElementById('pe_avail_'+i)?.checked,
   };
-  // Remove internal fields before saving
   const { _path, _sha, _slug, ...clean } = updated;
   setSyncBusy('Saving…');
   try {
-    await ghWriteFile(_path, JSON.stringify(clean, null, 2), _sha, `admin: update property "${clean.name}"`);
-    allData.properties[i] = { ...clean, _path, _sha, _slug };
+    // ghWriteFile fetches the live SHA from GitHub immediately before writing
+    // so stale-SHA errors cannot occur regardless of what changed since last load
+    await ghWriteFile(_path, JSON.stringify(clean, null, 2), null, `admin: update property "${clean.name}"`);
     closePropEdit(i);
-    renderProperties();
-    setSyncOk('Saved');
+    setSyncOk('Saved ✓');
     dirty = false;
-    document.getElementById('saveBanner').classList.remove('show');
-    document.getElementById('publishBtn').style.display = 'none';
-    toast('✅', `"${clean.name}" saved — live site updating`);
-    await loadAllData(); // refresh to get new SHA
+    hideSaveBanner();
+    toast('✅', `"${clean.name}" saved — live site updating in ~30s`);
+    // Reload all data so SHAs are fresh for subsequent saves
+    await loadAllData();
   } catch(e) {
-    setSyncErr('Error');
-    toast('⚠️', 'Save failed: ' + e.message);
+    setSyncErr('Save failed');
+    // Show a specific, actionable error message
+    const msg = e.message || '';
+    if (msg.includes('does not match') || msg.includes('sha') || msg.includes('409')) {
+      toast('⚠️', 'SHA conflict — retrying automatically…');
+      // Auto-retry once: ghWriteFile will re-fetch the live SHA
+      setTimeout(async () => {
+        try {
+          await ghWriteFile(_path, JSON.stringify(clean, null, 2), null, `admin: update property "${clean.name}" (retry)`);
+          closePropEdit(i);
+          setSyncOk('Saved ✓');
+          dirty = false;
+          hideSaveBanner();
+          toast('✅', `"${clean.name}" saved on retry ✓`);
+          await loadAllData();
+        } catch(e2) {
+          setSyncErr('Error');
+          toast('⚠️', 'Still failing — click Refresh at top then try again');
+        }
+      }, 1000);
+    } else {
+      toast('⚠️', 'Save failed: ' + msg + ' — click Refresh and try again');
+    }
   }
 }
 
@@ -719,10 +778,14 @@ async function deleteProp(i) {
   showConfirm(`Delete "${p.name}"?`, 'This removes it from your repo and the live site.', async () => {
     setSyncBusy('Deleting…');
     try {
+      // Always fetch live SHA before deleting to avoid stale SHA errors
+      const checkR = await ghFetch(`/repos/${REPO}/contents/${p._path}?ref=${BRANCH}`);
+      if (!checkR.ok) throw new Error('File not found on GitHub');
+      const checkD = await checkR.json();
       await ghFetch(`/repos/${REPO}/contents/${p._path}`, token, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `admin: delete property "${p.name}"`, sha: p._sha, branch: BRANCH }),
+        body: JSON.stringify({ message: `admin: delete property "${p.name}"`, sha: checkD.sha, branch: BRANCH }),
       });
       allData.properties.splice(i, 1);
       renderProperties();
@@ -842,18 +905,35 @@ async function saveExp(i) {
   const { _path, _sha, _slug, ...clean } = updated;
   setSyncBusy('Saving…');
   try {
-    await ghWriteFile(_path, JSON.stringify(clean, null, 2), _sha, `admin: update experience "${clean.name}"`);
-    allData.experiences[i] = { ...clean, _path, _sha, _slug };
+    await ghWriteFile(_path, JSON.stringify(clean, null, 2), null, `admin: update experience "${clean.name}"`);
     closeExpEdit(i);
-    renderExperiences();
-    setSyncOk('Saved');
+    setSyncOk('Saved ✓');
     dirty = false;
     hideSaveBanner();
-    toast('✅', `"${clean.name}" saved — live site updating`);
+    toast('✅', `"${clean.name}" saved — live site updating in ~30s`);
     await loadAllData();
   } catch(e) {
-    setSyncErr('Error');
-    toast('⚠️', 'Save failed: ' + e.message);
+    setSyncErr('Save failed');
+    const msg = e.message || '';
+    if (msg.includes('does not match') || msg.includes('sha') || msg.includes('409')) {
+      toast('⚠️', 'SHA conflict — retrying automatically…');
+      setTimeout(async () => {
+        try {
+          await ghWriteFile(_path, JSON.stringify(clean, null, 2), null, `admin: update experience "${clean.name}" (retry)`);
+          closeExpEdit(i);
+          setSyncOk('Saved ✓');
+          dirty = false;
+          hideSaveBanner();
+          toast('✅', `"${clean.name}" saved on retry ✓`);
+          await loadAllData();
+        } catch(e2) {
+          setSyncErr('Error');
+          toast('⚠️', 'Still failing — click Refresh at top then try again');
+        }
+      }, 1000);
+    } else {
+      toast('⚠️', 'Save failed: ' + msg + ' — click Refresh and try again');
+    }
   }
 }
 
@@ -874,10 +954,14 @@ async function deleteExp(i) {
   showConfirm(`Delete "${e.name}"?`, 'This removes it from your repo and live site.', async () => {
     setSyncBusy('Deleting…');
     try {
+      // Always fetch live SHA before deleting
+      const checkR = await ghFetch(`/repos/${REPO}/contents/${e._path}?ref=${BRANCH}`);
+      if (!checkR.ok) throw new Error('File not found on GitHub');
+      const checkD = await checkR.json();
       await ghFetch(`/repos/${REPO}/contents/${e._path}`, token, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `admin: delete experience "${e.name}"`, sha: e._sha, branch: BRANCH }),
+        body: JSON.stringify({ message: `admin: delete experience "${e.name}"`, sha: checkD.sha, branch: BRANCH }),
       });
       allData.experiences.splice(i, 1);
       renderExperiences();
@@ -1014,12 +1098,11 @@ async function saveSettings() {
   };
   setSyncBusy('Saving…');
   try {
-    await ghWriteFile('_data/settings.json', JSON.stringify(updated, null, 2), s._sha, 'admin: update site settings');
-    allData.settings = { ...updated, _path: '_data/settings.json', _sha: s._sha };
+    await ghWriteFile('_data/settings.json', JSON.stringify(updated, null, 2), null, 'admin: update site settings');
     setSyncOk('Saved');
     dirty = false;
     hideSaveBanner();
-    toast('✅', 'Settings saved — live site updating');
+    toast('✅', 'Settings saved — live site updating in ~30s');
     await loadAllData();
   } catch(e) {
     setSyncErr('Error');
