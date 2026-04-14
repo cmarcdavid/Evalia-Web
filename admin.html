@@ -3,11 +3,19 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Evalia Admin</title>
+  <title>Evalia Admin — Dashboard</title>
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+  <meta name="theme-color" content="#f4eae1"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
+      /* Evalia brand — from EvaliaLogo.png */
+      --brand-green:#6c7c6a;
+      --brand-dark: #4b5545;
+      --brand-cream:#f4eae1;
+      /* Site palette */
       --ocean:#006B8F;--lagoon:#00A8CC;--sand:#F7F0E6;--cream:#FDFAF6;
       --palm:#2D6A4F;--sunset:#E8855A;--dark:#1A1F2E;--muted:#5C6478;
       --stone:#DDD8CE;--white:#FFFFFF;--sidebar:#0d1520;
@@ -195,7 +203,25 @@
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
-  <div class="s-logo">🌴 Eva<span>lia</span></div>
+  <div class="s-logo" style="padding:0 8px;margin-bottom:24px">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" width="140" height="38" aria-label="Evalia">
+      <g transform="translate(1,1) scale(0.40)">
+        <path d="M50,95 C50,80 50,60 52,20" stroke="#a8b8a5" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M52,24 C44,20 30,14 18,8 C30,12 42,19 51,27" fill="#a8b8a5"/>
+        <path d="M52,34 C43,28 27,20 14,16 C27,22 41,30 51,37" fill="#a8b8a5"/>
+        <path d="M52,44 C42,38 25,32 11,30 C24,34 41,42 51,47" fill="#a8b8a5"/>
+        <path d="M52,55 C42,50 24,46 10,46 C23,48 41,53 51,57" fill="#a8b8a5"/>
+        <path d="M52,27 C60,20 74,14 86,8 C74,12 62,19 53,27" fill="#a8b8a5"/>
+        <path d="M51,37 C61,28 77,20 90,16 C77,22 63,30 53,37" fill="#a8b8a5"/>
+        <path d="M51,47 C62,38 79,32 93,30 C80,34 63,42 53,47" fill="#a8b8a5"/>
+        <path d="M51,57 C62,50 80,46 94,46 C81,48 63,53 53,57" fill="#a8b8a5"/>
+      </g>
+      <text x="40" y="26" font-family="Cormorant Garamond,Garamond,Georgia,serif"
+        font-size="22" font-weight="600" letter-spacing="3" fill="#ffffff">EVALIA</text>
+      <text x="41" y="38" font-family="Cormorant Garamond,Garamond,Georgia,serif"
+        font-size="6.5" letter-spacing="2" fill="#a8b8a5" opacity="0.8">ESCAPE THE ORDINARY</text>
+    </svg>
+  </div>
   <div class="s-sec">Overview</div>
   <div class="s-item active" data-page="dashboard" onclick="goPage('dashboard',this)"><span class="s-icon">📊</span>Dashboard</div>
   <div class="s-item" data-page="requests" onclick="goPage('requests',this)"><span class="s-icon">📩</span>Requests<span class="s-badge" id="reqBadge">0</span></div>

@@ -3,14 +3,33 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Evalia Mauritius — Your Island, Perfectly Arranged</title>
-  <meta name="description" content="Evalia — Premium concierge, accommodation, boat excursions, nature tours and local food discovery in Mauritius. Book everything in one place."/>
+  <title>Evalia — Escape the Ordinary · Mauritius</title>
+  <meta name="description" content="Evalia Mauritius — Escape the Ordinary. Curated accommodation, boat excursions, yoga &amp; nature retreats, food discovery and 24/7 concierge in Mauritius."/>
+  <!-- Evalia Brand Icons -->
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png"/>
+  <meta name="theme-color" content="#f4eae1"/>
+  <!-- Open Graph -->
+  <meta property="og:title" content="Evalia — Escape the Ordinary · Mauritius"/>
+  <meta property="og:description" content="Curated accommodation, excursions, yoga &amp; nature retreats, food discovery and 24/7 concierge in Mauritius."/>
+  <meta property="og:image" content="images/og-image.png"/>
+  <meta property="og:type" content="website"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="images/og-image.png"/>
+  <link rel="manifest" href="site.webmanifest"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
+      /* Evalia brand colours — extracted from EvaliaLogo.png */
+      --brand-green: #6c7c6a;   /* primary sage green */
+      --brand-dark:  #4b5545;   /* deep green */
+      --brand-cream: #f4eae1;   /* warm cream background */
+      /* Site palette */
       --ocean:   #006B8F;
       --lagoon:  #00A8CC;
       --sand:    #F7F0E6;
@@ -39,9 +58,7 @@
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(253,250,246,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(221,216,206,.5);transition:padding .3s}
     nav.scrolled{padding:12px 48px;box-shadow:0 2px 20px rgba(26,31,46,.06)}
     .nav-logo{display:flex;align-items:center;gap:10px}
-    .nav-logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--ocean),var(--lagoon));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-    .nav-logo-text{font-family:var(--font-d);font-size:22px;font-weight:600;color:var(--dark)}
-    .nav-logo-text span{color:var(--ocean)}
+    .nav-logo a{display:flex;align-items:center}
     .nav-links{display:flex;gap:32px;list-style:none}
     .nav-links a{font-size:13px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);transition:color .2s}
     .nav-links a:hover{color:var(--dark)}
@@ -340,8 +357,29 @@
 <!-- ── NAV ── -->
 <nav id="mainNav">
   <div class="nav-logo">
-    <div class="nav-logo-mark">🌴</div>
-    <div class="nav-logo-text">Eval<span>ia</span></div>
+    <a href="#home" style="display:flex;align-items:center;gap:0;text-decoration:none">
+      <!-- Evalia SVG logo — inline for crisp rendering at all sizes -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 52" width="150" height="42" aria-label="Evalia">
+        <!-- Palm leaf -->
+        <g transform="translate(2,1) scale(0.46)">
+          <path d="M50,95 C50,80 50,60 52,20" stroke="#6c7c6a" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <path d="M52,24 C44,20 30,14 18,8 C30,12 42,19 51,27" fill="#6c7c6a"/>
+          <path d="M52,34 C43,28 27,20 14,16 C27,22 41,30 51,37" fill="#6c7c6a"/>
+          <path d="M52,44 C42,38 25,32 11,30 C24,34 41,42 51,47" fill="#6c7c6a"/>
+          <path d="M52,55 C42,50 24,46 10,46 C23,48 41,53 51,57" fill="#6c7c6a"/>
+          <path d="M52,27 C60,20 74,14 86,8 C74,12 62,19 53,27" fill="#6c7c6a"/>
+          <path d="M51,37 C61,28 77,20 90,16 C77,22 63,30 53,37" fill="#6c7c6a"/>
+          <path d="M51,47 C62,38 79,32 93,30 C80,34 63,42 53,47" fill="#6c7c6a"/>
+          <path d="M51,57 C62,50 80,46 94,46 C81,48 63,53 53,57" fill="#6c7c6a"/>
+        </g>
+        <!-- EVALIA text -->
+        <text x="46" y="30" font-family="Cormorant Garamond,Garamond,Georgia,serif"
+          font-size="26" font-weight="600" letter-spacing="3.5" fill="#6c7c6a">EVALIA</text>
+        <!-- Tagline -->
+        <text x="47" y="43" font-family="Cormorant Garamond,Garamond,Georgia,serif"
+          font-size="7.5" font-weight="400" letter-spacing="2" fill="#6c7c6a" opacity="0.8">ESCAPE THE ORDINARY</text>
+      </svg>
+    </a>
   </div>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
@@ -370,7 +408,7 @@
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-badge">🌴 Mauritius · Est. 2024</div>
+    <div class="hero-badge">🌿 Mauritius · Escape the Ordinary</div>
     <h1 class="hero-title">Your Mauritius,<br><em>Perfectly Arranged</em></h1>
     <p class="hero-sub">From your villa to the open ocean — accommodation, excursions, food discovery and 24/7 concierge, all in one trusted platform.</p>
     <div class="hero-btns">
@@ -904,7 +942,26 @@
 <footer>
   <div class="footer-grid">
     <div>
-      <div class="footer-brand">Eval<span>ia</span> 🌴</div>
+      <!-- Evalia footer logo — white version -->
+    <div class="footer-brand" style="margin-bottom:12px">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 58" width="160" height="46" aria-label="Evalia">
+        <g transform="translate(2,1) scale(0.50)">
+          <path d="M50,95 C50,80 50,60 52,20" stroke="#ffffff" stroke-width="2.8" fill="none" stroke-linecap="round" opacity="0.9"/>
+          <path d="M52,24 C44,20 30,14 18,8 C30,12 42,19 51,27" fill="#ffffff" opacity="0.9"/>
+          <path d="M52,34 C43,28 27,20 14,16 C27,22 41,30 51,37" fill="#ffffff" opacity="0.9"/>
+          <path d="M52,44 C42,38 25,32 11,30 C24,34 41,42 51,47" fill="#ffffff" opacity="0.9"/>
+          <path d="M52,55 C42,50 24,46 10,46 C23,48 41,53 51,57" fill="#ffffff" opacity="0.9"/>
+          <path d="M52,27 C60,20 74,14 86,8 C74,12 62,19 53,27" fill="#ffffff" opacity="0.9"/>
+          <path d="M51,37 C61,28 77,20 90,16 C77,22 63,30 53,37" fill="#ffffff" opacity="0.9"/>
+          <path d="M51,47 C62,38 79,32 93,30 C80,34 63,42 53,47" fill="#ffffff" opacity="0.9"/>
+          <path d="M51,57 C62,50 80,46 94,46 C81,48 63,53 53,57" fill="#ffffff" opacity="0.9"/>
+        </g>
+        <text x="50" y="32" font-family="Cormorant Garamond,Garamond,Georgia,serif"
+          font-size="28" font-weight="600" letter-spacing="4" fill="#ffffff">EVALIA</text>
+        <text x="51" y="47" font-family="Cormorant Garamond,Garamond,Georgia,serif"
+          font-size="8" font-weight="400" letter-spacing="2.5" fill="#ffffff" opacity="0.65">ESCAPE THE ORDINARY</text>
+      </svg>
+    </div>
       <div class="footer-desc">Your one-stop concierge platform for the ultimate Mauritius experience. Accommodation, excursions, food discovery and 24/7 support — all in one place.</div>
       <div class="footer-socials">
         <a class="fsoc" href="https://www.instagram.com/evalia241/" target="_blank" title="Instagram @evalia241">📸</a>

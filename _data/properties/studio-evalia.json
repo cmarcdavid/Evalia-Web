@@ -7,7 +7,7 @@
   "max_guests": 2,
   "bedrooms": 1,
   "bathrooms": 1,
-  "photo": "/images/IMG_5328.jpeg",
+  "photo": "/images/Hero3.jpg",
   "badge": "Available Now",
   "available": true,
   "amenities": [
@@ -19,6 +19,5 @@
     "2 Guests"
   ],
   "min_stay": 2,
-  "cleaning_fee": 30,
-  "photo_alt": ""
+  "cleaning_fee": 30
 }
