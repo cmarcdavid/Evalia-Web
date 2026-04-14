@@ -74,7 +74,7 @@
     .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:linear-gradient(160deg,#001f3f 0%,#003d6b 40%,#006B8F 100%)}
     .hero-media{position:absolute;inset:0;overflow:hidden}
     /* ── IMAGE SLOT: replace with your real photo ──
-       <img src="your-mauritius-hero.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.35">
+       <!-- hero background provided by slideshow below -->
     */
     .hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,31,63,.85) 0%,rgba(0,61,107,.4) 60%,transparent 100%)}
     .hero-particles{position:absolute;inset:0;overflow:hidden}
@@ -462,8 +462,9 @@
       </div>
     </div>
     <div class="svc-card" onclick="openExpTab('nature')">
-      <div class="svc-img svc-img-nature">
-        🌿
+      <div class="svc-img svc-img-nature" id="svcNatureImg" style="padding:0;background:none;position:relative">
+        <img id="svcNaturePhoto" src="images/Hero3.jpg" alt="Nature & Wellness" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div style="display:none;align-items:center;justify-content:center;height:100%;font-size:64px;background:linear-gradient(135deg,#1a4a2e,#2D6A4F)">🌿</div>
         <div class="svc-tag">Island Exploration</div>
       </div>
       <div class="svc-body">
@@ -476,8 +477,9 @@
       </div>
     </div>
     <div class="svc-card" onclick="openExpTab('food')">
-      <div class="svc-img svc-img-food">
-        🍛
+      <div class="svc-img svc-img-food" id="svcFoodImg" style="padding:0;background:none;position:relative">
+        <img id="svcFoodPhoto" src="" alt="Food Discovery" style="width:100%;height:100%;object-fit:cover;display:none" onerror="this.style.display='none'"/>
+        <div id="svcFoodEmoji" style="display:flex;align-items:center;justify-content:center;height:100%;font-size:64px;background:linear-gradient(135deg,#7a2010,#c4451e)">🍛</div>
         <div class="svc-tag">Culinary</div>
       </div>
       <div class="svc-body">
@@ -504,8 +506,8 @@
       </div>
     </div>
     <div class="svc-card" onclick="scrollToSection('booking')">
-      <div class="svc-img svc-img-safety">
-        🛡️
+      <div class="svc-img svc-img-safety" style="background:linear-gradient(135deg,#1a1f2e,#2d3550);align-items:center;justify-content:center">
+        <div style="font-size:64px">🛡️</div>
         <div class="svc-tag">Safety & Care</div>
       </div>
       <div class="svc-body">
@@ -1176,7 +1178,8 @@ function renderProperties() {
 // Apply settings (WhatsApp, hero text etc) from _data/settings.json
 function applySettings(s) {
   if (!s) return;
-  // WhatsApp links
+
+  // ── WhatsApp ────────────────────────────────────────────────
   if (s.whatsapp) {
     const num = s.whatsapp.replace(/\D/g,'');
     document.querySelectorAll('a[href*="wa.me"]').forEach(a => {
@@ -1184,23 +1187,46 @@ function applySettings(s) {
       a.href = 'https://wa.me/' + num + qs;
     });
   }
-  // Hero title
+
+  // ── Hero text ─────────────────────────────────────────────────
   if (s.hero_line1) {
     const t = document.querySelector('.hero-title');
     if (t) t.innerHTML = s.hero_line1 + '<br><em>' + (s.hero_line2 || 'Perfectly Arranged') + '</em>';
   }
-  // Hero subtitle
   if (s.hero_sub) {
     const sub = document.querySelector('.hero-sub');
     if (sub) sub.textContent = s.hero_sub;
   }
-  // Hero photos for slideshow
+
+  // ── Hero slideshow photos ─────────────────────────────────────
   const heroPhotos = [s.hero_photo, s.hero_photo2, s.hero_photo3, s.hero_photo4].filter(Boolean);
   if (heroPhotos.length) {
-    const slides = document.querySelectorAll('.hero-slide');
-    heroPhotos.forEach((src, i) => { if (slides[i]) slides[i].src = src; });
+    document.querySelectorAll('.hero-slide').forEach((sl, i) => {
+      if (heroPhotos[i]) sl.src = heroPhotos[i];
+    });
   }
-  // Email
+
+  // ── Service card photos ───────────────────────────────────────
+  // Helper: set img src and show it, hide any emoji fallback sibling
+  function setSvcPhoto(selector, src) {
+    if (!src) return;
+    const el = document.querySelector(selector);
+    if (!el) return;
+    el.src = src;
+    el.style.display = 'block';
+    // Hide the emoji div that acts as fallback (next sibling div)
+    const sib = el.nextElementSibling;
+    if (sib && sib.tagName === 'DIV' && !sib.classList.contains('svc-tag')) {
+      sib.style.display = 'none';
+    }
+  }
+  setSvcPhoto('.svc-img-accommodation img', s.svc_accommodation_photo);
+  setSvcPhoto('.svc-img-boat img',           s.svc_boat_photo);
+  setSvcPhoto('#svcNaturePhoto',             s.svc_nature_photo);
+  setSvcPhoto('#svcFoodPhoto',               s.svc_food_photo);
+  setSvcPhoto('.svc-img-concierge img',      s.svc_concierge_photo);
+
+  // ── Email ─────────────────────────────────────────────────────
   if (s.email) {
     document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
       if (a.textContent.includes('@') || a.textContent.includes('evalia')) a.textContent = s.email;
@@ -1209,33 +1235,42 @@ function applySettings(s) {
   }
 }
 
-// Main loader — fetches all _data/*.json files
+// Main loader — fetches _data/manifest.json first, then all content
+// manifest.json is auto-updated by admin on every save/delete
 async function loadCMSContent() {
   try {
-    const EXP_SLUGS = [
+    // Step 1: load manifest to know what files exist (no hardcoded slugs)
+    const manifestRes = await fetch('/_data/manifest.json').then(r => r.ok ? r.json() : null);
+    const propSlugs = manifestRes?.properties || ['studio-evalia','villa-evalia'];
+    const expSlugs  = manifestRes?.experiences || [
       'dolphin-watching-cruise','ile-aux-cerfs-day-trip',
       'sunrise-beach-yoga','black-river-gorges-hike',
       'yoga-nature-retreat','chamarel-7-colour-earth',
-      'mindful-garden-walk','street-food-discovery',
-      'mauritian-cooking-class',
+      'mindful-garden-walk','street-food-discovery','mauritian-cooking-class'
     ];
 
-    const [settingsRes, studioRes, villaRes, ...expResults] = await Promise.allSettled([
+    // Step 2: load all content in parallel
+    const [settingsRes, ...rest] = await Promise.allSettled([
       fetch('/_data/settings.json').then(r => r.ok ? r.json() : null),
-      fetch('/_data/properties/studio-evalia.json').then(r => r.ok ? r.json() : null),
-      fetch('/_data/properties/villa-evalia.json').then(r => r.ok ? r.json() : null),
-      ...EXP_SLUGS.map(s => fetch('/_data/experiences/'+s+'.json').then(r => r.ok ? r.json() : null)),
+      ...propSlugs.map(s => fetch(`/_data/properties/${s}.json`).then(r => r.ok ? r.json() : null)),
+      ...expSlugs.map(s  => fetch(`/_data/experiences/${s}.json`).then(r => r.ok ? r.json() : null)),
     ]);
+    const propResults = rest.slice(0, propSlugs.length);
+    const expResults  = rest.slice(propSlugs.length);
+    // Map them to match original shape
+    const studioRes = propResults[0];
+    const villaRes  = propResults[1] || { status:'fulfilled', value:null };
+    // (rest of propResults for future properties)
 
     // Settings
     const settings = settingsRes.status === 'fulfilled' ? settingsRes.value : null;
     if (settings) applySettings(settings);
 
-    // Properties
-    const studio = studioRes.status === 'fulfilled' ? studioRes.value : null;
-    const villa  = villaRes.status  === 'fulfilled' ? villaRes.value  : null;
-    if (studio) { studio._slug = 'studio-evalia'; siteProperties.push(studio); }
-    if (villa)  { villa._slug  = 'villa-evalia';  siteProperties.push(villa); }
+    // Properties — load all from manifest
+    propResults.forEach((res, idx) => {
+      const p = res.status === 'fulfilled' ? res.value : null;
+      if (p) { p._slug = propSlugs[idx]; siteProperties.push(p); }
+    });
     if (siteProperties.length) renderProperties();
 
     // Experiences

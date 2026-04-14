@@ -7,5 +7,13 @@
   "hero_line1": "Your Mauritius,",
   "hero_line2": "Perfectly Arranged",
   "hero_sub": "From your villa to the open ocean — accommodation, excursions, food discovery and 24/7 concierge, all in one trusted platform.",
-  "hero_photo": "/images/Hero.jpg"
+  "hero_photo":  "/images/Hero.jpg",
+  "hero_photo2": "/images/Hero1.jpg",
+  "hero_photo3": "/images/Hero2.jpg",
+  "hero_photo4": "/images/Hero3.jpg",
+  "svc_accommodation_photo": "/images/Hero1.jpg",
+  "svc_boat_photo":          "/images/Hero2.jpg",
+  "svc_nature_photo":        "/images/Hero3.jpg",
+  "svc_food_photo":          "",
+  "svc_concierge_photo":     "/images/Host.jpg"
 }

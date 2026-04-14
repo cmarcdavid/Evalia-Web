@@ -3,490 +3,502 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Evalia Admin — Dashboard</title>
-  <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+  <title>Evalia Admin</title>
+  <!-- Brand favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
-  <meta name="theme-color" content="#f4eae1"/>
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      /* Evalia brand — from EvaliaLogo.png */
-      --brand-green:#6c7c6a;
-      --brand-dark: #4b5545;
-      --brand-cream:#f4eae1;
-      /* Site palette */
-      --ocean:#006B8F;--lagoon:#00A8CC;--sand:#F7F0E6;--cream:#FDFAF6;
-      --palm:#2D6A4F;--sunset:#E8855A;--dark:#1A1F2E;--muted:#5C6478;
-      --stone:#DDD8CE;--white:#FFFFFF;--sidebar:#0d1520;
-      --font-d:'Playfair Display',serif;--font-b:'Outfit',sans-serif;
+      --green: #6c7c6a; --dark-green:#4b5545; --cream:#f4eae1;
+      --ocean:#006B8F;  --sand:#F7F0E6;       --sidebar:#0d1520;
+      --dark:#1A1F2E;   --muted:#5C6478;      --stone:#DDD8CE;
+      --white:#FFFFFF;  --palm:#2D6A4F;       --sunset:#E8855A;
+      --font-d:'Playfair Display',serif; --font-b:'Outfit',sans-serif;
     }
-    /* ── SCROLLING FIX ──
-       html + body fill the viewport but DO NOT hide overflow.
-       The sidebar and main column each scroll independently.
-       .content is the only element with overflow-y:auto so
-       every page inside it can scroll freely regardless of
-       content length or font size.
-    ── */
-    html{height:100%}
-    body{font-family:var(--font-b);background:var(--sand);color:var(--dark);display:flex;height:100%;overflow:hidden}
+    html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(--sand);color:var(--dark)}
     a{color:inherit;text-decoration:none}
 
-    /* SIDEBAR — fixed height, scrolls its own nav items */
-    .sidebar{width:230px;background:var(--sidebar);padding:24px 14px;display:flex;flex-direction:column;gap:3px;flex-shrink:0;height:100%;overflow-y:auto}
-    .s-logo{font-family:var(--font-d);font-size:21px;font-weight:600;color:#fff;margin-bottom:24px;padding:0 10px;display:flex;align-items:center;gap:8px}
-    .s-logo span{color:var(--lagoon)}
-    .s-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;font-size:13px;color:rgba(255,255,255,.42);cursor:pointer;transition:all .15s;user-select:none}
-    .s-item:hover{background:rgba(0,168,204,.1);color:rgba(255,255,255,.8)}
-    .s-item.active{background:rgba(0,168,204,.18);color:var(--lagoon);font-weight:500}
-    .s-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
-    .s-div{height:1px;background:rgba(255,255,255,.06);margin:10px 4px}
-    .s-sec{font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.18);padding:5px 10px 2px}
-    .s-badge{background:var(--sunset);color:#fff;border-radius:50px;padding:1px 7px;font-size:10px;margin-left:auto}
+    /* LAYOUT */
+    .shell{display:flex;height:100%}
+    .sidebar{width:220px;background:var(--sidebar);display:flex;flex-direction:column;flex-shrink:0;height:100%;overflow-y:auto}
+    .main{flex:1;display:flex;flex-direction:column;min-width:0;height:100%;overflow:hidden}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(253,250,246,.97);border-bottom:1px solid var(--stone);flex-shrink:0;gap:12px;flex-wrap:wrap}
+    .content{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px;height:0}
 
-    /* MAIN — fills remaining width, stacks topbar above scrollable content */
-    .main{flex:1;display:flex;flex-direction:column;height:100%;min-width:0;overflow:hidden}
-    .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:rgba(253,250,246,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--stone);flex-shrink:0;z-index:10}
-    .page-title{font-family:var(--font-d);font-size:22px;font-weight:400}
-    .topbar-r{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    .tb-btn{height:34px;padding:0 14px;background:var(--white);border-radius:8px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--stone);transition:all .2s;color:var(--dark)}
-    .tb-btn:hover{border-color:var(--ocean);color:var(--ocean)}
-    .tb-btn.primary{background:var(--ocean);color:#fff;border-color:var(--ocean)}
-    .tb-btn.primary:hover{background:#005a78}
-    .sync-dot{width:8px;height:8px;border-radius:50%;background:#aaa;flex-shrink:0}
-    .sync-dot.ok{background:var(--palm)}
-    .sync-dot.busy{background:var(--sunset);animation:pulse-dot 1s infinite}
-    .sync-dot.err{background:#e74c3c}
-    @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
+    /* SIDEBAR */
+    .s-brand{padding:20px 14px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .s-nav{padding:10px 8px;display:flex;flex-direction:column;gap:2px;flex:1}
+    .s-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:13px;color:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap}
+    .s-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.8)}
+    .s-item.active{background:rgba(108,124,106,.25);color:#b8cbb5;font-weight:500}
+    .s-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+    .s-div{height:1px;background:rgba(255,255,255,.07);margin:8px 10px}
+    .s-label{font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:6px 10px 2px}
+    .s-badge{background:var(--sunset);color:#fff;border-radius:50px;padding:1px 6px;font-size:10px;margin-left:auto;flex-shrink:0}
 
-    /* CONTENT — the ONLY scroll container; always fills remaining height */
-    .content{flex:1;overflow-y:auto;overflow-x:hidden;padding:22px 24px;height:0;/* height:0 forces flex child to respect parent height */}
+    /* TOPBAR */
+    .page-title{font-family:var(--font-d);font-size:20px;font-weight:400;white-space:nowrap}
+    .tb-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .tb-btn{height:32px;padding:0 12px;background:var(--white);border-radius:8px;display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--stone);transition:all .2s;color:var(--dark);font-family:var(--font-b)}
+    .tb-btn:hover{border-color:var(--green);color:var(--green)}
+    .tb-btn.pri{background:var(--green);color:#fff;border-color:var(--green)}.tb-btn.pri:hover{background:var(--dark-green)}
+    .sync-wrap{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+    .dot{width:7px;height:7px;border-radius:50%;background:#aaa;flex-shrink:0;transition:background .3s}
+    .dot.ok{background:var(--palm)}
+    .dot.busy{background:var(--sunset);animation:blink 1s infinite}
+    .dot.err{background:#e74c3c}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+    /* PAGES */
     .page{display:none}.page.active{display:block}
 
     /* CARDS */
-    .card{background:var(--white);border-radius:14px;padding:22px;box-shadow:0 2px 12px rgba(26,31,46,.06);margin-bottom:18px}
-    .card-title{font-family:var(--font-d);font-size:18px;font-weight:400;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+    .card{background:var(--white);border-radius:12px;padding:20px;box-shadow:0 1px 10px rgba(26,31,46,.06);margin-bottom:16px}
+    .card-title{font-family:var(--font-d);font-size:17px;font-weight:400;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:860px){.grid2{grid-template-columns:1fr}}
 
     /* STATS */
-    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
-    @media(max-width:1100px){.stats-row{grid-template-columns:repeat(2,1fr)}}
-    .stat-card{background:var(--white);border-radius:12px;padding:18px;box-shadow:0 2px 12px rgba(26,31,46,.05)}
-    .sc-label{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-    .sc-val{font-family:var(--font-d);font-size:32px;font-weight:400;color:var(--dark);line-height:1}
-    .sc-delta{font-size:12px;margin-top:5px;color:var(--palm)}
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    @media(max-width:1000px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+    .stat-card{background:var(--white);border-radius:10px;padding:16px;box-shadow:0 1px 8px rgba(26,31,46,.05)}
+    .sc-lbl{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+    .sc-val{font-family:var(--font-d);font-size:28px;font-weight:400;color:var(--dark);line-height:1}
+    .sc-sub{font-size:12px;margin-top:4px;color:var(--palm)}
 
     /* TABLES */
     .tbl-wrap{overflow-x:auto}
-    table{width:100%;border-collapse:collapse;font-size:13px;min-width:480px}
-    th{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:0 10px 10px 0;text-align:left;border-bottom:1px solid var(--stone)}
-    td{padding:11px 10px 11px 0;border-bottom:1px solid rgba(221,216,206,.4);vertical-align:middle}
+    table{width:100%;border-collapse:collapse;font-size:13px;min-width:400px}
+    th{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0 10px 8px 0;text-align:left;border-bottom:1px solid var(--stone)}
+    td{padding:10px 10px 10px 0;border-bottom:1px solid rgba(221,216,206,.35);vertical-align:middle}
     tr:last-child td{border:none}
-    .pill{display:inline-block;padding:2px 10px;border-radius:50px;font-size:11px;font-weight:500}
-    .pill-green{background:rgba(45,106,79,.12);color:var(--palm)}
-    .pill-blue{background:rgba(0,107,143,.1);color:var(--ocean)}
-    .pill-orange{background:rgba(232,133,90,.12);color:var(--sunset)}
-    .pill-red{background:rgba(231,76,60,.1);color:#e74c3c}
+
+    /* PILLS */
+    .pill{display:inline-block;padding:2px 9px;border-radius:50px;font-size:11px;font-weight:500}
+    .pill-g{background:rgba(45,106,79,.1);color:var(--palm)}
+    .pill-o{background:rgba(232,133,90,.1);color:var(--sunset)}
+    .pill-b{background:rgba(0,107,143,.08);color:var(--ocean)}
 
     /* BUTTONS */
-    .btn{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:var(--font-b);transition:all .15s}
-    .btn-sm{padding:4px 10px;font-size:11px}
-    .btn-primary{background:var(--dark);color:#fff}.btn-primary:hover{background:var(--ocean)}
-    .btn-ocean{background:rgba(0,107,143,.1);color:var(--ocean)}.btn-ocean:hover{background:rgba(0,107,143,.2)}
-    .btn-red{background:rgba(231,76,60,.1);color:#e74c3c}.btn-red:hover{background:rgba(231,76,60,.18)}
-    .btn-green{background:rgba(45,106,79,.1);color:var(--palm)}.btn-green:hover{background:rgba(45,106,79,.18)}
-    .btn-full{width:100%;padding:12px;border-radius:10px;font-size:14px;text-align:center}
+    .btn{padding:5px 12px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:var(--font-b);transition:all .15s}
+    .btn-sm{padding:3px 9px;font-size:11px}
+    .btn-pri{background:var(--dark);color:#fff}.btn-pri:hover{background:var(--green)}
+    .btn-g{background:rgba(108,124,106,.1);color:var(--green)}.btn-g:hover{background:rgba(108,124,106,.2)}
+    .btn-r{background:rgba(231,76,60,.08);color:#c0392b}.btn-r:hover{background:rgba(231,76,60,.16)}
+    .btn-full{width:100%;padding:11px;border-radius:9px;font-size:13px;text-align:center}
 
     /* FORMS */
-    .fg{margin-bottom:13px}
-    .fl{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
-    .fi{width:100%;padding:9px 12px;border:1.5px solid var(--stone);border-radius:9px;font-family:var(--font-b);font-size:13px;color:var(--dark);background:var(--white);outline:none;transition:border-color .2s;appearance:none}
-    .fi:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(0,107,143,.08)}
+    .fg{margin-bottom:12px}
+    .fl{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
+    .fi{width:100%;padding:8px 11px;border:1.5px solid var(--stone);border-radius:8px;font-family:var(--font-b);font-size:13px;color:var(--dark);background:var(--white);outline:none;transition:border-color .2s;appearance:none}
+    .fi:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(108,124,106,.1)}
     .fi:disabled{background:var(--sand);color:var(--muted);cursor:not-allowed}
-    .fr2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    .fr2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
     @media(max-width:700px){.fr2,.fr3{grid-template-columns:1fr}}
-    .form-sec{margin-bottom:22px}
-    .form-sec-title{font-family:var(--font-d);font-size:17px;font-weight:400;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--stone)}
-    .check-group{display:flex;flex-wrap:wrap;gap:7px}
-    .check-pill{display:flex;align-items:center;gap:5px;padding:5px 11px;border:1px solid var(--stone);border-radius:7px;cursor:pointer;font-size:12px;transition:all .15s}
-    .check-pill:hover{border-color:var(--ocean)}
-    .check-pill input{accent-color:var(--ocean);width:13px;height:13px}
-
-    /* MEDIA GRID */
-    .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
-    .media-thumb{border-radius:10px;height:120px;position:relative;overflow:hidden;cursor:pointer;background:var(--sand);transition:transform .2s}
-    .media-thumb:hover{transform:scale(1.03)}
-    .media-thumb img,.media-thumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-    .media-thumb .thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(13,21,32,.7);color:#fff;font-size:10px;padding:4px 7px;line-height:1.3}
-    .media-thumb .thumb-del{position:absolute;top:5px;right:5px;width:22px;height:22px;background:rgba(231,76,60,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;cursor:pointer;opacity:0;transition:opacity .2s;border:none}
-    .media-thumb:hover .thumb-del{opacity:1}
-    .media-thumb .thumb-use{position:absolute;top:5px;left:5px;background:rgba(0,107,143,.85);color:#fff;font-size:10px;padding:2px 7px;border-radius:50px;cursor:pointer;opacity:0;transition:opacity .2s;border:none;font-family:var(--font-b)}
-    .media-thumb:hover .thumb-use{opacity:1}
-    .drop-zone{border:2px dashed var(--stone);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s}
-    .drop-zone:hover,.drop-zone.dragover{border-color:var(--ocean);background:rgba(0,107,143,.03)}
-    .upload-progress{display:none;margin-top:14px}
-    .prog-bar-wrap{height:5px;background:var(--sand);border-radius:50px;overflow:hidden;margin:6px 0 4px}
-    .prog-bar{height:100%;background:var(--ocean);border-radius:50px;width:0;transition:width .3s}
-
-    /* PROPERTY / EXP ITEM */
-    .content-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(221,216,206,.4)}
-    .content-item:last-child{border:none}
-    .item-thumb{width:56px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:26px}
-    .item-thumb img{width:100%;height:100%;object-fit:cover}
-    .item-info{flex:1;min-width:0}
-    .item-info strong{font-size:14px;font-weight:500;display:block}
-    .item-info span{font-size:12px;color:var(--muted)}
-    .item-price{font-family:var(--font-d);font-size:15px;margin-right:10px;white-space:nowrap}
+    .fsec{margin-bottom:18px}
+    .fsec-title{font-family:var(--font-d);font-size:15px;font-weight:400;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--stone)}
+    .hint{font-size:11px;color:var(--muted);margin-top:3px}
 
     /* INLINE EDIT PANEL */
-    /* Extra bottom padding so Save button always above viewport edge */
-    .edit-panel{background:var(--sand);border-radius:12px;padding:18px 18px 28px;margin-top:10px;display:none}
+    .edit-panel{background:var(--sand);border-radius:10px;padding:16px 16px 24px;margin-top:8px;display:none}
     .edit-panel.open{display:block}
 
-    /* TOAST & OVERLAY */
-    .toast{position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.22);z-index:9999;transform:translateY(60px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;max-width:320px}
-    .toast.show{transform:translateY(0);opacity:1}
-    .overlay{position:fixed;inset:0;background:rgba(13,21,32,.6);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(6px)}
-    .overlay.open{opacity:1;pointer-events:all}
-    .modal{background:var(--white);border-radius:16px;padding:28px;max-width:420px;width:100%;transform:translateY(20px);transition:transform .25s}
-    .overlay.open .modal{transform:none}
+    /* CONTENT ITEM */
+    .ci{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(221,216,206,.35)}
+    .ci:last-of-type{border:none}
+    .ci-thumb{width:52px;height:52px;border-radius:9px;overflow:hidden;flex-shrink:0;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:24px;position:relative}
+    .ci-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .ci-info{flex:1;min-width:0}
+    .ci-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ci-meta{font-size:12px;color:var(--muted);margin-top:1px}
+    .ci-price{font-family:var(--font-d);font-size:14px;margin-right:8px;white-space:nowrap}
+    .ci-actions{display:flex;gap:5px;flex-shrink:0}
 
-    /* CHART */
-    .chart-bars{display:flex;align-items:flex-end;gap:7px;height:110px;margin-top:8px}
-    .bar-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
-    .bar{background:linear-gradient(to top,var(--ocean),var(--lagoon));border-radius:3px 3px 0 0;width:100%;transition:opacity .2s;cursor:pointer}
-    .bar:hover{opacity:.7}
-    .bar-lbl{font-size:10px;color:var(--muted)}
+    /* MEDIA GRID */
+    .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+    .media-thumb{border-radius:9px;height:100px;position:relative;overflow:hidden;cursor:pointer;background:var(--sand);transition:transform .2s;border:2px solid transparent}
+    .media-thumb:hover{transform:scale(1.04);border-color:var(--green)}
+    .media-thumb.selected{border-color:var(--green);outline:2px solid var(--green)}
+    .media-thumb img,.media-thumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(13,21,32,.7);color:#fff;font-size:9px;padding:3px 6px;line-height:1.3;word-break:break-all}
+    .thumb-del{position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(192,57,43,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;cursor:pointer;opacity:0;transition:opacity .2s;border:none}
+    .media-thumb:hover .thumb-del{opacity:1}
+    .thumb-copy{position:absolute;top:4px;left:4px;background:rgba(0,107,143,.85);color:#fff;font-size:9px;padding:2px 6px;border-radius:50px;cursor:pointer;opacity:0;transition:opacity .2s;border:none;font-family:var(--font-b)}
+    .media-thumb:hover .thumb-copy{opacity:1}
 
-    /* CAL */
-    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px}
-    .cal-day{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer}
-    .cal-head{font-size:10px;color:var(--muted);font-weight:600;cursor:default;aspect-ratio:auto;padding:3px 0}
-    .cal-empty{background:transparent;cursor:default}
-    .cal-avail{background:rgba(45,106,79,.1);color:var(--palm)}
-    .cal-booked{background:rgba(232,133,90,.12);color:var(--sunset)}
-    .cal-today{background:var(--ocean);color:#fff;font-weight:600}
+    /* DROP ZONE */
+    .drop-zone{border:2px dashed var(--stone);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all .2s}
+    .drop-zone:hover,.drop-zone.over{border-color:var(--green);background:rgba(108,124,106,.04)}
+    .prog-wrap{display:none;margin-top:12px}
+    .prog-bar-bg{height:4px;background:var(--sand);border-radius:50px;overflow:hidden;margin:5px 0 3px}
+    .prog-bar{height:100%;background:var(--green);border-radius:50px;width:0;transition:width .3s}
+
+    /* IMAGE PICKER */
+    .img-picker-preview{width:100%;height:90px;border-radius:8px;overflow:hidden;background:var(--sand);margin-top:7px;display:none;position:relative}
+    .img-picker-preview img{width:100%;height:100%;object-fit:cover}
+
+    /* PHOTO SELECTOR MODAL */
+    .modal-wrap{position:fixed;inset:0;background:rgba(13,21,32,.55);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(6px)}
+    .modal-wrap.open{opacity:1;pointer-events:all}
+    .modal-box{background:var(--white);border-radius:14px;padding:24px;max-width:640px;width:100%;max-height:80vh;overflow-y:auto;transform:translateY(16px);transition:transform .25s}
+    .modal-wrap.open .modal-box{transform:none}
+
+    /* CONFIRM OVERLAY */
+    .confirm-wrap{position:fixed;inset:0;background:rgba(13,21,32,.5);z-index:700;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(4px)}
+    .confirm-wrap.open{opacity:1;pointer-events:all}
+    .confirm-box{background:var(--white);border-radius:12px;padding:24px;max-width:380px;width:100%;transform:translateY(12px);transition:transform .2s}
+    .confirm-wrap.open .confirm-box{transform:none}
 
     /* SAVE BANNER */
-    /* Save banner — above main area only, not covering sidebar */
-    .save-banner{position:fixed;top:0;left:230px;right:0;z-index:800;background:var(--ocean);color:#fff;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;font-size:13px;transform:translateY(-100%);transition:transform .3s}
+    .save-banner{position:fixed;top:0;left:220px;right:0;z-index:500;background:var(--green);color:#fff;padding:9px 20px;display:flex;align-items:center;justify-content:space-between;font-size:13px;transform:translateY(-100%);transition:transform .28s}
     .save-banner.show{transform:translateY(0)}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;padding:11px 16px;border-radius:9px;font-size:13px;box-shadow:0 5px 20px rgba(0,0,0,.2);z-index:9999;transform:translateY(50px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;max-width:300px}
+    .toast.show{transform:translateY(0);opacity:1}
+
+    /* INFO BOX */
+    .info-box{background:rgba(108,124,106,.07);border:1px solid rgba(108,124,106,.2);border-radius:9px;padding:14px 16px;font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:14px}
+    .info-box strong{color:var(--dark)}
+    .info-box a{color:var(--green)}
+
+    /* HOW IT WORKS STEPS */
+    .steps{display:flex;flex-direction:column;gap:10px}
+    .step{display:flex;gap:12px;align-items:flex-start}
+    .step-num{width:28px;height:28px;border-radius:50%;background:rgba(108,124,106,.15);color:var(--green);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .step-body{font-size:13px;color:var(--muted);line-height:1.6}
+    .step-body strong{color:var(--dark)}
   </style>
 </head>
 <body>
 
-<!-- Unsaved changes banner -->
+<!-- SAVE BANNER -->
 <div class="save-banner" id="saveBanner">
-  <span>⚠️ You have unsaved changes</span>
-  <div style="display:flex;gap:8px">
-    <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3)" onclick="discardChanges()">Discard</button>
-    <button class="btn btn-sm" style="background:#fff;color:var(--ocean)" onclick="publishChanges()">Publish to Live Site →</button>
+  <span>⚠️ Unsaved changes — click Save on the item you edited</span>
+  <div style="display:flex;gap:6px">
+    <button class="tb-btn" style="background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.3)" onclick="loadAllData(false);hideBanner()">Discard</button>
   </div>
 </div>
 
-<!-- Confirm overlay -->
-<div class="overlay" id="confirmOverlay">
-  <div class="modal">
-    <h3 id="confirmTitle" style="font-family:var(--font-d);font-size:20px;margin-bottom:8px">Confirm</h3>
+<!-- CONFIRM OVERLAY -->
+<div class="confirm-wrap" id="confirmWrap">
+  <div class="confirm-box">
+    <h3 id="confirmTitle" style="font-family:var(--font-d);font-size:18px;margin-bottom:8px"></h3>
     <p id="confirmMsg" style="font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6"></p>
     <div style="display:flex;gap:8px;justify-content:flex-end">
-      <button class="btn btn-ocean" onclick="closeConfirm()">Cancel</button>
-      <button class="btn btn-red" id="confirmOk">Confirm</button>
+      <button class="btn btn-g" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-r" id="confirmOk">Delete</button>
     </div>
   </div>
 </div>
 
-<!-- Toast -->
+<!-- PHOTO SELECTOR MODAL -->
+<div class="modal-wrap" id="photoModal">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h3 style="font-family:var(--font-d);font-size:18px;font-weight:400">Choose Photo</h3>
+      <button class="btn btn-g btn-sm" onclick="closePhotoModal()">✕ Close</button>
+    </div>
+    <div class="drop-zone" style="padding:16px;margin-bottom:16px" onclick="document.getElementById('modalFileIn').click()">
+      <span style="font-size:20px">📸</span> <span style="font-size:13px;color:var(--muted)">Upload new photo — or pick from library below</span>
+    </div>
+    <input type="file" id="modalFileIn" style="display:none" accept="image/*,video/mp4" onchange="handleModalUpload(event)"/>
+    <div id="modalMediaGrid" class="media-grid"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
 <div class="toast" id="toast"><span id="tIcon">✅</span><span id="tMsg"></span></div>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="s-logo" style="padding:0 8px;margin-bottom:24px">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" width="140" height="38" aria-label="Evalia">
-      <g transform="translate(1,1) scale(0.40)">
-        <path d="M50,95 C50,80 50,60 52,20" stroke="#a8b8a5" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M52,24 C44,20 30,14 18,8 C30,12 42,19 51,27" fill="#a8b8a5"/>
-        <path d="M52,34 C43,28 27,20 14,16 C27,22 41,30 51,37" fill="#a8b8a5"/>
-        <path d="M52,44 C42,38 25,32 11,30 C24,34 41,42 51,47" fill="#a8b8a5"/>
-        <path d="M52,55 C42,50 24,46 10,46 C23,48 41,53 51,57" fill="#a8b8a5"/>
-        <path d="M52,27 C60,20 74,14 86,8 C74,12 62,19 53,27" fill="#a8b8a5"/>
-        <path d="M51,37 C61,28 77,20 90,16 C77,22 63,30 53,37" fill="#a8b8a5"/>
-        <path d="M51,47 C62,38 79,32 93,30 C80,34 63,42 53,47" fill="#a8b8a5"/>
-        <path d="M51,57 C62,50 80,46 94,46 C81,48 63,53 53,57" fill="#a8b8a5"/>
-      </g>
-      <text x="40" y="26" font-family="Cormorant Garamond,Garamond,Georgia,serif"
-        font-size="22" font-weight="600" letter-spacing="3" fill="#ffffff">EVALIA</text>
-      <text x="41" y="38" font-family="Cormorant Garamond,Garamond,Georgia,serif"
-        font-size="6.5" letter-spacing="2" fill="#a8b8a5" opacity="0.8">ESCAPE THE ORDINARY</text>
-    </svg>
-  </div>
-  <div class="s-sec">Overview</div>
-  <div class="s-item active" data-page="dashboard" onclick="goPage('dashboard',this)"><span class="s-icon">📊</span>Dashboard</div>
-  <div class="s-item" data-page="requests" onclick="goPage('requests',this)"><span class="s-icon">📩</span>Requests<span class="s-badge" id="reqBadge">0</span></div>
-  <div class="s-item" data-page="bookings" onclick="goPage('bookings',this)"><span class="s-icon">📅</span>Bookings</div>
-  <div class="s-item" data-page="guests" onclick="goPage('guests',this)"><span class="s-icon">👥</span>Guests</div>
-  <div class="s-div"></div>
-  <div class="s-sec">Content</div>
-  <div class="s-item" data-page="properties" onclick="goPage('properties',this)"><span class="s-icon">🏠</span>Properties</div>
-  <div class="s-item" data-page="experiences" onclick="goPage('experiences',this)"><span class="s-icon">🌴</span>Experiences</div>
-  <div class="s-item" data-page="media" onclick="goPage('media',this)"><span class="s-icon">📸</span>Media Library</div>
-  <div class="s-item" data-page="settings" onclick="goPage('settings',this)"><span class="s-icon">⚙️</span>Settings</div>
-  <div class="s-div"></div>
-  <div class="s-item" onclick="window.open('https://evalia-web.vercel.app','_blank')"><span class="s-icon">🌐</span>View Live Site</div>
-  <div class="s-item" onclick="window.open('https://evalia-web.vercel.app/admin','_blank')"><span class="s-icon">✏️</span>CMS Editor</div>
-</aside>
+<div class="shell">
 
-<!-- MAIN -->
-<div class="main">
-  <div class="topbar">
-    <div class="page-title" id="pageTitle">Dashboard</div>
-    <div class="topbar-r">
-      <div id="syncStatus" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
-        <div class="sync-dot" id="syncDot"></div>
-        <span id="syncLabel">Connecting…</span>
-      </div>
-      <button class="tb-btn" onclick="loadAllData(true)">🔄 Refresh</button>
-      <button class="tb-btn primary" onclick="publishChanges()" id="publishBtn" style="display:none">Publish →</button>
-      <a class="tb-btn" href="https://wa.me/23057242099" target="_blank">💬 WhatsApp</a>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="s-brand">
+      <!-- Evalia brand logo — sage green palm leaf + wordmark -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 46" width="150" height="40" aria-label="Evalia">
+        <g transform="translate(1,1) scale(0.40)">
+          <path d="M50,95 C50,80 50,60 52,20" stroke="#8a9e87" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M52,24 C44,20 30,14 18,8 C30,12 42,19 51,27" fill="#8a9e87"/>
+          <path d="M52,34 C43,28 27,20 14,16 C27,22 41,30 51,37" fill="#8a9e87"/>
+          <path d="M52,44 C42,38 25,32 11,30 C24,34 41,42 51,47" fill="#8a9e87"/>
+          <path d="M52,55 C42,50 24,46 10,46 C23,48 41,53 51,57" fill="#8a9e87"/>
+          <path d="M52,27 C60,20 74,14 86,8 C74,12 62,19 53,27" fill="#8a9e87"/>
+          <path d="M51,37 C61,28 77,20 90,16 C77,22 63,30 53,37" fill="#8a9e87"/>
+          <path d="M51,47 C62,38 79,32 93,30 C80,34 63,42 53,47" fill="#8a9e87"/>
+          <path d="M51,57 C62,50 80,46 94,46 C81,48 63,53 53,57" fill="#8a9e87"/>
+        </g>
+        <text x="42" y="27" font-family="Playfair Display,Georgia,serif" font-size="21" font-weight="600" letter-spacing="3" fill="#ffffff">EVALIA</text>
+        <text x="43" y="39" font-family="Outfit,Arial,sans-serif" font-size="6.5" letter-spacing="2" fill="#8a9e87">ESCAPE THE ORDINARY</text>
+      </svg>
     </div>
-  </div>
+    <nav class="s-nav">
+      <div class="s-label">Overview</div>
+      <div class="s-item active" data-page="dashboard" onclick="goPage('dashboard',this)"><span class="s-icon">📊</span>Dashboard</div>
+      <div class="s-item" data-page="bookings" onclick="goPage('bookings',this)"><span class="s-icon">📩</span>Bookings<span class="s-badge" id="reqBadge">—</span></div>
+      <div class="s-div"></div>
+      <div class="s-label">Content</div>
+      <div class="s-item" data-page="properties" onclick="goPage('properties',this)"><span class="s-icon">🏠</span>Properties</div>
+      <div class="s-item" data-page="experiences" onclick="goPage('experiences',this)"><span class="s-icon">🌴</span>Experiences</div>
+      <div class="s-item" data-page="media" onclick="goPage('media',this)"><span class="s-icon">📸</span>Media Library</div>
+      <div class="s-item" data-page="settings" onclick="goPage('settings',this)"><span class="s-icon">⚙️</span>Settings</div>
+      <div class="s-div"></div>
+      <div class="s-item" onclick="window.open('index.html','_blank')"><span class="s-icon">🌐</span>View Live Site</div>
+      <div class="s-item" onclick="loadAllData(true)"><span class="s-icon">🔄</span>Refresh All</div>
+      <div class="s-item" onclick="disconnectGitHub()"><span class="s-icon">🔐</span>Disconnect</div>
+    </nav>
+  </aside>
 
-  <div class="content">
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title" id="pageTitle">Dashboard</div>
+      <div class="tb-r">
+        <div class="sync-wrap"><div class="dot" id="syncDot"></div><span id="syncLbl">—</span></div>
+        <button class="tb-btn" onclick="loadAllData(true)">🔄 Refresh</button>
+        <a class="tb-btn" href="https://wa.me/23057242099" target="_blank">💬 WhatsApp</a>
+        <a class="tb-btn pri" href="index.html" target="_blank">🌐 Live Site</a>
+      </div>
+    </div>
 
-    <!-- ══ CONNECT SCREEN ══ -->
-    <div id="page-connect" class="page active">
-      <div style="max-width:480px;margin:60px auto;text-align:center">
-        <div style="font-size:60px;margin-bottom:20px">🔐</div>
-        <h2 style="font-family:var(--font-d);font-size:28px;font-weight:400;margin-bottom:12px">Connect to GitHub</h2>
-        <p style="font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.7">The admin reads and saves content directly to your GitHub repo. Enter your GitHub Personal Access Token once — it stays in your browser only.</p>
-        <div class="card" style="text-align:left">
-          <div class="fg">
-            <label class="fl">GitHub Personal Access Token</label>
-            <input class="fi" type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"/>
+    <div class="content">
+
+      <!-- ══ CONNECT ══ -->
+      <div id="page-connect" class="page active">
+        <div style="max-width:460px;margin:48px auto;text-align:center">
+          <div style="font-size:56px;margin-bottom:18px">🔐</div>
+          <h2 style="font-family:var(--font-d);font-size:26px;font-weight:400;margin-bottom:10px">Connect to GitHub</h2>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.7">The admin reads and saves all content directly to your GitHub repo. Enter your Personal Access Token once — it's stored only in your browser.</p>
+          <div class="card" style="text-align:left">
+            <div class="fg">
+              <label class="fl">GitHub Personal Access Token</label>
+              <input class="fi" type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" onkeydown="if(event.key==='Enter')connectGitHub()"/>
+            </div>
+            <div class="info-box" style="margin-bottom:14px">
+              <strong>Get your token in 2 min:</strong><br>
+              1. Go to <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a><br>
+              2. Note: "Evalia Admin" · Expiry: No expiration<br>
+              3. Tick <strong>repo</strong> (full access)<br>
+              4. Generate → copy → paste above
+            </div>
+            <button class="btn btn-pri btn-full" onclick="connectGitHub()">Connect →</button>
+            <div id="connectErr" style="display:none;margin-top:8px;color:#c0392b;font-size:12px;text-align:center"></div>
           </div>
-          <div style="background:rgba(0,107,143,.05);border:1px solid rgba(0,107,143,.15);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.65">
-            <strong>How to get your token (takes 2 minutes):</strong><br>
-            1. Go to <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--ocean)">github.com/settings/tokens/new</a><br>
-            2. Note: "Evalia Admin" · Expiration: No expiration<br>
-            3. Tick <strong>repo</strong> (full repository access)<br>
-            4. Click Generate token → copy and paste above
-          </div>
-          <button class="btn btn-primary btn-full" onclick="connectGitHub()">Connect →</button>
-          <div id="connectError" style="display:none;margin-top:10px;color:#e74c3c;font-size:12px;text-align:center"></div>
         </div>
       </div>
-    </div>
 
-    <!-- ══ DASHBOARD ══ -->
-    <div id="page-dashboard" class="page">
-      <div class="stats-row">
-        <div class="stat-card"><div class="sc-label">Properties</div><div class="sc-val" id="statProps">–</div><div class="sc-delta" id="statPropsLbl"></div></div>
-        <div class="stat-card"><div class="sc-label">Experiences</div><div class="sc-val" id="statExps">–</div><div class="sc-delta">Active on site</div></div>
-        <div class="stat-card"><div class="sc-label">Media Files</div><div class="sc-val" id="statMedia">–</div><div class="sc-delta">In images/</div></div>
-        <div class="stat-card"><div class="sc-label">Last Updated</div><div class="sc-val" style="font-size:18px" id="statUpdated">–</div><div class="sc-delta" id="statBranch"></div></div>
+      <!-- ══ DASHBOARD ══ -->
+      <div id="page-dashboard" class="page">
+        <div class="stats-row">
+          <div class="stat-card"><div class="sc-lbl">Properties</div><div class="sc-val" id="dProps">—</div><div class="sc-sub" id="dPropsLbl"></div></div>
+          <div class="stat-card"><div class="sc-lbl">Experiences</div><div class="sc-val" id="dExps">—</div><div class="sc-sub">Active on site</div></div>
+          <div class="stat-card"><div class="sc-lbl">Media Files</div><div class="sc-val" id="dMedia">—</div><div class="sc-sub">In images/</div></div>
+          <div class="stat-card"><div class="sc-lbl">Last Synced</div><div class="sc-val" style="font-size:17px" id="dTime">—</div><div class="sc-sub" id="dBranch"></div></div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-title">Quick Actions</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <button class="btn btn-g btn-full" onclick="goPage('properties',document.querySelector('[data-page=properties]'))">🏠 Edit Properties</button>
+              <button class="btn btn-g btn-full" onclick="goPage('experiences',document.querySelector('[data-page=experiences]'))">🌴 Edit Experiences</button>
+              <button class="btn btn-g btn-full" onclick="goPage('media',document.querySelector('[data-page=media]'))">📸 Upload Photos</button>
+              <button class="btn btn-g btn-full" onclick="goPage('settings',document.querySelector('[data-page=settings]'))">⚙️ Site Settings</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">How Changes Sync</div>
+            <div class="steps">
+              <div class="step"><div class="step-num">1</div><div class="step-body">Edit any property, experience, photo or setting here</div></div>
+              <div class="step"><div class="step-num">2</div><div class="step-body">Click <strong>Save & Publish →</strong> — writes directly to GitHub</div></div>
+              <div class="step"><div class="step-num">3</div><div class="step-body">Vercel detects the change and rebuilds in <strong>~30 seconds</strong></div></div>
+              <div class="step"><div class="step-num">✅</div><div class="step-body">Live site at <a href="https://evalia-web.vercel.app" target="_blank" style="color:var(--green)">evalia-web.vercel.app</a> updates automatically</div></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="grid2">
+
+      <!-- ══ BOOKINGS ══ -->
+      <div id="page-bookings" class="page">
         <div class="card">
-          <div class="card-title">Quick Actions</div>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <button class="btn btn-ocean btn-full" onclick="goPage('properties',document.querySelector('[data-page=properties]'))">🏠 Edit Properties</button>
-            <button class="btn btn-ocean btn-full" onclick="goPage('experiences',document.querySelector('[data-page=experiences]'))">🌴 Edit Experiences</button>
-            <button class="btn btn-ocean btn-full" onclick="goPage('media',document.querySelector('[data-page=media]'))">📸 Upload Photos</button>
-            <button class="btn btn-ocean btn-full" onclick="goPage('settings',document.querySelector('[data-page=settings]'))">⚙️ Site Settings</button>
+          <div class="card-title">Booking Requests</div>
+          <div class="info-box">Booking requests arrive in your email via Formspree. Log in at <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank">formspree.io</a> to see all submissions. You can also follow up directly via WhatsApp.</div>
+          <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank" class="btn btn-g" style="margin-right:8px">View on Formspree →</a>
+          <a href="https://wa.me/23057242099" target="_blank" class="btn btn-g">💬 WhatsApp</a>
+        </div>
+      </div>
+
+      <!-- ══ PROPERTIES ══ -->
+      <div id="page-properties" class="page">
+        <div class="card">
+          <div class="card-title">Properties
+            <button class="btn btn-pri btn-sm" onclick="addNewProperty()">+ Add Property</button>
+          </div>
+          <div id="propList"><div style="text-align:center;padding:24px;color:var(--muted)">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- ══ EXPERIENCES ══ -->
+      <div id="page-experiences" class="page">
+        <div class="card">
+          <div class="card-title">Experiences
+            <button class="btn btn-pri btn-sm" onclick="addNewExperience()">+ Add Experience</button>
+          </div>
+          <div id="expList"><div style="text-align:center;padding:24px;color:var(--muted)">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- ══ MEDIA ══ -->
+      <div id="page-media" class="page">
+        <div class="card">
+          <div class="card-title">Upload Photos & Videos
+            <span style="font-size:11px;color:var(--muted);font-family:var(--font-b)">JPG · PNG · WebP · MP4 · Max 50MB</span>
+          </div>
+          <div class="drop-zone" id="dropZone"
+               ondragover="dzOver(event)" ondrop="dzDrop(event)" ondragleave="dzLeave(event)"
+               onclick="document.getElementById('fileIn').click()">
+            <div style="font-size:36px;margin-bottom:8px">📸</div>
+            <div style="font-size:14px;font-weight:500;margin-bottom:3px">Drag & drop photos or videos here</div>
+            <div style="font-size:12px;color:var(--muted)">or click to browse — files go straight to GitHub</div>
+          </div>
+          <input type="file" id="fileIn" style="display:none" multiple accept="image/*,video/mp4" onchange="handleFiles(event.target.files)"/>
+          <div class="prog-wrap" id="uploadProg">
+            <div id="uploadStat" style="font-size:12px;color:var(--muted);margin-bottom:3px">Uploading…</div>
+            <div class="prog-bar-bg"><div class="prog-bar" id="progBar"></div></div>
+            <div id="uploadFile" style="font-size:11px;color:var(--muted)"></div>
           </div>
         </div>
         <div class="card">
-          <div class="card-title">How Publishing Works</div>
-          <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--muted)">
-            <div style="display:flex;gap:10px"><span style="font-size:18px;flex-shrink:0">1️⃣</span><span>Edit any property, experience, photo or setting below</span></div>
-            <div style="display:flex;gap:10px"><span style="font-size:18px;flex-shrink:0">2️⃣</span><span>Click <strong style="color:var(--dark)">"Publish to Live Site →"</strong> — saves to GitHub</span></div>
-            <div style="display:flex;gap:10px"><span style="font-size:18px;flex-shrink:0">3️⃣</span><span>Vercel detects the change and rebuilds in <strong style="color:var(--dark)">~30 seconds</strong></span></div>
-            <div style="display:flex;gap:10px"><span style="font-size:18px;flex-shrink:0">✅</span><span>Live site at <a href="https://evalia-web.vercel.app" target="_blank" style="color:var(--ocean)">evalia-web.vercel.app</a> updates automatically</span></div>
+          <div class="card-title">Media Library
+            <span id="mediaCount" style="font-size:12px;color:var(--muted);font-family:var(--font-b)"></span>
           </div>
+          <div class="info-box">Click any photo to copy its path. To assign a photo to a property or experience, go to that item and click <strong>Edit → Photo → select from library</strong>. To assign hero or service card photos, go to <strong>Settings</strong>.</div>
+          <div class="media-grid" id="mediaGrid"></div>
         </div>
       </div>
-    </div>
 
-    <!-- ══ REQUESTS ══ -->
-    <div id="page-requests" class="page">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Booking requests submitted via the website forms (Formspree). Log in at <a href="https://formspree.io" target="_blank" style="color:var(--ocean)">formspree.io</a> to see all submissions in your inbox.</p>
-      <div class="card">
-        <div class="card-title">Pending Requests</div>
-        <div id="reqList">
-          <div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">
-            📩 Booking requests arrive in your email via Formspree (endpoint: mdayoknj).<br>
-            <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank" style="color:var(--ocean);margin-top:8px;display:inline-block">View all submissions on Formspree →</a>
+      <!-- ══ SETTINGS ══ -->
+      <div id="page-settings" class="page">
+        <div class="card">
+          <div class="fsec">
+            <div class="fsec-title">Business Information</div>
+            <div class="fr2">
+              <div class="fg"><label class="fl">Business Name</label><input class="fi" id="s_name" type="text" oninput="markDirty()"/></div>
+              <div class="fg"><label class="fl">Email</label><input class="fi" id="s_email" type="email" oninput="markDirty()"/></div>
+            </div>
+            <div class="fr2">
+              <div class="fg"><label class="fl">WhatsApp (with +country code)</label><input class="fi" id="s_whatsapp" type="tel" oninput="markDirty()"/></div>
+              <div class="fg"><label class="fl">Instagram Handle</label><input class="fi" id="s_instagram" type="text" oninput="markDirty()"/></div>
+            </div>
+            <div class="fr2">
+              <div class="fg"><label class="fl">Facebook Page</label><input class="fi" id="s_facebook" type="text" oninput="markDirty()"/></div>
+              <div class="fg"><label class="fl">TikTok Handle</label><input class="fi" id="s_tiktok" type="text" oninput="markDirty()"/></div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- ══ BOOKINGS ══ -->
-    <div id="page-bookings" class="page">
-      <div class="card">
-        <div class="card-title">Bookings</div>
-        <div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">
-          All booking requests are sent to your email via Formspree.<br>
-          <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank" style="color:var(--ocean);margin-top:8px;display:inline-block">View on Formspree →</a>
-          <br><br>
-          <a href="https://wa.me/23057242099" target="_blank" class="btn btn-green">💬 Open WhatsApp to follow up</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ GUESTS ══ -->
-    <div id="page-guests" class="page">
-      <div class="card">
-        <div class="card-title">Guest Registrations</div>
-        <div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">
-          Guest registrations are sent to your email via Formspree.<br>
-          <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank" style="color:var(--ocean);margin-top:8px;display:inline-block">View all registrations on Formspree →</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ PROPERTIES ══ -->
-    <div id="page-properties" class="page">
-      <div class="card">
-        <div class="card-title">Properties
-          <button class="btn btn-primary btn-sm" onclick="addNewProperty()">+ Add Property</button>
-        </div>
-        <div id="propList">
-          <div style="text-align:center;padding:24px;color:var(--muted)">Loading…</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ EXPERIENCES ══ -->
-    <div id="page-experiences" class="page">
-      <div class="card">
-        <div class="card-title">Experiences
-          <button class="btn btn-primary btn-sm" onclick="addNewExperience()">+ Add Experience</button>
-        </div>
-        <div id="expList">
-          <div style="text-align:center;padding:24px;color:var(--muted)">Loading…</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ MEDIA ══ -->
-    <div id="page-media" class="page">
-      <div class="card">
-        <div class="card-title">Upload Photos & Videos
-          <span style="font-size:12px;color:var(--muted);font-family:var(--font-b)">JPG · PNG · WebP · MP4 · Max 50MB</span>
-        </div>
-        <div class="drop-zone" id="dropZone"
-             ondragover="dzOver(event)" ondrop="dzDrop(event)" ondragleave="dzLeave(event)"
-             onclick="document.getElementById('fileIn').click()">
-          <div style="font-size:44px;margin-bottom:10px">📸</div>
-          <div style="font-size:14px;font-weight:500;margin-bottom:4px">Drag & drop photos or videos here</div>
-          <div style="font-size:12px;color:var(--muted)">or click to browse — files save directly to GitHub</div>
-        </div>
-        <input type="file" id="fileIn" style="display:none" multiple accept="image/*,video/mp4" onchange="handleFiles(event.target.files)"/>
-        <div class="upload-progress" id="uploadProg">
-          <div id="uploadStatus" style="font-size:12px;color:var(--muted);margin-bottom:4px">Uploading…</div>
-          <div class="prog-bar-wrap"><div class="prog-bar" id="progBar"></div></div>
-          <div id="uploadFile" style="font-size:11px;color:var(--muted)"></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Media Library
-          <span id="mediaCount" style="font-size:12px;color:var(--muted);font-family:var(--font-b)">Loading…</span>
-        </div>
-        <div class="media-grid" id="mediaGrid">
-          <div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;grid-column:1/-1">Loading media…</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ SETTINGS ══ -->
-    <div id="page-settings" class="page">
-      <div class="card">
-        <div class="form-sec">
-          <div class="form-sec-title">Business Information</div>
-          <div class="fr2">
-            <div class="fg"><label class="fl">Business Name</label><input class="fi" id="s_name" type="text" oninput="markDirty()"/></div>
-            <div class="fg"><label class="fl">Email</label><input class="fi" id="s_email" type="email" oninput="markDirty()"/></div>
+          <div class="fsec">
+            <div class="fsec-title">Hero Section Text</div>
+            <div class="fr2">
+              <div class="fg"><label class="fl">Title Line 1</label><input class="fi" id="s_hero1" type="text" oninput="markDirty()"/></div>
+              <div class="fg"><label class="fl">Title Line 2 (italic)</label><input class="fi" id="s_hero2" type="text" oninput="markDirty()"/></div>
+            </div>
+            <div class="fg"><label class="fl">Hero Subtitle</label><textarea class="fi" id="s_herosub" rows="2" style="resize:vertical" oninput="markDirty()"></textarea></div>
           </div>
-          <div class="fr2">
-            <div class="fg"><label class="fl">WhatsApp (with +country code)</label><input class="fi" id="s_whatsapp" type="tel" oninput="markDirty()"/></div>
-            <div class="fg"><label class="fl">Instagram Handle</label><input class="fi" id="s_instagram" type="text" oninput="markDirty()"/></div>
-          </div>
-          <div class="fr2">
-            <div class="fg"><label class="fl">Facebook Page</label><input class="fi" id="s_facebook" type="text" oninput="markDirty()"/></div>
-            <div class="fg"><label class="fl">TikTok Handle</label><input class="fi" id="s_tiktok" type="text" oninput="markDirty()"/></div>
-          </div>
-        </div>
-        <div class="form-sec">
-          <div class="form-sec-title">Hero Section</div>
-          <div class="fr2">
-            <div class="fg"><label class="fl">Title Line 1</label><input class="fi" id="s_hero1" type="text" oninput="markDirty()"/></div>
-            <div class="fg"><label class="fl">Title Line 2 (italic)</label><input class="fi" id="s_hero2" type="text" oninput="markDirty()"/></div>
-          </div>
-          <div class="fg"><label class="fl">Hero Subtitle</label><textarea class="fi" id="s_herosub" rows="2" style="resize:vertical" oninput="markDirty()"></textarea></div>
-        </div>
-        <button class="btn btn-primary" style="padding:11px 32px" onclick="saveSettings()">Save & Publish Settings →</button>
-      </div>
-    </div>
 
-  </div><!-- /content -->
-</div><!-- /main -->
+          <div class="fsec">
+            <div class="fsec-title">Hero Slideshow Photos (4 slides)</div>
+            <div class="fr2">
+              <div class="fg"><label class="fl">Slide 1 (main)</label><div style="display:flex;gap:6px"><input class="fi" id="s_hp1" type="text" placeholder="/images/Hero.jpg" oninput="markDirty();updateSettingsPreview('s_hp1','p_hp1')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_hp1','p_hp1')">📷</button></div><div class="img-picker-preview" id="p_hp1"><img id="p_hp1_img"/></div></div>
+              <div class="fg"><label class="fl">Slide 2</label><div style="display:flex;gap:6px"><input class="fi" id="s_hp2" type="text" placeholder="/images/Hero1.jpg" oninput="markDirty();updateSettingsPreview('s_hp2','p_hp2')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_hp2','p_hp2')">📷</button></div><div class="img-picker-preview" id="p_hp2"><img id="p_hp2_img"/></div></div>
+              <div class="fg"><label class="fl">Slide 3</label><div style="display:flex;gap:6px"><input class="fi" id="s_hp3" type="text" placeholder="/images/Hero2.jpg" oninput="markDirty();updateSettingsPreview('s_hp3','p_hp3')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_hp3','p_hp3')">📷</button></div><div class="img-picker-preview" id="p_hp3"><img id="p_hp3_img"/></div></div>
+              <div class="fg"><label class="fl">Slide 4</label><div style="display:flex;gap:6px"><input class="fi" id="s_hp4" type="text" placeholder="/images/Hero3.jpg" oninput="markDirty();updateSettingsPreview('s_hp4','p_hp4')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_hp4','p_hp4')">📷</button></div><div class="img-picker-preview" id="p_hp4"><img id="p_hp4_img"/></div></div>
+            </div>
+          </div>
+
+          <div class="fsec">
+            <div class="fsec-title">Service Section Photos</div>
+            <div class="hint" style="margin-bottom:12px">These photos appear on the six service cards on the homepage. Click 📷 to pick from your media library.</div>
+            <div class="fr2">
+              <div class="fg"><label class="fl">Accommodation card</label><div style="display:flex;gap:6px"><input class="fi" id="s_svc_acc" type="text" oninput="markDirty();updateSettingsPreview('s_svc_acc','p_svc_acc')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_svc_acc','p_svc_acc')">📷</button></div><div class="img-picker-preview" id="p_svc_acc"><img id="p_svc_acc_img"/></div></div>
+              <div class="fg"><label class="fl">Boat / Water card</label><div style="display:flex;gap:6px"><input class="fi" id="s_svc_boat" type="text" oninput="markDirty();updateSettingsPreview('s_svc_boat','p_svc_boat')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_svc_boat','p_svc_boat')">📷</button></div><div class="img-picker-preview" id="p_svc_boat"><img id="p_svc_boat_img"/></div></div>
+              <div class="fg"><label class="fl">Nature & Wellness card</label><div style="display:flex;gap:6px"><input class="fi" id="s_svc_nat" type="text" oninput="markDirty();updateSettingsPreview('s_svc_nat','p_svc_nat')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_svc_nat','p_svc_nat')">📷</button></div><div class="img-picker-preview" id="p_svc_nat"><img id="p_svc_nat_img"/></div></div>
+              <div class="fg"><label class="fl">Food Discovery card</label><div style="display:flex;gap:6px"><input class="fi" id="s_svc_food" type="text" oninput="markDirty();updateSettingsPreview('s_svc_food','p_svc_food')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_svc_food','p_svc_food')">📷</button></div><div class="img-picker-preview" id="p_svc_food"><img id="p_svc_food_img"/></div></div>
+              <div class="fg"><label class="fl">Concierge card</label><div style="display:flex;gap:6px"><input class="fi" id="s_svc_con" type="text" oninput="markDirty();updateSettingsPreview('s_svc_con','p_svc_con')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_svc_con','p_svc_con')">📷</button></div><div class="img-picker-preview" id="p_svc_con"><img id="p_svc_con_img"/></div></div>
+            </div>
+          </div>
+
+          <button class="btn btn-pri" style="padding:11px 28px" onclick="saveSettings()">Save & Publish Settings →</button>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
 
 <script>
-// ═══════════════════════════════════════════════════════════════════
-// EVALIA ADMIN — GitHub API Content Manager
-// All content is read from and written to GitHub directly.
-// No backend, no database — GitHub is the source of truth.
-// ═══════════════════════════════════════════════════════════════════
-
-const REPO  = 'cmarcdavid/evalia-web';
+// ═══════════════════════════════════════════════════════════════
+// EVALIA ADMIN — GitHub API single source of truth
+// ═══════════════════════════════════════════════════════════════
+const REPO   = 'cmarcdavid/evalia-web';
 const BRANCH = 'main';
 const API    = 'https://api.github.com';
 
-// In-memory state
-let token    = localStorage.getItem('ev_token') || '';
-let dirty    = false;
-let allData  = { properties: [], experiences: [], settings: {}, media: [] };
-let pendingWrites = {}; // path → {content, sha}
+let token = localStorage.getItem('ev_ghtoken') || '';
+let dirty = false;
+let allData = { properties:[], experiences:[], settings:{}, media:[] };
 let confirmCb = null;
+let photoPickerTarget = null; // { inputId, previewId }
 
-// ── AUTH ──────────────────────────────────────────────────────────
+// ── AUTH ─────────────────────────────────────────────────────────
 async function connectGitHub() {
   const t = document.getElementById('tokenInput').value.trim();
-  if (!t) { showConnectError('Please paste your token'); return; }
-  setSyncBusy('Verifying…');
+  if (!t) { showConnectErr('Paste your token first'); return; }
+  setBusy('Verifying…');
   try {
-    const r = await ghFetch(`/repos/${REPO}`, t);
+    const r = await ghGet(`/repos/${REPO}`, t);
     if (!r.ok) throw new Error('Invalid token or repo not found');
     token = t;
-    localStorage.setItem('ev_token', t);
-    setSyncOk('Connected');
-    await loadAllData();
+    localStorage.setItem('ev_ghtoken', t);
+    setOk('Connected');
+    await loadAllData(false);
     goPage('dashboard', document.querySelector('[data-page=dashboard]'));
-  } catch(e) {
-    setSyncErr('Failed');
-    showConnectError(e.message);
-  }
+  } catch(e) { setErr('Failed'); showConnectErr(e.message); }
 }
 
-function ghFetch(path, tok, opts={}) {
+function disconnectGitHub() {
+  localStorage.removeItem('ev_ghtoken');
+  token = '';
+  goPage('connect', null);
+  setErr('Disconnected');
+}
+
+function ghGet(path, tok) {
+  return fetch(API + path, { headers: {
+    'Authorization': 'Bearer ' + (tok || token),
+    'Accept': 'application/vnd.github.v3+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  }});
+}
+
+function ghReq(path, method, body) {
   return fetch(API + path, {
-    ...opts,
+    method,
     headers: {
-      'Authorization': 'Bearer ' + (tok || token),
+      'Authorization': 'Bearer ' + token,
       'Accept': 'application/vnd.github.v3+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-      ...(opts.headers || {})
-    }
+      'Content-Type': 'application/json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
+    body: body ? JSON.stringify(body) : undefined
   });
 }
 
-// ── LOAD ALL DATA FROM GITHUB ─────────────────────────────────────
-async function loadAllData(showFeedback = false) {
+// ── LOAD ALL DATA ────────────────────────────────────────────────
+async function loadAllData(showFeedback) {
   if (!token) return;
-  setSyncBusy('Loading…');
+  setBusy('Loading…');
   try {
     const [props, exps, settings, media] = await Promise.all([
       loadFolder('_data/properties'),
@@ -498,127 +510,93 @@ async function loadAllData(showFeedback = false) {
     allData.experiences = exps;
     allData.settings    = settings;
     allData.media       = media;
-
     renderDashboard();
     renderProperties();
     renderExperiences();
     renderMediaGrid();
     fillSettings();
-
-    setSyncOk('Synced');
-    if (showFeedback) toast('✅', 'Data refreshed from GitHub');
-  } catch(e) {
-    setSyncErr('Error');
-    toast('⚠️', 'Load error: ' + e.message);
-  }
+    setOk('Synced ✓');
+    if (showFeedback) toast('✅','Refreshed from GitHub');
+  } catch(e) { setErr('Error'); toast('⚠️', 'Load error: ' + e.message); }
 }
 
 async function loadFolder(path) {
-  const r = await ghFetch(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+  const r = await ghGet(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
   if (!r.ok) return [];
   const files = await r.json();
-  const items = await Promise.all(
+  const results = await Promise.all(
     files.filter(f => f.name.endsWith('.json')).map(async f => {
-      const fr = await ghFetch(`/repos/${REPO}/contents/${f.path}?ref=${BRANCH}`);
+      const fr = await ghGet(`/repos/${REPO}/contents/${f.path}?ref=${BRANCH}`);
       const fd = await fr.json();
-      const data = JSON.parse(atob(fd.content.replace(/\s/g, '')));
+      const data = JSON.parse(atob(fd.content.replace(/\s/g,'')));
       return { ...data, _path: f.path, _sha: fd.sha, _slug: f.name.replace('.json','') };
     })
   );
-  return items;
+  return results;
 }
 
 async function loadFile(path) {
-  const r = await ghFetch(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+  const r = await ghGet(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
   if (!r.ok) return {};
   const f = await r.json();
-  return { ...JSON.parse(atob(f.content.replace(/\s/g, ''))), _path: path, _sha: f.sha };
+  return { ...JSON.parse(atob(f.content.replace(/\s/g,''))), _path: path, _sha: f.sha };
 }
 
 async function loadMediaList() {
-  const r = await ghFetch(`/repos/${REPO}/contents/images?ref=${BRANCH}`);
+  const r = await ghGet(`/repos/${REPO}/contents/images?ref=${BRANCH}`);
   if (!r.ok) return [];
   const files = await r.json();
-  return files.filter(f => /\.(jpg|jpeg|png|gif|webp|mp4|mov)$/i.test(f.name))
-              .map(f => ({ name: f.name, path: f.path, sha: f.sha, download_url: f.download_url }));
+  return files
+    .filter(f => /\.(jpg|jpeg|png|gif|webp|mp4|mov)$/i.test(f.name))
+    .map(f => ({ name: f.name, path: f.path, sha: f.sha }));
 }
 
-// ── WRITE FILE TO GITHUB ──────────────────────────────────────────
-// Always fetches the LIVE SHA from GitHub immediately before writing.
-// This prevents "does not match" errors caused by stale cached SHAs
-// (which happen after any save, background update, or CMS edit).
-async function ghWriteFile(path, content, _ignoredSha, commitMsg) {
-  // Step 1: Get the current live SHA for this file
-  let liveSha = null;
+// ── WRITE FILE (always fetches live SHA first) ────────────────────
+async function ghWrite(path, content, msg) {
+  let sha = null;
   try {
-    const check = await ghFetch(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
-    if (check.ok) {
-      const existing = await check.json();
-      liveSha = existing.sha;
-    }
-  } catch(e) {
-    // File doesn't exist yet (new file) — sha stays null, that's correct
-  }
-
-  // Step 2: Write with the live SHA (or null for new files)
+    const c = await ghGet(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+    if (c.ok) { const d = await c.json(); sha = d.sha; }
+  } catch(e) {}
   const body = {
-    message: commitMsg || `admin: update ${path}`,
+    message: msg || `admin: update ${path}`,
     content: btoa(unescape(encodeURIComponent(content))),
-    branch:  BRANCH,
+    branch: BRANCH
   };
-  if (liveSha) body.sha = liveSha;
-
-  const r = await ghFetch(`/repos/${REPO}/contents/${path}`, token, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  if (!r.ok) {
-    const err = await r.json();
-    throw new Error(err.message || 'Write failed');
-  }
-  const result = await r.json();
-
-  // Step 3: Update our local cache with the new SHA returned by GitHub
-  // so the next save in the same session also works without a reload
-  if (result.content && result.content.sha) {
-    // Update any matching entry in allData
-    ['properties','experiences'].forEach(key => {
-      allData[key].forEach(item => {
-        if (item._path === path) item._sha = result.content.sha;
-      });
-    });
-    if (allData.settings._path === path) allData.settings._sha = result.content.sha;
-  }
-
-  return result;
+  if (sha) body.sha = sha;
+  const r = await ghReq(`/repos/${REPO}/contents/${path}`, 'PUT', body);
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || 'Write failed'); }
+  return r.json();
 }
 
-// ── UPLOAD BINARY FILE (photo/video) ─────────────────────────────
-async function uploadMedia(file) {
+// ── DELETE FILE (always fetches live SHA first) ───────────────────
+async function ghDelete(path, msg) {
+  const c = await ghGet(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+  if (!c.ok) throw new Error('File not found');
+  const d = await c.json();
+  const r = await ghReq(`/repos/${REPO}/contents/${path}`, 'DELETE', {
+    message: msg || `admin: delete ${path}`, sha: d.sha, branch: BRANCH
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || 'Delete failed'); }
+}
+
+// ── UPLOAD BINARY (photo/video) ───────────────────────────────────
+async function uploadBinary(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = async e => {
       try {
         const b64 = e.target.result.split(',')[1];
         const path = `images/${file.name}`;
-        // Check if file exists (to get sha for update)
         let sha = null;
-        const check = await ghFetch(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
-        if (check.ok) { const d = await check.json(); sha = d.sha; }
-
-        const body = {
-          message: `media: upload ${file.name}`,
-          content: b64,
-          branch: BRANCH,
-        };
+        try {
+          const c = await ghGet(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+          if (c.ok) { const d = await c.json(); sha = d.sha; }
+        } catch(e2) {}
+        const body = { message: `media: upload ${file.name}`, content: b64, branch: BRANCH };
         if (sha) body.sha = sha;
-        const r = await ghFetch(`/repos/${REPO}/contents/${path}`, token, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-        if (!r.ok) { const e2 = await r.json(); throw new Error(e2.message); }
+        const r = await ghReq(`/repos/${REPO}/contents/${path}`, 'PUT', body);
+        if (!r.ok) { const err = await r.json(); throw new Error(err.message); }
         resolve(await r.json());
       } catch(err) { reject(err); }
     };
@@ -629,44 +607,189 @@ async function uploadMedia(file) {
 
 // ── DASHBOARD ─────────────────────────────────────────────────────
 function renderDashboard() {
-  document.getElementById('statProps').textContent   = allData.properties.length;
-  document.getElementById('statExps').textContent    = allData.experiences.filter(e=>e.active!==false).length;
-  document.getElementById('statMedia').textContent   = allData.media.length;
-  document.getElementById('statPropsLbl').textContent = allData.properties.map(p=>p.name).join(' · ') || '–';
+  document.getElementById('dProps').textContent   = allData.properties.length;
+  document.getElementById('dExps').textContent    = allData.experiences.filter(e=>e.active!==false).length;
+  document.getElementById('dMedia').textContent   = allData.media.length;
+  document.getElementById('dPropsLbl').textContent = allData.properties.map(p=>p.name).join(' · ') || '—';
   const now = new Date();
-  document.getElementById('statUpdated').textContent = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
-  document.getElementById('statBranch').textContent  = 'Branch: ' + BRANCH;
+  document.getElementById('dTime').textContent  = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('dBranch').textContent = 'Branch: ' + BRANCH;
+}
+
+// ── MEDIA GRID (shared between Media page and photo picker modal) ──
+function mediaImgUrl(m) {
+  return `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${m.path}`;
+}
+
+function renderMediaGrid(container) {
+  const grid = container || document.getElementById('mediaGrid');
+  const count = document.getElementById('mediaCount');
+  if (!grid) return;
+  if (!allData.media.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--muted);font-size:13px">No media yet — upload photos above.</div>';
+    if (count) count.textContent = '0 files';
+    return;
+  }
+  if (count) count.textContent = allData.media.length + ' files';
+  const isVideo = name => /\.(mp4|mov)/i.test(name);
+  grid.innerHTML = allData.media.map(m => {
+    const url = mediaImgUrl(m);
+    const vid = isVideo(m.name);
+    return `
+    <div class="media-thumb" title="${m.name}" data-path="/images/${m.name}" data-sha="${m.sha}"
+         onclick="handleMediaThumbClick(this,'${m.path}','/images/${m.name}','${m.sha}','${m.name}')">
+      ${vid
+        ? `<video src="${url}" muted loading="lazy"></video>`
+        : `<img src="${url}" loading="lazy" onerror="this.style.opacity='.3'">`}
+      <div class="thumb-lbl">${m.name}</div>
+      <button class="thumb-copy" title="Copy path" onclick="event.stopPropagation();copyPath('/images/${m.name}')">📋</button>
+      <button class="thumb-del"  title="Delete"    onclick="event.stopPropagation();deleteMedia('${m.path}','${m.name}')">✕</button>
+    </div>`;
+  }).join('') + `
+  <div class="media-thumb" style="background:var(--sand);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;border:2px dashed var(--stone)" onclick="document.getElementById('fileIn').click()">
+    <span style="font-size:24px">+</span><span style="font-size:11px;color:var(--muted)">Upload</span>
+  </div>`;
+}
+
+function handleMediaThumbClick(el, ghPath, publicPath, sha, name) {
+  // If photo picker is open, select this image
+  if (photoPickerTarget) {
+    selectPhoto(publicPath);
+  }
+  // Otherwise just copy path
+}
+
+function copyPath(path) {
+  navigator.clipboard?.writeText(path).then(() => toast('📋','Copied: ' + path));
+}
+
+async function deleteMedia(ghPath, name) {
+  showConfirm(`Delete "${name}"?`, 'This permanently removes the file from GitHub. Properties using this photo will show a broken image until reassigned.', async () => {
+    setBusy('Deleting…');
+    try {
+      await ghDelete(ghPath, `media: delete ${name}`);
+      allData.media = allData.media.filter(m => m.path !== ghPath);
+      renderMediaGrid();
+      renderMediaGrid(document.getElementById('modalMediaGrid'));
+      setOk('Deleted');
+      toast('🗑', name + ' deleted');
+    } catch(e) { toast('⚠️','Delete failed: ' + e.message); setErr('Error'); }
+  });
+}
+
+// ── FILE UPLOAD ────────────────────────────────────────────────────
+function dzOver(e)  { e.preventDefault(); document.getElementById('dropZone').classList.add('over'); }
+function dzLeave()  { document.getElementById('dropZone').classList.remove('over'); }
+function dzDrop(e)  { e.preventDefault(); dzLeave(); handleFiles(e.dataTransfer.files); }
+
+async function handleFiles(files) {
+  const arr = Array.from(files);
+  if (!arr.length) return;
+  if (!token) { toast('⚠️','Connect GitHub first'); return; }
+  const prog = document.getElementById('uploadProg');
+  const bar  = document.getElementById('progBar');
+  const stat = document.getElementById('uploadStat');
+  const fileLbl = document.getElementById('uploadFile');
+  prog.style.display = 'block';
+  let done = 0;
+  setBusy('Uploading…');
+  for (const file of arr) {
+    fileLbl.textContent = file.name + ' (' + (file.size/1024).toFixed(0) + ' KB)';
+    stat.textContent = `Uploading ${done+1} of ${arr.length}…`;
+    try {
+      await uploadBinary(file);
+      done++;
+      bar.style.width = Math.round(done/arr.length*100) + '%';
+    } catch(e) { toast('⚠️','Upload failed: ' + file.name + ' — ' + e.message); }
+  }
+  stat.textContent = `✅ ${done} file(s) uploaded to GitHub`;
+  setOk('Uploaded');
+  toast('✅', done + ' file(s) uploaded');
+  await loadAllData(false);  // Refresh media list + repopulate photo selectors
+  setTimeout(() => { prog.style.display='none'; bar.style.width='0'; }, 3000);
+}
+
+// ── PHOTO PICKER MODAL ────────────────────────────────────────────
+function openPhotoPicker(inputId, previewId) {
+  photoPickerTarget = { inputId, previewId };
+  // Populate modal media grid
+  const grid = document.getElementById('modalMediaGrid');
+  renderMediaGrid(grid);
+  // Highlight currently selected photo
+  const curVal = document.getElementById(inputId)?.value;
+  if (curVal) {
+    grid.querySelectorAll('.media-thumb').forEach(t => {
+      t.classList.toggle('selected', t.dataset.path === curVal);
+    });
+  }
+  document.getElementById('photoModal').classList.add('open');
+}
+
+function closePhotoModal() {
+  document.getElementById('photoModal').classList.remove('open');
+  photoPickerTarget = null;
+}
+
+function selectPhoto(path) {
+  if (!photoPickerTarget) return;
+  const inp = document.getElementById(photoPickerTarget.inputId);
+  if (inp) { inp.value = path; inp.dispatchEvent(new Event('input')); }
+  updatePreview(photoPickerTarget.inputId, photoPickerTarget.previewId, path);
+  markDirty();
+  closePhotoModal();
+}
+
+async function handleModalUpload(event) {
+  const files = Array.from(event.target.files);
+  if (!files.length) return;
+  setBusy('Uploading…');
+  toast('⏳','Uploading ' + files[0].name + '…');
+  try {
+    await uploadBinary(files[0]);
+    await loadAllData(false);
+    // Re-render modal grid and select the new file
+    const grid = document.getElementById('modalMediaGrid');
+    renderMediaGrid(grid);
+    selectPhoto('/images/' + files[0].name);
+    toast('✅', files[0].name + ' uploaded');
+  } catch(e) { toast('⚠️','Upload failed: ' + e.message); setErr('Error'); }
 }
 
 // ── PROPERTIES ────────────────────────────────────────────────────
 function renderProperties() {
   const el = document.getElementById('propList');
   if (!allData.properties.length) {
-    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">No properties yet. Add one below.</div>';
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">No properties yet.</div>';
     return;
   }
   el.innerHTML = allData.properties.map((p, i) => `
-    <div class="content-item" id="propItem${i}">
-      <div class="item-thumb">
-        ${p.photo ? `<img src="${p.photo}" onerror="this.parentNode.innerHTML='🏠'"/>` : '🏠'}
+    <div class="ci">
+      <div class="ci-thumb">${p.photo ? `<img src="${p.photo}" onerror="this.remove()">` : '🏠'}</div>
+      <div class="ci-info">
+        <div class="ci-name">${esc(p.name||'Untitled')}</div>
+        <div class="ci-meta">📍 ${esc(p.location||'—')} · ${p.bedrooms||'—'} bed · ${p.max_guests||'—'} guests · min ${p.min_stay||'—'} nights</div>
       </div>
-      <div class="item-info">
-        <strong>${p.name || 'Unnamed'}</strong>
-        <span>📍 ${p.location || '–'} · ${p.bedrooms||'–'} bed · ${p.max_guests||'–'} guests</span>
+      <div class="ci-price">€${p.price||'—'}<span style="font-size:10px;color:var(--muted)">/night</span></div>
+      <span class="pill ${p.available!==false?'pill-g':'pill-o'}">${p.available!==false?'Active':'Hidden'}</span>
+      <div class="ci-actions">
+        <button class="btn btn-g btn-sm" onclick="openPropEdit(${i})">Edit</button>
+        <button class="btn btn-r btn-sm" onclick="deleteProp(${i})">✕</button>
       </div>
-      <div class="item-price">€${p.price}<span style="font-size:11px;color:var(--muted)">/night</span></div>
-      <span class="pill ${p.available!==false ? 'pill-green':'pill-orange'}">${p.available!==false?'Active':'Hidden'}</span>
-      <button class="btn btn-ocean btn-sm" style="margin-left:8px" onclick="openPropEdit(${i})">Edit</button>
-      <button class="btn btn-red btn-sm" style="margin-left:4px" onclick="deleteProp(${i})">Delete</button>
     </div>
-    <div class="edit-panel" id="propEdit${i}">
-      ${propEditForm(p, i)}
-    </div>
+    <div class="edit-panel" id="pe${i}">${propForm(p,i)}</div>
   `).join('');
 }
 
-function propEditForm(p, i) {
-  const amenStr = (p.amenities || []).join(', ');
+function propForm(p, i) {
+  const mediaOpts = allData.media
+    .filter(m => /\.(jpg|jpeg|png|webp)/i.test(m.name))
+    .map(m => `<option value="/images/${m.name}" ${(p.photo===`/images/${m.name}`||p.photo===m.name)?'selected':''}>${m.name}</option>`)
+    .join('');
+  const media2Opts = '<option value="">— none —</option>' + allData.media
+    .filter(m => /\.(jpg|jpeg|png|webp)/i.test(m.name))
+    .map(m => `<option value="/images/${m.name}" ${(p.photo_alt===`/images/${m.name}`)?'selected':''}>${m.name}</option>`)
+    .join('');
+  const amenStr = (p.amenities||[]).join(', ');
   return `
     <div class="fr2">
       <div class="fg"><label class="fl">Property Name</label><input class="fi" id="pe_name_${i}" value="${esc(p.name||'')}" oninput="markDirty()"/></div>
@@ -675,182 +798,164 @@ function propEditForm(p, i) {
     <div class="fg"><label class="fl">Description</label><textarea class="fi" id="pe_desc_${i}" rows="3" style="resize:vertical" oninput="markDirty()">${esc(p.description||'')}</textarea></div>
     <div class="fr3">
       <div class="fg"><label class="fl">Price/night (€)</label><input class="fi" id="pe_price_${i}" type="number" value="${p.price||''}" oninput="markDirty()"/></div>
-      <div class="fg"><label class="fl">Max Guests</label><input class="fi" id="pe_guests_${i}" type="number" value="${p.max_guests||''}" oninput="markDirty()"/></div>
-      <div class="fg"><label class="fl">Bedrooms</label><input class="fi" id="pe_beds_${i}" type="number" value="${p.bedrooms||''}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Min Stay (nights)</label><input class="fi" id="pe_minstay_${i}" type="number" min="1" value="${p.min_stay||2}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Cleaning Fee (€)</label><input class="fi" id="pe_clean_${i}" type="number" value="${p.cleaning_fee||0}" oninput="markDirty()"/></div>
     </div>
     <div class="fr3">
+      <div class="fg"><label class="fl">Max Guests</label><input class="fi" id="pe_guests_${i}" type="number" value="${p.max_guests||''}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Bedrooms</label><input class="fi" id="pe_beds_${i}" type="number" value="${p.bedrooms||''}" oninput="markDirty()"/></div>
       <div class="fg"><label class="fl">Bathrooms</label><input class="fi" id="pe_baths_${i}" type="number" value="${p.bathrooms||''}" oninput="markDirty()"/></div>
-      <div class="fg"><label class="fl">Min Stay (nights)</label><input class="fi" id="pe_minstay_${i}" type="number" min="1" value="${p.min_stay||2}" oninput="markDirty()"/></div>
-      <div class="fg"><label class="fl">Cleaning Fee (€)</label><input class="fi" id="pe_clean_${i}" type="number" value="${p.cleaning_fee||40}" oninput="markDirty()"/></div>
     </div>
     <div class="fr2">
       <div class="fg">
         <label class="fl">Main Photo</label>
-        <select class="fi" id="pe_photo_${i}" onchange="markDirty();updatePropPhotoPreview(${i})">
-          <option value="">— no photo —</option>
-          ${allData.media.filter(m=>/\.(jpg|jpeg|png|webp)/i.test(m.name)).map(m=>`<option value="/images/${m.name}" ${p.photo==='/images/'+m.name||p.photo===m.name?'selected':''}>${m.name}</option>`).join('')}
-        </select>
-        <div id="pe_photoPreview_${i}" style="margin-top:8px;height:80px;border-radius:8px;overflow:hidden;background:var(--sand);display:${p.photo?'block':'none'}">
-          <img id="pe_photoImg_${i}" src="${p.photo||''}" style="width:100%;height:100%;object-fit:cover"/>
+        <div style="display:flex;gap:6px">
+          <select class="fi" id="pe_photo_${i}" onchange="markDirty();updatePreview('pe_photo_${i}','pe_prev_${i}')">
+            <option value="">— no photo —</option>${mediaOpts}
+          </select>
+          <button class="btn btn-g btn-sm" onclick="openPhotoPicker('pe_photo_${i}','pe_prev_${i}')">📷</button>
+        </div>
+        <div class="img-picker-preview" id="pe_prev_${i}" style="${p.photo?'display:block':''}">
+          <img src="${p.photo||''}"/>
         </div>
       </div>
       <div class="fg">
         <label class="fl">Hover Photo (optional)</label>
-        <select class="fi" id="pe_photo2_${i}" onchange="markDirty()">
-          <option value="">— none —</option>
-          ${allData.media.filter(m=>/\.(jpg|jpeg|png|webp)/i.test(m.name)).map(m=>`<option value="/images/${m.name}" ${p.photo_alt==='/images/'+m.name?'selected':''}>${m.name}</option>`).join('')}
-        </select>
+        <div style="display:flex;gap:6px">
+          <select class="fi" id="pe_photo2_${i}" onchange="markDirty()">
+            ${media2Opts}
+          </select>
+          <button class="btn btn-g btn-sm" onclick="openPhotoPicker('pe_photo2_${i}',null)">📷</button>
+        </div>
       </div>
     </div>
-    <div class="fg"><label class="fl">Amenities (comma separated)</label><input class="fi" id="pe_amen_${i}" value="${esc(amenStr)}" placeholder="WiFi, Pool, Air Con, Kitchen…" oninput="markDirty()"/></div>
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
-        <input type="checkbox" id="pe_avail_${i}" ${p.available!==false?'checked':''} onchange="markDirty()" style="accent-color:var(--ocean)"/> Active (show on site)
-      </label>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn btn-primary" onclick="saveProp(${i})">Save & Publish →</button>
-      <button class="btn btn-ocean" onclick="closePropEdit(${i})">Cancel</button>
-    </div>
-  `;
+    <div class="fg"><label class="fl">Amenities (comma separated)</label><input class="fi" id="pe_amen_${i}" value="${esc(amenStr)}" placeholder="WiFi, Pool, Air Con…" oninput="markDirty()"/></div>
+    <div class="fg"><label class="fl">Badge text</label><input class="fi" id="pe_badge_${i}" value="${esc(p.badge||'')}" placeholder="e.g. Pool & Garden" oninput="markDirty()"/></div>
+    <label style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;margin-bottom:14px">
+      <input type="checkbox" id="pe_avail_${i}" ${p.available!==false?'checked':''} onchange="markDirty()" style="accent-color:var(--green)"/> Active (visible on site)
+    </label>
+    <div style="display:flex;gap:7px">
+      <button class="btn btn-pri" onclick="saveProp(${i})">Save & Publish →</button>
+      <button class="btn btn-g" onclick="closePropEdit(${i})">Cancel</button>
+    </div>`;
 }
 
 function openPropEdit(i) {
-  document.querySelectorAll('.edit-panel').forEach(p => p.classList.remove('open'));
-  document.getElementById('propEdit'+i).classList.add('open');
+  document.querySelectorAll('.edit-panel').forEach(p=>p.classList.remove('open'));
+  document.getElementById('pe'+i)?.classList.add('open');
+  document.getElementById('pe'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-function closePropEdit(i) {
-  document.getElementById('propEdit'+i).classList.remove('open');
-}
-function updatePropPhotoPreview(i) {
-  const val = document.getElementById('pe_photo_'+i)?.value;
-  const preview = document.getElementById('pe_photoPreview_'+i);
-  const img = document.getElementById('pe_photoImg_'+i);
-  if (val && preview && img) { img.src = val; preview.style.display = 'block'; }
-  else if (preview) preview.style.display = 'none';
+function closePropEdit(i) { document.getElementById('pe'+i)?.classList.remove('open'); }
+
+function updatePreview(selectId, previewId, forcePath) {
+  const path = forcePath || document.getElementById(selectId)?.value;
+  const wrap = document.getElementById(previewId);
+  if (!wrap) return;
+  if (path) {
+    wrap.style.display = 'block';
+    const img = wrap.querySelector('img');
+    if (img) img.src = path;
+  } else {
+    wrap.style.display = 'none';
+  }
 }
 
 async function saveProp(i) {
   const p = allData.properties[i];
+  const get = id => document.getElementById(id);
+  const val = id => get(id)?.value?.trim();
   const updated = {
-    ...p,
-    name:         document.getElementById('pe_name_'+i)?.value.trim(),
-    location:     document.getElementById('pe_loc_'+i)?.value.trim(),
-    description:  document.getElementById('pe_desc_'+i)?.value.trim(),
-    price:        Number(document.getElementById('pe_price_'+i)?.value),
-    max_guests:   Number(document.getElementById('pe_guests_'+i)?.value),
-    bedrooms:     Number(document.getElementById('pe_beds_'+i)?.value),
-    bathrooms:    Number(document.getElementById('pe_baths_'+i)?.value),
-    min_stay:     Number(document.getElementById('pe_minstay_'+i)?.value) || 2,
-    cleaning_fee: Number(document.getElementById('pe_clean_'+i)?.value) || 40,
-    photo:        document.getElementById('pe_photo_'+i)?.value,
-    photo_alt:    document.getElementById('pe_photo2_'+i)?.value,
-    amenities:    (document.getElementById('pe_amen_'+i)?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
-    available:    document.getElementById('pe_avail_'+i)?.checked,
+    name:         val(`pe_name_${i}`),
+    location:     val(`pe_loc_${i}`),
+    description:  val(`pe_desc_${i}`),
+    price:        Number(val(`pe_price_${i}`)),
+    max_guests:   Number(val(`pe_guests_${i}`)),
+    bedrooms:     Number(val(`pe_beds_${i}`)),
+    bathrooms:    Number(val(`pe_baths_${i}`)),
+    min_stay:     Number(val(`pe_minstay_${i}`)) || 2,
+    cleaning_fee: Number(val(`pe_clean_${i}`)) || 0,
+    photo:        val(`pe_photo_${i}`),
+    photo_alt:    val(`pe_photo2_${i}`),
+    amenities:    (val(`pe_amen_${i}`)||'').split(',').map(s=>s.trim()).filter(Boolean),
+    badge:        val(`pe_badge_${i}`),
+    available:    get(`pe_avail_${i}`)?.checked,
   };
-  const { _path, _sha, _slug, ...clean } = updated;
-  setSyncBusy('Saving…');
+  setBusy('Saving…');
   try {
-    // ghWriteFile fetches the live SHA from GitHub immediately before writing
-    // so stale-SHA errors cannot occur regardless of what changed since last load
-    await ghWriteFile(_path, JSON.stringify(clean, null, 2), null, `admin: update property "${clean.name}"`);
+    await ghWrite(p._path, JSON.stringify(updated, null, 2), `admin: update property "${updated.name}"`);
+    allData.properties[i] = { ...updated, _path: p._path, _sha: p._sha, _slug: p._slug };
     closePropEdit(i);
-    setSyncOk('Saved ✓');
-    dirty = false;
-    hideSaveBanner();
-    toast('✅', `"${clean.name}" saved — live site updating in ~30s`);
-    // Reload all data so SHAs are fresh for subsequent saves
-    await loadAllData();
+    renderProperties();
+    setOk('Saved ✓'); hideBanner();
+    toast('✅', `"${updated.name}" saved — site updating in ~30s`);
+    await loadAllData(false);
+    await updateManifest();
   } catch(e) {
-    setSyncErr('Save failed');
-    // Show a specific, actionable error message
-    const msg = e.message || '';
-    if (msg.includes('does not match') || msg.includes('sha') || msg.includes('409')) {
-      toast('⚠️', 'SHA conflict — retrying automatically…');
-      // Auto-retry once: ghWriteFile will re-fetch the live SHA
-      setTimeout(async () => {
-        try {
-          await ghWriteFile(_path, JSON.stringify(clean, null, 2), null, `admin: update property "${clean.name}" (retry)`);
-          closePropEdit(i);
-          setSyncOk('Saved ✓');
-          dirty = false;
-          hideSaveBanner();
-          toast('✅', `"${clean.name}" saved on retry ✓`);
-          await loadAllData();
-        } catch(e2) {
-          setSyncErr('Error');
-          toast('⚠️', 'Still failing — click Refresh at top then try again');
-        }
-      }, 1000);
-    } else {
-      toast('⚠️', 'Save failed: ' + msg + ' — click Refresh and try again');
-    }
+    setErr('Save failed');
+    toast('⚠️', 'Save failed: ' + e.message + '. Try Refresh then save again.');
   }
 }
 
 function addNewProperty() {
-  const newProp = {
+  const slug = 'property-' + Date.now();
+  allData.properties.push({
     name:'New Property', location:'', description:'', price:0, max_guests:2,
-    bedrooms:1, bathrooms:1, photo:'', amenities:[], available:true,
-    _path:`_data/properties/new-property-${Date.now()}.json`, _sha:null, _slug:'new-property'
-  };
-  allData.properties.push(newProp);
+    bedrooms:1, bathrooms:1, min_stay:2, cleaning_fee:0,
+    photo:'', amenities:[], available:true,
+    _path:`_data/properties/${slug}.json`, _sha:null, _slug:slug
+  });
   renderProperties();
   openPropEdit(allData.properties.length - 1);
 }
 
 async function deleteProp(i) {
   const p = allData.properties[i];
-  showConfirm(`Delete "${p.name}"?`, 'This removes it from your repo and the live site.', async () => {
-    setSyncBusy('Deleting…');
+  showConfirm(`Delete "${p.name}"?`, 'Removes it from GitHub and the live site.', async () => {
+    setBusy('Deleting…');
     try {
-      // Always fetch live SHA before deleting to avoid stale SHA errors
-      const checkR = await ghFetch(`/repos/${REPO}/contents/${p._path}?ref=${BRANCH}`);
-      if (!checkR.ok) throw new Error('File not found on GitHub');
-      const checkD = await checkR.json();
-      await ghFetch(`/repos/${REPO}/contents/${p._path}`, token, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `admin: delete property "${p.name}"`, sha: checkD.sha, branch: BRANCH }),
-      });
+      await ghDelete(p._path, `admin: delete property "${p.name}"`);
       allData.properties.splice(i, 1);
       renderProperties();
-      setSyncOk('Deleted');
-      toast('🗑', `"${p.name}" deleted`);
-    } catch(e) { toast('⚠️', 'Delete failed: ' + e.message); setSyncErr('Error'); }
+      setOk('Deleted'); toast('🗑', `"${p.name}" deleted`);
+      await updateManifest();
+    } catch(e) { toast('⚠️','Delete failed: ' + e.message); setErr('Error'); }
   });
 }
 
 // ── EXPERIENCES ───────────────────────────────────────────────────
 function renderExperiences() {
   const el = document.getElementById('expList');
+  const catLabel = {boat:'⛵ Boat',nature:'🌿 Nature',food:'🍛 Food',concierge:'🎩 Concierge'};
+  const catShade = {boat:'rgba(0,61,107,.07)',nature:'rgba(45,106,79,.07)',food:'rgba(232,133,90,.08)',concierge:'rgba(60,40,100,.05)'};
   if (!allData.experiences.length) {
-    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">No experiences yet.</div>';
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">No experiences yet.</div>';
     return;
   }
-  const catColors = {boat:'rgba(0,61,107,.08)',nature:'rgba(45,106,79,.08)',food:'rgba(232,133,90,.1)',concierge:'rgba(60,40,100,.06)'};
-  const catLabels = {boat:'⛵ Boat & Water',nature:'🌿 Nature',food:'🍛 Food',concierge:'🎩 Concierge'};
   el.innerHTML = allData.experiences.map((e, i) => `
-    <div class="content-item" id="expItem${i}">
-      <div class="item-thumb" style="background:${catColors[e.category]||'var(--sand)'}">
-        ${e.photo ? `<img src="${e.photo}" onerror="this.parentNode.innerHTML='${e.icon||'🌴'}'"/>` : (e.icon||'🌴')}
+    <div class="ci">
+      <div class="ci-thumb" style="background:${catShade[e.category]||'var(--sand)'}">
+        ${e.photo ? `<img src="${e.photo}" onerror="this.remove()">` : (e.icon||'🌴')}
       </div>
-      <div class="item-info">
-        <strong>${e.name||'Unnamed'}</strong>
-        <span>${catLabels[e.category]||e.category||'–'} · ⏱ ${e.duration||'–'}${e.instagram?' · <a href="'+e.instagram+'" target="_blank" style="color:var(--ocean)">📸</a>':''}</span>
+      <div class="ci-info">
+        <div class="ci-name">${esc(e.name||'Untitled')}</div>
+        <div class="ci-meta">${catLabel[e.category]||e.category||'—'} · ⏱ ${esc(e.duration||'—')}${e.instagram?` · <a href="${e.instagram}" target="_blank" style="color:var(--green)">📸</a>`:''}</div>
       </div>
-      <div class="item-price">€${e.price}<span style="font-size:11px;color:var(--muted)">/${e.unit||'person'}</span></div>
-      <span class="pill ${e.active!==false?'pill-green':'pill-orange'}">${e.active!==false?'Active':'Hidden'}</span>
-      <button class="btn btn-ocean btn-sm" style="margin-left:8px" onclick="openExpEdit(${i})">Edit</button>
-      <button class="btn btn-red btn-sm" style="margin-left:4px" onclick="deleteExp(${i})">Delete</button>
+      <div class="ci-price">€${e.price||'—'}<span style="font-size:10px;color:var(--muted)">/${e.unit||'person'}</span></div>
+      <span class="pill ${e.active!==false?'pill-g':'pill-o'}">${e.active!==false?'Active':'Hidden'}</span>
+      <div class="ci-actions">
+        <button class="btn btn-g btn-sm" onclick="openExpEdit(${i})">Edit</button>
+        <button class="btn btn-r btn-sm" onclick="deleteExp(${i})">✕</button>
+      </div>
     </div>
-    <div class="edit-panel" id="expEdit${i}">
-      ${expEditForm(e, i)}
-    </div>
+    <div class="edit-panel" id="ee${i}">${expForm(e,i)}</div>
   `).join('');
 }
 
-function expEditForm(e, i) {
+function expForm(e, i) {
+  const mediaOpts = '<option value="">— no photo —</option>' + allData.media
+    .filter(m => /\.(jpg|jpeg|png|webp)/i.test(m.name))
+    .map(m => `<option value="/images/${m.name}" ${e.photo===`/images/${m.name}`?'selected':''}>${m.name}</option>`)
+    .join('');
   return `
     <div class="fr2">
       <div class="fg"><label class="fl">Name</label><input class="fi" id="ee_name_${i}" value="${esc(e.name||'')}" oninput="markDirty()"/></div>
@@ -866,386 +971,254 @@ function expEditForm(e, i) {
     <div class="fg"><label class="fl">Description</label><textarea class="fi" id="ee_desc_${i}" rows="3" style="resize:vertical" oninput="markDirty()">${esc(e.description||'')}</textarea></div>
     <div class="fr3">
       <div class="fg"><label class="fl">Price (€)</label><input class="fi" id="ee_price_${i}" type="number" value="${e.price||''}" oninput="markDirty()"/></div>
-      <div class="fg"><label class="fl">Price Per</label>
+      <div class="fg"><label class="fl">Per</label>
         <select class="fi" id="ee_unit_${i}" onchange="markDirty()">
           <option value="person" ${e.unit==='person'?'selected':''}>person</option>
           <option value="group" ${e.unit==='group'?'selected':''}>group</option>
           <option value="service" ${e.unit==='service'?'selected':''}>service</option>
         </select>
       </div>
-      <div class="fg"><label class="fl">Duration</label><input class="fi" id="ee_dur_${i}" value="${esc(e.duration||'')}" placeholder="e.g. Half day" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Duration</label><input class="fi" id="ee_dur_${i}" value="${esc(e.duration||'')}" placeholder="Half day" oninput="markDirty()"/></div>
     </div>
     <div class="fr2">
       <div class="fg">
         <label class="fl">Photo</label>
-        <select class="fi" id="ee_photo_${i}" onchange="markDirty();updateExpPhotoPreview(${i})">
-          <option value="">— no photo —</option>
-          ${allData.media.filter(m=>/\.(jpg|jpeg|png|webp)/i.test(m.name)).map(m=>`<option value="/images/${m.name}" ${e.photo==='/images/'+m.name?'selected':''}>${m.name}</option>`).join('')}
-        </select>
-        <div id="ee_photoPreview_${i}" style="margin-top:8px;height:70px;border-radius:8px;overflow:hidden;background:var(--sand);display:${e.photo?'block':'none'}">
-          <img id="ee_photoImg_${i}" src="${e.photo||''}" style="width:100%;height:100%;object-fit:cover"/>
+        <div style="display:flex;gap:6px">
+          <select class="fi" id="ee_photo_${i}" onchange="markDirty();updatePreview('ee_photo_${i}','ee_prev_${i}')">
+            ${mediaOpts}
+          </select>
+          <button class="btn btn-g btn-sm" onclick="openPhotoPicker('ee_photo_${i}','ee_prev_${i}')">📷</button>
+        </div>
+        <div class="img-picker-preview" id="ee_prev_${i}" style="${e.photo?'display:block':''}">
+          <img src="${e.photo||''}"/>
         </div>
       </div>
-      <div class="fg"><label class="fl">Instagram URL (optional)</label><input class="fi" id="ee_ig_${i}" value="${esc(e.instagram||'')}" placeholder="https://instagram.com/…" oninput="markDirty()"/></div>
+      <div class="fg">
+        <label class="fl">Icon (emoji)</label><input class="fi" id="ee_icon_${i}" value="${esc(e.icon||'')}" placeholder="🌿" style="width:80px" oninput="markDirty()"/>
+        <label class="fl" style="margin-top:10px">Instagram URL</label><input class="fi" id="ee_ig_${i}" value="${esc(e.instagram||'')}" placeholder="https://instagram.com/…" oninput="markDirty()"/>
+      </div>
     </div>
-    <div class="fg"><label class="fl">Icon (emoji)</label><input class="fi" id="ee_icon_${i}" value="${esc(e.icon||'')}" placeholder="🌿" style="width:80px" oninput="markDirty()"/></div>
-    <div style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin-bottom:12px">
-      <input type="checkbox" id="ee_active_${i}" ${e.active!==false?'checked':''} onchange="markDirty()" style="accent-color:var(--ocean)"/>
-      <label for="ee_active_${i}">Active (show on site)</label>
-    </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-primary" onclick="saveExp(${i})">Save & Publish →</button>
-      <button class="btn btn-ocean" onclick="closeExpEdit(${i})">Cancel</button>
-    </div>
-  `;
+    <label style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;margin-bottom:14px">
+      <input type="checkbox" id="ee_active_${i}" ${e.active!==false?'checked':''} onchange="markDirty()" style="accent-color:var(--green)"/> Active (visible on site)
+    </label>
+    <div style="display:flex;gap:7px">
+      <button class="btn btn-pri" onclick="saveExp(${i})">Save & Publish →</button>
+      <button class="btn btn-g" onclick="closeExpEdit(${i})">Cancel</button>
+    </div>`;
 }
 
 function openExpEdit(i) {
-  document.querySelectorAll('.edit-panel').forEach(p => p.classList.remove('open'));
-  document.getElementById('expEdit'+i).classList.add('open');
+  document.querySelectorAll('.edit-panel').forEach(p=>p.classList.remove('open'));
+  document.getElementById('ee'+i)?.classList.add('open');
+  document.getElementById('ee'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-function closeExpEdit(i) { document.getElementById('expEdit'+i).classList.remove('open'); }
-function updateExpPhotoPreview(i) {
-  const val = document.getElementById('ee_photo_'+i)?.value;
-  const preview = document.getElementById('ee_photoPreview_'+i);
-  const img = document.getElementById('ee_photoImg_'+i);
-  if (val && preview && img) { img.src = val; preview.style.display='block'; }
-  else if (preview) preview.style.display = 'none';
-}
+function closeExpEdit(i) { document.getElementById('ee'+i)?.classList.remove('open'); }
 
 async function saveExp(i) {
   const e = allData.experiences[i];
+  const val = id => document.getElementById(id)?.value?.trim();
   const updated = {
-    ...e,
-    name:        document.getElementById('ee_name_'+i)?.value.trim(),
-    category:    document.getElementById('ee_cat_'+i)?.value,
-    description: document.getElementById('ee_desc_'+i)?.value.trim(),
-    price:       Number(document.getElementById('ee_price_'+i)?.value),
-    unit:        document.getElementById('ee_unit_'+i)?.value,
-    duration:    document.getElementById('ee_dur_'+i)?.value.trim(),
-    photo:       document.getElementById('ee_photo_'+i)?.value,
-    instagram:   document.getElementById('ee_ig_'+i)?.value.trim(),
-    icon:        document.getElementById('ee_icon_'+i)?.value.trim(),
-    active:      document.getElementById('ee_active_'+i)?.checked,
+    name:        val(`ee_name_${i}`),
+    category:    val(`ee_cat_${i}`),
+    description: val(`ee_desc_${i}`),
+    price:       Number(val(`ee_price_${i}`)),
+    unit:        val(`ee_unit_${i}`),
+    duration:    val(`ee_dur_${i}`),
+    photo:       val(`ee_photo_${i}`),
+    instagram:   val(`ee_ig_${i}`),
+    icon:        val(`ee_icon_${i}`),
+    active:      document.getElementById(`ee_active_${i}`)?.checked,
   };
-  const { _path, _sha, _slug, ...clean } = updated;
-  setSyncBusy('Saving…');
+  setBusy('Saving…');
   try {
-    await ghWriteFile(_path, JSON.stringify(clean, null, 2), null, `admin: update experience "${clean.name}"`);
+    await ghWrite(e._path, JSON.stringify(updated, null, 2), `admin: update experience "${updated.name}"`);
+    allData.experiences[i] = { ...updated, _path: e._path, _sha: e._sha, _slug: e._slug };
     closeExpEdit(i);
-    setSyncOk('Saved ✓');
-    dirty = false;
-    hideSaveBanner();
-    toast('✅', `"${clean.name}" saved — live site updating in ~30s`);
-    await loadAllData();
-  } catch(e) {
-    setSyncErr('Save failed');
-    const msg = e.message || '';
-    if (msg.includes('does not match') || msg.includes('sha') || msg.includes('409')) {
-      toast('⚠️', 'SHA conflict — retrying automatically…');
-      setTimeout(async () => {
-        try {
-          await ghWriteFile(_path, JSON.stringify(clean, null, 2), null, `admin: update experience "${clean.name}" (retry)`);
-          closeExpEdit(i);
-          setSyncOk('Saved ✓');
-          dirty = false;
-          hideSaveBanner();
-          toast('✅', `"${clean.name}" saved on retry ✓`);
-          await loadAllData();
-        } catch(e2) {
-          setSyncErr('Error');
-          toast('⚠️', 'Still failing — click Refresh at top then try again');
-        }
-      }, 1000);
-    } else {
-      toast('⚠️', 'Save failed: ' + msg + ' — click Refresh and try again');
-    }
+    renderExperiences();
+    setOk('Saved ✓'); hideBanner();
+    toast('✅', `"${updated.name}" saved — site updating in ~30s`);
+    await loadAllData(false);
+    await updateManifest();
+  } catch(e2) {
+    setErr('Save failed');
+    toast('⚠️', 'Save failed: ' + e2.message);
   }
 }
 
 function addNewExperience() {
-  const slug = 'new-experience-' + Date.now();
-  const newExp = {
+  const slug = 'experience-' + Date.now();
+  allData.experiences.push({
     name:'New Experience', category:'nature', description:'', price:0, unit:'person',
     duration:'', photo:'', instagram:'', icon:'🌴', active:true,
-    _path:`_data/experiences/${slug}.json`, _sha:null, _slug:slug,
-  };
-  allData.experiences.push(newExp);
+    _path:`_data/experiences/${slug}.json`, _sha:null, _slug:slug
+  });
   renderExperiences();
   openExpEdit(allData.experiences.length - 1);
 }
 
 async function deleteExp(i) {
   const e = allData.experiences[i];
-  showConfirm(`Delete "${e.name}"?`, 'This removes it from your repo and live site.', async () => {
-    setSyncBusy('Deleting…');
+  showConfirm(`Delete "${e.name}"?`, 'Removes it from GitHub and the live site.', async () => {
+    setBusy('Deleting…');
     try {
-      // Always fetch live SHA before deleting
-      const checkR = await ghFetch(`/repos/${REPO}/contents/${e._path}?ref=${BRANCH}`);
-      if (!checkR.ok) throw new Error('File not found on GitHub');
-      const checkD = await checkR.json();
-      await ghFetch(`/repos/${REPO}/contents/${e._path}`, token, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `admin: delete experience "${e.name}"`, sha: checkD.sha, branch: BRANCH }),
-      });
+      await ghDelete(e._path, `admin: delete experience "${e.name}"`);
       allData.experiences.splice(i, 1);
       renderExperiences();
-      setSyncOk('Deleted');
-      toast('🗑', `"${e.name}" deleted`);
-    } catch(e) { toast('⚠️', 'Delete failed: ' + e.message); }
+      setOk('Deleted'); toast('🗑', `"${e.name}" deleted`);
+      await updateManifest();
+    } catch(err) { toast('⚠️','Delete failed: ' + err.message); setErr('Error'); }
   });
 }
 
-// ── MEDIA LIBRARY ─────────────────────────────────────────────────
-function renderMediaGrid() {
-  const grid = document.getElementById('mediaGrid');
-  const count = document.getElementById('mediaCount');
-  if (!allData.media.length) {
-    grid.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;grid-column:1/-1">No media yet. Upload photos above.</div>';
-    if (count) count.textContent = '0 files';
-    return;
-  }
-  if (count) count.textContent = allData.media.length + ' files';
-  grid.innerHTML = allData.media.map(m => {
-    const isVideo = /\.(mp4|mov)/i.test(m.name);
-    const url = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${m.path}`;
-    return `
-      <div class="media-thumb" title="${m.name}">
-        ${isVideo
-          ? `<video src="${url}" muted style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>`
-          : `<img src="${url}" loading="lazy" onerror="this.style.display='none'">`}
-        <div class="thumb-lbl"><strong>${m.name}</strong></div>
-        <button class="thumb-use" onclick="copyPath('/images/${m.name}','${m.name}')">📋 Copy path</button>
-        <button class="thumb-del" onclick="deleteMedia('${m.path}','${m.sha}','${m.name}')" title="Delete">✕</button>
-      </div>`;
-  }).join('') + `
-    <div class="media-thumb" style="background:var(--sand);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;border:2px dashed var(--stone)" onclick="document.getElementById('fileIn').click()">
-      <span style="font-size:28px">+</span>
-      <span style="font-size:12px;color:var(--muted)">Upload</span>
-    </div>`;
-}
-
-function copyPath(path, name) {
-  navigator.clipboard?.writeText(path).then(() => toast('📋', 'Copied: ' + name));
-}
-
-async function deleteMedia(path, sha, name) {
-  showConfirm(`Delete "${name}"?`, 'This permanently removes the file from GitHub. Any properties using this photo will show a broken image until you assign a new one.', async () => {
-    setSyncBusy('Deleting…');
-    try {
-      await ghFetch(`/repos/${REPO}/contents/${path}`, token, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `media: delete ${name}`, sha, branch: BRANCH }),
-      });
-      allData.media = allData.media.filter(m => m.path !== path);
-      renderMediaGrid();
-      setSyncOk('Deleted');
-      toast('🗑', name + ' deleted');
-    } catch(e) { toast('⚠️', 'Delete failed: ' + e.message); }
-  });
-}
-
-// ── FILE UPLOAD ────────────────────────────────────────────────────
-function dzOver(e) {
-  e.preventDefault();
-  document.getElementById('dropZone').classList.add('dragover');
-}
-function dzLeave(e) {
-  document.getElementById('dropZone').classList.remove('dragover');
-}
-function dzDrop(e) {
-  e.preventDefault();
-  dzLeave(e);
-  handleFiles(e.dataTransfer.files);
-}
-async function handleFiles(files) {
-  const arr = Array.from(files);
-  if (!arr.length) return;
-  if (!token) { toast('⚠️', 'Connect GitHub first'); return; }
-  const prog = document.getElementById('uploadProg');
-  const bar  = document.getElementById('progBar');
-  const stat = document.getElementById('uploadStatus');
-  const fileLabel = document.getElementById('uploadFile');
-  prog.style.display = 'block';
-  let done = 0;
-  for (const file of arr) {
-    fileLabel.textContent = file.name + ' (' + (file.size/1024).toFixed(0) + 'KB)';
-    stat.textContent = `Uploading ${done+1} of ${arr.length}…`;
-    setSyncBusy('Uploading…');
-    try {
-      await uploadMedia(file);
-      done++;
-      bar.style.width = Math.round(done/arr.length*100) + '%';
-    } catch(e) {
-      toast('⚠️', 'Upload failed: ' + file.name + ' — ' + e.message);
-    }
-  }
-  stat.textContent = `✅ ${done} file(s) uploaded`;
-  setSyncOk('Uploaded');
-  toast('✅', done + ' photo(s) uploaded to GitHub');
-  await loadAllData(); // refresh media list + re-render photo dropdowns
-  setTimeout(() => { prog.style.display='none'; bar.style.width='0'; }, 3000);
-}
-
-// ── SETTINGS ──────────────────────────────────────────────────────
+// ── SETTINGS ─────────────────────────────────────────────────────
 function fillSettings() {
   const s = allData.settings;
   const set = (id, val) => { const el = document.getElementById(id); if(el) el.value = val||''; };
-  set('s_name',    s.name);
-  set('s_email',   s.email);
-  set('s_whatsapp',s.whatsapp);
+  set('s_name',     s.name);
+  set('s_email',    s.email);
+  set('s_whatsapp', s.whatsapp);
   set('s_instagram',s.instagram);
-  set('s_facebook',s.facebook);
-  set('s_tiktok',  s.tiktok);
-  set('s_hero1',   s.hero_line1);
-  set('s_hero2',   s.hero_line2);
-  set('s_herosub', s.hero_sub);
+  set('s_facebook', s.facebook);
+  set('s_tiktok',   s.tiktok);
+  set('s_hero1',    s.hero_line1);
+  set('s_hero2',    s.hero_line2);
+  set('s_herosub',  s.hero_sub);
+  set('s_hp1',      s.hero_photo);
+  set('s_hp2',      s.hero_photo2);
+  set('s_hp3',      s.hero_photo3);
+  set('s_hp4',      s.hero_photo4);
+  set('s_svc_acc',  s.svc_accommodation_photo);
+  set('s_svc_boat', s.svc_boat_photo);
+  set('s_svc_nat',  s.svc_nature_photo);
+  set('s_svc_food', s.svc_food_photo);
+  set('s_svc_con',  s.svc_concierge_photo);
+  // Update previews
+  ['s_hp1','s_hp2','s_hp3','s_hp4','s_svc_acc','s_svc_boat','s_svc_nat','s_svc_food','s_svc_con'].forEach(id => {
+    const val = document.getElementById(id)?.value;
+    const prevId = id.replace('s_','p_');
+    updatePreview(id, prevId, val);
+  });
+}
+
+function updateSettingsPreview(inputId, previewId) {
+  const val = document.getElementById(inputId)?.value;
+  updatePreview(inputId, previewId, val);
 }
 
 async function saveSettings() {
   const s = allData.settings;
-  const get = id => document.getElementById(id)?.value.trim();
+  const get = id => document.getElementById(id)?.value?.trim();
   const updated = {
-    name:       get('s_name'),
-    email:      get('s_email'),
-    whatsapp:   get('s_whatsapp'),
-    instagram:  get('s_instagram'),
-    facebook:   get('s_facebook'),
-    tiktok:     get('s_tiktok'),
-    hero_line1: get('s_hero1'),
-    hero_line2: get('s_hero2'),
-    hero_sub:   get('s_herosub'),
-    hero_photo:  s.hero_photo || '',
-    hero_photo2: s.hero_photo2 || '',
-    hero_photo3: s.hero_photo3 || '',
-    hero_photo4: s.hero_photo4 || '',
+    name:        get('s_name'),
+    email:       get('s_email'),
+    whatsapp:    get('s_whatsapp'),
+    instagram:   get('s_instagram'),
+    facebook:    get('s_facebook'),
+    tiktok:      get('s_tiktok'),
+    hero_line1:  get('s_hero1'),
+    hero_line2:  get('s_hero2'),
+    hero_sub:    get('s_herosub'),
+    hero_photo:  get('s_hp1'),
+    hero_photo2: get('s_hp2'),
+    hero_photo3: get('s_hp3'),
+    hero_photo4: get('s_hp4'),
+    svc_accommodation_photo: get('s_svc_acc'),
+    svc_boat_photo:          get('s_svc_boat'),
+    svc_nature_photo:        get('s_svc_nat'),
+    svc_food_photo:          get('s_svc_food'),
+    svc_concierge_photo:     get('s_svc_con'),
   };
-  setSyncBusy('Saving…');
+  setBusy('Saving…');
   try {
-    await ghWriteFile('_data/settings.json', JSON.stringify(updated, null, 2), null, 'admin: update site settings');
-    setSyncOk('Saved');
-    dirty = false;
-    hideSaveBanner();
-    toast('✅', 'Settings saved — live site updating in ~30s');
-    await loadAllData();
-  } catch(e) {
-    setSyncErr('Error');
-    toast('⚠️', 'Save failed: ' + e.message);
-  }
-}
-
-// ── DIRTY / PUBLISH ───────────────────────────────────────────────
-function markDirty() {
-  dirty = true;
-  document.getElementById('saveBanner').classList.add('show');
-  document.getElementById('publishBtn').style.display = 'flex';
-}
-function hideSaveBanner() {
-  dirty = false;
-  document.getElementById('saveBanner').classList.remove('show');
-  document.getElementById('publishBtn').style.display = 'none';
-}
-function discardChanges() {
-  if (confirm('Discard all unsaved changes?')) {
-    loadAllData();
-    hideSaveBanner();
-  }
-}
-function publishChanges() {
-  toast('💡', 'Click "Save & Publish →" on the item you edited to save it to GitHub');
+    await ghWrite('_data/settings.json', JSON.stringify(updated, null, 2), 'admin: update site settings');
+    allData.settings = { ...updated, _path:'_data/settings.json', _sha:s._sha };
+    setOk('Saved ✓'); hideBanner();
+    toast('✅','Settings saved — site updating in ~30s');
+    await loadAllData(false);
+  } catch(e) { setErr('Save failed'); toast('⚠️','Save failed: ' + e.message); }
 }
 
 // ── UI HELPERS ────────────────────────────────────────────────────
-function setSyncBusy(msg) {
-  document.getElementById('syncDot').className = 'sync-dot busy';
-  document.getElementById('syncLabel').textContent = msg;
-}
-function setSyncOk(msg) {
-  document.getElementById('syncDot').className = 'sync-dot ok';
-  document.getElementById('syncLabel').textContent = msg;
-}
-function setSyncErr(msg) {
-  document.getElementById('syncDot').className = 'sync-dot err';
-  document.getElementById('syncLabel').textContent = msg;
-}
-function showConnectError(msg) {
-  const el = document.getElementById('connectError');
-  if (el) { el.textContent = msg; el.style.display = 'block'; }
-  setSyncErr('Failed');
-}
-
-const pageTitles = {
-  connect:'Connect', dashboard:'Dashboard', requests:'Booking Requests',
-  bookings:'Bookings', guests:'Guests', properties:'Properties',
-  experiences:'Experiences', media:'Media Library', settings:'Settings'
-};
+const PAGE_TITLES = {connect:'Connect',dashboard:'Dashboard',bookings:'Bookings',
+  properties:'Properties',experiences:'Experiences',media:'Media Library',settings:'Settings'};
 
 function goPage(id, navEl) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const pg = document.getElementById('page-'+id);
-  if (pg) pg.classList.add('active');
-  document.getElementById('pageTitle').textContent = pageTitles[id] || id;
+  document.getElementById('page-'+id)?.classList.add('active');
+  document.getElementById('pageTitle').textContent = PAGE_TITLES[id] || id;
   document.querySelectorAll('.s-item[data-page]').forEach(el => el.classList.remove('active'));
   if (navEl) navEl.classList.add('active');
-  // Scroll the content area back to top (not window.scrollTo)
-  const contentEl = document.querySelector('.content');
-  if (contentEl) contentEl.scrollTop = 0;
+  document.querySelector('.content').scrollTop = 0;
+}
+
+function markDirty() {
+  dirty = true;
+  document.getElementById('saveBanner').classList.add('show');
+}
+function hideBanner() {
+  dirty = false;
+  document.getElementById('saveBanner').classList.remove('show');
+}
+
+function setBusy(msg) { document.getElementById('syncDot').className='dot busy'; document.getElementById('syncLbl').textContent=msg; }
+function setOk(msg)   { document.getElementById('syncDot').className='dot ok';   document.getElementById('syncLbl').textContent=msg; }
+function setErr(msg)  { document.getElementById('syncDot').className='dot err';  document.getElementById('syncLbl').textContent=msg; }
+function showConnectErr(msg) { const el=document.getElementById('connectErr'); if(el){el.textContent=msg;el.style.display='block';} setErr('Failed'); }
+
+let toastTimer;
+function toast(icon, msg) {
+  document.getElementById('tIcon').textContent = icon;
+  document.getElementById('tMsg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
 function showConfirm(title, msg, cb) {
   document.getElementById('confirmTitle').textContent = title;
   document.getElementById('confirmMsg').textContent = msg;
   confirmCb = cb;
-  document.getElementById('confirmOverlay').classList.add('open');
+  document.getElementById('confirmWrap').classList.add('open');
 }
-function closeConfirm() {
-  document.getElementById('confirmOverlay').classList.remove('open');
-  confirmCb = null;
+function closeConfirm() { document.getElementById('confirmWrap').classList.remove('open'); confirmCb=null; }
+document.getElementById('confirmOk').addEventListener('click', () => { if(confirmCb)confirmCb(); closeConfirm(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeConfirm(); closePhotoModal(); } });
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+
+// ── MANIFEST AUTO-UPDATE ──────────────────────────────────────────
+// Keeps _data/manifest.json in sync so index.html can discover all
+// properties and experiences without hardcoding slugs.
+async function updateManifest() {
+  try {
+    const props = allData.properties.map(p => p._slug).filter(Boolean);
+    const exps  = allData.experiences.map(e => e._slug).filter(Boolean);
+    const manifest = { properties: props.sort(), experiences: exps.sort() };
+    await ghWrite('_data/manifest.json', JSON.stringify(manifest, null, 2), 'admin: update content manifest');
+  } catch(e) {
+    console.warn('Manifest update failed (non-critical):', e.message);
+  }
 }
-document.getElementById('confirmOk').addEventListener('click', () => {
-  if (confirmCb) confirmCb();
-  closeConfirm();
-});
-
-function esc(s) { return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-
-let toastT;
-function toast(icon, msg) {
-  document.getElementById('tIcon').textContent = icon;
-  document.getElementById('tMsg').textContent = msg;
-  const t = document.getElementById('toast');
-  t.classList.add('show');
-  clearTimeout(toastT);
-  toastT = setTimeout(() => t.classList.remove('show'), 3500);
-}
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeConfirm(); });
 
 // ── INIT ──────────────────────────────────────────────────────────
 (function init() {
   if (token) {
-    // Token already saved — auto-connect
-    setSyncBusy('Connecting…');
-    ghFetch(`/repos/${REPO}`).then(r => {
+    setBusy('Connecting…');
+    ghGet(`/repos/${REPO}`).then(r => {
       if (r.ok) {
-        setSyncOk('Connected');
-        loadAllData();
+        setOk('Connected');
+        loadAllData(false);
         goPage('dashboard', document.querySelector('[data-page=dashboard]'));
       } else {
-        token = '';
-        localStorage.removeItem('ev_token');
-        goPage('connect', null);
-        setSyncErr('Token expired');
+        token=''; localStorage.removeItem('ev_ghtoken');
+        goPage('connect', null); setErr('Token expired');
       }
-    }).catch(() => {
-      goPage('connect', null);
-      setSyncErr('Offline');
-    });
+    }).catch(() => { goPage('connect', null); setErr('Offline'); });
   } else {
     goPage('connect', null);
-    document.getElementById('syncLabel').textContent = 'Not connected';
+    document.getElementById('syncLbl').textContent = 'Not connected';
   }
 })();
 </script>
