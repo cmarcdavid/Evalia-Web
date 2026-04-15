@@ -1,1 +1,12 @@
-{"name":"Dolphin Watching Cruise","category":"boat","description":"Meet wild dolphins in their natural habitat in the crystal-clear waters off the west coast.","price":45,"unit":"person","duration":"Half day","instagram":"","icon":"🐬","active":true}
+{
+  "name": "Dolphin and Whale Watching Cruise",
+  "category": "boat",
+  "description": "Meet wild dolphins and whales in their natural habitat in the crystal-clear waters off the west coast.",
+  "price": 45,
+  "unit": "person",
+  "duration": "Half day",
+  "photo": "/images/IMG_3527.jpeg",
+  "instagram": "",
+  "icon": "ð¬",
+  "active": true
+}
