@@ -358,7 +358,7 @@ const REPO='cmarcdavid/evalia-web',BRANCH='main',API='https://api.github.com';
 const RAW=`https://raw.githubusercontent.com/${REPO}/${BRANCH}`;
 const CONC=3; // upload concurrency
 
-let token=localStorage.getItem('ev_gh')||'';
+let token=localStorage.getItem('ev_gh')||localStorage.getItem('ev_token')||'';
 let dirty=false;
 let D={props:[],exps:[],settings:{},media:[]};
 let cfCb=null,ppTarget=null;

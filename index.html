@@ -501,10 +501,10 @@
       </div>
       <div class="svc-body">
         <div class="svc-name" data-svc-name="nat">Nature & Wellness</div>
-        <div class="svc-desc">Hiking, yoga in nature, Black River Gorges, Chamarel and more — curated with local wellness expert <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.</div>
+        <div class="svc-desc" data-svc-desc="nat" data-svc-desc-has-link="true">Hiking, yoga in nature, Black River Gorges, Chamarel and more — curated with local wellness expert <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.</div>
         <div class="svc-foot">
-          <div><div class="svc-price"><sup>€</sup>40</div><div class="svc-price-lbl">per person from</div></div>
-          <button class="btn-svc" onclick="openExpTab('nature')">Explore Nature</button>
+          <div><div class="svc-price"><sup>€</sup>40</div><div class="svc-price-lbl" data-svc-from="nat">per person from</div></div>
+          <button class="btn-svc" data-svc-btn="nat" onclick="openExpTab('nature')">Explore Nature</button>
         </div>
       </div>
     </div>
@@ -1356,6 +1356,9 @@ async function loadCMSContent() {
       renderExp('all');
     }
 
+    // Re-apply language AFTER CMS data is loaded so FR users see translated content
+    if (typeof applyLang === 'function') applyLang();
+
   } catch(err) {
     // Silent fail — hardcoded fallbacks remain visible
     console.log('CMS load skipped:', err.message);
@@ -1583,8 +1586,9 @@ function showToast(icon, msg) {
 // ── KEYBOARD ──────────────────────────────────
 document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
 </script>
-<script src="https://unpkg.com/@formspree/ajax@1" defer>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
+<script>
 // ═══════════════════════════════════════════════════════════════
 // i18n — EN / FR language toggle
 // Data-driven: all translations live in the I18N object.
@@ -1744,7 +1748,16 @@ function applyLang() {
   _setTxt('[data-svc-btn="boat"]',      T('svc_boat_btn'));
   _setTxt('[data-svc-tag="nat"]',       T('svc_nat_tag'));
   _setTxt('[data-svc-name="nat"]',      T('svc_nat_name'));
-  _setTxt('[data-svc-desc="nat"]',      T('svc_nat_desc'));
+  // Nature desc has a link in EN — use innerHTML for FR, preserve link for EN
+  (function() {
+    const el = document.querySelector('[data-svc-desc="nat"]');
+    if (!el) return;
+    if (lang === 'fr') {
+      el.innerHTML = T('svc_nat_desc') + ' — avec <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.';
+    } else {
+      el.innerHTML = 'Hiking, yoga in nature, Black River Gorges, Chamarel and more — curated with local wellness expert <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.';
+    }
+  })();
   _setTxt('[data-svc-from="nat"]',      T('svc_nat_from'));
   _setTxt('[data-svc-btn="nat"]',       T('svc_nat_btn'));
   _setTxt('[data-svc-tag="food"]',      T('svc_food_tag'));
@@ -1841,7 +1854,6 @@ function lbRender() {
   document.getElementById('lbPrev').style.display = show;
   document.getElementById('lbNext').style.display = show;
 }
-
 </script>
 
 
