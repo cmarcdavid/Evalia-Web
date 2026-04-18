@@ -9,7 +9,10 @@
   "unit": "person",
   "duration": "90 min",
   "duration_fr": "90 min",
-  "gallery": [],
+  "gallery": [
+    "/images/Hero1.jpg"
+  ],
   "instagram": "https://www.instagram.com/bea_titudeyoga/",
-  "active": true
+  "active": true,
+  "photo": "/images/Hero1.jpg"
 }

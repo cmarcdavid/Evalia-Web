@@ -9,7 +9,10 @@
   "unit": "person",
   "duration": "Full day",
   "duration_fr": "Journée complète",
-  "gallery": [],
+  "gallery": [
+    "/images/Hero3.jpg"
+  ],
   "instagram": "",
-  "active": true
+  "active": true,
+  "photo": "/images/Hero3.jpg"
 }

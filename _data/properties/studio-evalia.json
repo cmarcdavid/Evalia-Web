@@ -10,10 +10,13 @@
   "max_guests": 2,
   "bedrooms": 1,
   "bathrooms": 1,
+  "min_stay": 2,
+  "cleaning_fee": 30,
   "photo": "/images/Hero3.jpg",
-  "photo_alt": "",
+  "photo_alt": "/images/Hero1.jpg",
   "gallery": [
-    "/images/Hero3.jpg"
+    "/images/Hero3.jpg",
+    "/images/Hero1.jpg"
   ],
   "badge": "Available Now",
   "badge_fr": "Disponible Maintenant",
@@ -25,7 +28,5 @@
     "1 Bed",
     "1 Bath",
     "2 Guests"
-  ],
-  "min_stay": 2,
-  "cleaning_fee": 30
+  ]
 }

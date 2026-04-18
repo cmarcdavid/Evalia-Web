@@ -1,12 +1,18 @@
 {
   "name": "Mindful Garden Walk",
+  "name_fr": "Promenade Méditative au Jardin",
   "category": "nature",
+  "icon": "🌺",
   "description": "A mindful walk through Pamplemousses botanical garden with meditation stops, guided by @bea_titudeyoga.",
+  "description_fr": "Une promenade méditative à travers le jardin botanique de Pamplemousses avec des pauses méditation, guidée par @bea_titudeyoga.",
   "price": 30,
   "unit": "person",
   "duration": "2 hours",
-  "photo": "",
+  "duration_fr": "2 heures",
+  "gallery": [
+    "/images/Hero.jpg"
+  ],
   "instagram": "https://www.instagram.com/bea_titudeyoga/",
-  "icon": "ðº",
-  "active": false
+  "active": true,
+  "photo": "/images/Hero.jpg"
 }

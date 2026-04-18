@@ -9,7 +9,10 @@
   "unit": "person",
   "duration": "Half day",
   "duration_fr": "Demi-journée",
-  "gallery": [],
+  "gallery": [
+    "/images/Hero2.jpg"
+  ],
   "instagram": "",
-  "active": true
+  "active": true,
+  "photo": "/images/Hero2.jpg"
 }

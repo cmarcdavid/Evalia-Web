@@ -9,7 +9,10 @@
   "unit": "person",
   "duration": "3 hours",
   "duration_fr": "3 heures",
-  "gallery": [],
+  "gallery": [
+    "/images/Host.jpg"
+  ],
   "instagram": "",
-  "active": true
+  "active": true,
+  "photo": "/images/Host.jpg"
 }
