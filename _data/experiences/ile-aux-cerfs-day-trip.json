@@ -1,1 +1,12 @@
-{"name":"Île aux Cerfs Day Trip","category":"boat","description":"A full day on the most stunning island in Mauritius — white sand, turquoise lagoon, water sports.","price":75,"unit":"person","duration":"Full day","instagram":"","icon":"🏝️","active":true}
+{
+  "name": "West coast boat experiences",
+  "category": "boat",
+  "description": "From early morning Dolphin or Whale watching, to wke boarding or skiing or romantic sunset or full day. A full day with white sand, turquoise lagoon, water sports.",
+  "price": 75,
+  "unit": "person",
+  "duration": "flexible",
+  "photo": "/images/IMG_2171.jpeg",
+  "instagram": "",
+  "icon": "ðï¸",
+  "active": true
+}
