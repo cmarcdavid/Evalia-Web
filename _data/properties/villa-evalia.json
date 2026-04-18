@@ -1,25 +1,23 @@
 {
   "name": "Villa Evalia",
   "name_fr": "Villa Evalia",
-  "type": "Villa",
-  "location": "Grand Baie, North Mauritius",
-  "location_fr": "Grand Baie, Nord de l'Île Maurice",
+  "location": "Albion, West Mauritius",
+  "location_fr": "Albion, Ile Maurice",
   "description": "A private 2-bedroom villa surrounded by a lush tropical garden with its own pool. Ideal for families or groups seeking privacy, space and the ultimate island living experience.",
-  "description_fr": "Une villa privée de 2 chambres entourée d'un jardin tropical luxuriant avec sa propre piscine. Idéale pour les familles ou les groupes recherchant intimité, espace et la quintessence de la vie insulaire.",
-  "price": 180,
+  "description_fr": "Une villa privÃ©e de 2 chambres entourÃ©e d'un jardin tropical luxuriant avec sa propre piscine. IdÃ©ale pour les familles ou les groupes recherchant intimitÃ©, espace et la quintessence de la vie insulaire.",
+  "price": 100,
   "max_guests": 6,
   "bedrooms": 2,
   "bathrooms": 2,
-  "min_stay": 3,
-  "cleaning_fee": 60,
+  "min_stay": 5,
+  "cleaning_fee": 50,
+  "badge": "Pool & Garden",
+  "badge_fr": "Piscine & Jardin",
   "photo": "/images/Villa-pool.jpg",
-  "photo_alt": "/images/Villa-pool1.jpg",
   "gallery": [
     "/images/Villa-pool.jpg",
     "/images/Villa-pool1.jpg"
   ],
-  "badge": "Pool & Garden",
-  "badge_fr": "Piscine & Jardin",
   "available": true,
   "amenities": [
     "Pool",
@@ -31,5 +29,6 @@
     "2 Beds",
     "2 Baths",
     "6 Guests"
-  ]
+  ],
+  "type": "Villa"
 }
