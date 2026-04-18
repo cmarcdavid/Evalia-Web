@@ -1,15 +1,12 @@
 {
   "name": "Mauritian Cooking Class",
-  "name_fr": "Cours de Cuisine Mauricienne",
   "category": "food",
-  "icon": "👨‍🍳",
-  "description": "Learn to cook traditional Mauritian dishes with a local family — octopus curry, biryani, rougaille.",
-  "description_fr": "Apprenez à cuisiner des plats mauriciens traditionnels avec une famille locale — curry de poulpe, biryani, rougaille.",
+  "description": "Learn to cook traditional Mauritian dishes with a local family â octopus curry, biryani, rougaille.",
   "price": 50,
   "unit": "person",
   "duration": "3 hours",
-  "duration_fr": "3 heures",
-  "gallery": [],
+  "photo": "",
   "instagram": "",
-  "active": true
+  "icon": "ð¨âð³",
+  "active": false
 }
