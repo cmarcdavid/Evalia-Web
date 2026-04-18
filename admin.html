@@ -4,1222 +4,900 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Evalia Admin</title>
-  <!-- Brand favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
   <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --green: #6c7c6a; --dark-green:#4b5545; --cream:#f4eae1;
-      --ocean:#006B8F;  --sand:#F7F0E6;       --sidebar:#0d1520;
-      --dark:#1A1F2E;   --muted:#5C6478;      --stone:#DDD8CE;
-      --white:#FFFFFF;  --palm:#2D6A4F;       --sunset:#E8855A;
-      --font-d:'Playfair Display',serif; --font-b:'Outfit',sans-serif;
-    }
-    html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(--sand);color:var(--dark)}
+    :root{--g:#6c7c6a;--dg:#4b5545;--lg:#8a9e87;--cr:#f4eae1;--sd:#F7F0E6;
+      --sb:#0d1520;--dk:#1A1F2E;--mu:#5C6478;--st:#DDD8CE;--wh:#fff;
+      --pa:#2D6A4F;--su:#E8855A;--fd:'Playfair Display',serif;--fb:'Outfit',sans-serif;}
+    html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--sd);color:var(--dk)}
     a{color:inherit;text-decoration:none}
-
-    /* LAYOUT */
     .shell{display:flex;height:100%}
-    .sidebar{width:220px;background:var(--sidebar);display:flex;flex-direction:column;flex-shrink:0;height:100%;overflow-y:auto}
+    .sidebar{width:218px;background:var(--sb);display:flex;flex-direction:column;flex-shrink:0;height:100%;overflow-y:auto}
     .main{flex:1;display:flex;flex-direction:column;min-width:0;height:100%;overflow:hidden}
-    .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(253,250,246,.97);border-bottom:1px solid var(--stone);flex-shrink:0;gap:12px;flex-wrap:wrap}
-    .content{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px;height:0}
-
-    /* SIDEBAR */
-    .s-brand{padding:20px 14px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
-    .s-nav{padding:10px 8px;display:flex;flex-direction:column;gap:2px;flex:1}
-    .s-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:13px;color:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap}
-    .s-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.8)}
-    .s-item.active{background:rgba(108,124,106,.25);color:#b8cbb5;font-weight:500}
-    .s-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
-    .s-div{height:1px;background:rgba(255,255,255,.07);margin:8px 10px}
-    .s-label{font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:6px 10px 2px}
-    .s-badge{background:var(--sunset);color:#fff;border-radius:50px;padding:1px 6px;font-size:10px;margin-left:auto;flex-shrink:0}
-
-    /* TOPBAR */
-    .page-title{font-family:var(--font-d);font-size:20px;font-weight:400;white-space:nowrap}
-    .tb-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .tb-btn{height:32px;padding:0 12px;background:var(--white);border-radius:8px;display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--stone);transition:all .2s;color:var(--dark);font-family:var(--font-b)}
-    .tb-btn:hover{border-color:var(--green);color:var(--green)}
-    .tb-btn.pri{background:var(--green);color:#fff;border-color:var(--green)}.tb-btn.pri:hover{background:var(--dark-green)}
-    .sync-wrap{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(253,250,246,.97);border-bottom:1px solid var(--st);flex-shrink:0;gap:10px;flex-wrap:wrap;z-index:10}
+    .content{flex:1;overflow-y:auto;overflow-x:hidden;padding:18px 20px;height:0}
+    /* sidebar */
+    .sbrand{padding:18px 14px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .snav{padding:8px 6px;display:flex;flex-direction:column;gap:1px;flex:1}
+    .si{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;font-size:12.5px;color:rgba(255,255,255,.42);cursor:pointer;transition:all .12s;user-select:none;white-space:nowrap}
+    .si:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.78)}
+    .si.active{background:rgba(108,124,106,.22);color:#b8cbb5;font-weight:500}
+    .si-ic{font-size:13px;width:17px;text-align:center;flex-shrink:0}
+    .sdiv{height:1px;background:rgba(255,255,255,.07);margin:7px 8px}
+    .slbl{font-size:10px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:5px 10px 2px}
+    /* topbar */
+    .pgtitle{font-family:var(--fd);font-size:19px;font-weight:400;white-space:nowrap}
+    .tbr{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+    .tbb{height:31px;padding:0 11px;background:var(--wh);border-radius:7px;display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--st);transition:all .18s;color:var(--dk);font-family:var(--fb)}
+    .tbb:hover{border-color:var(--g);color:var(--g)}
+    .tbb.pri{background:var(--g);color:#fff;border-color:var(--g)}.tbb.pri:hover{background:var(--dg)}
+    .syncw{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--mu)}
     .dot{width:7px;height:7px;border-radius:50%;background:#aaa;flex-shrink:0;transition:background .3s}
-    .dot.ok{background:var(--palm)}
-    .dot.busy{background:var(--sunset);animation:blink 1s infinite}
-    .dot.err{background:#e74c3c}
+    .dot.ok{background:var(--pa)}.dot.busy{background:var(--su);animation:blink 1s infinite}.dot.err{background:#e74c3c}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
-
-    /* PAGES */
+    /* pages */
     .page{display:none}.page.active{display:block}
-
-    /* CARDS */
-    .card{background:var(--white);border-radius:12px;padding:20px;box-shadow:0 1px 10px rgba(26,31,46,.06);margin-bottom:16px}
-    .card-title{font-family:var(--font-d);font-size:17px;font-weight:400;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    @media(max-width:860px){.grid2{grid-template-columns:1fr}}
-
-    /* STATS */
-    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
-    @media(max-width:1000px){.stats-row{grid-template-columns:repeat(2,1fr)}}
-    .stat-card{background:var(--white);border-radius:10px;padding:16px;box-shadow:0 1px 8px rgba(26,31,46,.05)}
-    .sc-lbl{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-    .sc-val{font-family:var(--font-d);font-size:28px;font-weight:400;color:var(--dark);line-height:1}
-    .sc-sub{font-size:12px;margin-top:4px;color:var(--palm)}
-
-    /* TABLES */
-    .tbl-wrap{overflow-x:auto}
-    table{width:100%;border-collapse:collapse;font-size:13px;min-width:400px}
-    th{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0 10px 8px 0;text-align:left;border-bottom:1px solid var(--stone)}
-    td{padding:10px 10px 10px 0;border-bottom:1px solid rgba(221,216,206,.35);vertical-align:middle}
-    tr:last-child td{border:none}
-
-    /* PILLS */
-    .pill{display:inline-block;padding:2px 9px;border-radius:50px;font-size:11px;font-weight:500}
-    .pill-g{background:rgba(45,106,79,.1);color:var(--palm)}
-    .pill-o{background:rgba(232,133,90,.1);color:var(--sunset)}
-    .pill-b{background:rgba(0,107,143,.08);color:var(--ocean)}
-
-    /* BUTTONS */
-    .btn{padding:5px 12px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:var(--font-b);transition:all .15s}
-    .btn-sm{padding:3px 9px;font-size:11px}
-    .btn-pri{background:var(--dark);color:#fff}.btn-pri:hover{background:var(--green)}
-    .btn-g{background:rgba(108,124,106,.1);color:var(--green)}.btn-g:hover{background:rgba(108,124,106,.2)}
-    .btn-r{background:rgba(231,76,60,.08);color:#c0392b}.btn-r:hover{background:rgba(231,76,60,.16)}
-    .btn-full{width:100%;padding:11px;border-radius:9px;font-size:13px;text-align:center}
-
-    /* FORMS */
-    .fg{margin-bottom:12px}
-    .fl{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
-    .fi{width:100%;padding:8px 11px;border:1.5px solid var(--stone);border-radius:8px;font-family:var(--font-b);font-size:13px;color:var(--dark);background:var(--white);outline:none;transition:border-color .2s;appearance:none}
-    .fi:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(108,124,106,.1)}
-    .fi:disabled{background:var(--sand);color:var(--muted);cursor:not-allowed}
-    .fr2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-    @media(max-width:700px){.fr2,.fr3{grid-template-columns:1fr}}
-    .fsec{margin-bottom:18px}
-    .fsec-title{font-family:var(--font-d);font-size:15px;font-weight:400;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--stone)}
-    .hint{font-size:11px;color:var(--muted);margin-top:3px}
-
-    /* INLINE EDIT PANEL */
-    .edit-panel{background:var(--sand);border-radius:10px;padding:16px 16px 24px;margin-top:8px;display:none}
-    .edit-panel.open{display:block}
-
-    /* CONTENT ITEM */
-    .ci{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(221,216,206,.35)}
+    /* cards */
+    .card{background:var(--wh);border-radius:11px;padding:18px;box-shadow:0 1px 9px rgba(26,31,46,.06);margin-bottom:14px}
+    .ctitle{font-family:var(--fd);font-size:16px;font-weight:400;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:860px){.g2{grid-template-columns:1fr}}
+    .srow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+    @media(max-width:1000px){.srow{grid-template-columns:repeat(2,1fr)}}
+    .sc{background:var(--wh);border-radius:9px;padding:14px;box-shadow:0 1px 7px rgba(26,31,46,.05)}
+    .scl{font-size:10.5px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--mu);margin-bottom:5px}
+    .scv{font-family:var(--fd);font-size:26px;font-weight:400;color:var(--dk);line-height:1}
+    .scs{font-size:11px;margin-top:3px;color:var(--pa)}
+    /* forms */
+    .fg{margin-bottom:11px}
+    .fl{font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin-bottom:4px;display:block}
+    .fi{width:100%;padding:7px 10px;border:1.5px solid var(--st);border-radius:7px;font-family:var(--fb);font-size:13px;color:var(--dk);background:var(--wh);outline:none;transition:border-color .18s;appearance:none}
+    .fi:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(108,124,106,.09)}
+    .fi:disabled{background:var(--sd);cursor:not-allowed}
+    .fr2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+    .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+    @media(max-width:640px){.fr2,.fr3{grid-template-columns:1fr}}
+    .fsec{margin-bottom:16px}
+    .fsect{font-family:var(--fd);font-size:14.5px;font-weight:400;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--st)}
+    .hint{font-size:10.5px;color:var(--mu);margin-top:2px;line-height:1.5}
+    /* bilingual rows */
+    .birow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+    @media(max-width:640px){.birow{grid-template-columns:1fr}}
+    /* buttons */
+    .btn{padding:5px 11px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:var(--fb);transition:all .12s}
+    .bsm{padding:3px 8px;font-size:11px}
+    .bpri{background:var(--dk);color:#fff}.bpri:hover{background:var(--g)}
+    .bg{background:rgba(108,124,106,.1);color:var(--g)}.bg:hover{background:rgba(108,124,106,.2)}
+    .br{background:rgba(192,57,43,.08);color:#c0392b}.br:hover{background:rgba(192,57,43,.15)}
+    .bfull{width:100%;padding:10px;border-radius:8px;font-size:13px;text-align:center}
+    /* content items */
+    .ci{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid rgba(221,216,206,.32)}
     .ci:last-of-type{border:none}
-    .ci-thumb{width:52px;height:52px;border-radius:9px;overflow:hidden;flex-shrink:0;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:24px;position:relative}
-    .ci-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-    .ci-info{flex:1;min-width:0}
-    .ci-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .ci-meta{font-size:12px;color:var(--muted);margin-top:1px}
-    .ci-price{font-family:var(--font-d);font-size:14px;margin-right:8px;white-space:nowrap}
-    .ci-actions{display:flex;gap:5px;flex-shrink:0}
-
-    /* MEDIA GRID */
-    .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
-    .media-thumb{border-radius:9px;height:100px;position:relative;overflow:hidden;cursor:pointer;background:var(--sand);transition:transform .2s;border:2px solid transparent}
-    .media-thumb:hover{transform:scale(1.04);border-color:var(--green)}
-    .media-thumb.selected{border-color:var(--green);outline:2px solid var(--green)}
-    .media-thumb img,.media-thumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-    .thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(13,21,32,.7);color:#fff;font-size:9px;padding:3px 6px;line-height:1.3;word-break:break-all}
-    .thumb-del{position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(192,57,43,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;cursor:pointer;opacity:0;transition:opacity .2s;border:none}
-    .media-thumb:hover .thumb-del{opacity:1}
-    .thumb-copy{position:absolute;top:4px;left:4px;background:rgba(0,107,143,.85);color:#fff;font-size:9px;padding:2px 6px;border-radius:50px;cursor:pointer;opacity:0;transition:opacity .2s;border:none;font-family:var(--font-b)}
-    .media-thumb:hover .thumb-copy{opacity:1}
-
-    /* DROP ZONE */
-    .drop-zone{border:2px dashed var(--stone);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all .2s}
-    .drop-zone:hover,.drop-zone.over{border-color:var(--green);background:rgba(108,124,106,.04)}
-    .prog-wrap{display:none;margin-top:12px}
-    .prog-bar-bg{height:4px;background:var(--sand);border-radius:50px;overflow:hidden;margin:5px 0 3px}
-    .prog-bar{height:100%;background:var(--green);border-radius:50px;width:0;transition:width .3s}
-
-    /* IMAGE PICKER */
-    .img-picker-preview{width:100%;height:90px;border-radius:8px;overflow:hidden;background:var(--sand);margin-top:7px;display:none;position:relative}
-    .img-picker-preview img{width:100%;height:100%;object-fit:cover}
-
-    /* PHOTO SELECTOR MODAL */
-    .modal-wrap{position:fixed;inset:0;background:rgba(13,21,32,.55);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(6px)}
-    .modal-wrap.open{opacity:1;pointer-events:all}
-    .modal-box{background:var(--white);border-radius:14px;padding:24px;max-width:640px;width:100%;max-height:80vh;overflow-y:auto;transform:translateY(16px);transition:transform .25s}
-    .modal-wrap.open .modal-box{transform:none}
-
-    /* CONFIRM OVERLAY */
-    .confirm-wrap{position:fixed;inset:0;background:rgba(13,21,32,.5);z-index:700;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(4px)}
-    .confirm-wrap.open{opacity:1;pointer-events:all}
-    .confirm-box{background:var(--white);border-radius:12px;padding:24px;max-width:380px;width:100%;transform:translateY(12px);transition:transform .2s}
-    .confirm-wrap.open .confirm-box{transform:none}
-
-    /* SAVE BANNER */
-    .save-banner{position:fixed;top:0;left:220px;right:0;z-index:500;background:var(--green);color:#fff;padding:9px 20px;display:flex;align-items:center;justify-content:space-between;font-size:13px;transform:translateY(-100%);transition:transform .28s}
-    .save-banner.show{transform:translateY(0)}
-
-    /* TOAST */
-    .toast{position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;padding:11px 16px;border-radius:9px;font-size:13px;box-shadow:0 5px 20px rgba(0,0,0,.2);z-index:9999;transform:translateY(50px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;max-width:300px}
+    .cith{width:50px;height:50px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--sd);display:flex;align-items:center;justify-content:center;font-size:22px;position:relative}
+    .cith img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .ciin{flex:1;min-width:0}
+    .cinm{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cimt{font-size:11.5px;color:var(--mu);margin-top:1px}
+    .cipr{font-family:var(--fd);font-size:13.5px;margin-right:6px;white-space:nowrap}
+    .ciac{display:flex;gap:4px;flex-shrink:0}
+    .pill{display:inline-block;padding:2px 8px;border-radius:50px;font-size:10.5px;font-weight:500}
+    .pg{background:rgba(45,106,79,.1);color:var(--pa)}
+    .po{background:rgba(232,133,90,.1);color:var(--su)}
+    /* edit panel */
+    .ep{background:var(--sd);border-radius:9px;padding:14px 14px 22px;margin-top:7px;display:none}
+    .ep.open{display:block}
+    /* gallery */
+    .ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:6px;margin:7px 0 5px}
+    .gth{height:76px;border-radius:7px;position:relative;overflow:hidden;background:var(--sd);cursor:pointer;border:2px solid transparent;transition:border-color .15s}
+    .gth img,.gth video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .gth-del{position:absolute;top:3px;right:3px;width:18px;height:18px;background:rgba(192,57,43,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;cursor:pointer;border:none;opacity:0;transition:opacity .15s}
+    .gth:hover .gth-del{opacity:1}
+    .gadd{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;border:2px dashed var(--st);cursor:pointer;font-size:11px;color:var(--mu);transition:all .15s;border-radius:7px;height:76px}
+    .gadd:hover{border-color:var(--g);color:var(--g)}
+    /* media grid */
+    .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+    .mth{border-radius:8px;height:88px;position:relative;overflow:hidden;cursor:pointer;background:var(--sd);transition:transform .15s,border .15s;border:2px solid transparent}
+    .mth:hover{transform:scale(1.04);border-color:var(--g)}
+    .mth.sel{border-color:var(--g);outline:2px solid var(--g)}
+    .mth img,.mth video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .mth-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(13,21,32,.68);color:#fff;font-size:9px;padding:3px 5px;word-break:break-all;line-height:1.2}
+    .mth-del{position:absolute;top:3px;right:3px;width:18px;height:18px;background:rgba(192,57,43,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;cursor:pointer;opacity:0;transition:opacity .15s;border:none}
+    .mth:hover .mth-del{opacity:1}
+    .mth-cp{position:absolute;top:3px;left:3px;background:rgba(0,107,143,.85);color:#fff;font-size:9px;padding:2px 5px;border-radius:50px;cursor:pointer;opacity:0;transition:opacity .15s;border:none;font-family:var(--fb)}
+    .mth:hover .mth-cp{opacity:1}
+    /* drop zone */
+    .dz{border:2px dashed var(--st);border-radius:9px;padding:22px 14px;text-align:center;cursor:pointer;transition:all .18s}
+    .dz:hover,.dz.over{border-color:var(--g);background:rgba(108,124,106,.04)}
+    /* upload queue */
+    .uq{margin-top:10px;display:flex;flex-direction:column;gap:5px}
+    .uqi{display:flex;align-items:center;gap:8px;background:var(--wh);border-radius:7px;padding:7px 10px;font-size:12px;border:1px solid var(--st)}
+    .uqth{width:32px;height:32px;border-radius:5px;object-fit:cover;flex-shrink:0;background:var(--sd)}
+    .uqin{flex:1;min-width:0}
+    .uqnm{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .uqpb{height:3px;background:var(--sd);border-radius:50px;overflow:hidden;margin-top:3px}
+    .uqp{height:100%;border-radius:50px;background:var(--g);transition:width .25s}
+    .uqst{font-size:10px;color:var(--mu);flex-shrink:0;white-space:nowrap}
+    .uqst.done{color:var(--pa)}.uqst.err{color:#c0392b}
+    /* image picker preview */
+    .ipp{width:100%;height:80px;border-radius:7px;overflow:hidden;background:var(--sd);margin-top:6px;display:none;position:relative}
+    .ipp img{width:100%;height:100%;object-fit:cover}
+    /* modals */
+    .mow{position:fixed;inset:0;background:rgba(13,21,32,.52);z-index:600;display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .22s;backdrop-filter:blur(5px)}
+    .mow.open{opacity:1;pointer-events:all}
+    .mob{background:var(--wh);border-radius:13px;padding:20px;max-width:600px;width:100%;max-height:82vh;overflow-y:auto;transform:translateY(14px);transition:transform .22s}
+    .mow.open .mob{transform:none}
+    .cfw{position:fixed;inset:0;background:rgba(13,21,32,.48);z-index:700;display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(4px)}
+    .cfw.open{opacity:1;pointer-events:all}
+    .cfb{background:var(--wh);border-radius:11px;padding:22px;max-width:360px;width:100%;transform:translateY(10px);transition:transform .2s}
+    .cfw.open .cfb{transform:none}
+    /* save banner */
+    .sbanner{position:fixed;top:0;left:218px;right:0;z-index:500;background:var(--g);color:#fff;padding:8px 18px;display:flex;align-items:center;justify-content:space-between;font-size:12.5px;transform:translateY(-100%);transition:transform .26s}
+    .sbanner.show{transform:translateY(0)}
+    /* toast */
+    .toast{position:fixed;bottom:18px;right:18px;background:var(--dk);color:#fff;padding:10px 15px;border-radius:8px;font-size:12.5px;box-shadow:0 4px 18px rgba(0,0,0,.22);z-index:9999;transform:translateY(44px);opacity:0;transition:all .28s;display:flex;align-items:center;gap:7px;max-width:280px;pointer-events:none}
     .toast.show{transform:translateY(0);opacity:1}
-
-    /* INFO BOX */
-    .info-box{background:rgba(108,124,106,.07);border:1px solid rgba(108,124,106,.2);border-radius:9px;padding:14px 16px;font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:14px}
-    .info-box strong{color:var(--dark)}
-    .info-box a{color:var(--green)}
-
-    /* HOW IT WORKS STEPS */
-    .steps{display:flex;flex-direction:column;gap:10px}
-    .step{display:flex;gap:12px;align-items:flex-start}
-    .step-num{width:28px;height:28px;border-radius:50%;background:rgba(108,124,106,.15);color:var(--green);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-    .step-body{font-size:13px;color:var(--muted);line-height:1.6}
-    .step-body strong{color:var(--dark)}
+    .ib{background:rgba(108,124,106,.07);border:1px solid rgba(108,124,106,.18);border-radius:8px;padding:11px 14px;font-size:12.5px;color:var(--mu);line-height:1.6;margin-bottom:12px}
+    .ib strong{color:var(--dk)}.ib a{color:var(--g)}
+    .steps{display:flex;flex-direction:column;gap:9px}
+    .step{display:flex;gap:10px;align-items:flex-start}
+    .sn{width:26px;height:26px;border-radius:50%;background:rgba(108,124,106,.14);color:var(--g);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .sb2{font-size:12.5px;color:var(--mu);line-height:1.55}.sb2 strong{color:var(--dk)}
   </style>
 </head>
 <body>
-
-<!-- SAVE BANNER -->
-<div class="save-banner" id="saveBanner">
-  <span>⚠️ Unsaved changes — click Save on the item you edited</span>
-  <div style="display:flex;gap:6px">
-    <button class="tb-btn" style="background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.3)" onclick="loadAllData(false);hideBanner()">Discard</button>
-  </div>
+<div class="sbanner" id="sbanner">
+  <span>⚠️ Unsaved changes</span>
+  <button class="tbb" style="background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.28);height:26px" onclick="discardChanges()">Discard</button>
 </div>
-
-<!-- CONFIRM OVERLAY -->
-<div class="confirm-wrap" id="confirmWrap">
-  <div class="confirm-box">
-    <h3 id="confirmTitle" style="font-family:var(--font-d);font-size:18px;margin-bottom:8px"></h3>
-    <p id="confirmMsg" style="font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6"></p>
-    <div style="display:flex;gap:8px;justify-content:flex-end">
-      <button class="btn btn-g" onclick="closeConfirm()">Cancel</button>
-      <button class="btn btn-r" id="confirmOk">Delete</button>
-    </div>
+<div class="cfw" id="cfw"><div class="cfb">
+  <h3 id="cft" style="font-family:var(--fd);font-size:17px;margin-bottom:7px"></h3>
+  <p id="cfm" style="font-size:12.5px;color:var(--mu);margin-bottom:16px;line-height:1.55"></p>
+  <div style="display:flex;gap:7px;justify-content:flex-end">
+    <button class="btn bg" onclick="closeCF()">Cancel</button>
+    <button class="btn br" id="cfok">Delete</button>
   </div>
-</div>
-
-<!-- PHOTO SELECTOR MODAL -->
-<div class="modal-wrap" id="photoModal">
-  <div class="modal-box">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <h3 style="font-family:var(--font-d);font-size:18px;font-weight:400">Choose Photo</h3>
-      <button class="btn btn-g btn-sm" onclick="closePhotoModal()">✕ Close</button>
-    </div>
-    <div class="drop-zone" style="padding:16px;margin-bottom:16px" onclick="document.getElementById('modalFileIn').click()">
-      <span style="font-size:20px">📸</span> <span style="font-size:13px;color:var(--muted)">Upload new photo — or pick from library below</span>
-    </div>
-    <input type="file" id="modalFileIn" style="display:none" accept="image/*,video/mp4" onchange="handleModalUpload(event)"/>
-    <div id="modalMediaGrid" class="media-grid"></div>
+</div></div>
+<div class="mow" id="pmow"><div class="mob">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <h3 style="font-family:var(--fd);font-size:17px;font-weight:400">Select Photo / Video</h3>
+    <button class="btn bg bsm" onclick="closePM()">✕ Close</button>
   </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"><span id="tIcon">✅</span><span id="tMsg"></span></div>
+  <div class="dz" style="padding:12px;margin-bottom:12px" onclick="document.getElementById('mfin').click()">
+    <span style="font-size:18px">📸</span> <span style="font-size:12.5px;color:var(--mu)">Upload new — or pick from library below</span>
+  </div>
+  <input type="file" id="mfin" style="display:none" multiple accept="image/*,video/mp4" onchange="handleModalUpload(event)"/>
+  <div id="mmgrid" class="mgrid"></div>
+</div></div>
+<div class="toast" id="toast"><span id="ti">✅</span><span id="tm"></span></div>
 
 <div class="shell">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="s-brand">
-      <!-- Evalia brand logo — sage green palm leaf + wordmark -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 46" width="150" height="40" aria-label="Evalia">
-        <g transform="translate(1,1) scale(0.40)">
-          <path d="M50,95 C50,80 50,60 52,20" stroke="#8a9e87" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <path d="M52,24 C44,20 30,14 18,8 C30,12 42,19 51,27" fill="#8a9e87"/>
-          <path d="M52,34 C43,28 27,20 14,16 C27,22 41,30 51,37" fill="#8a9e87"/>
-          <path d="M52,44 C42,38 25,32 11,30 C24,34 41,42 51,47" fill="#8a9e87"/>
-          <path d="M52,55 C42,50 24,46 10,46 C23,48 41,53 51,57" fill="#8a9e87"/>
-          <path d="M52,27 C60,20 74,14 86,8 C74,12 62,19 53,27" fill="#8a9e87"/>
-          <path d="M51,37 C61,28 77,20 90,16 C77,22 63,30 53,37" fill="#8a9e87"/>
-          <path d="M51,47 C62,38 79,32 93,30 C80,34 63,42 53,47" fill="#8a9e87"/>
-          <path d="M51,57 C62,50 80,46 94,46 C81,48 63,53 53,57" fill="#8a9e87"/>
-        </g>
-        <text x="42" y="27" font-family="Playfair Display,Georgia,serif" font-size="21" font-weight="600" letter-spacing="3" fill="#ffffff">EVALIA</text>
-        <text x="43" y="39" font-family="Outfit,Arial,sans-serif" font-size="6.5" letter-spacing="2" fill="#8a9e87">ESCAPE THE ORDINARY</text>
-      </svg>
+<aside class="sidebar">
+  <div class="sbrand">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 44" width="148" height="38" aria-label="Evalia">
+      <g transform="translate(1,0) scale(0.38)">
+        <path d="M50,95C50,80 50,60 52,20" stroke="#8a9e87" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M52,24C44,20 30,14 18,8C30,12 42,19 51,27" fill="#8a9e87"/><path d="M52,34C43,28 27,20 14,16C27,22 41,30 51,37" fill="#8a9e87"/>
+        <path d="M52,44C42,38 25,32 11,30C24,34 41,42 51,47" fill="#8a9e87"/><path d="M52,55C42,50 24,46 10,46C23,48 41,53 51,57" fill="#8a9e87"/>
+        <path d="M52,27C60,20 74,14 86,8C74,12 62,19 53,27" fill="#8a9e87"/><path d="M51,37C61,28 77,20 90,16C77,22 63,30 53,37" fill="#8a9e87"/>
+        <path d="M51,47C62,38 79,32 93,30C80,34 63,42 53,47" fill="#8a9e87"/><path d="M51,57C62,50 80,46 94,46C81,48 63,53 53,57" fill="#8a9e87"/>
+      </g>
+      <text x="40" y="26" font-family="Playfair Display,Georgia,serif" font-size="20" font-weight="600" letter-spacing="3" fill="#fff">EVALIA</text>
+      <text x="41" y="38" font-family="Outfit,Arial,sans-serif" font-size="6.5" letter-spacing="2" fill="#8a9e87">ESCAPE THE ORDINARY</text>
+    </svg>
+  </div>
+  <nav class="snav">
+    <div class="slbl">Overview</div>
+    <div class="si active" data-page="dashboard" onclick="gp('dashboard',this)"><span class="si-ic">📊</span>Dashboard</div>
+    <div class="si" data-page="bookings" onclick="gp('bookings',this)"><span class="si-ic">📩</span>Bookings</div>
+    <div class="sdiv"></div>
+    <div class="slbl">Content</div>
+    <div class="si" data-page="properties" onclick="gp('properties',this)"><span class="si-ic">🏠</span>Properties</div>
+    <div class="si" data-page="experiences" onclick="gp('experiences',this)"><span class="si-ic">🌴</span>Experiences</div>
+    <div class="si" data-page="media" onclick="gp('media',this)"><span class="si-ic">📸</span>Media Library</div>
+    <div class="si" data-page="settings" onclick="gp('settings',this)"><span class="si-ic">⚙️</span>Settings</div>
+    <div class="sdiv"></div>
+    <div class="si" onclick="window.open('index.html','_blank')"><span class="si-ic">🌐</span>Live Site</div>
+    <div class="si" onclick="loadAll(true)"><span class="si-ic">🔄</span>Refresh</div>
+    <div class="si" onclick="disconnect()"><span class="si-ic">🔐</span>Disconnect</div>
+  </nav>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <div class="pgtitle" id="pgtitle">Dashboard</div>
+    <div class="tbr">
+      <div class="syncw"><div class="dot" id="dot"></div><span id="slb">—</span></div>
+      <button class="tbb" onclick="loadAll(true)">🔄 Refresh</button>
+      <a class="tbb" href="https://wa.me/23057242099" target="_blank">💬 WhatsApp</a>
+      <a class="tbb pri" href="index.html" target="_blank">🌐 Live Site</a>
     </div>
-    <nav class="s-nav">
-      <div class="s-label">Overview</div>
-      <div class="s-item active" data-page="dashboard" onclick="goPage('dashboard',this)"><span class="s-icon">📊</span>Dashboard</div>
-      <div class="s-item" data-page="bookings" onclick="goPage('bookings',this)"><span class="s-icon">📩</span>Bookings<span class="s-badge" id="reqBadge">—</span></div>
-      <div class="s-div"></div>
-      <div class="s-label">Content</div>
-      <div class="s-item" data-page="properties" onclick="goPage('properties',this)"><span class="s-icon">🏠</span>Properties</div>
-      <div class="s-item" data-page="experiences" onclick="goPage('experiences',this)"><span class="s-icon">🌴</span>Experiences</div>
-      <div class="s-item" data-page="media" onclick="goPage('media',this)"><span class="s-icon">📸</span>Media Library</div>
-      <div class="s-item" data-page="settings" onclick="goPage('settings',this)"><span class="s-icon">⚙️</span>Settings</div>
-      <div class="s-div"></div>
-      <div class="s-item" onclick="window.open('index.html','_blank')"><span class="s-icon">🌐</span>View Live Site</div>
-      <div class="s-item" onclick="loadAllData(true)"><span class="s-icon">🔄</span>Refresh All</div>
-      <div class="s-item" onclick="disconnectGitHub()"><span class="s-icon">🔐</span>Disconnect</div>
-    </nav>
-  </aside>
+  </div>
+  <div class="content">
 
-  <!-- MAIN -->
-  <div class="main">
-    <div class="topbar">
-      <div class="page-title" id="pageTitle">Dashboard</div>
-      <div class="tb-r">
-        <div class="sync-wrap"><div class="dot" id="syncDot"></div><span id="syncLbl">—</span></div>
-        <button class="tb-btn" onclick="loadAllData(true)">🔄 Refresh</button>
-        <a class="tb-btn" href="https://wa.me/23057242099" target="_blank">💬 WhatsApp</a>
-        <a class="tb-btn pri" href="index.html" target="_blank">🌐 Live Site</a>
+<!-- CONNECT -->
+<div id="page-connect" class="page active">
+<div style="max-width:440px;margin:44px auto;text-align:center">
+  <div style="font-size:52px;margin-bottom:16px">🔐</div>
+  <h2 style="font-family:var(--fd);font-size:24px;font-weight:400;margin-bottom:9px">Connect to GitHub</h2>
+  <p style="font-size:12.5px;color:var(--mu);margin-bottom:22px;line-height:1.7">Enter your GitHub Personal Access Token once — stored only in your browser.</p>
+  <div class="card" style="text-align:left">
+    <div class="fg"><label class="fl">GitHub Personal Access Token</label>
+      <input class="fi" type="password" id="tok" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" onkeydown="if(event.key==='Enter')connect()"/>
+    </div>
+    <div class="ib" style="margin-bottom:12px">
+      <strong>Get token (2 min):</strong><br>
+      1. <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a><br>
+      2. Note: "Evalia Admin" · No expiration · Tick <strong>repo</strong><br>
+      3. Generate → copy → paste above
+    </div>
+    <button class="btn bpri bfull" onclick="connect()">Connect →</button>
+    <div id="cerr" style="display:none;margin-top:7px;color:#c0392b;font-size:12px;text-align:center"></div>
+  </div>
+</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page">
+  <div class="srow">
+    <div class="sc"><div class="scl">Properties</div><div class="scv" id="dp">—</div><div class="scs" id="dpl"></div></div>
+    <div class="sc"><div class="scl">Experiences</div><div class="scv" id="de">—</div><div class="scs">Active on site</div></div>
+    <div class="sc"><div class="scl">Media Files</div><div class="scv" id="dm">—</div><div class="scs">In images/</div></div>
+    <div class="sc"><div class="scl">Last Synced</div><div class="scv" style="font-size:16px" id="dt">—</div><div class="scs" id="db"></div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="ctitle">Quick Actions</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button class="btn bg bfull" onclick="gp('properties',qs('properties'))">🏠 Edit Properties</button>
+        <button class="btn bg bfull" onclick="gp('experiences',qs('experiences'))">🌴 Edit Experiences</button>
+        <button class="btn bg bfull" onclick="gp('media',qs('media'))">📸 Upload Media</button>
+        <button class="btn bg bfull" onclick="gp('settings',qs('settings'))">⚙️ Settings</button>
       </div>
     </div>
-
-    <div class="content">
-
-      <!-- ══ CONNECT ══ -->
-      <div id="page-connect" class="page active">
-        <div style="max-width:460px;margin:48px auto;text-align:center">
-          <div style="font-size:56px;margin-bottom:18px">🔐</div>
-          <h2 style="font-family:var(--font-d);font-size:26px;font-weight:400;margin-bottom:10px">Connect to GitHub</h2>
-          <p style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.7">The admin reads and saves all content directly to your GitHub repo. Enter your Personal Access Token once — it's stored only in your browser.</p>
-          <div class="card" style="text-align:left">
-            <div class="fg">
-              <label class="fl">GitHub Personal Access Token</label>
-              <input class="fi" type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" onkeydown="if(event.key==='Enter')connectGitHub()"/>
-            </div>
-            <div class="info-box" style="margin-bottom:14px">
-              <strong>Get your token in 2 min:</strong><br>
-              1. Go to <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a><br>
-              2. Note: "Evalia Admin" · Expiry: No expiration<br>
-              3. Tick <strong>repo</strong> (full access)<br>
-              4. Generate → copy → paste above
-            </div>
-            <button class="btn btn-pri btn-full" onclick="connectGitHub()">Connect →</button>
-            <div id="connectErr" style="display:none;margin-top:8px;color:#c0392b;font-size:12px;text-align:center"></div>
-          </div>
-        </div>
+    <div class="card"><div class="ctitle">How Changes Sync</div>
+      <div class="steps">
+        <div class="step"><div class="sn">1</div><div class="sb2">Edit any property, experience, photo or setting</div></div>
+        <div class="step"><div class="sn">2</div><div class="sb2">Click <strong>Save & Publish →</strong> — writes directly to GitHub</div></div>
+        <div class="step"><div class="sn">3</div><div class="sb2">Vercel detects the change and rebuilds in <strong>~30 seconds</strong></div></div>
+        <div class="step"><div class="sn">✓</div><div class="sb2">Live site updates automatically at <a href="https://evalia-web.vercel.app" target="_blank" style="color:var(--g)">evalia-web.vercel.app</a></div></div>
       </div>
+    </div>
+  </div>
+</div>
 
-      <!-- ══ DASHBOARD ══ -->
-      <div id="page-dashboard" class="page">
-        <div class="stats-row">
-          <div class="stat-card"><div class="sc-lbl">Properties</div><div class="sc-val" id="dProps">—</div><div class="sc-sub" id="dPropsLbl"></div></div>
-          <div class="stat-card"><div class="sc-lbl">Experiences</div><div class="sc-val" id="dExps">—</div><div class="sc-sub">Active on site</div></div>
-          <div class="stat-card"><div class="sc-lbl">Media Files</div><div class="sc-val" id="dMedia">—</div><div class="sc-sub">In images/</div></div>
-          <div class="stat-card"><div class="sc-lbl">Last Synced</div><div class="sc-val" style="font-size:17px" id="dTime">—</div><div class="sc-sub" id="dBranch"></div></div>
-        </div>
-        <div class="grid2">
-          <div class="card">
-            <div class="card-title">Quick Actions</div>
-            <div style="display:flex;flex-direction:column;gap:7px">
-              <button class="btn btn-g btn-full" onclick="goPage('properties',document.querySelector('[data-page=properties]'))">🏠 Edit Properties</button>
-              <button class="btn btn-g btn-full" onclick="goPage('experiences',document.querySelector('[data-page=experiences]'))">🌴 Edit Experiences</button>
-              <button class="btn btn-g btn-full" onclick="goPage('media',document.querySelector('[data-page=media]'))">📸 Upload Photos</button>
-              <button class="btn btn-g btn-full" onclick="goPage('settings',document.querySelector('[data-page=settings]'))">⚙️ Site Settings</button>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title">How Changes Sync</div>
-            <div class="steps">
-              <div class="step"><div class="step-num">1</div><div class="step-body">Edit any property, experience, photo or setting here</div></div>
-              <div class="step"><div class="step-num">2</div><div class="step-body">Click <strong>Save & Publish →</strong> — writes directly to GitHub</div></div>
-              <div class="step"><div class="step-num">3</div><div class="step-body">Vercel detects the change and rebuilds in <strong>~30 seconds</strong></div></div>
-              <div class="step"><div class="step-num">✅</div><div class="step-body">Live site at <a href="https://evalia-web.vercel.app" target="_blank" style="color:var(--green)">evalia-web.vercel.app</a> updates automatically</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- BOOKINGS -->
+<div id="page-bookings" class="page">
+  <div class="card"><div class="ctitle">Booking Requests</div>
+    <div class="ib">Requests arrive via email through Formspree (mdayoknj). View all at <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank">formspree.io</a></div>
+    <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank" class="btn bg" style="margin-right:6px">View on Formspree →</a>
+    <a href="https://wa.me/23057242099" target="_blank" class="btn bg">💬 WhatsApp</a>
+  </div>
+</div>
 
-      <!-- ══ BOOKINGS ══ -->
-      <div id="page-bookings" class="page">
-        <div class="card">
-          <div class="card-title">Booking Requests</div>
-          <div class="info-box">Booking requests arrive in your email via Formspree. Log in at <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank">formspree.io</a> to see all submissions. You can also follow up directly via WhatsApp.</div>
-          <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank" class="btn btn-g" style="margin-right:8px">View on Formspree →</a>
-          <a href="https://wa.me/23057242099" target="_blank" class="btn btn-g">💬 WhatsApp</a>
-        </div>
-      </div>
+<!-- PROPERTIES -->
+<div id="page-properties" class="page">
+  <div class="card"><div class="ctitle">Properties <button class="btn bpri bsm" onclick="addProp()">+ Add</button></div>
+    <div id="plist"><div style="text-align:center;padding:18px;color:var(--mu)">Loading…</div></div>
+  </div>
+</div>
 
-      <!-- ══ PROPERTIES ══ -->
-      <div id="page-properties" class="page">
-        <div class="card">
-          <div class="card-title">Properties
-            <button class="btn btn-pri btn-sm" onclick="addNewProperty()">+ Add Property</button>
-          </div>
-          <div id="propList"><div style="text-align:center;padding:24px;color:var(--muted)">Loading…</div></div>
-        </div>
-      </div>
+<!-- EXPERIENCES -->
+<div id="page-experiences" class="page">
+  <div class="card"><div class="ctitle">Experiences <button class="btn bpri bsm" onclick="addExp()">+ Add</button></div>
+    <div id="elist"><div style="text-align:center;padding:18px;color:var(--mu)">Loading…</div></div>
+  </div>
+</div>
 
-      <!-- ══ EXPERIENCES ══ -->
-      <div id="page-experiences" class="page">
-        <div class="card">
-          <div class="card-title">Experiences
-            <button class="btn btn-pri btn-sm" onclick="addNewExperience()">+ Add Experience</button>
-          </div>
-          <div id="expList"><div style="text-align:center;padding:24px;color:var(--muted)">Loading…</div></div>
-        </div>
-      </div>
+<!-- MEDIA -->
+<div id="page-media" class="page">
+  <div class="card"><div class="ctitle">Upload Media
+    <span style="font-size:11px;color:var(--mu);font-family:var(--fb)">JPG · PNG · WebP · MP4 · Max 50MB each</span>
+  </div>
+    <div class="dz" id="dz" ondragover="dzO(event)" ondrop="dzD(event)" ondragleave="dzL()" onclick="document.getElementById('fin').click()">
+      <div style="font-size:34px;margin-bottom:6px">📸</div>
+      <div style="font-size:13.5px;font-weight:500;margin-bottom:2px">Drag & drop photos or videos here</div>
+      <div style="font-size:11.5px;color:var(--mu)">or click to browse — uploads in parallel, directly to GitHub</div>
+    </div>
+    <input type="file" id="fin" style="display:none" multiple accept="image/*,video/mp4" onchange="handleFiles(event.target.files)"/>
+    <div id="uq" class="uq"></div>
+  </div>
+  <div class="card"><div class="ctitle">Media Library <span id="mcnt" style="font-size:11px;color:var(--mu);font-family:var(--fb)"></span></div>
+    <div class="ib">Click 📋 to copy path. Use 📷 buttons on properties/experiences to assign photos to them.</div>
+    <div class="mgrid" id="mgrid"></div>
+  </div>
+</div>
 
-      <!-- ══ MEDIA ══ -->
-      <div id="page-media" class="page">
-        <div class="card">
-          <div class="card-title">Upload Photos & Videos
-            <span style="font-size:11px;color:var(--muted);font-family:var(--font-b)">JPG · PNG · WebP · MP4 · Max 50MB</span>
-          </div>
-          <div class="drop-zone" id="dropZone"
-               ondragover="dzOver(event)" ondrop="dzDrop(event)" ondragleave="dzLeave(event)"
-               onclick="document.getElementById('fileIn').click()">
-            <div style="font-size:36px;margin-bottom:8px">📸</div>
-            <div style="font-size:14px;font-weight:500;margin-bottom:3px">Drag & drop photos or videos here</div>
-            <div style="font-size:12px;color:var(--muted)">or click to browse — files go straight to GitHub</div>
-          </div>
-          <input type="file" id="fileIn" style="display:none" multiple accept="image/*,video/mp4" onchange="handleFiles(event.target.files)"/>
-          <div class="prog-wrap" id="uploadProg">
-            <div id="uploadStat" style="font-size:12px;color:var(--muted);margin-bottom:3px">Uploading…</div>
-            <div class="prog-bar-bg"><div class="prog-bar" id="progBar"></div></div>
-            <div id="uploadFile" style="font-size:11px;color:var(--muted)"></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-title">Media Library
-            <span id="mediaCount" style="font-size:12px;color:var(--muted);font-family:var(--font-b)"></span>
-          </div>
-          <div class="info-box">Click any photo to copy its path. To assign a photo to a property or experience, go to that item and click <strong>Edit → Photo → select from library</strong>. To assign hero or service card photos, go to <strong>Settings</strong>.</div>
-          <div class="media-grid" id="mediaGrid"></div>
-        </div>
-      </div>
+<!-- SETTINGS -->
+<div id="page-settings" class="page">
+<div class="card">
+  <div class="fsec"><div class="fsect">Business Information</div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Business Name</label><input class="fi" id="sn" oninput="md()"/></div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" id="se" type="email" oninput="md()"/></div>
+    </div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">WhatsApp</label><input class="fi" id="sw" type="tel" oninput="md()"/></div>
+      <div class="fg"><label class="fl">Instagram</label><input class="fi" id="sig" oninput="md()"/></div>
+    </div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Facebook</label><input class="fi" id="sfb" oninput="md()"/></div>
+      <div class="fg"><label class="fl">TikTok</label><input class="fi" id="stt" oninput="md()"/></div>
+    </div>
+  </div>
+  <div class="fsec"><div class="fsect">Hero Section — Bilingual Text</div>
+    <div class="birow">
+      <div class="fg"><label class="fl">🇬🇧 Title Line 1</label><input class="fi" id="sh1en" oninput="md()"/></div>
+      <div class="fg"><label class="fl">🇫🇷 Titre Ligne 1</label><input class="fi" id="sh1fr" oninput="md()"/></div>
+    </div>
+    <div class="birow">
+      <div class="fg"><label class="fl">🇬🇧 Title Line 2 (italic)</label><input class="fi" id="sh2en" oninput="md()"/></div>
+      <div class="fg"><label class="fl">🇫🇷 Titre Ligne 2</label><input class="fi" id="sh2fr" oninput="md()"/></div>
+    </div>
+    <div class="birow">
+      <div class="fg"><label class="fl">🇬🇧 Subtitle</label><textarea class="fi" id="shsen" rows="2" style="resize:vertical" oninput="md()"></textarea></div>
+      <div class="fg"><label class="fl">🇫🇷 Sous-titre</label><textarea class="fi" id="shsfr" rows="2" style="resize:vertical" oninput="md()"></textarea></div>
+    </div>
+  </div>
+  <div class="fsec"><div class="fsect">Hero Slideshow Photos</div>
+    <div class="fr2" id="heroF"></div>
+  </div>
+  <div class="fsec"><div class="fsect">Service Card Photos</div>
+    <div class="fr2" id="svcF"></div>
+  </div>
+  <button class="btn bpri" style="padding:10px 26px" onclick="saveSettings()">Save & Publish Settings →</button>
+</div>
+</div>
 
-      <!-- ══ SETTINGS ══ -->
-      <div id="page-settings" class="page">
-        <div class="card">
-          <div class="fsec">
-            <div class="fsec-title">Business Information</div>
-            <div class="fr2">
-              <div class="fg"><label class="fl">Business Name</label><input class="fi" id="s_name" type="text" oninput="markDirty()"/></div>
-              <div class="fg"><label class="fl">Email</label><input class="fi" id="s_email" type="email" oninput="markDirty()"/></div>
-            </div>
-            <div class="fr2">
-              <div class="fg"><label class="fl">WhatsApp (with +country code)</label><input class="fi" id="s_whatsapp" type="tel" oninput="markDirty()"/></div>
-              <div class="fg"><label class="fl">Instagram Handle</label><input class="fi" id="s_instagram" type="text" oninput="markDirty()"/></div>
-            </div>
-            <div class="fr2">
-              <div class="fg"><label class="fl">Facebook Page</label><input class="fi" id="s_facebook" type="text" oninput="markDirty()"/></div>
-              <div class="fg"><label class="fl">TikTok Handle</label><input class="fi" id="s_tiktok" type="text" oninput="markDirty()"/></div>
-            </div>
-          </div>
-
-          <div class="fsec">
-            <div class="fsec-title">Hero Section Text</div>
-            <div class="fr2">
-              <div class="fg"><label class="fl">Title Line 1</label><input class="fi" id="s_hero1" type="text" oninput="markDirty()"/></div>
-              <div class="fg"><label class="fl">Title Line 2 (italic)</label><input class="fi" id="s_hero2" type="text" oninput="markDirty()"/></div>
-            </div>
-            <div class="fg"><label class="fl">Hero Subtitle</label><textarea class="fi" id="s_herosub" rows="2" style="resize:vertical" oninput="markDirty()"></textarea></div>
-          </div>
-
-          <div class="fsec">
-            <div class="fsec-title">Hero Slideshow Photos (4 slides)</div>
-            <div class="fr2">
-              <div class="fg"><label class="fl">Slide 1 (main)</label><div style="display:flex;gap:6px"><input class="fi" id="s_hp1" type="text" placeholder="/images/Hero.jpg" oninput="markDirty();updateSettingsPreview('s_hp1','p_hp1')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_hp1','p_hp1')">📷</button></div><div class="img-picker-preview" id="p_hp1"><img id="p_hp1_img"/></div></div>
-              <div class="fg"><label class="fl">Slide 2</label><div style="display:flex;gap:6px"><input class="fi" id="s_hp2" type="text" placeholder="/images/Hero1.jpg" oninput="markDirty();updateSettingsPreview('s_hp2','p_hp2')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_hp2','p_hp2')">📷</button></div><div class="img-picker-preview" id="p_hp2"><img id="p_hp2_img"/></div></div>
-              <div class="fg"><label class="fl">Slide 3</label><div style="display:flex;gap:6px"><input class="fi" id="s_hp3" type="text" placeholder="/images/Hero2.jpg" oninput="markDirty();updateSettingsPreview('s_hp3','p_hp3')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_hp3','p_hp3')">📷</button></div><div class="img-picker-preview" id="p_hp3"><img id="p_hp3_img"/></div></div>
-              <div class="fg"><label class="fl">Slide 4</label><div style="display:flex;gap:6px"><input class="fi" id="s_hp4" type="text" placeholder="/images/Hero3.jpg" oninput="markDirty();updateSettingsPreview('s_hp4','p_hp4')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_hp4','p_hp4')">📷</button></div><div class="img-picker-preview" id="p_hp4"><img id="p_hp4_img"/></div></div>
-            </div>
-          </div>
-
-          <div class="fsec">
-            <div class="fsec-title">Service Section Photos</div>
-            <div class="hint" style="margin-bottom:12px">These photos appear on the six service cards on the homepage. Click 📷 to pick from your media library.</div>
-            <div class="fr2">
-              <div class="fg"><label class="fl">Accommodation card</label><div style="display:flex;gap:6px"><input class="fi" id="s_svc_acc" type="text" oninput="markDirty();updateSettingsPreview('s_svc_acc','p_svc_acc')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_svc_acc','p_svc_acc')">📷</button></div><div class="img-picker-preview" id="p_svc_acc"><img id="p_svc_acc_img"/></div></div>
-              <div class="fg"><label class="fl">Boat / Water card</label><div style="display:flex;gap:6px"><input class="fi" id="s_svc_boat" type="text" oninput="markDirty();updateSettingsPreview('s_svc_boat','p_svc_boat')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_svc_boat','p_svc_boat')">📷</button></div><div class="img-picker-preview" id="p_svc_boat"><img id="p_svc_boat_img"/></div></div>
-              <div class="fg"><label class="fl">Nature & Wellness card</label><div style="display:flex;gap:6px"><input class="fi" id="s_svc_nat" type="text" oninput="markDirty();updateSettingsPreview('s_svc_nat','p_svc_nat')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_svc_nat','p_svc_nat')">📷</button></div><div class="img-picker-preview" id="p_svc_nat"><img id="p_svc_nat_img"/></div></div>
-              <div class="fg"><label class="fl">Food Discovery card</label><div style="display:flex;gap:6px"><input class="fi" id="s_svc_food" type="text" oninput="markDirty();updateSettingsPreview('s_svc_food','p_svc_food')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_svc_food','p_svc_food')">📷</button></div><div class="img-picker-preview" id="p_svc_food"><img id="p_svc_food_img"/></div></div>
-              <div class="fg"><label class="fl">Concierge card</label><div style="display:flex;gap:6px"><input class="fi" id="s_svc_con" type="text" oninput="markDirty();updateSettingsPreview('s_svc_con','p_svc_con')"/><button class="btn btn-g btn-sm" onclick="openPhotoPicker('s_svc_con','p_svc_con')">📷</button></div><div class="img-picker-preview" id="p_svc_con"><img id="p_svc_con_img"/></div></div>
-            </div>
-          </div>
-
-          <button class="btn btn-pri" style="padding:11px 28px" onclick="saveSettings()">Save & Publish Settings →</button>
-        </div>
-      </div>
-
-    </div><!-- /content -->
-  </div><!-- /main -->
-</div><!-- /shell -->
-
+  </div>
+</div>
+</div>
 <script>
 // ═══════════════════════════════════════════════════════════════
-// EVALIA ADMIN — GitHub API single source of truth
-// ═══════════════════════════════════════════════════════════════
-const REPO   = 'cmarcdavid/evalia-web';
-const BRANCH = 'main';
-const API    = 'https://api.github.com';
+const REPO='cmarcdavid/evalia-web',BRANCH='main',API='https://api.github.com';
+const RAW=`https://raw.githubusercontent.com/${REPO}/${BRANCH}`;
+const CONC=3; // upload concurrency
 
-let token = localStorage.getItem('ev_ghtoken') || '';
-let dirty = false;
-let allData = { properties:[], experiences:[], settings:{}, media:[] };
-let confirmCb = null;
-let photoPickerTarget = null; // { inputId, previewId }
+let token=localStorage.getItem('ev_gh')||'';
+let dirty=false;
+let D={props:[],exps:[],settings:{},media:[]};
+let cfCb=null,ppTarget=null;
 
-// ── AUTH ─────────────────────────────────────────────────────────
-async function connectGitHub() {
-  const t = document.getElementById('tokenInput').value.trim();
-  if (!t) { showConnectErr('Paste your token first'); return; }
+const qs=p=>document.querySelector(`[data-page="${p}"]`);
+const hdr=(t)=>({'Authorization':'Bearer '+(t||token),'Accept':'application/vnd.github.v3+json','X-GitHub-Api-Version':'2022-11-28'});
+const ghG=(p,t)=>fetch(API+p,{headers:hdr(t)});
+const ghR=(p,m,b)=>fetch(API+p,{method:m,headers:{...hdr(),'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined});
+
+// AUTH
+async function connect(){
+  const t=document.getElementById('tok').value.trim();
+  if(!t){cErr('Paste your token');return;}
   setBusy('Verifying…');
-  try {
-    const r = await ghGet(`/repos/${REPO}`, t);
-    if (!r.ok) throw new Error('Invalid token or repo not found');
-    token = t;
-    localStorage.setItem('ev_ghtoken', t);
-    setOk('Connected');
-    await loadAllData(false);
-    goPage('dashboard', document.querySelector('[data-page=dashboard]'));
-  } catch(e) { setErr('Failed'); showConnectErr(e.message); }
+  try{const r=await ghG('/repos/'+REPO,t);if(!r.ok)throw new Error('Invalid token');
+    token=t;localStorage.setItem('ev_gh',t);setOk('Connected');
+    await loadAll(false);gp('dashboard',qs('dashboard'));
+  }catch(e){setErr('Failed');cErr(e.message);}
+}
+function disconnect(){localStorage.removeItem('ev_gh');token='';gp('connect',null);setErr('Disconnected');}
+
+// WRITE / DELETE (always live SHA)
+async function ghWrite(path,content,msg){
+  let sha=null;
+  try{const c=await ghG(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);if(c.ok){const d=await c.json();sha=d.sha;}}catch(e){}
+  const body={message:msg||'admin: update '+path,content:btoa(unescape(encodeURIComponent(content))),branch:BRANCH};
+  if(sha)body.sha=sha;
+  const r=await ghR(`/repos/${REPO}/contents/${path}`,'PUT',body);
+  if(!r.ok){const e=await r.json();throw new Error(e.message||'Write failed');}
+  return r.json();
+}
+async function ghDel(path,msg){
+  const c=await ghG(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+  if(!c.ok)throw new Error('Not found');
+  const d=await c.json();
+  const r=await ghR(`/repos/${REPO}/contents/${path}`,'DELETE',{message:msg||'admin: delete '+path,sha:d.sha,branch:BRANCH});
+  if(!r.ok){const e=await r.json();throw new Error(e.message||'Delete failed');}
 }
 
-function disconnectGitHub() {
-  localStorage.removeItem('ev_ghtoken');
-  token = '';
-  goPage('connect', null);
-  setErr('Disconnected');
-}
-
-function ghGet(path, tok) {
-  return fetch(API + path, { headers: {
-    'Authorization': 'Bearer ' + (tok || token),
-    'Accept': 'application/vnd.github.v3+json',
-    'X-GitHub-Api-Version': '2022-11-28'
-  }});
-}
-
-function ghReq(path, method, body) {
-  return fetch(API + path, {
-    method,
-    headers: {
-      'Authorization': 'Bearer ' + token,
-      'Accept': 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json',
-      'X-GitHub-Api-Version': '2022-11-28'
-    },
-    body: body ? JSON.stringify(body) : undefined
+// PARALLEL UPLOAD
+async function uploadOne(file,onProg){
+  const b64=await new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=e=>res(e.target.result.split(',')[1]);
+    r.onerror=()=>rej(new Error('Read failed'));
+    r.readAsDataURL(file);
   });
-}
-
-// ── LOAD ALL DATA ────────────────────────────────────────────────
-async function loadAllData(showFeedback) {
-  if (!token) return;
-  setBusy('Loading…');
-  try {
-    const [props, exps, settings, media] = await Promise.all([
-      loadFolder('_data/properties'),
-      loadFolder('_data/experiences'),
-      loadFile('_data/settings.json'),
-      loadMediaList(),
-    ]);
-    allData.properties  = props;
-    allData.experiences = exps;
-    allData.settings    = settings;
-    allData.media       = media;
-    renderDashboard();
-    renderProperties();
-    renderExperiences();
-    renderMediaGrid();
-    fillSettings();
-    setOk('Synced ✓');
-    if (showFeedback) toast('✅','Refreshed from GitHub');
-  } catch(e) { setErr('Error'); toast('⚠️', 'Load error: ' + e.message); }
-}
-
-async function loadFolder(path) {
-  const r = await ghGet(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
-  if (!r.ok) return [];
-  const files = await r.json();
-  const results = await Promise.all(
-    files.filter(f => f.name.endsWith('.json')).map(async f => {
-      const fr = await ghGet(`/repos/${REPO}/contents/${f.path}?ref=${BRANCH}`);
-      const fd = await fr.json();
-      const data = JSON.parse(atob(fd.content.replace(/\s/g,'')));
-      return { ...data, _path: f.path, _sha: fd.sha, _slug: f.name.replace('.json','') };
-    })
-  );
-  return results;
-}
-
-async function loadFile(path) {
-  const r = await ghGet(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
-  if (!r.ok) return {};
-  const f = await r.json();
-  return { ...JSON.parse(atob(f.content.replace(/\s/g,''))), _path: path, _sha: f.sha };
-}
-
-async function loadMediaList() {
-  const r = await ghGet(`/repos/${REPO}/contents/images?ref=${BRANCH}`);
-  if (!r.ok) return [];
-  const files = await r.json();
-  return files
-    .filter(f => /\.(jpg|jpeg|png|gif|webp|mp4|mov)$/i.test(f.name))
-    .map(f => ({ name: f.name, path: f.path, sha: f.sha }));
-}
-
-// ── WRITE FILE (always fetches live SHA first) ────────────────────
-async function ghWrite(path, content, msg) {
-  let sha = null;
-  try {
-    const c = await ghGet(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
-    if (c.ok) { const d = await c.json(); sha = d.sha; }
-  } catch(e) {}
-  const body = {
-    message: msg || `admin: update ${path}`,
-    content: btoa(unescape(encodeURIComponent(content))),
-    branch: BRANCH
-  };
-  if (sha) body.sha = sha;
-  const r = await ghReq(`/repos/${REPO}/contents/${path}`, 'PUT', body);
-  if (!r.ok) { const e = await r.json(); throw new Error(e.message || 'Write failed'); }
+  onProg&&onProg(30);
+  const path=`images/${file.name}`;
+  let sha=null;
+  try{const c=await ghG(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);if(c.ok){const d=await c.json();sha=d.sha;}}catch(e){}
+  onProg&&onProg(55);
+  const body={message:`media: upload ${file.name}`,content:b64,branch:BRANCH};
+  if(sha)body.sha=sha;
+  const r=await ghR(`/repos/${REPO}/contents/${path}`,'PUT',body);
+  if(!r.ok){const e=await r.json();throw new Error(e.message);}
+  onProg&&onProg(100);
   return r.json();
 }
 
-// ── DELETE FILE (always fetches live SHA first) ───────────────────
-async function ghDelete(path, msg) {
-  const c = await ghGet(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
-  if (!c.ok) throw new Error('File not found');
-  const d = await c.json();
-  const r = await ghReq(`/repos/${REPO}/contents/${path}`, 'DELETE', {
-    message: msg || `admin: delete ${path}`, sha: d.sha, branch: BRANCH
+async function processUploads(files){
+  if(!files.length)return;
+  if(!token){toast('⚠️','Connect GitHub first');return;}
+  const arr=Array.from(files);
+  const uq=document.getElementById('uq');
+  uq.innerHTML='';
+  const items=arr.map((f,i)=>{
+    const isImg=/\.(jpg|jpeg|png|gif|webp)/i.test(f.name);
+    const th=isImg?URL.createObjectURL(f):'';
+    const div=document.createElement('div');
+    div.className='uqi';div.id='uqi'+i;
+    div.innerHTML=`${th?`<img class="uqth" src="${th}"/>`:'<div class="uqth" style="display:flex;align-items:center;justify-content:center;font-size:14px">🎬</div>'}
+      <div class="uqin"><div class="uqnm">${f.name}</div><div class="uqpb"><div class="uqp" id="upb${i}" style="width:0%"></div></div></div>
+      <div class="uqst" id="ups${i}">Queued</div>`;
+    uq.appendChild(div);return{file:f,idx:i};
   });
-  if (!r.ok) { const e = await r.json(); throw new Error(e.message || 'Delete failed'); }
-}
-
-// ── UPLOAD BINARY (photo/video) ───────────────────────────────────
-async function uploadBinary(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = async e => {
-      try {
-        const b64 = e.target.result.split(',')[1];
-        const path = `images/${file.name}`;
-        let sha = null;
-        try {
-          const c = await ghGet(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
-          if (c.ok) { const d = await c.json(); sha = d.sha; }
-        } catch(e2) {}
-        const body = { message: `media: upload ${file.name}`, content: b64, branch: BRANCH };
-        if (sha) body.sha = sha;
-        const r = await ghReq(`/repos/${REPO}/contents/${path}`, 'PUT', body);
-        if (!r.ok) { const err = await r.json(); throw new Error(err.message); }
-        resolve(await r.json());
-      } catch(err) { reject(err); }
-    };
-    reader.onerror = () => reject(new Error('File read failed'));
-    reader.readAsDataURL(file);
-  });
-}
-
-// ── DASHBOARD ─────────────────────────────────────────────────────
-function renderDashboard() {
-  document.getElementById('dProps').textContent   = allData.properties.length;
-  document.getElementById('dExps').textContent    = allData.experiences.filter(e=>e.active!==false).length;
-  document.getElementById('dMedia').textContent   = allData.media.length;
-  document.getElementById('dPropsLbl').textContent = allData.properties.map(p=>p.name).join(' · ') || '—';
-  const now = new Date();
-  document.getElementById('dTime').textContent  = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-  document.getElementById('dBranch').textContent = 'Branch: ' + BRANCH;
-}
-
-// ── MEDIA GRID (shared between Media page and photo picker modal) ──
-function mediaImgUrl(m) {
-  return `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${m.path}`;
-}
-
-function renderMediaGrid(container) {
-  const grid = container || document.getElementById('mediaGrid');
-  const count = document.getElementById('mediaCount');
-  if (!grid) return;
-  if (!allData.media.length) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--muted);font-size:13px">No media yet — upload photos above.</div>';
-    if (count) count.textContent = '0 files';
-    return;
+  let ptr=0,done=0,failed=0;
+  async function run(item){
+    const st=document.getElementById('ups'+item.idx),bar=document.getElementById('upb'+item.idx);
+    if(st)st.textContent='Uploading…';
+    try{await uploadOne(item.file,p=>{if(bar)bar.style.width=p+'%';});
+      done++;if(st){st.textContent='✓ Done';st.className='uqst done';}
+    }catch(e){failed++;if(st){st.textContent='✗ '+e.message.slice(0,28);st.className='uqst err';}}
   }
-  if (count) count.textContent = allData.media.length + ' files';
-  const isVideo = name => /\.(mp4|mov)/i.test(name);
-  grid.innerHTML = allData.media.map(m => {
-    const url = mediaImgUrl(m);
-    const vid = isVideo(m.name);
-    return `
-    <div class="media-thumb" title="${m.name}" data-path="/images/${m.name}" data-sha="${m.sha}"
-         onclick="handleMediaThumbClick(this,'${m.path}','/images/${m.name}','${m.sha}','${m.name}')">
-      ${vid
-        ? `<video src="${url}" muted loading="lazy"></video>`
-        : `<img src="${url}" loading="lazy" onerror="this.style.opacity='.3'">`}
-      <div class="thumb-lbl">${m.name}</div>
-      <button class="thumb-copy" title="Copy path" onclick="event.stopPropagation();copyPath('/images/${m.name}')">📋</button>
-      <button class="thumb-del"  title="Delete"    onclick="event.stopPropagation();deleteMedia('${m.path}','${m.name}')">✕</button>
-    </div>`;
-  }).join('') + `
-  <div class="media-thumb" style="background:var(--sand);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;border:2px dashed var(--stone)" onclick="document.getElementById('fileIn').click()">
-    <span style="font-size:24px">+</span><span style="font-size:11px;color:var(--muted)">Upload</span>
+  setBusy('Uploading…');
+  while(ptr<items.length){await Promise.all(items.slice(ptr,ptr+CONC).map(run));ptr+=CONC;}
+  setOk('Uploaded');
+  if(!failed)toast('✅',done+' file'+(done>1?'s':'')+' uploaded');
+  else toast('⚠️',done+' uploaded, '+failed+' failed');
+  await refreshMedia();
+}
+
+// LOAD DATA
+async function loadAll(fb){
+  if(!token)return;
+  setBusy('Loading…');
+  try{
+    const[props,exps,sett]=await Promise.all([loadFolder('_data/properties'),loadFolder('_data/experiences'),loadFile('_data/settings.json')]);
+    await refreshMedia();
+    D.props=props;D.exps=exps;D.settings=sett;
+    renderDash();renderProps();renderExps();renderMGrid();renderMGrid(document.getElementById('mmgrid'));fillSettings();
+    setOk('Synced ✓');if(fb)toast('✅','Refreshed from GitHub');
+  }catch(e){setErr('Error');toast('⚠️','Load error: '+e.message);}
+}
+async function refreshMedia(){
+  const r=await ghG(`/repos/${REPO}/contents/images?ref=${BRANCH}`);
+  if(!r.ok)return;
+  const f=await r.json();
+  D.media=f.filter(f=>/\.(jpg|jpeg|png|gif|webp|mp4|mov)$/i.test(f.name)).map(f=>({name:f.name,path:f.path,sha:f.sha}));
+  const mc=document.getElementById('mcnt');if(mc)mc.textContent=D.media.length+' files';
+}
+async function loadFolder(p){
+  const r=await ghG(`/repos/${REPO}/contents/${p}?ref=${BRANCH}`);if(!r.ok)return[];
+  const fs=await r.json();
+  return Promise.all(fs.filter(f=>f.name.endsWith('.json')).map(async f=>{
+    const fr=await ghG(`/repos/${REPO}/contents/${f.path}?ref=${BRANCH}`);
+    const fd=await fr.json();
+    return{...JSON.parse(atob(fd.content.replace(/\s/g,''))),_path:f.path,_sha:fd.sha,_slug:f.name.replace('.json','')};
+  }));
+}
+async function loadFile(p){
+  const r=await ghG(`/repos/${REPO}/contents/${p}?ref=${BRANCH}`);if(!r.ok)return{};
+  const f=await r.json();
+  return{...JSON.parse(atob(f.content.replace(/\s/g,''))),_path:p,_sha:f.sha};
+}
+
+// MANIFEST
+async function updateManifest(){
+  try{await ghWrite('_data/manifest.json',JSON.stringify({
+    properties:D.props.map(p=>p._slug).filter(Boolean).sort(),
+    experiences:D.exps.map(e=>e._slug).filter(Boolean).sort()
+  },null,2),'admin: update manifest');}catch(e){console.warn('Manifest:',e.message);}
+}
+
+// DASHBOARD
+function renderDash(){
+  document.getElementById('dp').textContent=D.props.length;
+  document.getElementById('de').textContent=D.exps.filter(e=>e.active!==false).length;
+  document.getElementById('dm').textContent=D.media.length;
+  document.getElementById('dpl').textContent=D.props.map(p=>p.name).join(' · ')||'—';
+  const n=new Date();
+  document.getElementById('dt').textContent=n.getHours()+':'+String(n.getMinutes()).padStart(2,'0');
+  document.getElementById('db').textContent='Branch: '+BRANCH;
+}
+
+// MEDIA GRID
+function rawUrl(m){return`${RAW}/${m.path}`;}
+function renderMGrid(c){
+  const grid=c||document.getElementById('mgrid');if(!grid)return;
+  const mc=!c?document.getElementById('mcnt'):null;
+  if(!D.media.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:18px;color:var(--mu);font-size:12.5px">No media yet.</div>';if(mc)mc.textContent='0 files';return;}
+  if(mc)mc.textContent=D.media.length+' files';
+  const isVid=n=>/\.(mp4|mov)/i.test(n);
+  grid.innerHTML=D.media.map(m=>`
+    <div class="mth" title="${m.name}" onclick="mThClick('/images/${m.name}','${m.sha}','${m.name}')">
+      ${isVid(m.name)?`<video src="${rawUrl(m)}" muted loading="lazy"></video>`:`<img src="${rawUrl(m)}" loading="lazy" onerror="this.style.opacity='.3'">`}
+      <div class="mth-lbl">${m.name}</div>
+      <button class="mth-cp" onclick="event.stopPropagation();copyP('/images/${m.name}')">📋</button>
+      <button class="mth-del" onclick="event.stopPropagation();delMedia('${m.path}','${m.name}')">✕</button>
+    </div>`).join('')+
+    `<div class="mth" style="background:var(--sd);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;border:2px dashed var(--st)" onclick="document.getElementById('fin').click()">
+      <span style="font-size:22px">+</span><span style="font-size:10.5px;color:var(--mu)">Upload</span></div>`;
+}
+function mThClick(pub,sha,name){if(ppTarget){selPhoto(pub);}else{copyP(pub);}}
+function copyP(p){navigator.clipboard?.writeText(p).then(()=>toast('📋','Copied: '+p));}
+async function delMedia(gp2,name){
+  showCF(`Delete "${name}"?`,'Permanently removes from GitHub. Properties using it will show broken until reassigned.',async()=>{
+    setBusy('Deleting…');
+    try{await ghDel(gp2,'media: delete '+name);D.media=D.media.filter(m=>m.path!==gp2);renderMGrid();renderMGrid(document.getElementById('mmgrid'));setOk('Deleted');toast('🗑',name+' deleted');}
+    catch(e){toast('⚠️','Delete failed: '+e.message);setErr('Error');}
+  });
+}
+
+// DROP ZONE
+function dzO(e){e.preventDefault();document.getElementById('dz').classList.add('over');}
+function dzL(){document.getElementById('dz').classList.remove('over');}
+function dzD(e){e.preventDefault();dzL();handleFiles(e.dataTransfer.files);}
+function handleFiles(files){processUploads(files);}
+
+// PHOTO PICKER
+function openPP(inputId,previewId,isGal,ownerType,ownerIdx){
+  ppTarget={inputId,previewId,isGal:!!isGal,ownerType,ownerIdx};
+  renderMGrid(document.getElementById('mmgrid'));
+  document.getElementById('pmow').classList.add('open');
+}
+function closePM(){document.getElementById('pmow').classList.remove('open');ppTarget=null;}
+function selPhoto(path){
+  if(!ppTarget)return;
+  const{inputId,previewId,isGal,ownerType,ownerIdx}=ppTarget;
+  if(isGal){addToGal(ownerType,ownerIdx,path);}
+  else{const inp=document.getElementById(inputId);if(inp){inp.value=path;inp.dispatchEvent(new Event('input'));}updPrev(inputId,previewId,path);md();}
+  closePM();
+}
+async function handleModalUpload(ev){
+  const fs=Array.from(ev.target.files);if(!fs.length)return;
+  toast('⏳','Uploading '+fs.length+' file(s)…');
+  await processUploads(fs);
+  renderMGrid(document.getElementById('mmgrid'));
+  if(ppTarget&&fs[0])selPhoto('/images/'+fs[0].name);
+}
+function updPrev(inputId,previewId,force){
+  const path=force||document.getElementById(inputId)?.value;
+  const w=document.getElementById(previewId);if(!w)return;
+  if(path){w.style.display='block';const img=w.querySelector('img');if(img)img.src=path;}else w.style.display='none';
+}
+
+// GALLERY
+function galHtml(gallery,ot,oi){
+  const items=(gallery||[]).map((p,gi)=>`
+    <div class="gth">${/\.(mp4|mov)/i.test(p)?`<video src="${p}" muted></video>`:`<img src="${p}" loading="lazy">`}
+      <button class="gth-del" onclick="rmGal('${ot}',${oi},${gi})">✕</button></div>`).join('');
+  return`<div class="fg"><label class="fl">Gallery (photos & videos)</label>
+    <div class="ggrid" id="gg_${ot}_${oi}">${items}
+      <div class="gadd" onclick="openPP(null,null,true,'${ot}',${oi})"><span>+</span><span>Add</span></div>
+    </div>
+    <div class="hint">Add multiple photos/videos. First item becomes the cover. Click ✕ to remove.</div>
   </div>`;
 }
-
-function handleMediaThumbClick(el, ghPath, publicPath, sha, name) {
-  // If photo picker is open, select this image
-  if (photoPickerTarget) {
-    selectPhoto(publicPath);
-  }
-  // Otherwise just copy path
+function reRenderGal(ot,oi){
+  const arr=ot==='p'?D.props:D.exps;const item=arr[oi];if(!item)return;
+  const el=document.getElementById('gg_'+ot+'_'+oi);if(!el)return;
+  el.innerHTML=(item.gallery||[]).map((p,gi)=>`
+    <div class="gth">${/\.(mp4|mov)/i.test(p)?`<video src="${p}" muted></video>`:`<img src="${p}" loading="lazy">`}
+      <button class="gth-del" onclick="rmGal('${ot}',${oi},${gi})">✕</button></div>`).join('')+
+    `<div class="gadd" onclick="openPP(null,null,true,'${ot}',${oi})"><span>+</span><span>Add</span></div>`;
+}
+function addToGal(ot,oi,path){
+  const arr=ot==='p'?D.props:D.exps;const item=arr[oi];if(!item)return;
+  if(!item.gallery)item.gallery=[];
+  if(!item.gallery.includes(path))item.gallery.push(path);
+  if(!item.photo)item.photo=path;
+  reRenderGal(ot,oi);
+  const pvId=ot==='p'?`ppe_pv_${oi}`:`epe_pv_${oi}`;updPrev(null,pvId,item.photo);
+  md();
+}
+function rmGal(ot,oi,gi){
+  const arr=ot==='p'?D.props:D.exps;const item=arr[oi];if(!item||!item.gallery)return;
+  item.gallery.splice(gi,1);item.photo=item.gallery[0]||'';
+  reRenderGal(ot,oi);
+  const pvId=ot==='p'?`ppe_pv_${oi}`:`epe_pv_${oi}`;updPrev(null,pvId,item.photo||'');
+  md();
 }
 
-function copyPath(path) {
-  navigator.clipboard?.writeText(path).then(() => toast('📋','Copied: ' + path));
-}
-
-async function deleteMedia(ghPath, name) {
-  showConfirm(`Delete "${name}"?`, 'This permanently removes the file from GitHub. Properties using this photo will show a broken image until reassigned.', async () => {
-    setBusy('Deleting…');
-    try {
-      await ghDelete(ghPath, `media: delete ${name}`);
-      allData.media = allData.media.filter(m => m.path !== ghPath);
-      renderMediaGrid();
-      renderMediaGrid(document.getElementById('modalMediaGrid'));
-      setOk('Deleted');
-      toast('🗑', name + ' deleted');
-    } catch(e) { toast('⚠️','Delete failed: ' + e.message); setErr('Error'); }
-  });
-}
-
-// ── FILE UPLOAD ────────────────────────────────────────────────────
-function dzOver(e)  { e.preventDefault(); document.getElementById('dropZone').classList.add('over'); }
-function dzLeave()  { document.getElementById('dropZone').classList.remove('over'); }
-function dzDrop(e)  { e.preventDefault(); dzLeave(); handleFiles(e.dataTransfer.files); }
-
-async function handleFiles(files) {
-  const arr = Array.from(files);
-  if (!arr.length) return;
-  if (!token) { toast('⚠️','Connect GitHub first'); return; }
-  const prog = document.getElementById('uploadProg');
-  const bar  = document.getElementById('progBar');
-  const stat = document.getElementById('uploadStat');
-  const fileLbl = document.getElementById('uploadFile');
-  prog.style.display = 'block';
-  let done = 0;
-  setBusy('Uploading…');
-  for (const file of arr) {
-    fileLbl.textContent = file.name + ' (' + (file.size/1024).toFixed(0) + ' KB)';
-    stat.textContent = `Uploading ${done+1} of ${arr.length}…`;
-    try {
-      await uploadBinary(file);
-      done++;
-      bar.style.width = Math.round(done/arr.length*100) + '%';
-    } catch(e) { toast('⚠️','Upload failed: ' + file.name + ' — ' + e.message); }
-  }
-  stat.textContent = `✅ ${done} file(s) uploaded to GitHub`;
-  setOk('Uploaded');
-  toast('✅', done + ' file(s) uploaded');
-  await loadAllData(false);  // Refresh media list + repopulate photo selectors
-  setTimeout(() => { prog.style.display='none'; bar.style.width='0'; }, 3000);
-}
-
-// ── PHOTO PICKER MODAL ────────────────────────────────────────────
-function openPhotoPicker(inputId, previewId) {
-  photoPickerTarget = { inputId, previewId };
-  // Populate modal media grid
-  const grid = document.getElementById('modalMediaGrid');
-  renderMediaGrid(grid);
-  // Highlight currently selected photo
-  const curVal = document.getElementById(inputId)?.value;
-  if (curVal) {
-    grid.querySelectorAll('.media-thumb').forEach(t => {
-      t.classList.toggle('selected', t.dataset.path === curVal);
-    });
-  }
-  document.getElementById('photoModal').classList.add('open');
-}
-
-function closePhotoModal() {
-  document.getElementById('photoModal').classList.remove('open');
-  photoPickerTarget = null;
-}
-
-function selectPhoto(path) {
-  if (!photoPickerTarget) return;
-  const inp = document.getElementById(photoPickerTarget.inputId);
-  if (inp) { inp.value = path; inp.dispatchEvent(new Event('input')); }
-  updatePreview(photoPickerTarget.inputId, photoPickerTarget.previewId, path);
-  markDirty();
-  closePhotoModal();
-}
-
-async function handleModalUpload(event) {
-  const files = Array.from(event.target.files);
-  if (!files.length) return;
-  setBusy('Uploading…');
-  toast('⏳','Uploading ' + files[0].name + '…');
-  try {
-    await uploadBinary(files[0]);
-    await loadAllData(false);
-    // Re-render modal grid and select the new file
-    const grid = document.getElementById('modalMediaGrid');
-    renderMediaGrid(grid);
-    selectPhoto('/images/' + files[0].name);
-    toast('✅', files[0].name + ' uploaded');
-  } catch(e) { toast('⚠️','Upload failed: ' + e.message); setErr('Error'); }
-}
-
-// ── PROPERTIES ────────────────────────────────────────────────────
-function renderProperties() {
-  const el = document.getElementById('propList');
-  if (!allData.properties.length) {
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">No properties yet.</div>';
-    return;
-  }
-  el.innerHTML = allData.properties.map((p, i) => `
+// PROPERTIES
+function renderProps(){
+  const el=document.getElementById('plist');
+  if(!D.props.length){el.innerHTML='<div style="text-align:center;padding:18px;color:var(--mu)">No properties yet.</div>';return;}
+  el.innerHTML=D.props.map((p,i)=>`
     <div class="ci">
-      <div class="ci-thumb">${p.photo ? `<img src="${p.photo}" onerror="this.remove()">` : '🏠'}</div>
-      <div class="ci-info">
-        <div class="ci-name">${esc(p.name||'Untitled')}</div>
-        <div class="ci-meta">📍 ${esc(p.location||'—')} · ${p.bedrooms||'—'} bed · ${p.max_guests||'—'} guests · min ${p.min_stay||'—'} nights</div>
+      <div class="cith">${p.photo?`<img src="${p.photo}" onerror="this.remove()">`:'🏠'}</div>
+      <div class="ciin">
+        <div class="cinm">${esc(p.name||'Untitled')}</div>
+        <div class="cimt">📍${esc(p.location||'—')} · ${p.bedrooms||'—'}bd · ${p.max_guests||'—'}g · min${p.min_stay||'—'}n · ${(p.gallery||[]).length} photos</div>
       </div>
-      <div class="ci-price">€${p.price||'—'}<span style="font-size:10px;color:var(--muted)">/night</span></div>
-      <span class="pill ${p.available!==false?'pill-g':'pill-o'}">${p.available!==false?'Active':'Hidden'}</span>
-      <div class="ci-actions">
-        <button class="btn btn-g btn-sm" onclick="openPropEdit(${i})">Edit</button>
-        <button class="btn btn-r btn-sm" onclick="deleteProp(${i})">✕</button>
+      <div class="cipr">€${p.price||'—'}<span style="font-size:10px;color:var(--mu)">/n</span></div>
+      <span class="pill ${p.available!==false?'pg':'po'}">${p.available!==false?'Active':'Hidden'}</span>
+      <div class="ciac">
+        <button class="btn bg bsm" onclick="openPE(${i})">Edit</button>
+        <button class="btn br bsm" onclick="delProp(${i})">✕</button>
       </div>
     </div>
-    <div class="edit-panel" id="pe${i}">${propForm(p,i)}</div>
-  `).join('');
+    <div class="ep" id="ppe${i}">${pForm(p,i)}</div>`).join('');
 }
-
-function propForm(p, i) {
-  const mediaOpts = allData.media
-    .filter(m => /\.(jpg|jpeg|png|webp)/i.test(m.name))
-    .map(m => `<option value="/images/${m.name}" ${(p.photo===`/images/${m.name}`||p.photo===m.name)?'selected':''}>${m.name}</option>`)
-    .join('');
-  const media2Opts = '<option value="">— none —</option>' + allData.media
-    .filter(m => /\.(jpg|jpeg|png|webp)/i.test(m.name))
-    .map(m => `<option value="/images/${m.name}" ${(p.photo_alt===`/images/${m.name}`)?'selected':''}>${m.name}</option>`)
-    .join('');
-  const amenStr = (p.amenities||[]).join(', ');
-  return `
-    <div class="fr2">
-      <div class="fg"><label class="fl">Property Name</label><input class="fi" id="pe_name_${i}" value="${esc(p.name||'')}" oninput="markDirty()"/></div>
-      <div class="fg"><label class="fl">Location</label><input class="fi" id="pe_loc_${i}" value="${esc(p.location||'')}" oninput="markDirty()"/></div>
+function mopts(cur){
+  return D.media.filter(m=>/\.(jpg|jpeg|png|webp)/i.test(m.name))
+    .map(m=>`<option value="/images/${m.name}" ${cur==='/images/'+m.name?'selected':''}>${m.name}</option>`).join('');
+}
+function pForm(p,i){
+  return`
+    <div class="birow">
+      <div class="fg"><label class="fl">🇬🇧 Name</label><input class="fi" id="pn${i}" value="${esc(p.name||'')}" oninput="md()"/></div>
+      <div class="fg"><label class="fl">🇫🇷 Nom</label><input class="fi" id="pnfr${i}" value="${esc(p.name_fr||p.name||'')}" oninput="md()"/></div>
     </div>
-    <div class="fg"><label class="fl">Description</label><textarea class="fi" id="pe_desc_${i}" rows="3" style="resize:vertical" oninput="markDirty()">${esc(p.description||'')}</textarea></div>
-    <div class="fr3">
-      <div class="fg"><label class="fl">Price/night (€)</label><input class="fi" id="pe_price_${i}" type="number" value="${p.price||''}" oninput="markDirty()"/></div>
-      <div class="fg"><label class="fl">Min Stay (nights)</label><input class="fi" id="pe_minstay_${i}" type="number" min="1" value="${p.min_stay||2}" oninput="markDirty()"/></div>
-      <div class="fg"><label class="fl">Cleaning Fee (€)</label><input class="fi" id="pe_clean_${i}" type="number" value="${p.cleaning_fee||0}" oninput="markDirty()"/></div>
+    <div class="birow">
+      <div class="fg"><label class="fl">🇬🇧 Location</label><input class="fi" id="pl${i}" value="${esc(p.location||'')}" oninput="md()"/></div>
+      <div class="fg"><label class="fl">🇫🇷 Emplacement</label><input class="fi" id="plfr${i}" value="${esc(p.location_fr||p.location||'')}" oninput="md()"/></div>
+    </div>
+    <div class="birow">
+      <div class="fg"><label class="fl">🇬🇧 Description</label><textarea class="fi" id="pd${i}" rows="3" style="resize:vertical" oninput="md()">${esc(p.description||'')}</textarea></div>
+      <div class="fg"><label class="fl">🇫🇷 Description</label><textarea class="fi" id="pdfr${i}" rows="3" style="resize:vertical" oninput="md()">${esc(p.description_fr||p.description||'')}</textarea></div>
     </div>
     <div class="fr3">
-      <div class="fg"><label class="fl">Max Guests</label><input class="fi" id="pe_guests_${i}" type="number" value="${p.max_guests||''}" oninput="markDirty()"/></div>
-      <div class="fg"><label class="fl">Bedrooms</label><input class="fi" id="pe_beds_${i}" type="number" value="${p.bedrooms||''}" oninput="markDirty()"/></div>
-      <div class="fg"><label class="fl">Bathrooms</label><input class="fi" id="pe_baths_${i}" type="number" value="${p.bathrooms||''}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">€/night</label><input class="fi" id="pp${i}" type="number" value="${p.price||''}" oninput="md()"/></div>
+      <div class="fg"><label class="fl">Min Stay (nights)</label><input class="fi" id="pms${i}" type="number" value="${p.min_stay||2}" oninput="md()"/></div>
+      <div class="fg"><label class="fl">Cleaning Fee €</label><input class="fi" id="pcf${i}" type="number" value="${p.cleaning_fee||0}" oninput="md()"/></div>
     </div>
-    <div class="fr2">
-      <div class="fg">
-        <label class="fl">Main Photo</label>
-        <div style="display:flex;gap:6px">
-          <select class="fi" id="pe_photo_${i}" onchange="markDirty();updatePreview('pe_photo_${i}','pe_prev_${i}')">
-            <option value="">— no photo —</option>${mediaOpts}
-          </select>
-          <button class="btn btn-g btn-sm" onclick="openPhotoPicker('pe_photo_${i}','pe_prev_${i}')">📷</button>
-        </div>
-        <div class="img-picker-preview" id="pe_prev_${i}" style="${p.photo?'display:block':''}">
-          <img src="${p.photo||''}"/>
-        </div>
-      </div>
-      <div class="fg">
-        <label class="fl">Hover Photo (optional)</label>
-        <div style="display:flex;gap:6px">
-          <select class="fi" id="pe_photo2_${i}" onchange="markDirty()">
-            ${media2Opts}
-          </select>
-          <button class="btn btn-g btn-sm" onclick="openPhotoPicker('pe_photo2_${i}',null)">📷</button>
-        </div>
-      </div>
+    <div class="fr3">
+      <div class="fg"><label class="fl">Max Guests</label><input class="fi" id="pg${i}" type="number" value="${p.max_guests||''}" oninput="md()"/></div>
+      <div class="fg"><label class="fl">Bedrooms</label><input class="fi" id="pbd${i}" type="number" value="${p.bedrooms||''}" oninput="md()"/></div>
+      <div class="fg"><label class="fl">Bathrooms</label><input class="fi" id="pba${i}" type="number" value="${p.bathrooms||''}" oninput="md()"/></div>
     </div>
-    <div class="fg"><label class="fl">Amenities (comma separated)</label><input class="fi" id="pe_amen_${i}" value="${esc(amenStr)}" placeholder="WiFi, Pool, Air Con…" oninput="markDirty()"/></div>
-    <div class="fg"><label class="fl">Badge text</label><input class="fi" id="pe_badge_${i}" value="${esc(p.badge||'')}" placeholder="e.g. Pool & Garden" oninput="markDirty()"/></div>
-    <label style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;margin-bottom:14px">
-      <input type="checkbox" id="pe_avail_${i}" ${p.available!==false?'checked':''} onchange="markDirty()" style="accent-color:var(--green)"/> Active (visible on site)
+    <div class="fg"><label class="fl">Amenities (comma separated)</label><input class="fi" id="pam${i}" value="${esc((p.amenities||[]).join(', '))}" oninput="md()"/></div>
+    <div class="birow">
+      <div class="fg"><label class="fl">🇬🇧 Badge</label><input class="fi" id="pbg${i}" value="${esc(p.badge||'')}" oninput="md()"/></div>
+      <div class="fg"><label class="fl">🇫🇷 Badge</label><input class="fi" id="pbgfr${i}" value="${esc(p.badge_fr||p.badge||'')}" oninput="md()"/></div>
+    </div>
+    <div class="fg"><label class="fl">Cover Photo</label>
+      <div style="display:flex;gap:6px">
+        <select class="fi" id="pph${i}" onchange="md();updPrev('pph${i}','ppe_pv_${i}')">
+          <option value="">— none —</option>${mopts(p.photo)}
+        </select>
+        <button class="btn bg bsm" onclick="openPP('pph${i}','ppe_pv_${i}')">📷</button>
+      </div>
+      <div class="ipp" id="ppe_pv_${i}" style="${p.photo?'display:block':''}"><img src="${p.photo||''}"/></div>
+    </div>
+    ${galHtml(p.gallery,'p',i)}
+    <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer;margin:10px 0">
+      <input type="checkbox" id="pav${i}" ${p.available!==false?'checked':''} onchange="md()" style="accent-color:var(--g)"/> Active on site
     </label>
-    <div style="display:flex;gap:7px">
-      <button class="btn btn-pri" onclick="saveProp(${i})">Save & Publish →</button>
-      <button class="btn btn-g" onclick="closePropEdit(${i})">Cancel</button>
+    <div style="display:flex;gap:6px">
+      <button class="btn bpri" onclick="saveProp(${i})">Save & Publish →</button>
+      <button class="btn bg" onclick="closePE(${i})">Cancel</button>
     </div>`;
 }
-
-function openPropEdit(i) {
-  document.querySelectorAll('.edit-panel').forEach(p=>p.classList.remove('open'));
-  document.getElementById('pe'+i)?.classList.add('open');
-  document.getElementById('pe'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-function closePropEdit(i) { document.getElementById('pe'+i)?.classList.remove('open'); }
-
-function updatePreview(selectId, previewId, forcePath) {
-  const path = forcePath || document.getElementById(selectId)?.value;
-  const wrap = document.getElementById(previewId);
-  if (!wrap) return;
-  if (path) {
-    wrap.style.display = 'block';
-    const img = wrap.querySelector('img');
-    if (img) img.src = path;
-  } else {
-    wrap.style.display = 'none';
-  }
-}
-
-async function saveProp(i) {
-  const p = allData.properties[i];
-  const get = id => document.getElementById(id);
-  const val = id => get(id)?.value?.trim();
-  const updated = {
-    name:         val(`pe_name_${i}`),
-    location:     val(`pe_loc_${i}`),
-    description:  val(`pe_desc_${i}`),
-    price:        Number(val(`pe_price_${i}`)),
-    max_guests:   Number(val(`pe_guests_${i}`)),
-    bedrooms:     Number(val(`pe_beds_${i}`)),
-    bathrooms:    Number(val(`pe_baths_${i}`)),
-    min_stay:     Number(val(`pe_minstay_${i}`)) || 2,
-    cleaning_fee: Number(val(`pe_clean_${i}`)) || 0,
-    photo:        val(`pe_photo_${i}`),
-    photo_alt:    val(`pe_photo2_${i}`),
-    amenities:    (val(`pe_amen_${i}`)||'').split(',').map(s=>s.trim()).filter(Boolean),
-    badge:        val(`pe_badge_${i}`),
-    available:    get(`pe_avail_${i}`)?.checked,
+function openPE(i){document.querySelectorAll('.ep').forEach(e=>e.classList.remove('open'));document.getElementById('ppe'+i)?.classList.add('open');document.getElementById('ppe'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function closePE(i){document.getElementById('ppe'+i)?.classList.remove('open');}
+async function saveProp(i){
+  const p=D.props[i],v=id=>document.getElementById(id)?.value?.trim();
+  const gallery=p.gallery||[];
+  const photo=v('pph'+i)||(gallery[0]||'');
+  const updated={
+    name:v('pn'+i),name_fr:v('pnfr'+i),
+    location:v('pl'+i),location_fr:v('plfr'+i),
+    description:v('pd'+i),description_fr:v('pdfr'+i),
+    price:Number(v('pp'+i)),max_guests:Number(v('pg'+i)),
+    bedrooms:Number(v('pbd'+i)),bathrooms:Number(v('pba'+i)),
+    min_stay:Number(v('pms'+i))||2,cleaning_fee:Number(v('pcf'+i))||0,
+    badge:v('pbg'+i),badge_fr:v('pbgfr'+i),
+    photo,gallery,available:document.getElementById('pav'+i)?.checked,
+    amenities:(v('pam'+i)||'').split(',').map(s=>s.trim()).filter(Boolean),
+    type:p.type||'Property',
   };
   setBusy('Saving…');
-  try {
-    await ghWrite(p._path, JSON.stringify(updated, null, 2), `admin: update property "${updated.name}"`);
-    allData.properties[i] = { ...updated, _path: p._path, _sha: p._sha, _slug: p._slug };
-    closePropEdit(i);
-    renderProperties();
-    setOk('Saved ✓'); hideBanner();
-    toast('✅', `"${updated.name}" saved — site updating in ~30s`);
-    await loadAllData(false);
+  try{await ghWrite(p._path,JSON.stringify(updated,null,2),'admin: update property "'+updated.name+'"');
+    D.props[i]={...updated,_path:p._path,_sha:p._sha,_slug:p._slug};
+    closePE(i);renderProps();setOk('Saved ✓');hideBanner();
+    toast('✅','"'+updated.name+'" saved — site updating ~30s');
     await updateManifest();
-  } catch(e) {
-    setErr('Save failed');
-    toast('⚠️', 'Save failed: ' + e.message + '. Try Refresh then save again.');
-  }
+  }catch(e){setErr('Save failed');toast('⚠️','Save failed: '+e.message);}
 }
-
-function addNewProperty() {
-  const slug = 'property-' + Date.now();
-  allData.properties.push({
-    name:'New Property', location:'', description:'', price:0, max_guests:2,
-    bedrooms:1, bathrooms:1, min_stay:2, cleaning_fee:0,
-    photo:'', amenities:[], available:true,
-    _path:`_data/properties/${slug}.json`, _sha:null, _slug:slug
-  });
-  renderProperties();
-  openPropEdit(allData.properties.length - 1);
+function addProp(){
+  const slug='property-'+Date.now();
+  D.props.push({name:'New Property',name_fr:'Nouvelle Propriété',type:'Property',
+    location:'',location_fr:'',description:'',description_fr:'',
+    price:0,max_guests:2,bedrooms:1,bathrooms:1,min_stay:2,cleaning_fee:0,
+    photo:'',gallery:[],badge:'',badge_fr:'',available:true,amenities:[],
+    _path:`_data/properties/${slug}.json`,_sha:null,_slug:slug});
+  renderProps();openPE(D.props.length-1);
 }
-
-async function deleteProp(i) {
-  const p = allData.properties[i];
-  showConfirm(`Delete "${p.name}"?`, 'Removes it from GitHub and the live site.', async () => {
+async function delProp(i){
+  const p=D.props[i];
+  showCF(`Delete "${p.name}"?`,'Removes from GitHub and live site.',async()=>{
     setBusy('Deleting…');
-    try {
-      await ghDelete(p._path, `admin: delete property "${p.name}"`);
-      allData.properties.splice(i, 1);
-      renderProperties();
-      setOk('Deleted'); toast('🗑', `"${p.name}" deleted`);
-      await updateManifest();
-    } catch(e) { toast('⚠️','Delete failed: ' + e.message); setErr('Error'); }
+    try{await ghDel(p._path,'admin: delete property "'+p.name+'"');
+      D.props.splice(i,1);renderProps();setOk('Deleted');toast('🗑','"'+p.name+'" deleted');await updateManifest();
+    }catch(e){toast('⚠️','Delete failed: '+e.message);setErr('Error');}
   });
 }
 
-// ── EXPERIENCES ───────────────────────────────────────────────────
-function renderExperiences() {
-  const el = document.getElementById('expList');
-  const catLabel = {boat:'⛵ Boat',nature:'🌿 Nature',food:'🍛 Food',concierge:'🎩 Concierge'};
-  const catShade = {boat:'rgba(0,61,107,.07)',nature:'rgba(45,106,79,.07)',food:'rgba(232,133,90,.08)',concierge:'rgba(60,40,100,.05)'};
-  if (!allData.experiences.length) {
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">No experiences yet.</div>';
-    return;
-  }
-  el.innerHTML = allData.experiences.map((e, i) => `
+// EXPERIENCES
+function renderExps(){
+  const el=document.getElementById('elist');
+  const cL={boat:'⛵',nature:'🌿',food:'🍛',concierge:'🎩'};
+  if(!D.exps.length){el.innerHTML='<div style="text-align:center;padding:18px;color:var(--mu)">No experiences yet.</div>';return;}
+  el.innerHTML=D.exps.map((e,i)=>`
     <div class="ci">
-      <div class="ci-thumb" style="background:${catShade[e.category]||'var(--sand)'}">
-        ${e.photo ? `<img src="${e.photo}" onerror="this.remove()">` : (e.icon||'🌴')}
+      <div class="cith">${e.photo?`<img src="${e.photo}" onerror="this.remove()">`:(e.icon||'🌴')}</div>
+      <div class="ciin">
+        <div class="cinm">${esc(e.name||'Untitled')}</div>
+        <div class="cimt">${cL[e.category]||'—'} ${e.category||'—'} · ⏱${esc(e.duration||'—')} · ${(e.gallery||[]).length} photos</div>
       </div>
-      <div class="ci-info">
-        <div class="ci-name">${esc(e.name||'Untitled')}</div>
-        <div class="ci-meta">${catLabel[e.category]||e.category||'—'} · ⏱ ${esc(e.duration||'—')}${e.instagram?` · <a href="${e.instagram}" target="_blank" style="color:var(--green)">📸</a>`:''}</div>
-      </div>
-      <div class="ci-price">€${e.price||'—'}<span style="font-size:10px;color:var(--muted)">/${e.unit||'person'}</span></div>
-      <span class="pill ${e.active!==false?'pill-g':'pill-o'}">${e.active!==false?'Active':'Hidden'}</span>
-      <div class="ci-actions">
-        <button class="btn btn-g btn-sm" onclick="openExpEdit(${i})">Edit</button>
-        <button class="btn btn-r btn-sm" onclick="deleteExp(${i})">✕</button>
+      <div class="cipr">€${e.price||'—'}<span style="font-size:10px;color:var(--mu)">/${e.unit||'person'}</span></div>
+      <span class="pill ${e.active!==false?'pg':'po'}">${e.active!==false?'Active':'Hidden'}</span>
+      <div class="ciac">
+        <button class="btn bg bsm" onclick="openEE(${i})">Edit</button>
+        <button class="btn br bsm" onclick="delExp(${i})">✕</button>
       </div>
     </div>
-    <div class="edit-panel" id="ee${i}">${expForm(e,i)}</div>
-  `).join('');
+    <div class="ep" id="epe${i}">${eForm(e,i)}</div>`).join('');
 }
-
-function expForm(e, i) {
-  const mediaOpts = '<option value="">— no photo —</option>' + allData.media
-    .filter(m => /\.(jpg|jpeg|png|webp)/i.test(m.name))
-    .map(m => `<option value="/images/${m.name}" ${e.photo===`/images/${m.name}`?'selected':''}>${m.name}</option>`)
-    .join('');
-  return `
-    <div class="fr2">
-      <div class="fg"><label class="fl">Name</label><input class="fi" id="ee_name_${i}" value="${esc(e.name||'')}" oninput="markDirty()"/></div>
-      <div class="fg"><label class="fl">Category</label>
-        <select class="fi" id="ee_cat_${i}" onchange="markDirty()">
-          <option value="boat" ${e.category==='boat'?'selected':''}>⛵ Boat & Water</option>
-          <option value="nature" ${e.category==='nature'?'selected':''}>🌿 Nature & Wellness</option>
-          <option value="food" ${e.category==='food'?'selected':''}>🍛 Food & Culture</option>
-          <option value="concierge" ${e.category==='concierge'?'selected':''}>🎩 Concierge</option>
-        </select>
-      </div>
+function eForm(e,i){
+  return`
+    <div class="birow">
+      <div class="fg"><label class="fl">🇬🇧 Name</label><input class="fi" id="en${i}" value="${esc(e.name||'')}" oninput="md()"/></div>
+      <div class="fg"><label class="fl">🇫🇷 Nom</label><input class="fi" id="enfr${i}" value="${esc(e.name_fr||e.name||'')}" oninput="md()"/></div>
     </div>
-    <div class="fg"><label class="fl">Description</label><textarea class="fi" id="ee_desc_${i}" rows="3" style="resize:vertical" oninput="markDirty()">${esc(e.description||'')}</textarea></div>
+    <div class="fg"><label class="fl">Category</label>
+      <select class="fi" id="ec${i}" onchange="md()">
+        <option value="boat" ${e.category==='boat'?'selected':''}>⛵ Boat & Water</option>
+        <option value="nature" ${e.category==='nature'?'selected':''}>🌿 Nature & Wellness</option>
+        <option value="food" ${e.category==='food'?'selected':''}>🍛 Food & Culture</option>
+        <option value="concierge" ${e.category==='concierge'?'selected':''}>🎩 Concierge</option>
+      </select>
+    </div>
+    <div class="birow">
+      <div class="fg"><label class="fl">🇬🇧 Description</label><textarea class="fi" id="ed${i}" rows="3" style="resize:vertical" oninput="md()">${esc(e.description||'')}</textarea></div>
+      <div class="fg"><label class="fl">🇫🇷 Description</label><textarea class="fi" id="edfr${i}" rows="3" style="resize:vertical" oninput="md()">${esc(e.description_fr||e.description||'')}</textarea></div>
+    </div>
+    <div class="birow">
+      <div class="fg"><label class="fl">🇬🇧 Duration</label><input class="fi" id="edur${i}" value="${esc(e.duration||'')}" oninput="md()"/></div>
+      <div class="fg"><label class="fl">🇫🇷 Durée</label><input class="fi" id="edurfr${i}" value="${esc(e.duration_fr||e.duration||'')}" oninput="md()"/></div>
+    </div>
     <div class="fr3">
-      <div class="fg"><label class="fl">Price (€)</label><input class="fi" id="ee_price_${i}" type="number" value="${e.price||''}" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Price €</label><input class="fi" id="ep${i}" type="number" value="${e.price||''}" oninput="md()"/></div>
       <div class="fg"><label class="fl">Per</label>
-        <select class="fi" id="ee_unit_${i}" onchange="markDirty()">
+        <select class="fi" id="eu${i}" onchange="md()">
           <option value="person" ${e.unit==='person'?'selected':''}>person</option>
           <option value="group" ${e.unit==='group'?'selected':''}>group</option>
           <option value="service" ${e.unit==='service'?'selected':''}>service</option>
         </select>
       </div>
-      <div class="fg"><label class="fl">Duration</label><input class="fi" id="ee_dur_${i}" value="${esc(e.duration||'')}" placeholder="Half day" oninput="markDirty()"/></div>
+      <div class="fg"><label class="fl">Icon</label><input class="fi" id="eic${i}" value="${esc(e.icon||'')}" style="width:60px" oninput="md()"/></div>
     </div>
-    <div class="fr2">
-      <div class="fg">
-        <label class="fl">Photo</label>
-        <div style="display:flex;gap:6px">
-          <select class="fi" id="ee_photo_${i}" onchange="markDirty();updatePreview('ee_photo_${i}','ee_prev_${i}')">
-            ${mediaOpts}
-          </select>
-          <button class="btn btn-g btn-sm" onclick="openPhotoPicker('ee_photo_${i}','ee_prev_${i}')">📷</button>
-        </div>
-        <div class="img-picker-preview" id="ee_prev_${i}" style="${e.photo?'display:block':''}">
-          <img src="${e.photo||''}"/>
-        </div>
+    <div class="fg"><label class="fl">Instagram URL</label><input class="fi" id="eig${i}" value="${esc(e.instagram||'')}" oninput="md()"/></div>
+    <div class="fg"><label class="fl">Cover Photo</label>
+      <div style="display:flex;gap:6px">
+        <select class="fi" id="eph${i}" onchange="md();updPrev('eph${i}','epe_pv_${i}')">
+          <option value="">— none —</option>${mopts(e.photo)}
+        </select>
+        <button class="btn bg bsm" onclick="openPP('eph${i}','epe_pv_${i}')">📷</button>
       </div>
-      <div class="fg">
-        <label class="fl">Icon (emoji)</label><input class="fi" id="ee_icon_${i}" value="${esc(e.icon||'')}" placeholder="🌿" style="width:80px" oninput="markDirty()"/>
-        <label class="fl" style="margin-top:10px">Instagram URL</label><input class="fi" id="ee_ig_${i}" value="${esc(e.instagram||'')}" placeholder="https://instagram.com/…" oninput="markDirty()"/>
-      </div>
+      <div class="ipp" id="epe_pv_${i}" style="${e.photo?'display:block':''}"><img src="${e.photo||''}"/></div>
     </div>
-    <label style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;margin-bottom:14px">
-      <input type="checkbox" id="ee_active_${i}" ${e.active!==false?'checked':''} onchange="markDirty()" style="accent-color:var(--green)"/> Active (visible on site)
+    ${galHtml(e.gallery,'e',i)}
+    <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer;margin:10px 0">
+      <input type="checkbox" id="eav${i}" ${e.active!==false?'checked':''} onchange="md()" style="accent-color:var(--g)"/> Active on site
     </label>
-    <div style="display:flex;gap:7px">
-      <button class="btn btn-pri" onclick="saveExp(${i})">Save & Publish →</button>
-      <button class="btn btn-g" onclick="closeExpEdit(${i})">Cancel</button>
+    <div style="display:flex;gap:6px">
+      <button class="btn bpri" onclick="saveExp(${i})">Save & Publish →</button>
+      <button class="btn bg" onclick="closeEE(${i})">Cancel</button>
     </div>`;
 }
-
-function openExpEdit(i) {
-  document.querySelectorAll('.edit-panel').forEach(p=>p.classList.remove('open'));
-  document.getElementById('ee'+i)?.classList.add('open');
-  document.getElementById('ee'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-function closeExpEdit(i) { document.getElementById('ee'+i)?.classList.remove('open'); }
-
-async function saveExp(i) {
-  const e = allData.experiences[i];
-  const val = id => document.getElementById(id)?.value?.trim();
-  const updated = {
-    name:        val(`ee_name_${i}`),
-    category:    val(`ee_cat_${i}`),
-    description: val(`ee_desc_${i}`),
-    price:       Number(val(`ee_price_${i}`)),
-    unit:        val(`ee_unit_${i}`),
-    duration:    val(`ee_dur_${i}`),
-    photo:       val(`ee_photo_${i}`),
-    instagram:   val(`ee_ig_${i}`),
-    icon:        val(`ee_icon_${i}`),
-    active:      document.getElementById(`ee_active_${i}`)?.checked,
+function openEE(i){document.querySelectorAll('.ep').forEach(e=>e.classList.remove('open'));document.getElementById('epe'+i)?.classList.add('open');document.getElementById('epe'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function closeEE(i){document.getElementById('epe'+i)?.classList.remove('open');}
+async function saveExp(i){
+  const e=D.exps[i],v=id=>document.getElementById(id)?.value?.trim();
+  const gallery=e.gallery||[];
+  const photo=v('eph'+i)||(gallery[0]||'');
+  const updated={
+    name:v('en'+i),name_fr:v('enfr'+i),category:v('ec'+i),icon:v('eic'+i),
+    description:v('ed'+i),description_fr:v('edfr'+i),
+    duration:v('edur'+i),duration_fr:v('edurfr'+i),
+    price:Number(v('ep'+i)),unit:v('eu'+i),instagram:v('eig'+i),
+    photo,gallery,active:document.getElementById('eav'+i)?.checked,
   };
   setBusy('Saving…');
-  try {
-    await ghWrite(e._path, JSON.stringify(updated, null, 2), `admin: update experience "${updated.name}"`);
-    allData.experiences[i] = { ...updated, _path: e._path, _sha: e._sha, _slug: e._slug };
-    closeExpEdit(i);
-    renderExperiences();
-    setOk('Saved ✓'); hideBanner();
-    toast('✅', `"${updated.name}" saved — site updating in ~30s`);
-    await loadAllData(false);
+  try{await ghWrite(e._path,JSON.stringify(updated,null,2),'admin: update experience "'+updated.name+'"');
+    D.exps[i]={...updated,_path:e._path,_sha:e._sha,_slug:e._slug};
+    closeEE(i);renderExps();setOk('Saved ✓');hideBanner();
+    toast('✅','"'+updated.name+'" saved — site updating ~30s');
     await updateManifest();
-  } catch(e2) {
-    setErr('Save failed');
-    toast('⚠️', 'Save failed: ' + e2.message);
-  }
+  }catch(e2){setErr('Save failed');toast('⚠️','Save failed: '+e2.message);}
 }
-
-function addNewExperience() {
-  const slug = 'experience-' + Date.now();
-  allData.experiences.push({
-    name:'New Experience', category:'nature', description:'', price:0, unit:'person',
-    duration:'', photo:'', instagram:'', icon:'🌴', active:true,
-    _path:`_data/experiences/${slug}.json`, _sha:null, _slug:slug
-  });
-  renderExperiences();
-  openExpEdit(allData.experiences.length - 1);
+function addExp(){
+  const slug='experience-'+Date.now();
+  D.exps.push({name:'New Experience',name_fr:'Nouvelle Expérience',category:'nature',
+    description:'',description_fr:'',duration:'',duration_fr:'',price:0,unit:'person',
+    icon:'🌴',instagram:'',photo:'',gallery:[],active:true,
+    _path:`_data/experiences/${slug}.json`,_sha:null,_slug:slug});
+  renderExps();openEE(D.exps.length-1);
 }
-
-async function deleteExp(i) {
-  const e = allData.experiences[i];
-  showConfirm(`Delete "${e.name}"?`, 'Removes it from GitHub and the live site.', async () => {
+async function delExp(i){
+  const e=D.exps[i];
+  showCF(`Delete "${e.name}"?`,'Removes from GitHub and live site.',async()=>{
     setBusy('Deleting…');
-    try {
-      await ghDelete(e._path, `admin: delete experience "${e.name}"`);
-      allData.experiences.splice(i, 1);
-      renderExperiences();
-      setOk('Deleted'); toast('🗑', `"${e.name}" deleted`);
-      await updateManifest();
-    } catch(err) { toast('⚠️','Delete failed: ' + err.message); setErr('Error'); }
+    try{await ghDel(e._path,'admin: delete experience "'+e.name+'"');
+      D.exps.splice(i,1);renderExps();setOk('Deleted');toast('🗑','"'+e.name+'" deleted');await updateManifest();
+    }catch(e){toast('⚠️','Delete failed: '+e.message);setErr('Error');}
   });
 }
 
-// ── SETTINGS ─────────────────────────────────────────────────────
-function fillSettings() {
-  const s = allData.settings;
-  const set = (id, val) => { const el = document.getElementById(id); if(el) el.value = val||''; };
-  set('s_name',     s.name);
-  set('s_email',    s.email);
-  set('s_whatsapp', s.whatsapp);
-  set('s_instagram',s.instagram);
-  set('s_facebook', s.facebook);
-  set('s_tiktok',   s.tiktok);
-  set('s_hero1',    s.hero_line1);
-  set('s_hero2',    s.hero_line2);
-  set('s_herosub',  s.hero_sub);
-  set('s_hp1',      s.hero_photo);
-  set('s_hp2',      s.hero_photo2);
-  set('s_hp3',      s.hero_photo3);
-  set('s_hp4',      s.hero_photo4);
-  set('s_svc_acc',  s.svc_accommodation_photo);
-  set('s_svc_boat', s.svc_boat_photo);
-  set('s_svc_nat',  s.svc_nature_photo);
-  set('s_svc_food', s.svc_food_photo);
-  set('s_svc_con',  s.svc_concierge_photo);
-  // Update previews
-  ['s_hp1','s_hp2','s_hp3','s_hp4','s_svc_acc','s_svc_boat','s_svc_nat','s_svc_food','s_svc_con'].forEach(id => {
-    const val = document.getElementById(id)?.value;
-    const prevId = id.replace('s_','p_');
-    updatePreview(id, prevId, val);
-  });
+// SETTINGS
+function pField(id,lbl,val){
+  return`<div class="fg"><label class="fl">${lbl}</label>
+    <div style="display:flex;gap:6px"><input class="fi" id="${id}" value="${esc(val||'')}" oninput="md();updPrev('${id}','${id}_pv')"/>
+    <button class="btn bg bsm" onclick="openPP('${id}','${id}_pv')">📷</button></div>
+    <div class="ipp" id="${id}_pv" style="${val?'display:block':''}"><img src="${val||''}"/></div>
+  </div>`;
 }
-
-function updateSettingsPreview(inputId, previewId) {
-  const val = document.getElementById(inputId)?.value;
-  updatePreview(inputId, previewId, val);
+function fillSettings(){
+  const s=D.settings;
+  const sv=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||'';};
+  sv('sn',s.name);sv('se',s.email);sv('sw',s.whatsapp);sv('sig',s.instagram);sv('sfb',s.facebook);sv('stt',s.tiktok);
+  sv('sh1en',s.hero_line1);sv('sh1fr',s.hero_line1_fr);
+  sv('sh2en',s.hero_line2);sv('sh2fr',s.hero_line2_fr);
+  sv('shsen',s.hero_sub);sv('shsfr',s.hero_sub_fr);
+  const hf=document.getElementById('heroF');
+  if(hf)hf.innerHTML=pField('shp1','Slide 1',s.hero_photo)+pField('shp2','Slide 2',s.hero_photo2)+pField('shp3','Slide 3',s.hero_photo3)+pField('shp4','Slide 4',s.hero_photo4);
+  const sf=document.getElementById('svcF');
+  if(sf)sf.innerHTML=pField('ssacc','Accommodation',s.svc_accommodation_photo)+pField('ssboa','Boat & Water',s.svc_boat_photo)+pField('ssnat','Nature & Wellness',s.svc_nature_photo)+pField('ssfoo','Food Discovery',s.svc_food_photo)+pField('sscon','Concierge',s.svc_concierge_photo);
 }
-
-async function saveSettings() {
-  const s = allData.settings;
-  const get = id => document.getElementById(id)?.value?.trim();
-  const updated = {
-    name:        get('s_name'),
-    email:       get('s_email'),
-    whatsapp:    get('s_whatsapp'),
-    instagram:   get('s_instagram'),
-    facebook:    get('s_facebook'),
-    tiktok:      get('s_tiktok'),
-    hero_line1:  get('s_hero1'),
-    hero_line2:  get('s_hero2'),
-    hero_sub:    get('s_herosub'),
-    hero_photo:  get('s_hp1'),
-    hero_photo2: get('s_hp2'),
-    hero_photo3: get('s_hp3'),
-    hero_photo4: get('s_hp4'),
-    svc_accommodation_photo: get('s_svc_acc'),
-    svc_boat_photo:          get('s_svc_boat'),
-    svc_nature_photo:        get('s_svc_nat'),
-    svc_food_photo:          get('s_svc_food'),
-    svc_concierge_photo:     get('s_svc_con'),
-  };
+async function saveSettings(){
+  const s=D.settings,v=id=>document.getElementById(id)?.value?.trim();
+  const updated={name:v('sn'),email:v('se'),whatsapp:v('sw'),instagram:v('sig'),facebook:v('sfb'),tiktok:v('stt'),
+    hero_line1:v('sh1en'),hero_line1_fr:v('sh1fr'),hero_line2:v('sh2en'),hero_line2_fr:v('sh2fr'),
+    hero_sub:v('shsen'),hero_sub_fr:v('shsfr'),
+    hero_photo:v('shp1'),hero_photo2:v('shp2'),hero_photo3:v('shp3'),hero_photo4:v('shp4'),
+    svc_accommodation_photo:v('ssacc'),svc_boat_photo:v('ssboa'),svc_nature_photo:v('ssnat'),
+    svc_food_photo:v('ssfoo'),svc_concierge_photo:v('sscon')};
   setBusy('Saving…');
-  try {
-    await ghWrite('_data/settings.json', JSON.stringify(updated, null, 2), 'admin: update site settings');
-    allData.settings = { ...updated, _path:'_data/settings.json', _sha:s._sha };
-    setOk('Saved ✓'); hideBanner();
-    toast('✅','Settings saved — site updating in ~30s');
-    await loadAllData(false);
-  } catch(e) { setErr('Save failed'); toast('⚠️','Save failed: ' + e.message); }
+  try{await ghWrite('_data/settings.json',JSON.stringify(updated,null,2),'admin: update settings');
+    D.settings={...updated,_path:'_data/settings.json',_sha:s._sha};setOk('Saved ✓');hideBanner();toast('✅','Settings saved — site updating ~30s');
+  }catch(e){setErr('Save failed');toast('⚠️','Save failed: '+e.message);}
 }
 
-// ── UI HELPERS ────────────────────────────────────────────────────
-const PAGE_TITLES = {connect:'Connect',dashboard:'Dashboard',bookings:'Bookings',
-  properties:'Properties',experiences:'Experiences',media:'Media Library',settings:'Settings'};
-
-function goPage(id, navEl) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+// UI HELPERS
+const PTITLES={connect:'Connect',dashboard:'Dashboard',bookings:'Bookings',properties:'Properties',experiences:'Experiences',media:'Media Library',settings:'Settings'};
+function gp(id,navEl){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+id)?.classList.add('active');
-  document.getElementById('pageTitle').textContent = PAGE_TITLES[id] || id;
-  document.querySelectorAll('.s-item[data-page]').forEach(el => el.classList.remove('active'));
-  if (navEl) navEl.classList.add('active');
-  document.querySelector('.content').scrollTop = 0;
+  document.getElementById('pgtitle').textContent=PTITLES[id]||id;
+  document.querySelectorAll('.si[data-page]').forEach(e=>e.classList.remove('active'));
+  if(navEl)navEl.classList.add('active');
+  document.querySelector('.content').scrollTop=0;
 }
+function md(){dirty=true;document.getElementById('sbanner').classList.add('show');}
+function hideBanner(){dirty=false;document.getElementById('sbanner').classList.remove('show');}
+function discardChanges(){if(confirm('Discard all unsaved changes?')){loadAll(false);hideBanner();}}
+function setBusy(m){document.getElementById('dot').className='dot busy';document.getElementById('slb').textContent=m;}
+function setOk(m){document.getElementById('dot').className='dot ok';document.getElementById('slb').textContent=m;}
+function setErr(m){document.getElementById('dot').className='dot err';document.getElementById('slb').textContent=m;}
+function cErr(m){const e=document.getElementById('cerr');if(e){e.textContent=m;e.style.display='block';}setErr('Failed');}
+let tT;
+function toast(icon,msg){document.getElementById('ti').textContent=icon;document.getElementById('tm').textContent=msg;const t=document.getElementById('toast');t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3500);}
+function showCF(title,msg,cb){document.getElementById('cft').textContent=title;document.getElementById('cfm').textContent=msg;cfCb=cb;document.getElementById('cfw').classList.add('open');}
+function closeCF(){document.getElementById('cfw').classList.remove('open');cfCb=null;}
+document.getElementById('cfok').addEventListener('click',()=>{if(cfCb)cfCb();closeCF();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCF();closePM();}});
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-function markDirty() {
-  dirty = true;
-  document.getElementById('saveBanner').classList.add('show');
-}
-function hideBanner() {
-  dirty = false;
-  document.getElementById('saveBanner').classList.remove('show');
-}
-
-function setBusy(msg) { document.getElementById('syncDot').className='dot busy'; document.getElementById('syncLbl').textContent=msg; }
-function setOk(msg)   { document.getElementById('syncDot').className='dot ok';   document.getElementById('syncLbl').textContent=msg; }
-function setErr(msg)  { document.getElementById('syncDot').className='dot err';  document.getElementById('syncLbl').textContent=msg; }
-function showConnectErr(msg) { const el=document.getElementById('connectErr'); if(el){el.textContent=msg;el.style.display='block';} setErr('Failed'); }
-
-let toastTimer;
-function toast(icon, msg) {
-  document.getElementById('tIcon').textContent = icon;
-  document.getElementById('tMsg').textContent = msg;
-  const t = document.getElementById('toast');
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
-}
-
-function showConfirm(title, msg, cb) {
-  document.getElementById('confirmTitle').textContent = title;
-  document.getElementById('confirmMsg').textContent = msg;
-  confirmCb = cb;
-  document.getElementById('confirmWrap').classList.add('open');
-}
-function closeConfirm() { document.getElementById('confirmWrap').classList.remove('open'); confirmCb=null; }
-document.getElementById('confirmOk').addEventListener('click', () => { if(confirmCb)confirmCb(); closeConfirm(); });
-document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeConfirm(); closePhotoModal(); } });
-
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-
-// ── MANIFEST AUTO-UPDATE ──────────────────────────────────────────
-// Keeps _data/manifest.json in sync so index.html can discover all
-// properties and experiences without hardcoding slugs.
-async function updateManifest() {
-  try {
-    const props = allData.properties.map(p => p._slug).filter(Boolean);
-    const exps  = allData.experiences.map(e => e._slug).filter(Boolean);
-    const manifest = { properties: props.sort(), experiences: exps.sort() };
-    await ghWrite('_data/manifest.json', JSON.stringify(manifest, null, 2), 'admin: update content manifest');
-  } catch(e) {
-    console.warn('Manifest update failed (non-critical):', e.message);
-  }
-}
-
-// ── INIT ──────────────────────────────────────────────────────────
-(function init() {
-  if (token) {
+// INIT
+(function(){
+  if(token){
     setBusy('Connecting…');
-    ghGet(`/repos/${REPO}`).then(r => {
-      if (r.ok) {
-        setOk('Connected');
-        loadAllData(false);
-        goPage('dashboard', document.querySelector('[data-page=dashboard]'));
-      } else {
-        token=''; localStorage.removeItem('ev_ghtoken');
-        goPage('connect', null); setErr('Token expired');
-      }
-    }).catch(() => { goPage('connect', null); setErr('Offline'); });
-  } else {
-    goPage('connect', null);
-    document.getElementById('syncLbl').textContent = 'Not connected';
-  }
+    ghG('/repos/'+REPO).then(r=>{
+      if(r.ok){setOk('Connected');loadAll(false);gp('dashboard',qs('dashboard'));}
+      else{token='';localStorage.removeItem('ev_gh');gp('connect',null);setErr('Token expired');}
+    }).catch(()=>{gp('connect',null);setErr('Offline');});
+  }else{gp('connect',null);document.getElementById('slb').textContent='Not connected';}
 })();
 </script>
 </body>

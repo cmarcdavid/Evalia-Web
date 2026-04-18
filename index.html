@@ -341,6 +341,34 @@
       .service-picker{grid-template-columns:1fr 1fr}
       .pay-methods{grid-template-columns:1fr}
     }
+
+    /* ── LANGUAGE TOGGLE ────────────────────────────────── */
+    .lang-btn{display:flex;align-items:center;gap:5px;padding:7px 13px;border-radius:50px;border:1.5px solid rgba(108,124,106,.3);background:rgba(108,124,106,.07);cursor:pointer;transition:all .2s;font-family:var(--font-b)}
+    .lang-btn:hover{background:rgba(108,124,106,.14);border-color:var(--brand-green)}
+    .lang-flag{font-size:16px;line-height:1}
+    .lang-lbl{font-size:12px;font-weight:600;color:var(--brand-green);letter-spacing:.05em}
+
+    /* ── LIGHTBOX ────────────────────────────────────────── */
+    .lb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s}
+    .lb-overlay.open{opacity:1;pointer-events:all}
+    .lb-media{max-width:90vw;max-height:84vh;border-radius:10px;object-fit:contain;display:block}
+    .lb-close{position:fixed;top:18px;right:22px;color:rgba(255,255,255,.8);font-size:26px;cursor:pointer;line-height:1;padding:6px;transition:color .15s}
+    .lb-close:hover{color:#fff}
+    .lb-prev,.lb-next{position:fixed;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.75);font-size:34px;cursor:pointer;padding:10px 14px;background:rgba(255,255,255,.1);border-radius:8px;user-select:none;transition:background .15s;line-height:1}
+    .lb-prev:hover,.lb-next:hover{background:rgba(255,255,255,.2)}
+    .lb-prev{left:14px}.lb-next{right:14px}
+    .lb-dots{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+    .lb-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:background .15s}
+    .lb-dot.on{background:#fff}
+    .lb-count{position:fixed;top:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.55);font-size:13px;font-family:var(--font-b)}
+
+    /* ── GALLERY STRIP ON CARDS ─────────────────────────── */
+    .gal-strip{display:flex;gap:5px;padding:8px 0 4px;overflow-x:auto}
+    .gal-strip::-webkit-scrollbar{height:3px}
+    .gal-strip::-webkit-scrollbar-thumb{background:var(--stone);border-radius:3px}
+    .gal-th{width:54px;height:38px;border-radius:5px;object-fit:cover;flex-shrink:0;cursor:pointer;transition:transform .15s,outline .15s;outline:2px solid transparent}
+    .gal-th:hover{transform:scale(1.1);outline-color:var(--brand-green)}
+
   </style>
 </head>
 <body>
@@ -391,6 +419,10 @@
     <button class="btn-outline" onclick="scrollToSection('register')">Register</button>
     <button class="btn-fill" onclick="scrollToSection('booking')">Book Now</button>
   </div>
+  <div class="lang-btn" id="langBtn" onclick="toggleLang()" title="Switch language">
+    <span class="lang-flag" id="langFlag">🇬🇧</span>
+    <span class="lang-lbl" id="langLbl">EN</span>
+  </div>
   <div class="nav-burger" onclick="toggleMobile()"><span></span><span></span><span></span></div>
 </nav>
 
@@ -428,19 +460,19 @@
 <!-- ── SERVICES ── -->
 <section id="services">
   <div class="s-header center">
-    <div class="s-eyebrow">Everything in One Place</div>
-    <h2 class="s-title">The complete<br><em>Mauritius experience</em></h2>
-    <p class="s-sub">Every service you need for a perfect stay — handpicked, vetted and arranged for you.</p>
+    <div class="s-eyebrow" data-i18n="svc_eyebrow">Everything in One Place</div>
+    <h2 class="s-title" data-i18n="svc_title">The complete<br><em>Mauritius experience</em></h2>
+    <p class="s-sub" data-i18n="svc_sub">Every service you need for a perfect stay — handpicked, vetted and arranged for you.</p>
   </div>
   <div class="services-grid">
     <div class="svc-card" onclick="scrollToSection('accommodation')">
       <div class="svc-img svc-img-accommodation" style="padding:0;background:none">
         <img src="images/Hero1.jpg" alt="Accommodation" style="width:100%;height:100%;object-fit:cover;display:block"/>
-        <div class="svc-tag">Accommodation</div>
+        <div class="svc-tag" data-svc-tag="acc">Accommodation</div>
       </div>
       <div class="svc-body">
-        <div class="svc-name">Stay with Us</div>
-        <div class="svc-desc">Studio apartment or a private 2-bedroom villa with pool and tropical garden — your home away from home.</div>
+        <div class="svc-name" data-svc-name="acc">Stay with Us</div>
+        <div class="svc-desc" data-svc-desc="acc">Studio apartment or a private 2-bedroom villa with pool and tropical garden — your home away from home.</div>
         <div class="svc-foot">
           <div><div class="svc-price"><sup>€</sup>80</div><div class="svc-price-lbl">per night from</div></div>
           <button class="btn-svc" onclick="scrollToSection('accommodation')">View Properties</button>
@@ -450,11 +482,11 @@
     <div class="svc-card" onclick="openExpTab('boat')">
       <div class="svc-img svc-img-boat" style="padding:0;background:none">
         <img src="images/Hero2.jpg" alt="Boat Excursions" style="width:100%;height:100%;object-fit:cover;display:block"/>
-        <div class="svc-tag">Water Activities</div>
+        <div class="svc-tag" data-svc-tag="boat">Water Activities</div>
       </div>
       <div class="svc-body">
-        <div class="svc-name">Boat Excursions</div>
-        <div class="svc-desc">Dolphin watching, snorkelling, Île aux Cerfs day trips and sunset cruises on the Indian Ocean.</div>
+        <div class="svc-name" data-svc-name="boat">Boat Excursions</div>
+        <div class="svc-desc" data-svc-desc="boat">Dolphin watching, snorkelling, Île aux Cerfs day trips and sunset cruises on the Indian Ocean.</div>
         <div class="svc-foot">
           <div><div class="svc-price"><sup>€</sup>45</div><div class="svc-price-lbl">per person from</div></div>
           <button class="btn-svc" onclick="openExpTab('boat')">See Excursions</button>
@@ -465,10 +497,10 @@
       <div class="svc-img svc-img-nature" id="svcNatureImg" style="padding:0;background:none;position:relative">
         <img id="svcNaturePhoto" src="images/Hero3.jpg" alt="Nature & Wellness" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
         <div style="display:none;align-items:center;justify-content:center;height:100%;font-size:64px;background:linear-gradient(135deg,#1a4a2e,#2D6A4F)">🌿</div>
-        <div class="svc-tag">Island Exploration</div>
+        <div class="svc-tag" data-svc-tag="nat">Island Exploration</div>
       </div>
       <div class="svc-body">
-        <div class="svc-name">Nature & Wellness</div>
+        <div class="svc-name" data-svc-name="nat">Nature & Wellness</div>
         <div class="svc-desc">Hiking, yoga in nature, Black River Gorges, Chamarel and more — curated with local wellness expert <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.</div>
         <div class="svc-foot">
           <div><div class="svc-price"><sup>€</sup>40</div><div class="svc-price-lbl">per person from</div></div>
@@ -480,11 +512,11 @@
       <div class="svc-img svc-img-food" id="svcFoodImg" style="padding:0;background:none;position:relative">
         <img id="svcFoodPhoto" src="" alt="Food Discovery" style="width:100%;height:100%;object-fit:cover;display:none" onerror="this.style.display='none'"/>
         <div id="svcFoodEmoji" style="display:flex;align-items:center;justify-content:center;height:100%;font-size:64px;background:linear-gradient(135deg,#7a2010,#c4451e)">🍛</div>
-        <div class="svc-tag">Culinary</div>
+        <div class="svc-tag" data-svc-tag="food">Culinary</div>
       </div>
       <div class="svc-body">
-        <div class="svc-name">Food Discovery</div>
-        <div class="svc-desc">Street food tours, local market visits, traditional Mauritian cooking classes and curated restaurant recommendations.</div>
+        <div class="svc-name" data-svc-name="food">Food Discovery</div>
+        <div class="svc-desc" data-svc-desc="food">Street food tours, local market visits, traditional Mauritian cooking classes and curated restaurant recommendations.</div>
         <div class="svc-foot">
           <div><div class="svc-price"><sup>€</sup>35</div><div class="svc-price-lbl">per person from</div></div>
           <button class="btn-svc" onclick="openExpTab('food')">Discover Food</button>
@@ -494,10 +526,10 @@
     <div class="svc-card" onclick="scrollToSection('booking')">
       <div class="svc-img svc-img-concierge" style="padding:0;background:none">
         <img src="images/Host.jpg" alt="Personal Concierge" style="width:100%;height:100%;object-fit:cover;display:block"/>
-        <div class="svc-tag">Concierge</div>
+        <div class="svc-tag" data-svc-tag="con">Concierge</div>
       </div>
       <div class="svc-body">
-        <div class="svc-name">Personal Concierge</div>
+        <div class="svc-name" data-svc-name="con">Personal Concierge</div>
         <div class="svc-desc">Airport transfers, car rental, event tickets, SIM setup, personal shopping and anything else you need.</div>
         <div class="svc-foot">
           <div><div class="svc-price"><sup>€</sup>25</div><div class="svc-price-lbl">per service from</div></div>
@@ -508,10 +540,10 @@
     <div class="svc-card" onclick="scrollToSection('booking')">
       <div class="svc-img svc-img-safety" style="background:linear-gradient(135deg,#1a1f2e,#2d3550);align-items:center;justify-content:center">
         <div style="font-size:64px">🛡️</div>
-        <div class="svc-tag">Safety & Care</div>
+        <div class="svc-tag" data-svc-tag="safe">Safety & Care</div>
       </div>
       <div class="svc-body">
-        <div class="svc-name">Healthcare & Safety</div>
+        <div class="svc-name" data-svc-name="safe">Healthcare & Safety</div>
         <div class="svc-desc">Healthcare referrals, clinic access, safety briefings, emergency contacts and 24/7 WhatsApp support throughout your stay.</div>
         <div class="svc-foot">
           <div><div class="svc-price">Free</div><div class="svc-price-lbl">with any booking</div></div>
@@ -525,8 +557,8 @@
 <!-- ── ACCOMMODATION ── -->
 <section id="accommodation">
   <div class="s-header">
-    <div class="s-eyebrow">Where You'll Stay</div>
-    <h2 class="s-title">Your private<br><em>island retreat</em></h2>
+    <div class="s-eyebrow" data-i18n="acc_eyebrow">Where You'll Stay</div>
+    <h2 class="s-title" data-i18n="acc_title">Your private<br><em>island retreat</em></h2>
     <p class="s-sub">Two carefully curated properties in Mauritius — intimate, beautiful and fully supported by your personal concierge.</p>
   </div>
   <div class="acc-grid">
@@ -588,15 +620,15 @@
 <!-- ── EXPERIENCES ── -->
 <section id="experiences">
   <div class="s-header">
-    <div class="s-eyebrow">Curated Experiences</div>
-    <h2 class="s-title">Discover the<br><em>real Mauritius</em></h2>
+    <div class="s-eyebrow" data-i18n="exp_eyebrow">Curated Experiences</div>
+    <h2 class="s-title" data-i18n="exp_title">Discover the<br><em>real Mauritius</em></h2>
     <p class="s-sub">Handpicked excursions led by local experts. Nature &amp; wellness experiences curated with <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.</p>
   </div>
   <div class="exp-tabs">
-    <button class="exp-tab active" onclick="filterExp(this,'all')">All</button>
-    <button class="exp-tab" onclick="filterExp(this,'boat')">⛵ Boat & Water</button>
-    <button class="exp-tab" onclick="filterExp(this,'nature')">🌿 Nature</button>
-    <button class="exp-tab" onclick="filterExp(this,'food')">🍛 Food</button>
+    <button class="exp-tab active" data-tab="all" onclick="filterExp(this,'all')">All</button>
+    <button class="exp-tab" data-tab="boat" onclick="filterExp(this,'boat')">⛵ Boat & Water</button>
+    <button class="exp-tab" data-tab="nat" onclick="filterExp(this,'nature')">🌿 Nature</button>
+    <button class="exp-tab" data-tab="food" onclick="filterExp(this,'food')">🍛 Food</button>
   </div>
   <div class="exp-grid" id="expGrid"></div>
 </section>
@@ -1105,12 +1137,25 @@ function renderExp(filter) {
     return;
   }
   document.getElementById('expGrid').innerHTML = list.map(e => {
-    const cat    = e.category || e.cat || 'nature';
-    const photo  = e.photo || '';
-    const color  = CAT_COLORS[cat] || 'linear-gradient(135deg,#1A1F2E,#2d3550)';
+    const cat     = e.category || e.cat || 'nature';
+    const name    = (lang === 'fr' && e.name_fr)        ? e.name_fr        : (e.name || '');
+    const desc    = (lang === 'fr' && e.description_fr) ? e.description_fr : (e.description || e.desc || '');
+    const dur     = (lang === 'fr' && e.duration_fr)    ? e.duration_fr    : (e.duration || '');
+    const unitLbl = lang === 'fr'
+      ? (e.unit==='person'?'/personne':e.unit==='group'?'/groupe':'/service')
+      : ('/'+(e.unit||'person'));
+    const photo   = e.photo || (e.gallery && e.gallery[0]) || '';
+    const gallery = e.gallery || (photo ? [photo] : []);
+    const color   = CAT_COLORS[cat] || 'linear-gradient(135deg,#1A1F2E,#2d3550)';
     const imgHtml = photo
-      ? `<img src="${photo}" alt="${e.name}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/>`
-      : (e.icon || '🌴');
+      ? `<img src="${photo}" alt="${name}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;cursor:${gallery.length>1?'zoom-in':'default'}" ${gallery.length>0?`onclick="openLb(${JSON.stringify(gallery)},0)"`:''}/>`
+      : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:56px">${e.icon||'🌴'}</div>`;
+    const galStrip = gallery.length > 1
+      ? `<div class="gal-strip">${gallery.map((g,gi)=>
+          `<img class="gal-th" src="${g}" loading="lazy" onclick="openLb(${JSON.stringify(gallery)},${gi})" title="Photo ${gi+1}">`
+        ).join('')}</div>`
+      : '';
+    const bookName = name.replace(/'/g,"\\'");
     return `
     <div class="exp-card">
       <div class="exp-img" style="background:${color};position:relative">
@@ -1118,14 +1163,15 @@ function renderExp(filter) {
       </div>
       <div class="exp-body">
         <div class="exp-cat">${CAT_LABELS[cat] || cat}</div>
-        <div class="exp-name">${e.name}</div>
-        <div class="exp-desc">${e.description || e.desc || ''}</div>
+        <div class="exp-name">${name}</div>
+        <div class="exp-desc">${desc}</div>
         ${e.instagram ? `<a href="${e.instagram}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ocean);margin-top:8px;margin-bottom:2px;font-weight:500;text-decoration:none">📸 @bea_titudeyoga</a>` : ''}
+        ${galStrip}
         <div class="exp-foot">
-          <div class="exp-meta"><span>⏱ ${e.duration || ''}</span></div>
-          <div class="exp-price">€${e.price}<span style="font-size:12px;color:var(--muted);font-family:var(--font-b)">/${e.unit || 'person'}</span></div>
+          <div class="exp-meta"><span>⏱ ${dur}</span></div>
+          <div class="exp-price">€${e.price}<span style="font-size:12px;color:var(--muted);font-family:var(--font-b)">${unitLbl}</span></div>
         </div>
-        <button class="btn-svc" style="margin-top:8px;width:100%" onclick="openBookingModal('${(e.name||'').replace(/'/g,"\\'")}',${e.price})">Book This →</button>
+        <button class="btn-svc" style="margin-top:8px;width:100%" onclick="openBookingModal('${bookName}',${e.price})">${T('exp_book_btn')}</button>
       </div>
     </div>`;
   }).join('');
@@ -1138,21 +1184,48 @@ function renderProperties() {
     const cardId = p._slug && p._slug.includes('studio') ? 'studioCard' : 'villaCard';
     const card = document.getElementById(cardId);
     if (!card) return;
+    // Language-aware fields
+    const name    = (lang==='fr' && p.name_fr)        ? p.name_fr        : (p.name||'');
+    const desc    = (lang==='fr' && p.description_fr) ? p.description_fr : (p.description||'');
+    const locStr  = (lang==='fr' && p.location_fr)    ? p.location_fr    : (p.location||'');
+    const badge   = (lang==='fr' && p.badge_fr)       ? p.badge_fr       : (p.badge||'');
+    const gallery = p.gallery || (p.photo ? [p.photo] : []);
     // Photo
     if (p.photo) {
       const img = card.querySelector('.acc-img img, #villaImg');
-      if (img) img.src = p.photo;
-      if (img && img.id === 'villaImg') {
-        img.setAttribute('onmouseover', `this.src='${p.photo_alt || p.photo}'`);
-        img.setAttribute('onmouseout',  `this.src='${p.photo}'`);
+      if (img) {
+        img.src = p.photo;
+        if (img.id === 'villaImg') {
+          img.setAttribute('onmouseover', `this.src='${p.photo_alt||p.photo}'`);
+          img.setAttribute('onmouseout',  `this.src='${p.photo}'`);
+        }
+        // Click cover to open lightbox if gallery exists
+        if (gallery.length > 0) {
+          img.style.cursor = 'zoom-in';
+          img.onclick = () => openLb(gallery, 0);
+        }
       }
+    }
+    // Gallery strip — inject after .acc-img if multiple photos
+    if (gallery.length > 1) {
+      let strip = card.querySelector('.acc-gallery-strip');
+      if (!strip) {
+        strip = document.createElement('div');
+        strip.className = 'acc-gallery-strip gal-strip';
+        strip.style.cssText = 'padding:6px 16px 0';
+        const accImg = card.querySelector('.acc-img');
+        if (accImg) accImg.after(strip);
+      }
+      strip.innerHTML = gallery.map((g,gi) =>
+        `<img class="gal-th" src="${g}" loading="lazy" onclick="openLb(${JSON.stringify(gallery)},${gi})">`
+      ).join('');
     }
     // Text fields
     const set = (sel, val) => { const el = card.querySelector(sel); if(el && val) el.textContent = val; };
-    set('.acc-name', p.name);
-    set('.acc-desc', p.description);
-    set('.acc-loc',  p.location ? '📍 ' + p.location : null);
-    set('.acc-badge', p.badge);
+    set('.acc-name', name);
+    set('.acc-desc', desc);
+    set('.acc-loc',  locStr ? '📍 ' + locStr : null);
+    set('.acc-badge', badge);
     // Price
     const priceEl = card.querySelector('.acc-price');
     if (priceEl && p.price) priceEl.innerHTML = '<sup>€</sup>' + p.price;
@@ -1290,9 +1363,14 @@ async function loadCMSContent() {
 }
 
 // Run on page load
-document.addEventListener('DOMContentLoaded', loadCMSContent);
-// Also run immediately (in case DOM already ready)
-if (document.readyState !== 'loading') loadCMSContent();
+document.addEventListener('DOMContentLoaded', () => {
+  loadCMSContent();
+  applyLang();
+});
+if (document.readyState !== 'loading') {
+  loadCMSContent();
+  applyLang();
+}
 
 function filterExp(btn, cat) {
   document.querySelectorAll('.exp-tab').forEach(t => t.classList.remove('active'));
@@ -1505,8 +1583,278 @@ function showToast(icon, msg) {
 // ── KEYBOARD ──────────────────────────────────
 document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
 </script>
-<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer>
 
+// ═══════════════════════════════════════════════════════════════
+// i18n — EN / FR language toggle
+// Data-driven: all translations live in the I18N object.
+// JSON content uses name_fr / description_fr etc fields.
+// ═══════════════════════════════════════════════════════════════
+let lang = localStorage.getItem('ev_lang') || 'en';
+
+const I18N = {
+  en: {
+    // Nav
+    nav_services:'Services', nav_stay:'Stay', nav_exp:'Experiences', nav_book:'Book',
+    nav_cta_outline:'Register', nav_cta_fill:'Book Now',
+    // Hero
+    hero_badge:'🌿 Mauritius · Escape the Ordinary',
+    hero_btn_primary:'Book Your Stay →', hero_btn_ghost:'Explore Services',
+    hero_stat1:'Happy Guests', hero_stat2:'Experiences', hero_stat3:'Concierge', hero_stat4:'Satisfaction',
+    // Services section
+    svc_eyebrow:'Everything in One Place',
+    svc_title:'The complete<br><em>Mauritius experience</em>',
+    svc_sub:'Every service you need for a perfect stay — handpicked, vetted and arranged for you.',
+    svc_acc_tag:'Accommodation', svc_acc_name:'Stay with Us',
+    svc_acc_desc:'Studio apartment or a private 2-bedroom villa with pool and tropical garden.',
+    svc_acc_from:'per night from', svc_acc_btn:'View Properties',
+    svc_boat_tag:'Water Activities', svc_boat_name:'Boat Excursions',
+    svc_boat_desc:'Dolphin watching, snorkelling, Île aux Cerfs day trips and sunset cruises.',
+    svc_boat_from:'per person from', svc_boat_btn:'See Excursions',
+    svc_nat_tag:'Island Exploration', svc_nat_name:'Nature & Wellness',
+    svc_nat_desc:'Hiking, yoga, Black River Gorges, Chamarel and more — curated with @bea_titudeyoga.',
+    svc_nat_from:'per person from', svc_nat_btn:'Explore Nature',
+    svc_food_tag:'Culinary', svc_food_name:'Food Discovery',
+    svc_food_desc:'Street food tours, market visits, Mauritian cooking classes and restaurant picks.',
+    svc_food_from:'per person from', svc_food_btn:'Discover Food',
+    svc_con_tag:'Concierge', svc_con_name:'Personal Concierge',
+    svc_con_desc:'Airport transfers, car rental, event tickets, SIM setup and anything else you need.',
+    svc_con_from:'per service from', svc_con_btn:'Request Service',
+    svc_safe_tag:'Safety & Care', svc_safe_name:'Healthcare & Safety',
+    svc_safe_desc:'Healthcare referrals, clinic access, emergency contacts and 24/7 WhatsApp support.',
+    svc_safe_price:'Free', svc_safe_from:'with any booking', svc_safe_btn:'Learn More',
+    // Accommodation
+    acc_eyebrow:"Where You'll Stay",
+    acc_title:'Your private<br><em>island retreat</em>',
+    acc_sub:'Two carefully curated properties in Mauritius — intimate, beautiful and fully supported.',
+    acc_btn_studio:'Book Studio →', acc_btn_villa:'Book Villa →',
+    acc_per_night:'per night',
+    // Experiences
+    exp_eyebrow:'Curated Experiences',
+    exp_title:'Discover the<br><em>real Mauritius</em>',
+    exp_sub:'Handpicked excursions led by local experts. Nature & wellness curated with @bea_titudeyoga.',
+    exp_tab_all:'All', exp_tab_boat:'⛵ Boat & Water', exp_tab_nat:'🌿 Nature', exp_tab_food:'🍛 Food',
+    exp_book_btn:'Book This →',
+    // Booking
+    book_eyebrow:'Reserve Your Stay',
+    book_title:'Book in<br><em>3 easy steps</em>',
+    // Footer
+    footer_desc:'Your one-stop concierge platform for the ultimate Mauritius experience.',
+  },
+  fr: {
+    nav_services:'Services', nav_stay:'Séjour', nav_exp:'Expériences', nav_book:'Réserver',
+    nav_cta_outline:'S\'inscrire', nav_cta_fill:'Réserver',
+    hero_badge:'🌿 Maurice · Sortez de l\'Ordinaire',
+    hero_btn_primary:'Réserver votre séjour →', hero_btn_ghost:'Explorer les services',
+    hero_stat1:'Clients satisfaits', hero_stat2:'Expériences', hero_stat3:'Concierge', hero_stat4:'Satisfaction',
+    svc_eyebrow:'Tout en un seul endroit',
+    svc_title:'L\'expérience<br><em>Maurice complète</em>',
+    svc_sub:'Chaque service pour un séjour parfait — sélectionné, vérifié et arrangé pour vous.',
+    svc_acc_tag:'Hébergement', svc_acc_name:'Séjourner',
+    svc_acc_desc:'Studio ou villa privée de 2 chambres avec piscine et jardin tropical.',
+    svc_acc_from:'par nuit à partir de', svc_acc_btn:'Voir les propriétés',
+    svc_boat_tag:'Activités nautiques', svc_boat_name:'Excursions en bateau',
+    svc_boat_desc:'Observation des dauphins, snorkeling, Île aux Cerfs et croisières au coucher du soleil.',
+    svc_boat_from:'par personne à partir de', svc_boat_btn:'Voir les excursions',
+    svc_nat_tag:'Exploration insulaire', svc_nat_name:'Nature & Bien-être',
+    svc_nat_desc:'Randonnées, yoga, Gorges de la Rivière Noire — avec @bea_titudeyoga.',
+    svc_nat_from:'par personne à partir de', svc_nat_btn:'Explorer la nature',
+    svc_food_tag:'Culinaire', svc_food_name:'Découverte gastronomique',
+    svc_food_desc:'Tours street food, marchés locaux, cours de cuisine mauricienne et restaurants.',
+    svc_food_from:'par personne à partir de', svc_food_btn:'Découvrir la cuisine',
+    svc_con_tag:'Conciergerie', svc_con_name:'Conciergerie personnelle',
+    svc_con_desc:'Transferts aéroport, location de voiture, billets d\'événements et plus encore.',
+    svc_con_from:'par service à partir de', svc_con_btn:'Demander un service',
+    svc_safe_tag:'Sécurité & Soins', svc_safe_name:'Santé & Sécurité',
+    svc_safe_desc:'Références médicales, accès aux cliniques, contacts d\'urgence et support 24h/24.',
+    svc_safe_price:'Gratuit', svc_safe_from:'avec toute réservation', svc_safe_btn:'En savoir plus',
+    acc_eyebrow:'Où vous séjournerez',
+    acc_title:'Votre retraite<br><em>insulaire privée</em>',
+    acc_sub:'Deux propriétés soigneusement sélectionnées à Maurice — intimes, belles et soutenues.',
+    acc_btn_studio:'Réserver le studio →', acc_btn_villa:'Réserver la villa →',
+    acc_per_night:'par nuit',
+    exp_eyebrow:'Expériences sélectionnées',
+    exp_title:'Découvrez la<br><em>vraie Maurice</em>',
+    exp_sub:'Excursions guidées par des experts locaux. Nature & bien-être avec @bea_titudeyoga.',
+    exp_tab_all:'Tout', exp_tab_boat:'⛵ Mer & Eau', exp_tab_nat:'🌿 Nature', exp_tab_food:'🍛 Cuisine',
+    exp_book_btn:'Réserver →',
+    book_eyebrow:'Réservez votre séjour',
+    book_title:'Réservez en<br><em>3 étapes faciles</em>',
+    footer_desc:'Votre plateforme conciergerie tout-en-un pour l\'expérience Maurice ultime.',
+  }
+};
+
+function T(k) { return I18N[lang][k] || I18N.en[k] || k; }
+
+function toggleLang() {
+  lang = lang === 'en' ? 'fr' : 'en';
+  localStorage.setItem('ev_lang', lang);
+  applyLang();
+}
+
+function applyLang() {
+  const isFr = lang === 'fr';
+  document.documentElement.lang = lang;
+
+  // Toggle button
+  document.getElementById('langFlag').textContent = isFr ? '🇫🇷' : '🇬🇧';
+  document.getElementById('langLbl').textContent  = isFr ? 'FR'   : 'EN';
+
+  // Nav links
+  const navA = document.querySelectorAll('.nav-links a');
+  const navKeys = ['nav_services','nav_stay','nav_exp','nav_book'];
+  navA.forEach((a,i) => { if(navKeys[i]) a.textContent = T(navKeys[i]); });
+  const btnOutline = document.querySelector('.btn-outline');
+  const btnFill    = document.querySelector('.btn-fill');
+  if(btnOutline) btnOutline.textContent = T('nav_cta_outline');
+  if(btnFill)    btnFill.textContent    = T('nav_cta_fill');
+
+  // Hero
+  const heroBadge = document.querySelector('.hero-badge');
+  if(heroBadge) heroBadge.textContent = T('hero_badge');
+  const heroStats = document.querySelectorAll('.hstat-lbl');
+  const statKeys = ['hero_stat1','hero_stat2','hero_stat3','hero_stat4'];
+  heroStats.forEach((el,i) => { if(statKeys[i]) el.textContent = T(statKeys[i]); });
+  const heroPri  = document.querySelector('.btn-hero-primary');
+  const heroGho  = document.querySelector('.btn-hero-ghost');
+  if(heroPri) heroPri.textContent = T('hero_btn_primary');
+  if(heroGho) heroGho.textContent = T('hero_btn_ghost');
+
+  // Services section heading
+  _setHTML('.s-eyebrow:first-of-type', T('svc_eyebrow'));
+  const sTitles = document.querySelectorAll('.s-title');
+  const sEyes   = document.querySelectorAll('.s-eyebrow');
+  // Use data-i18n attributes instead — simpler
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.dataset.i18n;
+    const v = T(k);
+    el.innerHTML = v;
+  });
+
+  // Service card tags and body text
+  _setTxt('[data-svc-tag="acc"]',       T('svc_acc_tag'));
+  _setTxt('[data-svc-name="acc"]',      T('svc_acc_name'));
+  _setTxt('[data-svc-desc="acc"]',      T('svc_acc_desc'));
+  _setTxt('[data-svc-from="acc"]',      T('svc_acc_from'));
+  _setTxt('[data-svc-btn="acc"]',       T('svc_acc_btn'));
+  _setTxt('[data-svc-tag="boat"]',      T('svc_boat_tag'));
+  _setTxt('[data-svc-name="boat"]',     T('svc_boat_name'));
+  _setTxt('[data-svc-desc="boat"]',     T('svc_boat_desc'));
+  _setTxt('[data-svc-from="boat"]',     T('svc_boat_from'));
+  _setTxt('[data-svc-btn="boat"]',      T('svc_boat_btn'));
+  _setTxt('[data-svc-tag="nat"]',       T('svc_nat_tag'));
+  _setTxt('[data-svc-name="nat"]',      T('svc_nat_name'));
+  _setTxt('[data-svc-desc="nat"]',      T('svc_nat_desc'));
+  _setTxt('[data-svc-from="nat"]',      T('svc_nat_from'));
+  _setTxt('[data-svc-btn="nat"]',       T('svc_nat_btn'));
+  _setTxt('[data-svc-tag="food"]',      T('svc_food_tag'));
+  _setTxt('[data-svc-name="food"]',     T('svc_food_name'));
+  _setTxt('[data-svc-desc="food"]',     T('svc_food_desc'));
+  _setTxt('[data-svc-from="food"]',     T('svc_food_from'));
+  _setTxt('[data-svc-btn="food"]',      T('svc_food_btn'));
+  _setTxt('[data-svc-tag="con"]',       T('svc_con_tag'));
+  _setTxt('[data-svc-name="con"]',      T('svc_con_name'));
+  _setTxt('[data-svc-desc="con"]',      T('svc_con_desc'));
+  _setTxt('[data-svc-from="con"]',      T('svc_con_from'));
+  _setTxt('[data-svc-btn="con"]',       T('svc_con_btn'));
+  _setTxt('[data-svc-tag="safe"]',      T('svc_safe_tag'));
+  _setTxt('[data-svc-name="safe"]',     T('svc_safe_name'));
+  _setTxt('[data-svc-desc="safe"]',     T('svc_safe_desc'));
+  _setTxt('[data-svc-price="safe"]',    T('svc_safe_price'));
+  _setTxt('[data-svc-from="safe"]',     T('svc_safe_from'));
+  _setTxt('[data-svc-btn="safe"]',      T('svc_safe_btn'));
+
+  // Experience tab labels
+  _setTxt('[data-tab="all"]',  T('exp_tab_all'));
+  _setTxt('[data-tab="boat"]', T('exp_tab_boat'));
+  _setTxt('[data-tab="nat"]',  T('exp_tab_nat'));
+  _setTxt('[data-tab="food"]', T('exp_tab_food'));
+
+  // Acc section booking buttons
+  const studioBtn = document.querySelector('#studioCard .btn-acc');
+  const villaBtn  = document.querySelector('#villaCard .btn-acc');
+  if(studioBtn) studioBtn.textContent = T('acc_btn_studio');
+  if(villaBtn)  villaBtn.textContent  = T('acc_btn_villa');
+  document.querySelectorAll('.acc-price-lbl').forEach(el => el.textContent = T('acc_per_night'));
+
+  // Footer desc
+  _setTxt('.footer-desc', T('footer_desc'));
+
+  // Re-render CMS content with correct language
+  if (siteProperties.length)  renderProperties();
+  if (siteExperiences.length) renderExp(document.querySelector('.exp-tab.active')?.dataset?.tab || 'all');
+}
+
+function _setTxt(sel, val) {
+  const el = document.querySelector(sel);
+  if (el) el.textContent = val;
+}
+function _setHTML(sel, val) {
+  const el = document.querySelector(sel);
+  if (el) el.innerHTML = val;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LIGHTBOX
+// ═══════════════════════════════════════════════════════════════
+let lbImgs = [], lbIdx = 0;
+
+function openLb(imgs, startIdx) {
+  lbImgs = Array.isArray(imgs) ? imgs : [imgs];
+  lbIdx  = startIdx || 0;
+  document.getElementById('lbOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  lbRender();
+  document.addEventListener('keydown', lbKey);
+}
+function closeLb() {
+  document.getElementById('lbOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.removeEventListener('keydown', lbKey);
+}
+function lbBg(e) { if (e.target.id === 'lbOverlay') closeLb(); }
+function lbKey(e) {
+  if (e.key === 'Escape')      closeLb();
+  if (e.key === 'ArrowRight')  lbGo(1);
+  if (e.key === 'ArrowLeft')   lbGo(-1);
+}
+function lbGo(dir) {
+  lbIdx = (lbIdx + dir + lbImgs.length) % lbImgs.length;
+  lbRender();
+}
+function lbRender() {
+  const src = lbImgs[lbIdx];
+  const med = document.getElementById('lbMedia');
+  const isV = /\.(mp4|mov)/i.test(src);
+  med.innerHTML = isV
+    ? `<video class="lb-media" src="${src}" controls autoplay muted loop></video>`
+    : `<img class="lb-media" src="${src}" alt="Photo ${lbIdx+1}"/>`;
+  // Dots
+  const dots = document.getElementById('lbDots');
+  dots.innerHTML = lbImgs.length > 1
+    ? lbImgs.map((_,i) => `<div class="lb-dot${i===lbIdx?' on':''}" onclick="lbIdx=${i};lbRender()"></div>`).join('')
+    : '';
+  // Counter
+  document.getElementById('lbCount').textContent = lbImgs.length > 1 ? `${lbIdx+1} / ${lbImgs.length}` : '';
+  // Nav arrows
+  const show = lbImgs.length > 1 ? 'block' : 'none';
+  document.getElementById('lbPrev').style.display = show;
+  document.getElementById('lbNext').style.display = show;
+}
+
+</script>
+
+
+
+<!-- ── LIGHTBOX ───────────────────────────────── -->
+<div class="lb-overlay" id="lbOverlay" onclick="lbBg(event)">
+  <div id="lbMedia"></div>
+  <span class="lb-close" onclick="closeLb()">✕</span>
+  <span class="lb-prev" id="lbPrev" onclick="lbGo(-1)">‹</span>
+  <span class="lb-next" id="lbNext" onclick="lbGo(1)">›</span>
+  <div class="lb-dots" id="lbDots"></div>
+  <div class="lb-count" id="lbCount"></div>
+</div>
 
 </body>
 </html>

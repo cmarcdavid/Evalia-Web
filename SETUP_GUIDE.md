@@ -1,114 +1,128 @@
-# Evalia Mauritius — Setup Guide v4
-## Getting live in 30 minutes
+# Evalia — Setup & Operations Guide
+
+## 1. First-Time Setup
+
+### Connect the Admin Panel
+
+1. Go to `evalia-web.vercel.app/admin.html`
+2. Generate a GitHub Personal Access Token:
+   - Visit [github.com/settings/tokens/new](https://github.com/settings/tokens/new)
+   - Name: "Evalia Admin" | Expiration: No expiration
+   - Scope: tick **repo** (full access)
+   - Click Generate — copy the token
+3. Paste the token in the admin Connect page
+4. The admin stores the token in your browser's localStorage. You only enter it once per browser.
 
 ---
 
-## PART 1 — Formspree Forms (10 min, free)
+## 2. Editing Content
 
-You need 3 forms. Go to **formspree.io** → sign up → create each:
+### Properties
+1. Admin → **Properties** → click **Edit**
+2. Fill in both 🇬🇧 English and 🇫🇷 French fields side-by-side
+3. Add photos and videos to the **Gallery** — click **+** to open the media picker
+4. The first gallery item becomes the cover image on the site
+5. Click **Save & Publish →** — Vercel rebuilds in ~30 seconds
 
-| Form Name | Replace in index.html |
-|-----------|----------------------|
-| Evalia Registration | `YOUR_FORMSPREE_REGISTER_ID` |
-| Evalia Booking | `YOUR_FORMSPREE_BOOKING_ID` (appears 2×) |
+### Experiences
+Same workflow as properties. Each experience also has a **Category** (boat / nature / food / concierge) which controls which filter tab it appears under.
 
-### How to find and replace:
-1. Open `index.html` in TextEdit (right-click → Open With → TextEdit)
-2. Press **Cmd+F** → search: `YOUR_FORMSPREE`
-3. Replace each one with your actual Formspree ID
-4. Save with **Cmd+S**
-
----
-
-## PART 2 — GitHub Desktop + Vercel (10 min)
-
-1. Install **GitHub Desktop** from desktop.github.com
-2. Create a new repo called `evalia`
-3. Drag all files into the repo folder
-4. Commit → Push
-5. Go to **vercel.com** → New Project → Import GitHub repo → Deploy
-
-Your site will be live at `evalia.vercel.app` (or your custom domain)
+### Settings
+Admin → **Settings** to update:
+- Business name, email, WhatsApp, social handles
+- Hero section text (bilingual — EN and FR side-by-side)
+- Hero slideshow photos (4 slides)
+- Service card photos (6 service cards)
 
 ---
 
-## PART 3 — Decap CMS (No-code admin panel — 5 min)
+## 3. Uploading Media
 
-This replaces Cloudinary entirely. You get a visual admin at `/admin`.
+Admin → **Media Library**:
 
-### A. Fix the config
-Open `admin/config.yml` and replace:
-```
-repo: YOUR_GITHUB_USERNAME/evalia
-```
-With your actual GitHub username, e.g.:
-```
-repo: christopherdavid/evalia
-```
+- Drag and drop files or click to browse
+- Multiple files upload in parallel (3 at a time)
+- Each file shows its own progress bar
+- JPG, PNG, WebP, MP4 and MOV supported — max 50 MB per file
+- After upload, files appear in the media library grid immediately
+- Use the **📷** button on any photo field to open the media picker and assign photos
 
-### B. Enable GitHub OAuth on Vercel
-1. Go to **github.com → Settings → Developer Settings → OAuth Apps → New OAuth App**
-2. Fill in:
-   - Application name: `Evalia CMS`
-   - Homepage URL: `https://evalia.vercel.app`
-   - Authorization callback URL: `https://api.netlify.com/auth/done`
-3. Copy the **Client ID** and **Client Secret**
-4. Go to **vercel.com → Project → Settings → Environment Variables**
-5. Add: `GITHUB_CLIENT_ID` = your client ID
-6. Add: `GITHUB_CLIENT_SECRET` = your client secret
+To **assign a photo to a property or experience**: open the item in Properties or Experiences, click the 📷 button next to the photo field, and select or upload from the modal.
 
-### C. Use the CMS
-1. Go to `https://evalia.vercel.app/admin`
-2. Click **Login with GitHub**
-3. You'll see a visual dashboard to:
-   - ✅ Add/edit properties with photo uploads
-   - ✅ Add/edit experiences
-   - ✅ Change site settings, hero text, phone number
-   - ✅ Everything saves automatically to GitHub → Vercel redeploys in 30 seconds
+To **assign hero or service card photos**: go to Settings and use the photo fields there.
 
 ---
 
-## PART 4 — Add Photos Without CMS (simpler option)
+## 4. Language Toggle (EN / FR)
 
-If you don't want to set up the CMS yet, just add photos directly:
+The site has a 🇬🇧/🇫🇷 flag toggle button in the navigation bar.
 
-1. Drop any `.jpg` photo into the `images/` folder in your GitHub repo
-2. In `index.html`, find the `<!-- ADD PHOTO -->` comment for each property
-3. Uncomment the `<img>` tag and set `src="images/your-photo.jpg"`
-4. Push → Vercel deploys → photo appears live
+- Visitors click it to switch between English and French
+- Their preference is saved in the browser (`localStorage`)
+- Static UI text switches immediately via the `I18N` dictionary
+- Property and experience names, descriptions, and durations switch based on the `*_fr` fields in the JSON
 
----
-
-## PART 5 — WhatsApp Number
-
-Search `23057000000` in `index.html` and replace with your real Mauritius number (no + or spaces).
+To ensure content appears correctly in French: always fill in the `*_fr` fields when editing properties and experiences in the admin panel.
 
 ---
 
-## PART 6 — Payments (when ready for live bookings)
+## 5. Gallery & Lightbox
 
-Add your Stripe keys in **Vercel → Settings → Environment Variables**:
-- `STRIPE_PUBLISHABLE_KEY` = pk_live_...
-- `STRIPE_SECRET_KEY` = sk_live_... (never in code!)
+Each property and experience supports multiple photos and videos:
 
-MyT Money and MCB Juice: the booking flow already sends requests via WhatsApp/email.
-When you integrate directly, add the API keys the same way.
-
----
-
-## Quick File Reference
-
-| File | Purpose |
-|------|---------|
-| `index.html` | Main website — edit text/prices here |
-| `admin/index.html` | CMS panel (do not edit) |
-| `admin/config.yml` | CMS structure — edit repo name here |
-| `images/` | Drop your photos here |
-| `.env.example` | Environment variable template |
-| `.gitignore` | Keeps secrets out of GitHub |
-| `ARCHITECTURE.md` | Technical documentation |
-| `PRD.md` | Product requirements |
+- Add photos via the **Gallery** section in the admin edit form
+- Videos (MP4) are supported alongside photos
+- On the website, if an item has more than one photo, a thumbnail strip appears below the cover image
+- Clicking any thumbnail opens a full-screen lightbox with:
+  - Previous / Next arrows
+  - Dot navigation
+  - Keyboard support: ← → to navigate, Esc to close
+  - Swipe support on mobile
 
 ---
 
-*Evalia Mauritius — v4 — April 2026*
+## 6. Booking Flow
+
+1. Guests select services in Step 1 of the booking wizard
+2. Fill dates, name, email, phone in Step 2
+3. Review summary in Step 3 and click **Send Booking Request**
+4. Request is submitted to Formspree (endpoint: `mdayoknj`)
+5. You receive an email; follow up via WhatsApp or email within 2 hours
+
+To view all submissions: [formspree.io/forms/mdayoknj/submissions](https://formspree.io/forms/mdayoknj/submissions)
+
+---
+
+## 7. SHA Mismatch / Write Errors
+
+If a "Save failed" error appears in admin:
+1. Click **Refresh** in the topbar
+2. Re-open the item and edit again
+3. Save again
+
+The admin always fetches a live SHA from GitHub immediately before every write, preventing conflicts.
+
+---
+
+## 8. Adding a New Property or Experience
+
+1. Admin → Properties (or Experiences) → click **+ Add**
+2. A new item opens in edit mode at the bottom of the list
+3. Fill in all fields including EN and FR text
+4. Add gallery photos
+5. Click **Save & Publish →**
+6. The manifest (`_data/manifest.json`) auto-updates so the new item appears on the live site
+
+---
+
+## 9. Contacts & Access
+
+| Resource | Value |
+|---|---|
+| Live site | https://evalia-web.vercel.app |
+| Admin panel | https://evalia-web.vercel.app/admin.html |
+| GitHub repo | https://github.com/cmarcdavid/evalia-web |
+| Formspree | https://formspree.io/forms/mdayoknj/submissions |
+| WhatsApp | +230 5724 2099 |
+| Email | hello@evalia.mu |
+| Instagram | @evalia241 |
