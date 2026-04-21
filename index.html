@@ -1309,6 +1309,38 @@ function applySettings(s) {
       a.href = 'mailto:' + s.email;
     });
   }
+
+  // ── Service card visibility (active/hidden) ───────────────────────────────
+  const svcActiveMap = {
+    acc: s.svc_accommodation_active !== false,
+    boa: s.svc_boat_active          !== false,
+    nat: s.svc_nature_active        !== false,
+    foo: s.svc_food_active          !== false,
+    con: s.svc_concierge_active     !== false,
+    saf: s.svc_safe_active          !== false,
+  };
+  const svcInnerSel = {
+    acc: '.svc-img-accommodation', boa: '.svc-img-boat',
+    nat: '#svcNatureImg',          foo: '#svcFoodImg',
+    con: '.svc-img-concierge',     saf: '.svc-img-safe',
+  };
+  Object.entries(svcActiveMap).forEach(([key, active]) => {
+    const inner = document.querySelector(svcInnerSel[key]);
+    const card  = inner && inner.closest('.svc-card');
+    if (card) card.style.display = active ? '' : 'none';
+  });
+
+  // ── Service card order ────────────────────────────────────────────────────
+  if (s.svc_order && Array.isArray(s.svc_order)) {
+    const grid = document.querySelector('.services-grid');
+    if (grid) {
+      s.svc_order.forEach(key => {
+        const inner = document.querySelector(svcInnerSel[key]);
+        const card  = inner && inner.closest('.svc-card');
+        if (card) grid.appendChild(card);
+      });
+    }
+  }
 }
 
 // Main loader — fetches _data/manifest.json first, then all content
@@ -1593,338 +1625,294 @@ document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); 
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// i18n — EN / FR bilingual toggle
-// All keys must exist in both EN and FR.
+// i18n — EN / FR bilingual toggle  (v5)
+// Uses double-quoted strings — safe for all French apostrophes & accents.
 // ═══════════════════════════════════════════════════════════════
 
-let lang = localStorage.getItem('ev_lang') || 'en';
+let lang = localStorage.getItem("ev_lang") || "en";
 
 const I18N = {
   en: {
-    // Nav
-    nav_services:'Services', nav_stay:'Stay', nav_exp:'Experiences', nav_book:'Book',
-    nav_cta_outline:'Register', nav_cta_fill:'Book Now',
-    // Hero
-    hero_badge:'🌿 Mauritius · Escape the Ordinary',
-    hero_btn_primary:'Book Your Stay →', hero_btn_ghost:'Explore Services',
-    hero_stat1:'Happy Guests', hero_stat2:'Experiences', hero_stat3:'Concierge', hero_stat4:'Satisfaction',
-    // Services
-    svc_eyebrow:'Everything in One Place',
-    svc_title:'The complete<br><em>Mauritius experience</em>',
-    svc_sub:'Every service you need for a perfect stay — handpicked, vetted and arranged for you.',
-    svc_acc_tag:'Accommodation', svc_acc_name:'Stay with Us',
-    svc_acc_desc:'Studio apartment or private 2-bedroom villa with pool and tropical garden.',
-    svc_acc_from:'per night from', svc_acc_btn:'View Properties',
-    svc_boat_tag:'Water Activities', svc_boat_name:'Boat Excursions',
-    svc_boat_desc:'Dolphin watching, snorkelling, Île aux Cerfs day trips and sunset cruises.',
-    svc_boat_from:'per person from', svc_boat_btn:'View Excursions',
-    svc_nat_tag:'Island Exploration', svc_nat_name:'Nature & Wellness',
-    svc_nat_desc:'Hiking, yoga, Black River Gorges, Chamarel and more — curated with @bea_titudeyoga.',
-    svc_nat_from:'per person from', svc_nat_btn:'Explore Nature',
-    svc_food_tag:'Culinary', svc_food_name:'Food Discovery',
-    svc_food_desc:'Street food tours, local markets, Mauritian cooking classes and restaurant picks.',
-    svc_food_from:'per person from', svc_food_btn:'Discover Food',
-    svc_con_tag:'Concierge', svc_con_name:'Personal Concierge',
-    svc_con_desc:'Airport transfers, car hire, event tickets and more — arranged for you.',
-    svc_con_from:'per service from', svc_con_btn:'Request a Service',
-    svc_safe_tag:'Safety & Care', svc_safe_name:'Health & Safety',
-    svc_safe_desc:'Medical referrals, clinic access, emergency contacts and 24/7 support.',
-    svc_safe_price:'Free', svc_safe_from:'with any booking', svc_safe_btn:'Learn More',
-    // Accommodation
+    nav_services:"Services", nav_stay:"Stay", nav_exp:"Experiences", nav_book:"Book",
+    nav_cta_outline:"Register", nav_cta_fill:"Book Now",
+    hero_badge:"🌿 Mauritius · Escape the Ordinary",
+    hero_btn_primary:"Book Your Stay →", hero_btn_ghost:"Explore Services",
+    hero_stat1:"Happy Guests", hero_stat2:"Experiences", hero_stat3:"Concierge", hero_stat4:"Satisfaction",
+    svc_eyebrow:"Everything in One Place",
+    svc_title:"The complete<br><em>Mauritius experience</em>",
+    svc_sub:"Every service you need for a perfect stay — handpicked, vetted and arranged for you.",
+    svc_acc_tag:"Accommodation", svc_acc_name:"Stay with Us",
+    svc_acc_desc:"Studio apartment or private 2-bedroom villa with pool and tropical garden.",
+    svc_acc_from:"per night from", svc_acc_btn:"View Properties",
+    svc_boat_tag:"Water Activities", svc_boat_name:"Boat Excursions",
+    svc_boat_desc:"Dolphin watching, snorkelling, Île aux Cerfs day trips and sunset cruises.",
+    svc_boat_from:"per person from", svc_boat_btn:"View Excursions",
+    svc_nat_tag:"Island Exploration", svc_nat_name:"Nature & Wellness",
+    svc_nat_desc:"Hiking, yoga, Black River Gorges, Chamarel and more — curated with @bea_titudeyoga.",
+    svc_nat_from:"per person from", svc_nat_btn:"Explore Nature",
+    svc_food_tag:"Culinary", svc_food_name:"Food Discovery",
+    svc_food_desc:"Street food tours, local markets, Mauritian cooking classes and restaurant picks.",
+    svc_food_from:"per person from", svc_food_btn:"Discover Food",
+    svc_con_tag:"Concierge", svc_con_name:"Personal Concierge",
+    svc_con_desc:"Airport transfers, car hire, event tickets and more — arranged for you.",
+    svc_con_from:"per service from", svc_con_btn:"Request a Service",
+    svc_safe_tag:"Safety & Care", svc_safe_name:"Health & Safety",
+    svc_safe_desc:"Medical referrals, clinic access, emergency contacts and 24/7 support.",
+    svc_safe_price:"Free", svc_safe_from:"with any booking", svc_safe_btn:"Learn More",
     acc_eyebrow:"Where You'll Stay",
-    acc_title:'Your private<br><em>island retreat</em>',
-    acc_sub:'Two carefully curated properties in Mauritius — intimate, beautiful and fully supported by your personal concierge.',
-    acc_btn_studio:'Book Studio →', acc_btn_villa:'Book Villa →',
-    acc_per_night:'per night',
-    // Experiences
-    exp_eyebrow:'Curated Experiences',
-    exp_title:'Discover the<br><em>real Mauritius</em>',
-    exp_sub:'Handpicked excursions led by local experts. Nature & wellness curated with @bea_titudeyoga.',
-    exp_tab_all:'All', exp_tab_boat:'⛵ Boat & Water', exp_tab_nat:'🌿 Nature', exp_tab_food:'🍛 Food',
-    exp_book_btn:'Book This →',
-    // Register
-    reg_eyebrow:'Guest Registration',
-    reg_title:'Start your<br><em>Mauritius journey</em>',
-    reg_sub:'Register once, book everything. Your profile saves your details so every booking takes seconds.',
-    reg_b1_title:'Instant Booking', reg_b1_desc:'Your details are saved — book any service in under 60 seconds.',
-    reg_b2_title:'Dedicated Concierge', reg_b2_desc:'From the moment you register, you have a personal WhatsApp contact.',
-    reg_b3_title:'Safety First', reg_b3_desc:'Your emergency contact and healthcare preferences are always on file.',
-    reg_b4_title:'Your Itinerary', reg_b4_desc:'All your bookings in one place — a day-by-day plan emailed to you.',
-    reg_form_title:'Create Your Profile',
-    reg_fname:'First Name', reg_lname:'Last Name', reg_email:'Email Address',
-    reg_phone:'Phone / WhatsApp', reg_nationality:'Nationality', reg_party:'Party Size',
-    reg_arrival:'Arrival Date', reg_departure:'Departure Date', reg_special:'Special Requirements',
-    reg_btn:'Create My Profile →',
-    reg_privacy:'🔒 Your data is private and secure. We never share your details.',
-    // Booking wizard
-    book_eyebrow:'Reserve Your Experience',
-    book_title:'Book in<br><em>3 easy steps</em>',
-    book_step1:'Choose Services', book_step2:'Dates & Details', book_step3:'Confirm & Send',
-    book_next1:'Next: Dates & Details →', book_next2:'Next: Review & Confirm →',
-    // Payment
-    pay_eyebrow:'Secure Payments',
-    pay_title:'Pay your way,<br><em>local or global</em>',
-    pay_tab_card:'Credit / Debit Card', pay_tab_wallet:'Digital Wallet',
-    pay_tab_local:'MU Local', pay_tab_cash:'Cash + Deposit',
-    pay_btn:'Complete Payment →',
-    pay_secure:'🔒 256-bit SSL · PCI DSS Compliant · Your card is never stored',
-    pay_summary_title:'Order Summary',
-    // Testimonials
-    testi_eyebrow:'Guest Stories',
-    testi_title:'What our guests <em>say</em>',
-    // Concierge strip
-    cs_title:'Need something right now? 🌴',
-    cs_sub:'Our concierge team is available 24/7 on WhatsApp. From restaurant reservations to last-minute transfers — we make it happen.',
-    cs_btn:'💬 Chat on WhatsApp',
-    // Footer
-    footer_desc:'Your one-stop concierge platform for the ultimate Mauritius experience. Accommodation, excursions, food discovery and 24/7 support — all in one place.',
-    footer_col1_title:'Services', footer_col2_title:'Plan Your Trip', footer_col3_title:'Support',
-    footer_acc:'Accommodation', footer_boat:'Boat Excursions', footer_nature:'Nature Tours',
-    footer_food:'Food Discovery', footer_concierge:'Concierge',
-    footer_register:'Register', footer_book:'Book Now', footer_payments:'Payments', footer_reviews:'Reviews',
-    footer_wa:'WhatsApp 24/7', footer_cancel:'Cancellation Policy',
-    footer_privacy:'Privacy Policy', footer_emergency:'Emergency Contacts 🆘',
-    footer_copy:'© 2025 Evalia Mauritius. All rights reserved.',
-    footer_made:'🏝️ Made with love for the Island of Mauritius',
+    acc_title:"Your private<br><em>island retreat</em>",
+    acc_sub:"Two carefully curated properties in Mauritius — intimate, beautiful and fully supported by your personal concierge.",
+    acc_btn_studio:"Book Studio →", acc_btn_villa:"Book Villa →",
+    acc_per_night:"per night",
+    exp_eyebrow:"Curated Experiences",
+    exp_title:"Discover the<br><em>real Mauritius</em>",
+    exp_sub:"Handpicked excursions led by local experts. Nature & wellness curated with @bea_titudeyoga.",
+    exp_tab_all:"All", exp_tab_boat:"⛵ Boat & Water", exp_tab_nat:"🌿 Nature", exp_tab_food:"🍛 Food",
+    exp_book_btn:"Book This →",
+    reg_eyebrow:"Guest Registration",
+    reg_title:"Start your<br><em>Mauritius journey</em>",
+    reg_sub:"Register once, book everything. Your profile saves your details so every booking takes seconds.",
+    reg_b1_title:"Instant Booking", reg_b1_desc:"Your details are saved — book any service in under 60 seconds.",
+    reg_b2_title:"Dedicated Concierge", reg_b2_desc:"From the moment you register, you have a personal WhatsApp contact.",
+    reg_b3_title:"Safety First", reg_b3_desc:"Your emergency contact and healthcare preferences are always on file.",
+    reg_b4_title:"Your Itinerary", reg_b4_desc:"All your bookings in one place — a day-by-day plan emailed to you.",
+    reg_form_title:"Create Your Profile",
+    reg_fname:"First Name", reg_lname:"Last Name", reg_email:"Email Address",
+    reg_phone:"Phone / WhatsApp", reg_nationality:"Nationality", reg_party:"Party Size",
+    reg_arrival:"Arrival Date", reg_departure:"Departure Date", reg_special:"Special Requirements",
+    reg_btn:"Create My Profile →",
+    reg_privacy:"🔒 Your data is private and secure. We never share your details.",
+    book_eyebrow:"Reserve Your Experience",
+    book_title:"Book in<br><em>3 easy steps</em>",
+    book_step1:"Choose Services", book_step2:"Dates & Details", book_step3:"Confirm & Send",
+    book_next1:"Next: Dates & Details →", book_next2:"Next: Review & Confirm →",
+    pay_eyebrow:"Secure Payments",
+    pay_title:"Pay your way,<br><em>local or global</em>",
+    pay_tab_card:"Credit / Debit Card", pay_tab_wallet:"Digital Wallet",
+    pay_tab_local:"MU Local", pay_tab_cash:"Cash + Deposit",
+    pay_btn:"Complete Payment →",
+    pay_secure:"🔒 256-bit SSL · PCI DSS Compliant · Your card is never stored",
+    pay_summary_title:"Order Summary",
+    testi_eyebrow:"Guest Stories",
+    testi_title:"What our guests <em>say</em>",
+    cs_title:"Need something right now? 🌴",
+    cs_sub:"Our concierge team is available 24/7 on WhatsApp. From restaurant reservations to last-minute transfers — we make it happen.",
+    cs_btn:"💬 Chat on WhatsApp",
+    footer_desc:"Your one-stop concierge platform for the ultimate Mauritius experience. Accommodation, excursions, food discovery and 24/7 support — all in one place.",
+    footer_col1_title:"Services", footer_col2_title:"Plan Your Trip", footer_col3_title:"Support",
+    footer_acc:"Accommodation", footer_boat:"Boat Excursions", footer_nature:"Nature Tours",
+    footer_food:"Food Discovery", footer_concierge:"Concierge",
+    footer_register:"Register", footer_book:"Book Now", footer_payments:"Payments", footer_reviews:"Reviews",
+    footer_wa:"WhatsApp 24/7", footer_cancel:"Cancellation Policy",
+    footer_privacy:"Privacy Policy", footer_emergency:"Emergency Contacts 🆘",
+    footer_copy:"© 2025 Evalia Mauritius. All rights reserved.",
+    footer_made:"🏝️ Made with love for the Island of Mauritius",
   },
   fr: {
-    // Nav
-    nav_services:'Services', nav_stay:'Séjour', nav_exp:'Expériences', nav_book:'Réserver',
-    nav_cta_outline:'S'inscrire', nav_cta_fill:'Réserver',
-    // Hero
-    hero_badge:'🌿 Maurice · Sortez de l'Ordinaire',
-    hero_btn_primary:'Réserver votre séjour →', hero_btn_ghost:'Explorer les services',
-    hero_stat1:'Clients satisfaits', hero_stat2:'Expériences', hero_stat3:'Conciergerie', hero_stat4:'Satisfaction',
-    // Services
-    svc_eyebrow:'Tout en un seul endroit',
-    svc_title:'L'expérience<br><em>Maurice complète</em>',
-    svc_sub:'Chaque service pour un séjour parfait — sélectionné, vérifié et arrangé pour vous.',
-    svc_acc_tag:'Hébergement', svc_acc_name:'Séjourner chez nous',
-    svc_acc_desc:'Studio ou villa privée de 2 chambres avec piscine et jardin tropical.',
-    svc_acc_from:'par nuit à partir de', svc_acc_btn:'Voir les propriétés',
-    svc_boat_tag:'Activités nautiques', svc_boat_name:'Excursions en mer',
-    svc_boat_desc:'Observation des dauphins, snorkeling, Île aux Cerfs et croisières au coucher du soleil.',
-    svc_boat_from:'par personne à partir de', svc_boat_btn:'Voir les excursions',
-    svc_nat_tag:'Exploration de l'île', svc_nat_name:'Nature & Bien-être',
-    svc_nat_desc:'Randonnées, yoga, Gorges de la Rivière Noire — avec @bea_titudeyoga.',
-    svc_nat_from:'par personne à partir de', svc_nat_btn:'Explorer la nature',
-    svc_food_tag:'Gastronomie', svc_food_name:'Découverte culinaire',
-    svc_food_desc:'Tours street food, marchés locaux, cours de cuisine mauricienne et restaurants.',
-    svc_food_from:'par personne à partir de', svc_food_btn:'Découvrir la cuisine',
-    svc_con_tag:'Conciergerie', svc_con_name:'Conciergerie personnelle',
-    svc_con_desc:'Transferts aéroport, location de voiture, billets d'événements et bien plus.',
-    svc_con_from:'par service à partir de', svc_con_btn:'Demander un service',
-    svc_safe_tag:'Sécurité & Soins', svc_safe_name:'Santé & Sécurité',
-    svc_safe_desc:'Références médicales, accès aux cliniques, contacts d'urgence et assistance 24h/24.',
-    svc_safe_price:'Gratuit', svc_safe_from:'avec toute réservation', svc_safe_btn:'En savoir plus',
-    // Accommodation
-    acc_eyebrow:'Où vous séjournerez',
-    acc_title:'Votre retraite<br><em>insulaire privée</em>',
-    acc_sub:'Deux propriétés soigneusement sélectionnées à Maurice — intimes, belles et entièrement soutenues par votre concierge personnel.',
-    acc_btn_studio:'Réserver le studio →', acc_btn_villa:'Réserver la villa →',
-    acc_per_night:'par nuit',
-    // Experiences
-    exp_eyebrow:'Expériences sélectionnées',
-    exp_title:'Découvrez la<br><em>vraie Maurice</em>',
-    exp_sub:'Excursions guidées par des experts locaux. Nature & bien-être avec @bea_titudeyoga.',
-    exp_tab_all:'Tout', exp_tab_boat:'⛵ Mer & Eau', exp_tab_nat:'🌿 Nature', exp_tab_food:'🍛 Cuisine',
-    exp_book_btn:'Réserver →',
-    // Register
-    reg_eyebrow:'Inscription des hôtes',
-    reg_title:'Commencez votre<br><em>aventure mauricienne</em>',
-    reg_sub:'Inscrivez-vous une fois, réservez tout. Votre profil sauvegarde vos coordonnées pour des réservations en quelques secondes.',
-    reg_b1_title:'Réservation instantanée', reg_b1_desc:'Vos coordonnées sont sauvegardées — réservez n'importe quel service en moins de 60 secondes.',
-    reg_b2_title:'Conciergerie dédiée', reg_b2_desc:'Dès votre inscription, vous disposez d'un contact WhatsApp personnel.',
-    reg_b3_title:'La sécurité avant tout', reg_b3_desc:'Votre contact d'urgence et vos préférences médicales sont toujours enregistrés.',
-    reg_b4_title:'Votre itinéraire', reg_b4_desc:'Toutes vos réservations en un seul endroit — un plan jour par jour envoyé par e-mail.',
-    reg_form_title:'Créer votre profil',
-    reg_fname:'Prénom', reg_lname:'Nom de famille', reg_email:'Adresse e-mail',
-    reg_phone:'Téléphone / WhatsApp', reg_nationality:'Nationalité', reg_party:'Taille du groupe',
-    reg_arrival:'Date d'arrivée', reg_departure:'Date de départ', reg_special:'Besoins particuliers',
-    reg_btn:'Créer mon profil →',
-    reg_privacy:'🔒 Vos données sont privées et sécurisées. Nous ne partageons jamais vos informations.',
-    // Booking wizard
-    book_eyebrow:'Réservez votre expérience',
-    book_title:'Réservez en<br><em>3 étapes faciles</em>',
-    book_step1:'Choisir les services', book_step2:'Dates & détails', book_step3:'Confirmer & envoyer',
-    book_next1:'Suivant : Dates & détails →', book_next2:'Suivant : Vérifier & confirmer →',
-    // Payment
-    pay_eyebrow:'Paiements sécurisés',
-    pay_title:'Payez à votre façon,<br><em>local ou mondial</em>',
-    pay_tab_card:'Carte bancaire', pay_tab_wallet:'Portefeuille numérique',
-    pay_tab_local:'Local MU', pay_tab_cash:'Espèces + Dépôt',
-    pay_btn:'Finaliser le paiement →',
-    pay_secure:'🔒 SSL 256 bits · Conforme PCI DSS · Votre carte n'est jamais stockée',
-    pay_summary_title:'Récapitulatif de commande',
-    // Testimonials
-    testi_eyebrow:'Témoignages de nos hôtes',
-    testi_title:'Ce que disent<br><em>nos hôtes</em>',
-    // Concierge strip
-    cs_title:'Besoin de quelque chose maintenant ? 🌴',
-    cs_sub:'Notre équipe de conciergerie est disponible 24h/24 sur WhatsApp. Des réservations au restaurant aux transferts de dernière minute — nous nous en occupons.',
-    cs_btn:'💬 Discuter sur WhatsApp',
-    // Footer
-    footer_desc:'Votre plateforme conciergerie tout-en-un pour l'expérience Maurice ultime. Hébergement, excursions, découverte gastronomique et assistance 24h/24 — tout en un.',
-    footer_col1_title:'Services', footer_col2_title:'Planifier votre voyage', footer_col3_title:'Assistance',
-    footer_acc:'Hébergement', footer_boat:'Excursions en mer', footer_nature:'Tours nature',
-    footer_food:'Découverte culinaire', footer_concierge:'Conciergerie',
-    footer_register:'S'inscrire', footer_book:'Réserver maintenant', footer_payments:'Paiements', footer_reviews:'Avis',
-    footer_wa:'WhatsApp 24h/24', footer_cancel:'Politique d'annulation',
-    footer_privacy:'Politique de confidentialité', footer_emergency:'Contacts d'urgence 🆘',
-    footer_copy:'© 2025 Evalia Mauritius. Tous droits réservés.',
-    footer_made:'🏝️ Fait avec amour pour l'île Maurice',
+    nav_services:"Services", nav_stay:"Séjour", nav_exp:"Expériences", nav_book:"Réserver",
+    nav_cta_outline:"S\'inscrire", nav_cta_fill:"Réserver",
+    hero_badge:"🌿 Maurice · Sortez de l\'Ordinaire",
+    hero_btn_primary:"Réserver votre séjour →", hero_btn_ghost:"Explorer les services",
+    hero_stat1:"Clients satisfaits", hero_stat2:"Expériences", hero_stat3:"Conciergerie", hero_stat4:"Satisfaction",
+    svc_eyebrow:"Tout en un seul endroit",
+    svc_title:"L\'expérience<br><em>Maurice complète</em>",
+    svc_sub:"Chaque service pour un séjour parfait — sélectionné, vérifié et arrangé pour vous.",
+    svc_acc_tag:"Hébergement", svc_acc_name:"Séjourner chez nous",
+    svc_acc_desc:"Studio ou villa privée de 2 chambres avec piscine et jardin tropical.",
+    svc_acc_from:"par nuit à partir de", svc_acc_btn:"Voir les propriétés",
+    svc_boat_tag:"Activités nautiques", svc_boat_name:"Excursions en mer",
+    svc_boat_desc:"Observation des dauphins, snorkeling, Île aux Cerfs et croisières au coucher du soleil.",
+    svc_boat_from:"par personne à partir de", svc_boat_btn:"Voir les excursions",
+    svc_nat_tag:"Exploration de l\'île", svc_nat_name:"Nature & Bien-être",
+    svc_nat_desc:"Randonnées, yoga, Gorges de la Rivière Noire — avec @bea_titudeyoga.",
+    svc_nat_from:"par personne à partir de", svc_nat_btn:"Explorer la nature",
+    svc_food_tag:"Gastronomie", svc_food_name:"Découverte culinaire",
+    svc_food_desc:"Tours street food, marchés locaux, cours de cuisine mauricienne et restaurants.",
+    svc_food_from:"par personne à partir de", svc_food_btn:"Découvrir la cuisine",
+    svc_con_tag:"Conciergerie", svc_con_name:"Conciergerie personnelle",
+    svc_con_desc:"Transferts aéroport, location de voiture, billets d\'événements et bien plus.",
+    svc_con_from:"par service à partir de", svc_con_btn:"Demander un service",
+    svc_safe_tag:"Sécurité & Soins", svc_safe_name:"Santé & Sécurité",
+    svc_safe_desc:"Références médicales, accès aux cliniques, contacts d\'urgence et assistance 24h/24.",
+    svc_safe_price:"Gratuit", svc_safe_from:"avec toute réservation", svc_safe_btn:"En savoir plus",
+    acc_eyebrow:"Où vous séjournerez",
+    acc_title:"Votre retraite<br><em>insulaire privée</em>",
+    acc_sub:"Deux propriétés soigneusement sélectionnées à Maurice — intimes, belles et entièrement soutenues par votre concierge personnel.",
+    acc_btn_studio:"Réserver le studio →", acc_btn_villa:"Réserver la villa →",
+    acc_per_night:"par nuit",
+    exp_eyebrow:"Expériences sélectionnées",
+    exp_title:"Découvrez la<br><em>vraie Maurice</em>",
+    exp_sub:"Excursions guidées par des experts locaux. Nature & bien-être avec @bea_titudeyoga.",
+    exp_tab_all:"Tout", exp_tab_boat:"⛵ Mer & Eau", exp_tab_nat:"🌿 Nature", exp_tab_food:"🍛 Cuisine",
+    exp_book_btn:"Réserver →",
+    reg_eyebrow:"Inscription des hôtes",
+    reg_title:"Commencez votre<br><em>aventure mauricienne</em>",
+    reg_sub:"Inscrivez-vous une fois, réservez tout. Votre profil sauvegarde vos coordonnées.",
+    reg_b1_title:"Réservation instantanée", reg_b1_desc:"Vos coordonnées sont sauvegardées — réservez en moins de 60 secondes.",
+    reg_b2_title:"Conciergerie dédiée", reg_b2_desc:"Dès votre inscription, vous avez un contact WhatsApp personnel.",
+    reg_b3_title:"La sécurité avant tout", reg_b3_desc:"Votre contact d\'urgence et préférences médicales sont toujours enregistrés.",
+    reg_b4_title:"Votre itinéraire", reg_b4_desc:"Toutes vos réservations en un seul endroit — plan jour par jour par e-mail.",
+    reg_form_title:"Créer votre profil",
+    reg_fname:"Prénom", reg_lname:"Nom de famille", reg_email:"Adresse e-mail",
+    reg_phone:"Téléphone / WhatsApp", reg_nationality:"Nationalité", reg_party:"Taille du groupe",
+    reg_arrival:"Date d\'arrivée", reg_departure:"Date de départ", reg_special:"Besoins particuliers",
+    reg_btn:"Créer mon profil →",
+    reg_privacy:"🔒 Vos données sont privées et sécurisées. Nous ne partageons jamais vos informations.",
+    book_eyebrow:"Réservez votre expérience",
+    book_title:"Réservez en<br><em>3 étapes faciles</em>",
+    book_step1:"Choisir les services", book_step2:"Dates & détails", book_step3:"Confirmer & envoyer",
+    book_next1:"Suivant : Dates & détails →", book_next2:"Suivant : Vérifier & confirmer →",
+    pay_eyebrow:"Paiements sécurisés",
+    pay_title:"Payez à votre façon,<br><em>local ou mondial</em>",
+    pay_tab_card:"Carte bancaire", pay_tab_wallet:"Portefeuille numérique",
+    pay_tab_local:"Local MU", pay_tab_cash:"Espèces + Dépôt",
+    pay_btn:"Finaliser le paiement →",
+    pay_secure:"🔒 SSL 256 bits · Conforme PCI DSS · Votre carte n\'est jamais stockée",
+    pay_summary_title:"Récapitulatif de commande",
+    testi_eyebrow:"Témoignages de nos hôtes",
+    testi_title:"Ce que disent<br><em>nos hôtes</em>",
+    cs_title:"Besoin de quelque chose maintenant ? 🌴",
+    cs_sub:"Notre équipe de conciergerie est disponible 24h/24 sur WhatsApp. Des réservations aux transferts — nous nous en occupons.",
+    cs_btn:"💬 Discuter sur WhatsApp",
+    footer_desc:"Votre plateforme conciergerie tout-en-un pour l\'expérience Maurice ultime. Hébergement, excursions, découverte gastronomique et assistance 24h/24 — tout en un.",
+    footer_col1_title:"Services", footer_col2_title:"Planifier votre voyage", footer_col3_title:"Assistance",
+    footer_acc:"Hébergement", footer_boat:"Excursions en mer", footer_nature:"Tours nature",
+    footer_food:"Découverte culinaire", footer_concierge:"Conciergerie",
+    footer_register:"S\'inscrire", footer_book:"Réserver maintenant", footer_payments:"Paiements", footer_reviews:"Avis",
+    footer_wa:"WhatsApp 24h/24", footer_cancel:"Politique d\'annulation",
+    footer_privacy:"Politique de confidentialité", footer_emergency:"Contacts d\'urgence 🆘",
+    footer_copy:"© 2025 Evalia Mauritius. Tous droits réservés.",
+    footer_made:"🏝️ Fait avec amour pour l\'île Maurice",
   }
 };
 
 function T(k) { return (I18N[lang] && I18N[lang][k]) ? I18N[lang][k] : (I18N.en[k] || k); }
 
 function toggleLang() {
-  lang = lang === 'en' ? 'fr' : 'en';
-  localStorage.setItem('ev_lang', lang);
+  lang = (lang === "en") ? "fr" : "en";
+  localStorage.setItem("ev_lang", lang);
   applyLang();
 }
 
 function applyLang() {
-  const isFr = lang === 'fr';
+  const isFr = (lang === "fr");
   document.documentElement.lang = lang;
 
-  // ── Toggle button ───────────────────────────────────────────
-  const flag = document.getElementById('langFlag');
-  const lbl  = document.getElementById('langLbl');
-  if (flag) flag.textContent = isFr ? '🇫🇷' : '🇬🇧';
-  if (lbl)  lbl.textContent  = isFr ? 'FR'   : 'EN';
+  const flag = document.getElementById("langFlag");
+  const lbl  = document.getElementById("langLbl");
+  if (flag) flag.textContent = isFr ? "🇫🇷" : "🇬🇧";
+  if (lbl)  lbl.textContent  = isFr ? "FR"   : "EN";
 
-  // ── Nav links ───────────────────────────────────────────────
-  const navLinks = document.querySelectorAll('.nav-links a');
-  ['nav_services','nav_stay','nav_exp','nav_book'].forEach((k,i) => {
+  // Nav
+  const navLinks = document.querySelectorAll(".nav-links a");
+  ["nav_services","nav_stay","nav_exp","nav_book"].forEach((k,i) => {
     if (navLinks[i]) navLinks[i].textContent = T(k);
   });
-  const btnOutline = document.querySelector('.btn-outline');
-  const btnFill    = document.querySelector('.btn-fill');
-  if (btnOutline) btnOutline.textContent = T('nav_cta_outline');
-  if (btnFill)    btnFill.textContent    = T('nav_cta_fill');
+  const btnO = document.querySelector(".btn-outline");
+  const btnF = document.querySelector(".btn-fill");
+  if (btnO) btnO.textContent = T("nav_cta_outline");
+  if (btnF) btnF.textContent = T("nav_cta_fill");
 
-  // ── Hero ────────────────────────────────────────────────────
-  const heroBadge = document.querySelector('.hero-badge');
-  if (heroBadge) heroBadge.textContent = T('hero_badge');
-  document.querySelectorAll('.hstat-lbl').forEach((el,i) => {
-    el.textContent = T(['hero_stat1','hero_stat2','hero_stat3','hero_stat4'][i] || '');
-  });
-  const heroPri = document.querySelector('.btn-hero-primary');
-  const heroGho = document.querySelector('.btn-hero-ghost');
-  if (heroPri) heroPri.textContent = T('hero_btn_primary');
-  if (heroGho) heroGho.textContent = T('hero_btn_ghost');
+  // Hero
+  const badge = document.querySelector(".hero-badge");
+  if (badge) badge.textContent = T("hero_badge");
+  document.querySelectorAll(".hstat-lbl").forEach((el,i) =>
+    { el.textContent = T(["hero_stat1","hero_stat2","hero_stat3","hero_stat4"][i]||""); }
+  );
+  const hp = document.querySelector(".btn-hero-primary");
+  const hg = document.querySelector(".btn-hero-ghost");
+  if (hp) hp.textContent = T("hero_btn_primary");
+  if (hg) hg.textContent = T("hero_btn_ghost");
 
-  // ── All data-i18n elements ──────────────────────────────────
-  // innerHTML for elements that may contain <em> or <a> tags
-  const HTML_KEYS = new Set([
-    'svc_title','acc_title','exp_title','reg_title','book_title','pay_title','testi_title',
-    'exp_sub'
-  ]);
-  document.querySelectorAll('[data-i18n]').forEach(el => {
+  // data-i18n elements (innerHTML for those with HTML tags)
+  const HTML_KEYS = new Set(["svc_title","acc_title","exp_title","reg_title",
+    "book_title","pay_title","testi_title","exp_sub"]);
+  document.querySelectorAll("[data-i18n]").forEach(el => {
     const k = el.dataset.i18n;
     const v = T(k);
-    if (HTML_KEYS.has(k)) { el.innerHTML = v; }
-    else { el.textContent = v; }
+    HTML_KEYS.has(k) ? (el.innerHTML = v) : (el.textContent = v);
   });
 
-  // ── Service card descriptions (special: nat has a link in EN) ─
-  (function() {
-    const el = document.querySelector('[data-svc-desc="nat"]');
-    if (!el) return;
-    if (isFr) {
-      el.innerHTML = T('svc_nat_desc') + ' — avec <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.';
-    } else {
-      el.innerHTML = 'Hiking, yoga in nature, Black River Gorges, Chamarel and more — curated with local wellness expert <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.';
+  // Service card text
+  ["acc","boat","food","con","safe"].forEach(s => {
+    const q = (a) => document.querySelector(`[data-svc-${a}="${s}"]`);
+    const set = (a, k) => { const el = q(a); if (el) el.textContent = T(k); };
+    set("tag", `svc_${s}_tag`); set("name", `svc_${s}_name`);
+    set("desc", `svc_${s}_desc`); set("from", `svc_${s}_from`);
+    set("btn",  `svc_${s}_btn`);
+    if (s === "safe") {
+      const pe = document.querySelector("[data-svc-price="safe"]");
+      if (pe) pe.textContent = T("svc_safe_price");
     }
+  });
+  // Nature card has an embedded link — use innerHTML
+  (function(){
+    const el = document.querySelector("[data-svc-desc="nat"]");
+    if (!el) return;
+    el.innerHTML = isFr
+      ? T("svc_nat_desc") + " — avec <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>."
+      : "Hiking, yoga in nature, Black River Gorges, Chamarel and more — curated with local wellness expert <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.";
   })();
 
-  // ── Service card other text ─────────────────────────────────
-  const svcKeys = ['acc','boat','nat','food','con','safe'];
-  svcKeys.forEach(s => {
-    const set = (attr, key) => {
-      const el = document.querySelector(`[data-svc-${attr}="${s}"]`);
-      if (el) el.textContent = T(key);
-    };
-    set('tag',  `svc_${s}_tag`);
-    set('name', `svc_${s}_name`);
-    if (s !== 'nat') set('desc', `svc_${s}_desc`); // nat handled above
-    set('from', `svc_${s}_from`);
-    set('btn',  `svc_${s}_btn`);
-    if (s === 'safe') {
-      const priceEl = document.querySelector(`[data-svc-price="safe"]`);
-      if (priceEl) priceEl.textContent = T('svc_safe_price');
-    }
+  // Exp tabs
+  const tabMap = {all:"exp_tab_all", boat:"exp_tab_boat", nat:"exp_tab_nat", food:"exp_tab_food"};
+  document.querySelectorAll(".exp-tab").forEach(btn => {
+    const t = btn.dataset.tab;
+    if (tabMap[t]) btn.textContent = T(tabMap[t]);
   });
 
-  // ── Acc section booking buttons ─────────────────────────────
-  const studioBtn = document.querySelector('#studioCard .btn-acc');
-  const villaBtn  = document.querySelector('#villaCard  .btn-acc');
-  if (studioBtn) studioBtn.textContent = T('acc_btn_studio');
-  if (villaBtn)  villaBtn.textContent  = T('acc_btn_villa');
-  document.querySelectorAll('.acc-price-lbl').forEach(el => el.textContent = T('acc_per_night'));
+  // Acc buttons
+  const sb = document.querySelector("#studioCard .btn-acc");
+  const vb = document.querySelector("#villaCard .btn-acc");
+  if (sb) sb.textContent = T("acc_btn_studio");
+  if (vb) vb.textContent = T("acc_btn_villa");
+  document.querySelectorAll(".acc-price-lbl").forEach(el => el.textContent = T("acc_per_night"));
 
-  // ── Experience tabs ─────────────────────────────────────────
-  const tabMap = {all:'exp_tab_all', boat:'exp_tab_boat', nat:'exp_tab_nat', food:'exp_tab_food'};
-  document.querySelectorAll('.exp-tab').forEach(btn => {
-    const tab = btn.dataset.tab;
-    if (tabMap[tab]) btn.textContent = T(tabMap[tab]);
-  });
-
-  // ── Re-render CMS content in correct language ───────────────
+  // Re-render CMS content in new language
   if (siteProperties.length)  renderProperties();
   if (siteExperiences.length) {
-    const activeTab = document.querySelector('.exp-tab.active');
-    renderExp(activeTab ? (activeTab.dataset.tab === 'nat' ? 'nature' : activeTab.dataset.tab) : 'all');
+    const at = document.querySelector(".exp-tab.active");
+    const cat = at ? at.dataset.tab : "all";
+    renderExp(cat === "nat" ? "nature" : cat);
   }
 }
 
-function _setTxt(sel, val) {
-  const el = document.querySelector(sel);
-  if (el) el.textContent = val;
-}
-function _setHTML(sel, val) {
-  const el = document.querySelector(sel);
-  if (el) el.innerHTML = val;
-}
-
-// ── LIGHTBOX ───────────────────────────────────────────────────────────────
+// ── LIGHTBOX ──────────────────────────────────────────────────────────────
 let lbImgs = [], lbIdx = 0;
-
 function openLb(imgs, idx) {
   lbImgs = imgs; lbIdx = idx;
-  const ov = document.getElementById('lbOverlay');
-  const img = document.getElementById('lbImg');
+  const ov = document.getElementById("lbOverlay");
+  const img = document.getElementById("lbImg");
   if (!ov || !img) return;
   img.src = lbImgs[lbIdx];
-  ov.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  ov.classList.add("open");
+  document.body.style.overflow = "hidden";
   updateLbNav();
 }
 function closeLb() {
-  const ov = document.getElementById('lbOverlay');
-  if (ov) ov.classList.remove('open');
-  document.body.style.overflow = '';
+  const ov = document.getElementById("lbOverlay");
+  if (ov) ov.classList.remove("open");
+  document.body.style.overflow = "";
 }
 function lbMove(dir) {
   lbIdx = (lbIdx + dir + lbImgs.length) % lbImgs.length;
-  const img = document.getElementById('lbImg');
+  const img = document.getElementById("lbImg");
   if (img) img.src = lbImgs[lbIdx];
   updateLbNav();
 }
 function updateLbNav() {
   const show = lbImgs.length > 1;
-  const prev = document.getElementById('lbPrev');
-  const next = document.getElementById('lbNext');
-  if (prev) prev.style.display = show ? 'flex' : 'none';
-  if (next) next.style.display = show ? 'flex' : 'none';
+  const p = document.getElementById("lbPrev");
+  const n = document.getElementById("lbNext");
+  if (p) p.style.display = show ? "flex" : "none";
+  if (n) n.style.display = show ? "flex" : "none";
 }
-document.addEventListener('keydown', e => {
-  const ov = document.getElementById('lbOverlay');
-  if (!ov || !ov.classList.contains('open')) return;
-  if (e.key === 'ArrowLeft')  lbMove(-1);
-  if (e.key === 'ArrowRight') lbMove(1);
-  if (e.key === 'Escape') closeLb();
+document.addEventListener("keydown", e => {
+  const ov = document.getElementById("lbOverlay");
+  if (!ov || !ov.classList.contains("open")) return;
+  if (e.key === "ArrowLeft")  lbMove(-1);
+  if (e.key === "ArrowRight") lbMove(1);
+  if (e.key === "Escape") closeLb();
 });
 </script>
 

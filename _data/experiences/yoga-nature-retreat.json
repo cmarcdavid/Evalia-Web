@@ -2,17 +2,17 @@
   "name": "Yoga & Nature Retreat",
   "name_fr": "Retraite Yoga & Nature",
   "category": "nature",
-  "icon": "ð¿",
-  "description": "A half-day combining forest yoga, breathwork and a guided nature walk through tropical landscapes â with @bea_titudeyoga.",
-  "description_fr": "Une demi-journÃ©e combinant yoga en forÃªt, respiration et une promenade nature guidÃ©e Ã  travers des paysages tropicaux â avec @bea_titudeyoga.",
-  "duration": "Half day",
-  "duration_fr": "Demi-journÃ©e",
+  "icon": "🌿",
+  "description": "A half-day combining forest yoga, breathwork and a guided nature walk through tropical landscapes — with @bea_titudeyoga.",
+  "description_fr": "Une demi-journée combinant yoga en forêt, respiration et une promenade nature guidée à travers des paysages tropicaux — avec @bea_titudeyoga.",
   "price": 65,
   "unit": "person",
-  "instagram": "https://www.instagram.com/bea_titudeyoga/",
-  "photo": "/images/Hero3.jpg",
+  "duration": "Half day",
+  "duration_fr": "Demi-journée",
   "gallery": [
     "/images/Hero3.jpg"
   ],
-  "active": false
+  "instagram": "https://www.instagram.com/bea_titudeyoga/",
+  "active": true,
+  "photo": "/images/Hero3.jpg"
 }

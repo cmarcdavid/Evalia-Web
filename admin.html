@@ -342,8 +342,9 @@
   <div class="fsec"><div class="fsect">Hero Slideshow Photos</div>
     <div class="fr2" id="heroF"></div>
   </div>
-  <div class="fsec"><div class="fsect">Service Card Photos</div>
-    <div class="fr2" id="svcF"></div>
+  <div class="fsec"><div class="fsect">Service Cards — Photos, Order & Visibility</div>
+    <div class="hint" style="margin-bottom:12px">Drag rows to reorder · Toggle to show/hide each card on the website</div>
+    <div id="svcCards" style="display:flex;flex-direction:column;gap:8px"></div>
   </div>
   <button class="btn bpri" style="padding:10px 26px" onclick="saveSettings()">Save & Publish Settings →</button>
 </div>
@@ -832,6 +833,103 @@ function pField(id,lbl,val){
     <div class="ipp" id="${id}_pv" style="${val?'display:block':''}"><img src="${val||''}"/></div>
   </div>`;
 }
+
+// ── SERVICE CARD MANAGER ──────────────────────────────────────────────────
+const SVC_DEFS = [
+  {key:'acc', label:'Accommodation',   photoId:'ssacc', activeId:'svcact_acc'},
+  {key:'boa', label:'Boat & Water',    photoId:'ssboa', activeId:'svcact_boa'},
+  {key:'nat', label:'Nature & Wellness',photoId:'ssnat', activeId:'svcact_nat'},
+  {key:'foo', label:'Food Discovery',  photoId:'ssfoo', activeId:'svcact_foo'},
+  {key:'con', label:'Concierge',       photoId:'sscon', activeId:'svcact_con'},
+  {key:'saf', label:'Health & Safety', photoId:'sssaf', activeId:'svcact_saf'},
+];
+
+function getSvcOrder(){return SVC_DEFS.map(d=>d.key);}
+
+function renderSvcCards(){
+  const s=D.settings;
+  const photoMap={acc:s.svc_accommodation_photo,boa:s.svc_boat_photo,nat:s.svc_nature_photo,
+                  foo:s.svc_food_photo,con:s.svc_concierge_photo,saf:s.svc_safe_photo};
+  const activeMap={acc:s.svc_accommodation_active!==false,boa:s.svc_boat_active!==false,
+                   nat:s.svc_nature_active!==false,foo:s.svc_food_active!==false,
+                   con:s.svc_concierge_active!==false,saf:s.svc_safe_active!==false};
+  const order=s.svc_order||SVC_DEFS.map(d=>d.key);
+  const el=document.getElementById('svcCards');
+  if(!el)return;
+  // Render in saved order
+  const ordered=order.map(k=>SVC_DEFS.find(d=>d.key===k)).filter(Boolean);
+  // Add any missing definitions
+  SVC_DEFS.forEach(d=>{if(!ordered.find(o=>o.key===d.key))ordered.push(d);});
+  el.innerHTML=ordered.map((d,idx)=>`
+    <div class="svc-card-row" data-key="${d.key}" draggable="true"
+         ondragstart="svcDragStart(event)" ondragover="svcDragOver(event)"
+         ondrop="svcDrop(event)" ondragleave="svcDragLeave(event)"
+         style="display:flex;align-items:center;gap:10px;background:var(--sd);border:1px solid var(--st);border-radius:10px;padding:10px 12px;cursor:grab">
+      <span style="color:var(--mu);font-size:16px;cursor:grab">⠿</span>
+      <div style="width:48px;height:36px;border-radius:6px;overflow:hidden;background:var(--st);flex-shrink:0">
+        ${photoMap[d.key]?`<img src="${photoMap[d.key]}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.opacity='.3'">`:"<div style='width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:16px'>🖼</div>"}
+      </div>
+      <div style="flex:1;font-size:13px;font-weight:500">${d.label}</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="btn bg bsm" onclick="openPP('${d.photoId}','svc_pv_${d.key}',false)">📷 Photo</button>
+        <input type="hidden" id="${d.photoId}" value="${photoMap[d.key]||''}"/>
+        <div id="svc_pv_${d.key}" style="display:none;width:40px;height:30px;border-radius:4px;overflow:hidden">
+          <img src="${photoMap[d.key]||''}" style="width:100%;height:100%;object-fit:cover"/>
+        </div>
+      </div>
+      <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;white-space:nowrap">
+        <input type="checkbox" id="${d.activeId}" ${activeMap[d.key]?'checked':''} onchange="md()"
+               style="accent-color:var(--g);width:15px;height:15px"/>
+        Active
+      </label>
+      <span class="pill ${activeMap[d.key]?'pg':'po'}" style="font-size:10px">${activeMap[d.key]?'Visible':'Hidden'}</span>
+    </div>`).join('');
+  // Re-attach drag listeners
+  attachSvcDrag();
+}
+
+let dragSvcKey=null;
+function svcDragStart(e){
+  dragSvcKey=e.currentTarget.dataset.key;
+  e.currentTarget.style.opacity='.5';
+  e.dataTransfer.effectAllowed='move';
+}
+function svcDragOver(e){
+  e.preventDefault();
+  e.currentTarget.style.border='1px solid var(--g)';
+  e.dataTransfer.dropEffect='move';
+}
+function svcDragLeave(e){e.currentTarget.style.border='1px solid var(--st)';}
+function svcDrop(e){
+  e.preventDefault();
+  const target=e.currentTarget;
+  target.style.border='1px solid var(--st)';
+  const targetKey=target.dataset.key;
+  if(!dragSvcKey||dragSvcKey===targetKey)return;
+  const el=document.getElementById('svcCards');
+  const rows=[...el.querySelectorAll('.svc-card-row')];
+  const fromEl=rows.find(r=>r.dataset.key===dragSvcKey);
+  const toEl=rows.find(r=>r.dataset.key===targetKey);
+  if(!fromEl||!toEl)return;
+  // Reorder in DOM
+  const fromIdx=rows.indexOf(fromEl);
+  const toIdx=rows.indexOf(toEl);
+  if(fromIdx<toIdx)toEl.after(fromEl);else toEl.before(fromEl);
+  // Update SVC_DEFS order to match DOM
+  const newOrder=[...el.querySelectorAll('.svc-card-row')].map(r=>r.dataset.key);
+  // Reorder SVC_DEFS array
+  newOrder.forEach((k,i)=>{
+    const fi=SVC_DEFS.findIndex(d=>d.key===k);
+    if(fi!==i){const tmp=SVC_DEFS[i];SVC_DEFS[i]=SVC_DEFS[fi];SVC_DEFS[fi]=tmp;}
+  });
+  md();
+}
+function attachSvcDrag(){
+  document.querySelectorAll('.svc-card-row').forEach(row=>{
+    row.addEventListener('dragend',()=>{row.style.opacity='1';});
+  });
+}
+
 function fillSettings(){
   const s=D.settings;
   const sv=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||'';};
@@ -841,8 +939,7 @@ function fillSettings(){
   sv('shsen',s.hero_sub);sv('shsfr',s.hero_sub_fr);
   const hf=document.getElementById('heroF');
   if(hf)hf.innerHTML=pField('shp1','Slide 1',s.hero_photo)+pField('shp2','Slide 2',s.hero_photo2)+pField('shp3','Slide 3',s.hero_photo3)+pField('shp4','Slide 4',s.hero_photo4);
-  const sf=document.getElementById('svcF');
-  if(sf)sf.innerHTML=pField('ssacc','Accommodation',s.svc_accommodation_photo)+pField('ssboa','Boat & Water',s.svc_boat_photo)+pField('ssnat','Nature & Wellness',s.svc_nature_photo)+pField('ssfoo','Food Discovery',s.svc_food_photo)+pField('sscon','Concierge',s.svc_concierge_photo);
+  renderSvcCards();
 }
 async function saveSettings(){
   const s=D.settings,v=id=>document.getElementById(id)?.value?.trim();
@@ -851,7 +948,15 @@ async function saveSettings(){
     hero_sub:v('shsen'),hero_sub_fr:v('shsfr'),
     hero_photo:v('shp1'),hero_photo2:v('shp2'),hero_photo3:v('shp3'),hero_photo4:v('shp4'),
     svc_accommodation_photo:v('ssacc'),svc_boat_photo:v('ssboa'),svc_nature_photo:v('ssnat'),
-    svc_food_photo:v('ssfoo'),svc_concierge_photo:v('sscon')};
+    svc_food_photo:v('ssfoo'),svc_concierge_photo:v('sscon'),
+    svc_concierge2_photo:v('sscon2'),
+    svc_accommodation_active:document.getElementById('svcact_acc')?.checked!==false,
+    svc_boat_active:document.getElementById('svcact_boa')?.checked!==false,
+    svc_nature_active:document.getElementById('svcact_nat')?.checked!==false,
+    svc_food_active:document.getElementById('svcact_foo')?.checked!==false,
+    svc_concierge_active:document.getElementById('svcact_con')?.checked!==false,
+    svc_safe_active:document.getElementById('svcact_saf')?.checked!==false,
+    svc_order:getSvcOrder()};
   setBusy('Saving…');
   try{await ghWrite('_data/settings.json',JSON.stringify(updated,null,2),'admin: update settings');
     D.settings={...updated,_path:'_data/settings.json',_sha:s._sha};setOk('Saved ✓');hideBanner();toast('✅','Settings saved — site updating ~30s');
