@@ -171,6 +171,15 @@
   <input type="file" id="mfin" style="display:none" multiple accept="image/*,video/mp4" onchange="handleModalUpload(event)"/>
   <div id="mmgrid" class="mgrid"></div>
 </div></div>
+<!-- HISTORY PANEL -->
+<div class="mow" id="histPanel"><div class="mob">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <h3 id="histTitle" style="font-family:var(--fd);font-size:17px;font-weight:400">Version History</h3>
+    <button class="btn bg bsm" onclick="document.getElementById('histPanel').classList.remove('open')">✕ Close</button>
+  </div>
+  <p style="font-size:12px;color:var(--mu);margin-bottom:12px">Up to 20 most recent snapshots. Click Restore to roll back to any version — current data is saved first.</p>
+  <div id="histList" style="max-height:400px;overflow-y:auto"></div>
+</div></div>
 <div class="toast" id="toast"><span id="ti">✅</span><span id="tm"></span></div>
 
 <div class="shell">
@@ -201,6 +210,7 @@
     <div class="sdiv"></div>
     <div class="si" onclick="window.open('index.html','_blank')"><span class="si-ic">🌐</span>Live Site</div>
     <div class="si" onclick="loadAll(true)"><span class="si-ic">🔄</span>Refresh</div>
+    <div class="si" data-page="history" onclick="gp('history',this)"><span class="si-ic">🕐</span>Data History</div>
     <div class="si" onclick="disconnect()"><span class="si-ic">🔐</span>Disconnect</div>
   </nav>
 </aside>
@@ -308,9 +318,31 @@
   </div>
 </div>
 
+<!-- HISTORY -->
+<div id="page-history" class="page">
+  <div class="card">
+    <div class="ctitle">Data History & Analytics
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn bg bsm" onclick="showHistory('settings')">⚙️ Settings History</button>
+        <button class="btn bg bsm" onclick="showAllHistory()">📋 All History</button>
+      </div>
+    </div>
+    <div class="ib" style="margin-bottom:14px">Every time you save a property, experience or setting, a timestamped snapshot is automatically stored in <code>_data/history/</code>. Use these to roll back to any previous version, or to analyse price and content changes over time.</div>
+    <div id="historyAnalytics" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:16px"></div>
+    <div class="ctitle" style="margin-top:8px">Browse by Item</div>
+    <div id="historyBrowser" style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:13px;color:var(--mu)">Loading history index…</div>
+    </div>
+  </div>
+</div>
+
 <!-- SETTINGS -->
 <div id="page-settings" class="page">
 <div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div style="font-size:11px;color:var(--mu)">Changes are versioned automatically on every save.</div>
+    <button class="btn bg bsm" onclick="showHistory('settings')">🕐 View History</button>
+  </div>
   <div class="fsec"><div class="fsect">Business Information</div>
     <div class="fr2">
       <div class="fg"><label class="fl">Business Name</label><input class="fi" id="sn" oninput="md()"/></div>
@@ -342,8 +374,12 @@
   <div class="fsec"><div class="fsect">Hero Slideshow Photos</div>
     <div class="fr2" id="heroF"></div>
   </div>
-  <div class="fsec"><div class="fsect">Service Cards — Photos, Order & Visibility</div>
-    <div class="hint" style="margin-bottom:12px">Drag rows to reorder · Toggle to show/hide each card on the website</div>
+  <div class="fsec">
+    <div class="fsect" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Service Cards — Photos, Order & Visibility</span>
+      <button class="btn bg bsm" onclick="addCustomSvcCard()">+ Add Card</button>
+    </div>
+    <div class="hint" style="margin-bottom:12px">Drag ⠿ to reorder · Toggle Active to show/hide · 📷 to assign photo · 🕐 to view history</div>
     <div id="svcCards" style="display:flex;flex-direction:column;gap:8px"></div>
   </div>
   <button class="btn bpri" style="padding:10px 26px" onclick="saveSettings()">Save & Publish Settings →</button>
@@ -382,6 +418,103 @@ async function connect(){
 function disconnect(){localStorage.removeItem('ev_gh');token='';gp('connect',null);setErr('Disconnected');}
 
 // WRITE / DELETE (always live SHA)
+// ── DATA HISTORY & VERSIONING ────────────────────────────────────────────────
+// Every save writes a timestamped snapshot to _data/history/<slug>/<timestamp>.json
+// Enables rollback, audit trail, and price/booking pattern analysis.
+
+async function writeDataSnapshot(type, slug){
+  try{
+    const now=new Date();
+    const ts=now.toISOString().replace(/[:.]/g,'-').slice(0,19);
+    let path, content;
+    if(type==='settings'){
+      path=`_data/history/settings/${ts}.json`;
+      content=JSON.stringify({...D.settings,_snapshot_ts:now.toISOString(),_snapshot_type:'settings'},null,2);
+    } else if(type==='property' && slug){
+      const p=D.props.find(x=>x._slug===slug);
+      if(!p)return;
+      path=`_data/history/properties/${slug}/${ts}.json`;
+      const {_path,_sha,...data}=p;
+      content=JSON.stringify({...data,_snapshot_ts:now.toISOString(),_snapshot_type:'property',_slug:slug},null,2);
+    } else if(type==='experience' && slug){
+      const e=D.exps.find(x=>x._slug===slug);
+      if(!e)return;
+      path=`_data/history/experiences/${slug}/${ts}.json`;
+      const {_path,_sha,...data}=e;
+      content=JSON.stringify({...data,_snapshot_ts:now.toISOString(),_snapshot_type:'experience',_slug:slug},null,2);
+    } else return;
+    await ghWrite(path,content,`history: snapshot ${type} ${slug||''} at ${ts}`);
+    console.log('Snapshot saved:',path);
+  }catch(e){
+    // History write failure is non-critical — log but don't block the main save
+    console.warn('Snapshot failed (non-critical):',e.message);
+  }
+}
+
+async function loadHistory(type, slug){
+  try{
+    const folder = type==='settings' ? '_data/history/settings'
+                 : type==='property' ? `_data/history/properties/${slug}`
+                 : `_data/history/experiences/${slug}`;
+    const r=await ghG(`/repos/${REPO}/contents/${folder}?ref=${BRANCH}`);
+    if(!r.ok)return[];
+    const files=await r.json();
+    return files.filter(f=>f.name.endsWith('.json'))
+               .sort((a,b)=>b.name.localeCompare(a.name)) // newest first
+               .slice(0,20); // cap at 20 versions
+  }catch(e){return[];}
+}
+
+async function restoreSnapshot(path){
+  showCF('Restore this version?','This will overwrite the current data with the selected historical version. A new snapshot will be saved first.',async()=>{
+    setBusy('Restoring…');
+    try{
+      const r=await ghG(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+      if(!r.ok)throw new Error('Cannot read snapshot');
+      const f=await r.json();
+      const data=JSON.parse(atob(f.content.replace(/\s/g,'')));
+      // Remove snapshot metadata before restoring
+      const {_snapshot_ts,_snapshot_type,_path:__p,_sha:__s,...clean}=data;
+      // Determine restore target
+      if(_snapshot_type==='settings'){
+        await writeDataSnapshot('settings'); // save current before overwrite
+        await ghWrite('_data/settings.json',JSON.stringify(clean,null,2),'admin: restore settings from '+path);
+        await loadAll(true);
+      } else if(_snapshot_type==='property' && data._slug){
+        const p=D.props.find(x=>x._slug===data._slug);
+        if(p){await writeDataSnapshot('property',data._slug);}
+        await ghWrite(`_data/properties/${data._slug}.json`,JSON.stringify(clean,null,2),'admin: restore property from '+path);
+        await loadAll(true);
+      } else if(_snapshot_type==='experience' && data._slug){
+        const e=D.exps.find(x=>x._slug===data._slug);
+        if(e){await writeDataSnapshot('experience',data._slug);}
+        await ghWrite(`_data/experiences/${data._slug}.json`,JSON.stringify(clean,null,2),'admin: restore experience from '+path);
+        await loadAll(true);
+      }
+      setOk('Restored ✓');toast('♻️','Version restored — site updating');
+    }catch(e){setErr('Restore failed');toast('⚠️','Restore failed: '+e.message);}
+  });
+}
+
+async function showHistory(type, slug){
+  setBusy('Loading history…');
+  const files=await loadHistory(type,slug);
+  setOk('Loaded');
+  if(!files.length){toast('📋','No history yet for this item.');return;}
+  const label=type==='settings'?'Settings':(slug||type);
+  const rows=files.map(f=>{
+    const ts=f.name.replace('.json','').replace(/-/g,(c,i)=>i===10?'T':i>10&&i<=15?':':'-').slice(0,19);
+    const date=ts.replace('T',' ');
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--st)">
+      <div><div style="font-size:13px;font-weight:500">${date}</div><div style="font-size:11px;color:var(--mu)">${f.path}</div></div>
+      <button class="btn bg bsm" onclick="restoreSnapshot('${f.path}')">Restore</button>
+    </div>`;
+  }).join('');
+  document.getElementById('histTitle').textContent='Version History: '+label;
+  document.getElementById('histList').innerHTML=rows;
+  document.getElementById('histPanel').classList.add('open');
+}
+
 async function ghWrite(path,content,msg){
   let sha=null;
   try{const c=await ghG(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);if(c.ok){const d=await c.json();sha=d.sha;}}catch(e){}
@@ -618,6 +751,7 @@ function renderProps(){
       <span class="pill ${p.available!==false?'pg':'po'}">${p.available!==false?'Active':'Hidden'}</span>
       <div class="ciac">
         <button class="btn bg bsm" onclick="openPE(${i})">Edit</button>
+        <button class="btn bg bsm" onclick="showHistory('property','${p._slug}')">🕐</button>
         <button class="btn br bsm" onclick="delProp(${i})">✕</button>
       </div>
     </div>
@@ -687,7 +821,7 @@ async function saveProp(i){
   const p=D.props[i],v=id=>document.getElementById(id)?.value?.trim();
   const gallery=p.gallery||[];
   const photo=v('pph'+i)||(gallery[0]||'');
-  const updated={
+  const formData={
     name:v('pn'+i),name_fr:v('pnfr'+i),
     location:v('pl'+i),location_fr:v('plfr'+i),
     description:v('pd'+i),description_fr:v('pdfr'+i),
@@ -699,8 +833,13 @@ async function saveProp(i){
     amenities:(v('pam'+i)||'').split(',').map(s=>s.trim()).filter(Boolean),
     type:p.type||'Property',
   };
+  // Safe merge: preserve ALL existing fields, overlay with form values
+  const {_path:__pp,_sha:__ps,_slug:__psl,...existingP}=p;
+  const updated={...existingP,...formData};
   setBusy('Saving…');
-  try{await ghWrite(p._path,JSON.stringify(updated,null,2),'admin: update property "'+updated.name+'"');
+  try{
+    await writeDataSnapshot('property',p._slug);
+    await ghWrite(p._path,JSON.stringify(updated,null,2),'admin: update property "'+updated.name+'"');
     D.props[i]={...updated,_path:p._path,_sha:p._sha,_slug:p._slug};
     closePE(i);renderProps();setOk('Saved ✓');hideBanner();
     toast('✅','"'+updated.name+'" saved — site updating ~30s');
@@ -742,6 +881,7 @@ function renderExps(){
       <span class="pill ${e.active!==false?'pg':'po'}">${e.active!==false?'Active':'Hidden'}</span>
       <div class="ciac">
         <button class="btn bg bsm" onclick="openEE(${i})">Edit</button>
+        <button class="btn bg bsm" onclick="showHistory('experience','${e._slug}')">🕐</button>
         <button class="btn br bsm" onclick="delExp(${i})">✕</button>
       </div>
     </div>
@@ -807,6 +947,37 @@ function openEE(i){
   document.getElementById('epe'+i)?.classList.add('open');
   document.getElementById('epe'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
+async function saveExp(i){
+  const e=D.exps[i],v=id=>document.getElementById(id)?.value?.trim();
+  const gallery=e.gallery||[];
+  const photo=v('eph'+i)||(gallery[0]||'');
+  const updated={
+    name:v('en'+i), name_fr:v('enfr'+i),
+    category:v('ec'+i)||'nature',
+    description:v('ed'+i), description_fr:v('edfr'+i),
+    duration:v('edur'+i), duration_fr:v('edurfr'+i),
+    price:Number(v('ep'+i))||0,
+    unit:v('eu'+i)||'person',
+    icon:v('eic'+i)||'🌴',
+    instagram:v('eig'+i)||'',
+    photo, gallery,
+    active:document.getElementById('eav'+i)?.checked!==false,
+    type:e.type||'Experience',
+  };
+  // Preserve any existing fields not in the form (safe merge)
+  const {_path,_sha,_slug,...existing}=e;
+  const merged={...existing,...updated};
+  setBusy('Saving…');
+  try{
+    await writeDataSnapshot('experience',e._slug);
+    await ghWrite(e._path,JSON.stringify(merged,null,2),'admin: update experience "'+merged.name+'"');
+    D.exps[i]={...merged,_path:e._path,_sha:e._sha,_slug:e._slug};
+    closeEE(i);renderExps();setOk('Saved ✓');hideBanner();
+    toast('✅','"'+merged.name+'" saved — site updating ~30s');
+    await updateManifest();
+  }catch(err){setErr('Save failed');toast('⚠️','Save failed: '+err.message);}
+}
+
 function addExp(){
   const slug='experience-'+Date.now();
   D.exps.push({name:'New Experience',name_fr:'Nouvelle Expérience',category:'nature',
@@ -844,7 +1015,12 @@ const SVC_DEFS = [
   {key:'saf', label:'Health & Safety', photoId:'sssaf', activeId:'svcact_saf'},
 ];
 
-function getSvcOrder(){return SVC_DEFS.map(d=>d.key);}
+function getSvcOrder(){
+  // Read current DOM order (reflects drag-and-drop reordering)
+  const rows=document.querySelectorAll('#svcCards .svc-card-row');
+  if(rows.length) return [...rows].map(r=>r.dataset.key);
+  return SVC_DEFS.map(d=>d.key); // fallback
+}
 
 function renderSvcCards(){
   const s=D.settings;
@@ -860,30 +1036,37 @@ function renderSvcCards(){
   const ordered=order.map(k=>SVC_DEFS.find(d=>d.key===k)).filter(Boolean);
   // Add any missing definitions
   SVC_DEFS.forEach(d=>{if(!ordered.find(o=>o.key===d.key))ordered.push(d);});
-  el.innerHTML=ordered.map((d,idx)=>`
-    <div class="svc-card-row" data-key="${d.key}" draggable="true"
+  el.innerHTML=ordered.map((d,idx)=>{
+    const photo=photoMap[d.key]||'';
+    const active=activeMap[d.key];
+    const isCustom=!!d.is_custom;
+    return`<div class="svc-card-row" data-key="${d.key}" draggable="true"
          ondragstart="svcDragStart(event)" ondragover="svcDragOver(event)"
          ondrop="svcDrop(event)" ondragleave="svcDragLeave(event)"
-         style="display:flex;align-items:center;gap:10px;background:var(--sd);border:1px solid var(--st);border-radius:10px;padding:10px 12px;cursor:grab">
-      <span style="color:var(--mu);font-size:16px;cursor:grab">⠿</span>
-      <div style="width:48px;height:36px;border-radius:6px;overflow:hidden;background:var(--st);flex-shrink:0">
-        ${photoMap[d.key]?`<img src="${photoMap[d.key]}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.opacity='.3'">`:"<div style='width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:16px'>🖼</div>"}
+         style="display:flex;align-items:center;gap:8px;background:var(--sd);border:1px solid var(--st);border-radius:10px;padding:9px 11px;cursor:grab;flex-wrap:wrap">
+      <span style="color:var(--mu);font-size:16px;cursor:grab;flex-shrink:0">⠿</span>
+      <div style="width:44px;height:34px;border-radius:6px;overflow:hidden;background:var(--st);flex-shrink:0">
+        ${photo?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.opacity='.3'">`:"<div style='width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:14px'>🖼</div>"}
       </div>
-      <div style="flex:1;font-size:13px;font-weight:500">${d.label}</div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <button class="btn bg bsm" onclick="openPP('${d.photoId}','svc_pv_${d.key}',false)">📷 Photo</button>
-        <input type="hidden" id="${d.photoId}" value="${photoMap[d.key]||''}"/>
-        <div id="svc_pv_${d.key}" style="display:none;width:40px;height:30px;border-radius:4px;overflow:hidden">
-          <img src="${photoMap[d.key]||''}" style="width:100%;height:100%;object-fit:cover"/>
+      ${isCustom
+        ? `<input class="fi svc-card-label-edit" value="${esc(d.label)}" oninput="updateCustomCardLabel('${d.key}',this.value);md()" style="flex:1;min-width:80px;font-size:13px;font-weight:500;padding:4px 8px;height:28px"/>`
+        : `<div style="flex:1;font-size:13px;font-weight:500;min-width:80px">${d.label}</div>`
+      }
+      <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:wrap">
+        <button class="btn bg bsm" onclick="openPP('${d.photoId}','svc_pv_${d.key}',false)">📷</button>
+        <input type="hidden" id="${d.photoId}" value="${photo}"/>
+        <div id="svc_pv_${d.key}" style="display:${photo?'block':'none'};width:36px;height:28px;border-radius:4px;overflow:hidden;flex-shrink:0">
+          <img src="${photo}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'"/>
         </div>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;white-space:nowrap">
+          <input type="checkbox" id="${d.activeId}" ${active?'checked':''} onchange="md()" style="accent-color:var(--g);width:14px;height:14px"/>
+          Active
+        </label>
+        <span class="pill ${active?'pg':'po'}" style="font-size:10px">${active?'On':'Off'}</span>
+        ${isCustom?`<button class="btn br bsm" onclick="deleteSvcCard('${d.key}')" title="Delete this card">✕</button>`:''}
       </div>
-      <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;white-space:nowrap">
-        <input type="checkbox" id="${d.activeId}" ${activeMap[d.key]?'checked':''} onchange="md()"
-               style="accent-color:var(--g);width:15px;height:15px"/>
-        Active
-      </label>
-      <span class="pill ${activeMap[d.key]?'pg':'po'}" style="font-size:10px">${activeMap[d.key]?'Visible':'Hidden'}</span>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   // Re-attach drag listeners
   attachSvcDrag();
 }
@@ -930,6 +1113,114 @@ function attachSvcDrag(){
   });
 }
 
+
+// ── CUSTOM SERVICE CARDS ─────────────────────────────────────────────────────
+let customCardCounter = Date.now();
+
+function addCustomSvcCard(){
+  // Generate a unique key for the new card
+  const key = 'cust_' + (++customCardCounter);
+  // Add to D.settings.svc_custom_cards
+  if(!D.settings.svc_custom_cards) D.settings.svc_custom_cards=[];
+  const newCard={key,label:'New Card',photoKey:'svc_'+key+'_photo',activeKey:'svc_'+key+'_active',
+                 photo:'',active:true,is_custom:true};
+  D.settings.svc_custom_cards.push(newCard);
+  // Add to SVC_DEFS so it participates in rendering
+  SVC_DEFS.push({key,label:'New Card',photoId:'ss'+key,activeId:'svcact_'+key,is_custom:true});
+  // Set initial values in D.settings
+  D.settings['svc_'+key+'_photo']='';
+  D.settings['svc_'+key+'_active']=true;
+  renderSvcCards();
+  md();
+  // Auto-open edit for the new card label
+  setTimeout(()=>{
+    const row=document.querySelector(`.svc-card-row[data-key="${key}"]`);
+    if(row){
+      const lbl=row.querySelector('.svc-card-label-edit');
+      if(lbl){lbl.focus();lbl.select();}
+    }
+  },100);
+}
+
+function deleteSvcCard(key){
+  showCF(`Delete this service card?`,'The card will be removed from the website.',()=>{
+    // Remove from SVC_DEFS
+    const idx=SVC_DEFS.findIndex(d=>d.key===key);
+    if(idx>=0)SVC_DEFS.splice(idx,1);
+    // Remove from custom cards list
+    if(D.settings.svc_custom_cards)
+      D.settings.svc_custom_cards=D.settings.svc_custom_cards.filter(c=>c.key!==key);
+    // Remove photo/active keys
+    delete D.settings['svc_'+key+'_photo'];
+    delete D.settings['svc_'+key+'_active'];
+    renderSvcCards();
+    md();
+    toast('🗑','Card deleted');
+  });
+}
+
+function updateCustomCardLabel(key, value){
+  const def=SVC_DEFS.find(d=>d.key===key);
+  if(def)def.label=value;
+  const cc=D.settings.svc_custom_cards;
+  if(cc){const c=cc.find(x=>x.key===key);if(c)c.label=value;}
+  md();
+}
+
+// Override renderSvcCards to support custom cards and editable labels
+// ── HISTORY PAGE ─────────────────────────────────────────────────────────────
+async function showAllHistory(){
+  gp('history',document.querySelector('[data-page="history"]'));
+  setBusy('Loading history…');
+  const analytics=document.getElementById('historyAnalytics');
+  const browser=document.getElementById('historyBrowser');
+  if(analytics) analytics.innerHTML='<div style="font-size:12px;color:var(--mu)">Loading…</div>';
+  if(browser) browser.innerHTML='<div style="font-size:12px;color:var(--mu)">Loading…</div>';
+  
+  try{
+    // Build analytics from current data
+    const priceData=D.exps.map(e=>({name:e.name,price:e.price,slug:e._slug,type:'experience'}))
+                   .concat(D.props.map(p=>({name:p.name,price:p.price,slug:p._slug,type:'property'})));
+    
+    if(analytics){
+      analytics.innerHTML=priceData.map(item=>`
+        <div style="background:var(--sd);border-radius:9px;padding:12px;border:1px solid var(--st)">
+          <div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--mu);margin-bottom:4px">${item.type}</div>
+          <div style="font-size:14px;font-weight:500;margin-bottom:2px">${item.name}</div>
+          <div style="font-family:var(--fd);font-size:22px;color:var(--g)">€${item.price||'—'}</div>
+          <button class="btn bg bsm" style="margin-top:8px" onclick="showHistory('${item.type}','${item.slug}')">🕐 View History</button>
+        </div>`).join('');
+    }
+    
+    // List history folders
+    const rows=[];
+    rows.push(`<div style="font-size:13px;font-weight:500;padding:6px 0;border-bottom:1px solid var(--st);margin-bottom:8px">Settings</div>`);
+    rows.push(`<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0">
+      <span style="font-size:13px">⚙️ Site Settings</span>
+      <button class="btn bg bsm" onclick="showHistory('settings')">View Versions</button>
+    </div>`);
+    rows.push(`<div style="font-size:13px;font-weight:500;padding:10px 0 6px;border-bottom:1px solid var(--st);margin:8px 0 8px">Properties</div>`);
+    D.props.forEach(p=>{
+      rows.push(`<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0">
+        <span style="font-size:13px">🏠 ${p.name}</span>
+        <button class="btn bg bsm" onclick="showHistory('property','${p._slug}')">View Versions</button>
+      </div>`);
+    });
+    rows.push(`<div style="font-size:13px;font-weight:500;padding:10px 0 6px;border-bottom:1px solid var(--st);margin:8px 0 8px">Experiences</div>`);
+    D.exps.forEach(e=>{
+      rows.push(`<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0">
+        <span style="font-size:13px">🌴 ${e.name}</span>
+        <button class="btn bg bsm" onclick="showHistory('experience','${e._slug}')">View Versions</button>
+      </div>`);
+    });
+    if(browser) browser.innerHTML=rows.join('');
+    setOk('Loaded');
+  }catch(err){
+    setErr('Error');
+    if(browser) browser.innerHTML='<div style="color:#c0392b;font-size:13px">Failed to load history: '+err.message+'</div>';
+  }
+}
+
 function fillSettings(){
   const s=D.settings;
   const sv=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||'';};
@@ -942,8 +1233,11 @@ function fillSettings(){
   renderSvcCards();
 }
 async function saveSettings(){
-  const s=D.settings,v=id=>document.getElementById(id)?.value?.trim();
-  const updated={name:v('sn'),email:v('se'),whatsapp:v('sw'),instagram:v('sig'),facebook:v('sfb'),tiktok:v('stt'),
+  const s=D.settings, v=id=>document.getElementById(id)?.value?.trim();
+  // SAFE MERGE: start from ALL existing settings, only overwrite fields we explicitly control.
+  // This prevents loss of fields added by other sessions or future admin updates.
+  const formFields={
+    name:v('sn'),email:v('se'),whatsapp:v('sw'),instagram:v('sig'),facebook:v('sfb'),tiktok:v('stt'),
     hero_line1:v('sh1en'),hero_line1_fr:v('sh1fr'),hero_line2:v('sh2en'),hero_line2_fr:v('sh2fr'),
     hero_sub:v('shsen'),hero_sub_fr:v('shsfr'),
     hero_photo:v('shp1'),hero_photo2:v('shp2'),hero_photo3:v('shp3'),hero_photo4:v('shp4'),
@@ -955,15 +1249,24 @@ async function saveSettings(){
     svc_food_active:document.getElementById('svcact_foo')?.checked!==false,
     svc_concierge_active:document.getElementById('svcact_con')?.checked!==false,
     svc_safe_active:document.getElementById('svcact_saf')?.checked!==false,
-    svc_order:getSvcOrder()};
+    svc_order:getSvcOrder(),
+    svc_custom_cards:D.settings.svc_custom_cards||[]
+  };
+  // Merge: existing base + form overrides (never drops historical keys)
+  const {_path,_sha,...baseSettings}=s;
+  const updated={...baseSettings,...formFields};
   setBusy('Saving…');
-  try{await ghWrite('_data/settings.json',JSON.stringify(updated,null,2),'admin: update settings');
-    D.settings={...updated,_path:'_data/settings.json',_sha:s._sha};setOk('Saved ✓');hideBanner();toast('✅','Settings saved — site updating ~30s');
+  try{
+    // Write versioned snapshot before overwriting (data history)
+    await writeDataSnapshot('settings');
+    await ghWrite('_data/settings.json',JSON.stringify(updated,null,2),'admin: update settings');
+    D.settings={...updated,_path:'_data/settings.json',_sha:s._sha};
+    setOk('Saved ✓');hideBanner();toast('✅','Settings saved — site updating ~30s');
   }catch(e){setErr('Save failed');toast('⚠️','Save failed: '+e.message);}
 }
 
 // UI HELPERS
-const PTITLES={connect:'Connect',dashboard:'Dashboard',bookings:'Bookings',properties:'Properties',experiences:'Experiences',media:'Media Library',settings:'Settings'};
+const PTITLES={connect:'Connect',dashboard:'Dashboard',bookings:'Bookings',properties:'Properties',experiences:'Experiences',media:'Media Library',settings:'Settings',history:'Data History'};
 function gp(id,navEl){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+id)?.classList.add('active');
