@@ -467,7 +467,7 @@ async function refreshMedia(){
   const r=await ghG(`/repos/${REPO}/contents/images?ref=${BRANCH}`);
   if(!r.ok)return;
   const f=await r.json();
-  D.media=f.filter(f=>/\.(jpg|jpeg|png|gif|webp|mp4|mov)$/i.test(f.name)).map(f=>({name:f.name,path:f.path,sha:f.sha}));
+  D.media=f.filter(f=>/\.(jpg|jpeg|png|gif|webp|mp4|mov)$/i.test(f.name)).map(f=>({name:f.name,path:f.path,sha:f.sha,url:f.download_url||(`${RAW}/${f.path}`)}));
   const mc=document.getElementById('mcnt');if(mc)mc.textContent=D.media.length+' files';
 }
 async function loadFolder(p){
@@ -514,7 +514,7 @@ function renderMGrid(c){
   const isVid=n=>/\.(mp4|mov)/i.test(n);
   grid.innerHTML=D.media.map(m=>`
     <div class="mth" title="${m.name}" onclick="mThClick('/images/${m.name}','${m.sha}','${m.name}')">
-      ${isVid(m.name)?`<video src="${rawUrl(m)}" muted loading="lazy"></video>`:`<img src="${rawUrl(m)}" loading="lazy" onerror="this.style.opacity='.3'">`}
+      ${isVid(m.name)?`<video src="${m.url||rawUrl(m)}" muted loading="lazy"></video>`:`<img src="${m.url||rawUrl(m)}" loading="lazy" onerror="this.style.opacity='.3'">`}
       <div class="mth-lbl">${m.name}</div>
       <button class="mth-cp" onclick="event.stopPropagation();copyP('/images/${m.name}')">📋</button>
       <button class="mth-del" onclick="event.stopPropagation();delMedia('${m.path}','${m.name}')">✕</button>
@@ -568,7 +568,7 @@ function updPrev(inputId,previewId,force){
 // GALLERY
 function galHtml(gallery,ot,oi){
   const items=(gallery||[]).map((p,gi)=>`
-    <div class="gth">${/\.(mp4|mov)/i.test(p)?`<video src="${p}" muted></video>`:`<img src="${p}" loading="lazy">`}
+    <div class="gth">${/\.(mp4|mov)/i.test(p)?`<video src="${p}" muted></video>`:`<img src="${p}" loading="lazy" onerror="this.style.opacity='.4'">`}
       <button class="gth-del" onclick="rmGal('${ot}',${oi},${gi})">✕</button></div>`).join('');
   return`<div class="fg"><label class="fl">Gallery (photos & videos)</label>
     <div class="ggrid" id="gg_${ot}_${oi}">${items}
@@ -581,7 +581,7 @@ function reRenderGal(ot,oi){
   const arr=ot==='p'?D.props:D.exps;const item=arr[oi];if(!item)return;
   const el=document.getElementById('gg_'+ot+'_'+oi);if(!el)return;
   el.innerHTML=(item.gallery||[]).map((p,gi)=>`
-    <div class="gth">${/\.(mp4|mov)/i.test(p)?`<video src="${p}" muted></video>`:`<img src="${p}" loading="lazy">`}
+    <div class="gth">${/\.(mp4|mov)/i.test(p)?`<video src="${p}" muted></video>`:`<img src="${p}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\'%3E%3Crect width=\'60\' height=\'60\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'55%25\' font-size=\'10\' fill=\'%23999\' text-anchor=\'middle\'%3E🖼%3C/text%3E%3C/svg%3E'">`}
       <button class="gth-del" onclick="rmGal('${ot}',${oi},${gi})">✕</button></div>`).join('')+
     `<div class="gadd" onclick="openPP(null,null,true,'${ot}',${oi})"><span>+</span><span>Add</span></div>`;
 }
@@ -673,7 +673,14 @@ function pForm(p,i){
       <button class="btn bg" onclick="closePE(${i})">Cancel</button>
     </div>`;
 }
-function openPE(i){document.querySelectorAll('.ep').forEach(e=>e.classList.remove('open'));document.getElementById('ppe'+i)?.classList.add('open');document.getElementById('ppe'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function openPE(i){
+  // Auto-set cover photo from gallery[0] if photo is unset
+  const p=D.props[i];
+  if(p&&!p.photo&&p.gallery&&p.gallery.length){p.photo=p.gallery[0];renderProps();}
+  document.querySelectorAll('.ep').forEach(e=>e.classList.remove('open'));
+  document.getElementById('ppe'+i)?.classList.add('open');
+  document.getElementById('ppe'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 function closePE(i){document.getElementById('ppe'+i)?.classList.remove('open');}
 async function saveProp(i){
   const p=D.props[i],v=id=>document.getElementById(id)?.value?.trim();
@@ -791,26 +798,13 @@ function eForm(e,i){
       <button class="btn bg" onclick="closeEE(${i})">Cancel</button>
     </div>`;
 }
-function openEE(i){document.querySelectorAll('.ep').forEach(e=>e.classList.remove('open'));document.getElementById('epe'+i)?.classList.add('open');document.getElementById('epe'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});}
-function closeEE(i){document.getElementById('epe'+i)?.classList.remove('open');}
-async function saveExp(i){
-  const e=D.exps[i],v=id=>document.getElementById(id)?.value?.trim();
-  const gallery=e.gallery||[];
-  const photo=v('eph'+i)||(gallery[0]||'');
-  const updated={
-    name:v('en'+i),name_fr:v('enfr'+i),category:v('ec'+i),icon:v('eic'+i),
-    description:v('ed'+i),description_fr:v('edfr'+i),
-    duration:v('edur'+i),duration_fr:v('edurfr'+i),
-    price:Number(v('ep'+i)),unit:v('eu'+i),instagram:v('eig'+i),
-    photo,gallery,active:document.getElementById('eav'+i)?.checked,
-  };
-  setBusy('Saving…');
-  try{await ghWrite(e._path,JSON.stringify(updated,null,2),'admin: update experience "'+updated.name+'"');
-    D.exps[i]={...updated,_path:e._path,_sha:e._sha,_slug:e._slug};
-    closeEE(i);renderExps();setOk('Saved ✓');hideBanner();
-    toast('✅','"'+updated.name+'" saved — site updating ~30s');
-    await updateManifest();
-  }catch(e2){setErr('Save failed');toast('⚠️','Save failed: '+e2.message);}
+function openEE(i){
+  // Auto-set cover photo from gallery[0] if photo is unset
+  const e=D.exps[i];
+  if(e&&!e.photo&&e.gallery&&e.gallery.length){e.photo=e.gallery[0];renderExps();}
+  document.querySelectorAll('.ee').forEach(e=>e.classList.remove('open'));
+  document.getElementById('epe'+i)?.classList.add('open');
+  document.getElementById('epe'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function addExp(){
   const slug='experience-'+Date.now();

@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Evalia — Escape the Ordinary · Mauritius</title>
+  <!-- Evalia v5 -->
   <meta name="description" content="Evalia Mauritius — Escape the Ordinary. Curated accommodation, boat excursions, yoga &amp; nature retreats, food discovery and 24/7 concierge in Mauritius."/>
   <!-- Evalia Brand Icons -->
   <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
@@ -559,7 +560,7 @@
   <div class="s-header">
     <div class="s-eyebrow" data-i18n="acc_eyebrow">Where You'll Stay</div>
     <h2 class="s-title" data-i18n="acc_title">Your private<br><em>island retreat</em></h2>
-    <p class="s-sub">Two carefully curated properties in Mauritius — intimate, beautiful and fully supported by your personal concierge.</p>
+    <p class="s-sub" data-i18n="acc_sub">Two carefully curated properties in Mauritius — intimate, beautiful and fully supported by your personal concierge.</p>
   </div>
   <div class="acc-grid">
     <div class="acc-card" id="studioCard">
@@ -622,7 +623,7 @@
   <div class="s-header">
     <div class="s-eyebrow" data-i18n="exp_eyebrow">Curated Experiences</div>
     <h2 class="s-title" data-i18n="exp_title">Discover the<br><em>real Mauritius</em></h2>
-    <p class="s-sub">Handpicked excursions led by local experts. Nature &amp; wellness experiences curated with <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.</p>
+    <p class="s-sub" data-i18n="exp_sub">Handpicked excursions led by local experts. Nature &amp; wellness experiences curated with <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.</p>
   </div>
   <div class="exp-tabs">
     <button class="exp-tab active" data-tab="all" onclick="filterExp(this,'all')">All</button>
@@ -638,31 +639,31 @@
   <div class="reg-grid">
     <div>
       <div class="s-header">
-        <div class="s-eyebrow" style="color:var(--lagoon)">Guest Registration</div>
-        <h2 class="s-title">Start your<br><em>Mauritius journey</em></h2>
-        <p class="s-sub">Register once, book everything. Your profile saves your details so every booking takes seconds.</p>
+        <div class="s-eyebrow" style="color:var(--lagoon)" data-i18n="reg_eyebrow">Guest Registration</div>
+        <h2 class="s-title" data-i18n="reg_title">Start your<br><em>Mauritius journey</em></h2>
+        <p class="s-sub" data-i18n="reg_sub">Register once, book everything. Your profile saves your details so every booking takes seconds.</p>
       </div>
       <div class="reg-benefits">
         <div class="reg-benefit">
           <div class="rb-icon">⚡</div>
-          <div class="rb-body"><h4>Instant Booking</h4><p>Your details are saved — book any service in under 60 seconds.</p></div>
+          <div class="rb-body"><h4 data-i18n="reg_b1_title">Instant Booking</h4><p data-i18n="reg_b1_desc">Your details are saved — book any service in under 60 seconds.</p></div>
         </div>
         <div class="reg-benefit">
           <div class="rb-icon">🎩</div>
-          <div class="rb-body"><h4>Dedicated Concierge</h4><p>From the moment you register, you have a personal WhatsApp contact.</p></div>
+          <div class="rb-body"><h4 data-i18n="reg_b2_title">Dedicated Concierge</h4><p data-i18n="reg_b2_desc">From the moment you register, you have a personal WhatsApp contact.</p></div>
         </div>
         <div class="reg-benefit">
           <div class="rb-icon">🛡️</div>
-          <div class="rb-body"><h4>Safety First</h4><p>Your emergency contact and healthcare preferences are always on file.</p></div>
+          <div class="rb-body"><h4 data-i18n="reg_b3_title">Safety First</h4><p data-i18n="reg_b3_desc">Your emergency contact and healthcare preferences are always on file.</p></div>
         </div>
         <div class="reg-benefit">
           <div class="rb-icon">📅</div>
-          <div class="rb-body"><h4>Your Itinerary</h4><p>All your bookings in one place — a day-by-day plan emailed to you.</p></div>
+          <div class="rb-body"><h4 data-i18n="reg_b4_title">Your Itinerary</h4><p data-i18n="reg_b4_desc">All your bookings in one place — a day-by-day plan emailed to you.</p></div>
         </div>
       </div>
     </div>
     <div class="reg-form-card">
-      <div class="form-title">Create Your Profile</div>
+      <div class="form-title" data-i18n="reg_form_title">Create Your Profile</div>
       <!-- Global success / error banners for registration form -->
       <div data-fs-success style="display:none;background:rgba(45,106,79,.12);color:#2D6A4F;padding:14px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;text-align:center">
         ✅ Profile created! Welcome to Evalia — watch for our WhatsApp welcome message.
@@ -673,29 +674,29 @@
         <input type="hidden" name="_subject" value="New Guest Registration — Evalia Mauritius"/>
         <div class="form-row2">
           <div class="fg">
-            <label class="fl">First Name</label>
+            <label class="fl" data-i18n="reg_fname">First Name</label>
             <input class="fi" type="text" name="firstname" placeholder="Marie" required data-fs-field/>
             <span data-fs-error="firstname" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
           </div>
           <div class="fg">
-            <label class="fl">Last Name</label>
+            <label class="fl" data-i18n="reg_lname">Last Name</label>
             <input class="fi" type="text" name="lastname" placeholder="Dupont" required data-fs-field/>
             <span data-fs-error="lastname" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
           </div>
         </div>
         <div class="fg">
-          <label class="fl">Email Address</label>
+          <label class="fl" data-i18n="reg_email">Email Address</label>
           <input class="fi" type="email" name="email" placeholder="marie@email.com" required data-fs-field/>
           <span data-fs-error="email" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
         </div>
         <div class="fg">
-          <label class="fl">Phone / WhatsApp</label>
+          <label class="fl" data-i18n="reg_phone">Phone / WhatsApp</label>
           <input class="fi" type="tel" name="phone" placeholder="+33 6 12 34 56 78" required data-fs-field/>
           <span data-fs-error="phone" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
         </div>
         <div class="form-row2">
-          <div class="fg"><label class="fl">Nationality</label><input class="fi" type="text" name="nationality" placeholder="French" data-fs-field/></div>
-          <div class="fg"><label class="fl">Party Size</label>
+          <div class="fg"><label class="fl" data-i18n="reg_nationality">Nationality</label><input class="fi" type="text" name="nationality" placeholder="French" data-fs-field/></div>
+          <div class="fg"><label class="fl" data-i18n="reg_party">Party Size</label>
             <select class="fi" name="party_size" data-fs-field>
               <option>1 person</option><option selected>2 people</option><option>3 people</option>
               <option>4 people</option><option>5 people</option><option>6+ people</option>
@@ -704,22 +705,22 @@
         </div>
         <div class="form-row2">
           <div class="fg">
-            <label class="fl">Arrival Date</label>
+            <label class="fl" data-i18n="reg_arrival">Arrival Date</label>
             <input class="fi" type="date" name="arrival" required data-fs-field/>
             <span data-fs-error="arrival" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
           </div>
           <div class="fg">
-            <label class="fl">Departure Date</label>
+            <label class="fl" data-i18n="reg_departure">Departure Date</label>
             <input class="fi" type="date" name="departure" required data-fs-field/>
             <span data-fs-error="departure" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
           </div>
         </div>
         <div class="fg">
-          <label class="fl">Special Requirements</label>
+          <label class="fl" data-i18n="reg_special">Special Requirements</label>
           <textarea class="fi" name="requirements" rows="2" placeholder="Dietary needs, accessibility, medical info…" style="resize:vertical" data-fs-field></textarea>
         </div>
-        <button type="submit" class="btn-register" data-fs-submit-btn>Create My Profile →</button>
-        <div class="form-note" style="margin-top:12px">🔒 Your data is private and secure. We never share your details.</div>
+        <button type="submit" class="btn-register" data-fs-submit-btn data-i18n="reg_btn">Create My Profile →</button>
+        <div class="form-note" style="margin-top:12px"><span data-i18n="reg_privacy">🔒 Your data is private and secure. We never share your details.</span></div>
       </form>
     </div>
   </div>
@@ -728,14 +729,14 @@
 <!-- ── BOOKING WIZARD ── -->
 <section id="booking" style="background:var(--sand)">
   <div class="s-header center">
-    <div class="s-eyebrow">Reserve Your Experience</div>
-    <h2 class="s-title">Book in<br><em>3 easy steps</em></h2>
+    <div class="s-eyebrow" data-i18n="book_eyebrow">Reserve Your Experience</div>
+    <h2 class="s-title" data-i18n="book_title">Book in<br><em>3 easy steps</em></h2>
   </div>
   <div class="booking-wizard">
     <div class="wizard-steps">
-      <div class="wizard-step active" id="ws1" onclick="goStep(1)"><div class="ws-circle">1</div><div class="ws-label">Choose Services</div></div>
-      <div class="wizard-step" id="ws2" onclick="goStep(2)"><div class="ws-circle">2</div><div class="ws-label">Dates & Details</div></div>
-      <div class="wizard-step" id="ws3" onclick="goStep(3)"><div class="ws-circle">3</div><div class="ws-label">Confirm & Send</div></div>
+      <div class="wizard-step active" id="ws1" onclick="goStep(1)"><div class="ws-circle">1</div><div class="ws-label" data-i18n="book_step1">Choose Services</div></div>
+      <div class="wizard-step" id="ws2" onclick="goStep(2)"><div class="ws-circle">2</div><div class="ws-label" data-i18n="book_step2">Dates & Details</div></div>
+      <div class="wizard-step" id="ws3" onclick="goStep(3)"><div class="ws-circle">3</div><div class="ws-label" data-i18n="book_step3">Confirm & Send</div></div>
     </div>
 
     <!-- Step 1: Choose services -->
@@ -770,7 +771,7 @@
       </div>
       <div class="wizard-nav">
         <div></div>
-        <button class="btn-wiz-next" onclick="goStep(2)">Next: Dates & Details →</button>
+        <button class="btn-wiz-next" onclick="goStep(2)" data-i18n="book_next1">Next: Dates & Details →</button>
       </div>
     </div>
 
@@ -829,17 +830,17 @@
 <!-- ── PAYMENT ── -->
 <section id="payment">
   <div class="s-header center">
-    <div class="s-eyebrow">Secure Payments</div>
-    <h2 class="s-title">Pay your way,<br><em>local or global</em></h2>
+    <div class="s-eyebrow" data-i18n="pay_eyebrow">Secure Payments</div>
+    <h2 class="s-title" data-i18n="pay_title">Pay your way,<br><em>local or global</em></h2>
     <p class="s-sub">International cards, Apple Pay, MyT Money and MCB Juice — whichever works best for you.</p>
   </div>
   <div class="pay-grid">
     <div class="pay-card">
       <div class="pay-methods">
         <div class="pay-method active" onclick="switchPay(this,'card')"><span class="pay-method-icon">💳</span>Card</div>
-        <div class="pay-method" onclick="switchPay(this,'wallet')"><span class="pay-method-icon">📱</span>Digital Wallet</div>
-        <div class="pay-method" onclick="switchPay(this,'local')"><span class="pay-method-icon">🇲🇺</span>MU Local</div>
-        <div class="pay-method" onclick="switchPay(this,'cash')"><span class="pay-method-icon">💵</span>Cash + Deposit</div>
+        <div class="pay-method" onclick="switchPay(this,'wallet')"><span class="pay-method-icon">📱</span><span data-i18n="pay_tab_wallet">Digital Wallet</span></div>
+        <div class="pay-method" onclick="switchPay(this,'local')"><span class="pay-method-icon">🇲🇺</span><span data-i18n="pay_tab_local">MU Local</span></div>
+        <div class="pay-method" onclick="switchPay(this,'cash')"><span class="pay-method-icon">💵</span><span data-i18n="pay_tab_cash">Cash + Deposit</span></div>
       </div>
 
       <!-- Card -->
@@ -905,12 +906,12 @@
         <p style="font-size:12px;color:var(--muted)">Deposit is refundable if cancelled 7+ days before arrival.</p>
       </div>
 
-      <button class="btn-pay" onclick="handlePayment()">Complete Payment →</button>
-      <div class="pay-secure">🔒 256-bit SSL · PCI DSS Compliant · Your card is never stored</div>
+      <button class="btn-pay" onclick="handlePayment()" data-i18n="pay_btn">Complete Payment →</button>
+      <div class="pay-secure" data-i18n="pay_secure">🔒 256-bit SSL · PCI DSS Compliant · Your card is never stored</div>
     </div>
 
     <div class="pay-summary">
-      <h3 style="font-family:var(--font-d);font-size:22px;font-weight:400;margin-bottom:20px">Order Summary</h3>
+      <h3 style="font-family:var(--font-d);font-size:22px;font-weight:400;margin-bottom:20px" data-i18n="pay_summary_title">Order Summary</h3>
       <div class="pay-sum-row"><span>Studio (3 nights)</span><span>€240</span></div>
       <div class="pay-sum-row"><span>Boat Excursion × 2</span><span>€130</span></div>
       <div class="pay-sum-row"><span>Airport Transfer</span><span>€30</span></div>
@@ -934,8 +935,8 @@
 <!-- ── TESTIMONIALS ── -->
 <section id="testimonials">
   <div class="s-header center">
-    <div class="s-eyebrow">Guest Stories</div>
-    <h2 class="s-title">What our guests <em>say</em></h2>
+    <div class="s-eyebrow" data-i18n="testi_eyebrow">Guest Stories</div>
+    <h2 class="s-title" data-i18n="testi_title">What our guests <em>say</em></h2>
   </div>
   <div class="testi-grid">
     <div class="testi-card">
@@ -967,9 +968,9 @@
 
 <!-- ── CONCIERGE STRIP ── -->
 <div class="concierge-strip">
-  <div class="cs-title">Need something right now? 🌴</div>
-  <div class="cs-sub">Our concierge team is available 24/7 on WhatsApp. From restaurant reservations to last-minute transfers — we make it happen.</div>
-  <a class="btn-whatsapp" href="https://wa.me/23057242099" target="_blank">💬 Chat on WhatsApp</a>
+  <div class="cs-title" data-i18n="cs_title">Need something right now? 🌴</div>
+  <div class="cs-sub" data-i18n="cs_sub">Our concierge team is available 24/7 on WhatsApp. From restaurant reservations to last-minute transfers — we make it happen.</div>
+  <a class="btn-whatsapp" href="https://wa.me/23057242099" target="_blank" data-i18n="cs_btn">💬 Chat on WhatsApp</a>
 </div>
 
 <!-- ── FOOTER ── -->
@@ -996,7 +997,7 @@
           font-size="8" font-weight="400" letter-spacing="2.5" fill="#ffffff" opacity="0.65">ESCAPE THE ORDINARY</text>
       </svg>
     </div>
-      <div class="footer-desc">Your one-stop concierge platform for the ultimate Mauritius experience. Accommodation, excursions, food discovery and 24/7 support — all in one place.</div>
+      <div class="footer-desc" data-i18n="footer_desc">Your one-stop concierge platform for the ultimate Mauritius experience. Accommodation, excursions, food discovery and 24/7 support — all in one place.</div>
       <div class="footer-socials">
         <a class="fsoc" href="https://www.instagram.com/evalia241/" target="_blank" title="Instagram @evalia241">📸</a>
         <a class="fsoc" href="https://www.facebook.com/evalia241" target="_blank" title="Facebook">👍</a>
@@ -1005,38 +1006,38 @@
       </div>
     </div>
     <div class="footer-col">
-      <h5>Services</h5>
+      <h5 data-i18n="footer_col1_title">Services</h5>
       <ul>
-        <li><a href="#accommodation">Accommodation</a></li>
-        <li><a href="#experiences">Boat Excursions</a></li>
-        <li><a href="#experiences">Nature Tours</a></li>
-        <li><a href="#experiences">Food Discovery</a></li>
-        <li><a href="#services">Concierge</a></li>
+        <li><a href="#accommodation" data-i18n="footer_acc">Accommodation</a></li>
+        <li><a href="#experiences" data-i18n="footer_boat">Boat Excursions</a></li>
+        <li><a href="#experiences" data-i18n="footer_nature">Nature Tours</a></li>
+        <li><a href="#experiences" data-i18n="footer_food">Food Discovery</a></li>
+        <li><a href="#services" data-i18n="footer_concierge">Concierge</a></li>
       </ul>
     </div>
     <div class="footer-col">
-      <h5>Plan Your Trip</h5>
+      <h5 data-i18n="footer_col2_title">Plan Your Trip</h5>
       <ul>
-        <li><a href="#register">Register</a></li>
-        <li><a href="#booking">Book Now</a></li>
-        <li><a href="#payment">Payments</a></li>
-        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#register" data-i18n="footer_register">Register</a></li>
+        <li><a href="#booking" data-i18n="footer_book">Book Now</a></li>
+        <li><a href="#payment" data-i18n="footer_payments">Payments</a></li>
+        <li><a href="#testimonials" data-i18n="footer_reviews">Reviews</a></li>
       </ul>
     </div>
     <div class="footer-col">
-      <h5>Support</h5>
+      <h5 data-i18n="footer_col3_title">Support</h5>
       <ul>
-        <li><a href="https://wa.me/23057242099" target="_blank">WhatsApp 24/7</a></li>
+        <li><a href="https://wa.me/23057242099" target="_blank" data-i18n="footer_wa">WhatsApp 24/7</a></li>
         <li><a href="mailto:hello@evalia.mu">hello@evalia.mu</a></li>
-        <li><a href="#booking" onclick="scrollToSection('booking')">Cancellation Policy</a></li>
-        <li><a href="mailto:hello@evalia.mu?subject=Privacy%20Policy%20Request">Privacy Policy</a></li>
-        <li><a href="https://wa.me/23057242099?text=EMERGENCY%20-%20I%20need%20urgent%20assistance" target="_blank">Emergency Contacts 🆘</a></li>
+        <li><a href="#booking" onclick="scrollToSection('booking')" data-i18n="footer_cancel">Cancellation Policy</a></li>
+        <li><a href="mailto:hello@evalia.mu?subject=Privacy%20Policy%20Request" data-i18n="footer_privacy">Privacy Policy</a></li>
+        <li><a href="https://wa.me/23057242099?text=EMERGENCY%20-%20I%20need%20urgent%20assistance" target="_blank" data-i18n="footer_emergency">Emergency Contacts 🆘</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">© 2025 Evalia Mauritius. All rights reserved.</div>
-    <div class="footer-copy">🏝️ Made with love for the Island of Mauritius</div>
+    <div class="footer-copy" data-i18n="footer_copy">© 2025 Evalia Mauritius. All rights reserved.</div>
+    <div class="footer-copy" data-i18n="footer_made">🏝️ Made with love for the Island of Mauritius</div>
   </div>
 </footer>
 
@@ -1190,14 +1191,16 @@ function renderProperties() {
     const locStr  = (lang==='fr' && p.location_fr)    ? p.location_fr    : (p.location||'');
     const badge   = (lang==='fr' && p.badge_fr)       ? p.badge_fr       : (p.badge||'');
     const gallery = p.gallery || (p.photo ? [p.photo] : []);
-    // Photo
-    if (p.photo) {
+    // Photo — first gallery item is the default cover if photo not explicitly set
+    const coverPhoto = p.photo || (p.gallery && p.gallery[0]) || '';
+    if (coverPhoto) {
       const img = card.querySelector('.acc-img img, #villaImg');
       if (img) {
-        img.src = p.photo;
+        img.src = coverPhoto;
         if (img.id === 'villaImg') {
-          img.setAttribute('onmouseover', `this.src='${p.photo_alt||p.photo}'`);
-          img.setAttribute('onmouseout',  `this.src='${p.photo}'`);
+          const hoverPhoto = p.photo_alt || p.gallery?.[1] || coverPhoto;
+          img.setAttribute('onmouseover', `this.src='${hoverPhoto}'`);
+          img.setAttribute('onmouseout',  `this.src='${coverPhoto}'`);
         }
         // Click cover to open lightbox if gallery exists
         if (gallery.length > 0) {
@@ -1590,10 +1593,10 @@ document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); 
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// i18n — EN / FR language toggle
-// Data-driven: all translations live in the I18N object.
-// JSON content uses name_fr / description_fr etc fields.
+// i18n — EN / FR bilingual toggle
+// All keys must exist in both EN and FR.
 // ═══════════════════════════════════════════════════════════════
+
 let lang = localStorage.getItem('ev_lang') || 'en';
 
 const I18N = {
@@ -1605,32 +1608,32 @@ const I18N = {
     hero_badge:'🌿 Mauritius · Escape the Ordinary',
     hero_btn_primary:'Book Your Stay →', hero_btn_ghost:'Explore Services',
     hero_stat1:'Happy Guests', hero_stat2:'Experiences', hero_stat3:'Concierge', hero_stat4:'Satisfaction',
-    // Services section
+    // Services
     svc_eyebrow:'Everything in One Place',
     svc_title:'The complete<br><em>Mauritius experience</em>',
     svc_sub:'Every service you need for a perfect stay — handpicked, vetted and arranged for you.',
     svc_acc_tag:'Accommodation', svc_acc_name:'Stay with Us',
-    svc_acc_desc:'Studio apartment or a private 2-bedroom villa with pool and tropical garden.',
+    svc_acc_desc:'Studio apartment or private 2-bedroom villa with pool and tropical garden.',
     svc_acc_from:'per night from', svc_acc_btn:'View Properties',
     svc_boat_tag:'Water Activities', svc_boat_name:'Boat Excursions',
     svc_boat_desc:'Dolphin watching, snorkelling, Île aux Cerfs day trips and sunset cruises.',
-    svc_boat_from:'per person from', svc_boat_btn:'See Excursions',
+    svc_boat_from:'per person from', svc_boat_btn:'View Excursions',
     svc_nat_tag:'Island Exploration', svc_nat_name:'Nature & Wellness',
     svc_nat_desc:'Hiking, yoga, Black River Gorges, Chamarel and more — curated with @bea_titudeyoga.',
     svc_nat_from:'per person from', svc_nat_btn:'Explore Nature',
     svc_food_tag:'Culinary', svc_food_name:'Food Discovery',
-    svc_food_desc:'Street food tours, market visits, Mauritian cooking classes and restaurant picks.',
+    svc_food_desc:'Street food tours, local markets, Mauritian cooking classes and restaurant picks.',
     svc_food_from:'per person from', svc_food_btn:'Discover Food',
     svc_con_tag:'Concierge', svc_con_name:'Personal Concierge',
-    svc_con_desc:'Airport transfers, car rental, event tickets, SIM setup and anything else you need.',
-    svc_con_from:'per service from', svc_con_btn:'Request Service',
-    svc_safe_tag:'Safety & Care', svc_safe_name:'Healthcare & Safety',
-    svc_safe_desc:'Healthcare referrals, clinic access, emergency contacts and 24/7 WhatsApp support.',
+    svc_con_desc:'Airport transfers, car hire, event tickets and more — arranged for you.',
+    svc_con_from:'per service from', svc_con_btn:'Request a Service',
+    svc_safe_tag:'Safety & Care', svc_safe_name:'Health & Safety',
+    svc_safe_desc:'Medical referrals, clinic access, emergency contacts and 24/7 support.',
     svc_safe_price:'Free', svc_safe_from:'with any booking', svc_safe_btn:'Learn More',
     // Accommodation
     acc_eyebrow:"Where You'll Stay",
     acc_title:'Your private<br><em>island retreat</em>',
-    acc_sub:'Two carefully curated properties in Mauritius — intimate, beautiful and fully supported.',
+    acc_sub:'Two carefully curated properties in Mauritius — intimate, beautiful and fully supported by your personal concierge.',
     acc_btn_studio:'Book Studio →', acc_btn_villa:'Book Villa →',
     acc_per_night:'per night',
     // Experiences
@@ -1639,56 +1642,141 @@ const I18N = {
     exp_sub:'Handpicked excursions led by local experts. Nature & wellness curated with @bea_titudeyoga.',
     exp_tab_all:'All', exp_tab_boat:'⛵ Boat & Water', exp_tab_nat:'🌿 Nature', exp_tab_food:'🍛 Food',
     exp_book_btn:'Book This →',
-    // Booking
-    book_eyebrow:'Reserve Your Stay',
+    // Register
+    reg_eyebrow:'Guest Registration',
+    reg_title:'Start your<br><em>Mauritius journey</em>',
+    reg_sub:'Register once, book everything. Your profile saves your details so every booking takes seconds.',
+    reg_b1_title:'Instant Booking', reg_b1_desc:'Your details are saved — book any service in under 60 seconds.',
+    reg_b2_title:'Dedicated Concierge', reg_b2_desc:'From the moment you register, you have a personal WhatsApp contact.',
+    reg_b3_title:'Safety First', reg_b3_desc:'Your emergency contact and healthcare preferences are always on file.',
+    reg_b4_title:'Your Itinerary', reg_b4_desc:'All your bookings in one place — a day-by-day plan emailed to you.',
+    reg_form_title:'Create Your Profile',
+    reg_fname:'First Name', reg_lname:'Last Name', reg_email:'Email Address',
+    reg_phone:'Phone / WhatsApp', reg_nationality:'Nationality', reg_party:'Party Size',
+    reg_arrival:'Arrival Date', reg_departure:'Departure Date', reg_special:'Special Requirements',
+    reg_btn:'Create My Profile →',
+    reg_privacy:'🔒 Your data is private and secure. We never share your details.',
+    // Booking wizard
+    book_eyebrow:'Reserve Your Experience',
     book_title:'Book in<br><em>3 easy steps</em>',
+    book_step1:'Choose Services', book_step2:'Dates & Details', book_step3:'Confirm & Send',
+    book_next1:'Next: Dates & Details →', book_next2:'Next: Review & Confirm →',
+    // Payment
+    pay_eyebrow:'Secure Payments',
+    pay_title:'Pay your way,<br><em>local or global</em>',
+    pay_tab_card:'Credit / Debit Card', pay_tab_wallet:'Digital Wallet',
+    pay_tab_local:'MU Local', pay_tab_cash:'Cash + Deposit',
+    pay_btn:'Complete Payment →',
+    pay_secure:'🔒 256-bit SSL · PCI DSS Compliant · Your card is never stored',
+    pay_summary_title:'Order Summary',
+    // Testimonials
+    testi_eyebrow:'Guest Stories',
+    testi_title:'What our guests <em>say</em>',
+    // Concierge strip
+    cs_title:'Need something right now? 🌴',
+    cs_sub:'Our concierge team is available 24/7 on WhatsApp. From restaurant reservations to last-minute transfers — we make it happen.',
+    cs_btn:'💬 Chat on WhatsApp',
     // Footer
-    footer_desc:'Your one-stop concierge platform for the ultimate Mauritius experience.',
+    footer_desc:'Your one-stop concierge platform for the ultimate Mauritius experience. Accommodation, excursions, food discovery and 24/7 support — all in one place.',
+    footer_col1_title:'Services', footer_col2_title:'Plan Your Trip', footer_col3_title:'Support',
+    footer_acc:'Accommodation', footer_boat:'Boat Excursions', footer_nature:'Nature Tours',
+    footer_food:'Food Discovery', footer_concierge:'Concierge',
+    footer_register:'Register', footer_book:'Book Now', footer_payments:'Payments', footer_reviews:'Reviews',
+    footer_wa:'WhatsApp 24/7', footer_cancel:'Cancellation Policy',
+    footer_privacy:'Privacy Policy', footer_emergency:'Emergency Contacts 🆘',
+    footer_copy:'© 2025 Evalia Mauritius. All rights reserved.',
+    footer_made:'🏝️ Made with love for the Island of Mauritius',
   },
   fr: {
+    // Nav
     nav_services:'Services', nav_stay:'Séjour', nav_exp:'Expériences', nav_book:'Réserver',
-    nav_cta_outline:'S\'inscrire', nav_cta_fill:'Réserver',
-    hero_badge:'🌿 Maurice · Sortez de l\'Ordinaire',
+    nav_cta_outline:'S'inscrire', nav_cta_fill:'Réserver',
+    // Hero
+    hero_badge:'🌿 Maurice · Sortez de l'Ordinaire',
     hero_btn_primary:'Réserver votre séjour →', hero_btn_ghost:'Explorer les services',
-    hero_stat1:'Clients satisfaits', hero_stat2:'Expériences', hero_stat3:'Concierge', hero_stat4:'Satisfaction',
+    hero_stat1:'Clients satisfaits', hero_stat2:'Expériences', hero_stat3:'Conciergerie', hero_stat4:'Satisfaction',
+    // Services
     svc_eyebrow:'Tout en un seul endroit',
-    svc_title:'L\'expérience<br><em>Maurice complète</em>',
+    svc_title:'L'expérience<br><em>Maurice complète</em>',
     svc_sub:'Chaque service pour un séjour parfait — sélectionné, vérifié et arrangé pour vous.',
-    svc_acc_tag:'Hébergement', svc_acc_name:'Séjourner',
+    svc_acc_tag:'Hébergement', svc_acc_name:'Séjourner chez nous',
     svc_acc_desc:'Studio ou villa privée de 2 chambres avec piscine et jardin tropical.',
     svc_acc_from:'par nuit à partir de', svc_acc_btn:'Voir les propriétés',
-    svc_boat_tag:'Activités nautiques', svc_boat_name:'Excursions en bateau',
+    svc_boat_tag:'Activités nautiques', svc_boat_name:'Excursions en mer',
     svc_boat_desc:'Observation des dauphins, snorkeling, Île aux Cerfs et croisières au coucher du soleil.',
     svc_boat_from:'par personne à partir de', svc_boat_btn:'Voir les excursions',
-    svc_nat_tag:'Exploration insulaire', svc_nat_name:'Nature & Bien-être',
+    svc_nat_tag:'Exploration de l'île', svc_nat_name:'Nature & Bien-être',
     svc_nat_desc:'Randonnées, yoga, Gorges de la Rivière Noire — avec @bea_titudeyoga.',
     svc_nat_from:'par personne à partir de', svc_nat_btn:'Explorer la nature',
-    svc_food_tag:'Culinaire', svc_food_name:'Découverte gastronomique',
+    svc_food_tag:'Gastronomie', svc_food_name:'Découverte culinaire',
     svc_food_desc:'Tours street food, marchés locaux, cours de cuisine mauricienne et restaurants.',
     svc_food_from:'par personne à partir de', svc_food_btn:'Découvrir la cuisine',
     svc_con_tag:'Conciergerie', svc_con_name:'Conciergerie personnelle',
-    svc_con_desc:'Transferts aéroport, location de voiture, billets d\'événements et plus encore.',
+    svc_con_desc:'Transferts aéroport, location de voiture, billets d'événements et bien plus.',
     svc_con_from:'par service à partir de', svc_con_btn:'Demander un service',
     svc_safe_tag:'Sécurité & Soins', svc_safe_name:'Santé & Sécurité',
-    svc_safe_desc:'Références médicales, accès aux cliniques, contacts d\'urgence et support 24h/24.',
+    svc_safe_desc:'Références médicales, accès aux cliniques, contacts d'urgence et assistance 24h/24.',
     svc_safe_price:'Gratuit', svc_safe_from:'avec toute réservation', svc_safe_btn:'En savoir plus',
+    // Accommodation
     acc_eyebrow:'Où vous séjournerez',
     acc_title:'Votre retraite<br><em>insulaire privée</em>',
-    acc_sub:'Deux propriétés soigneusement sélectionnées à Maurice — intimes, belles et soutenues.',
+    acc_sub:'Deux propriétés soigneusement sélectionnées à Maurice — intimes, belles et entièrement soutenues par votre concierge personnel.',
     acc_btn_studio:'Réserver le studio →', acc_btn_villa:'Réserver la villa →',
     acc_per_night:'par nuit',
+    // Experiences
     exp_eyebrow:'Expériences sélectionnées',
     exp_title:'Découvrez la<br><em>vraie Maurice</em>',
     exp_sub:'Excursions guidées par des experts locaux. Nature & bien-être avec @bea_titudeyoga.',
     exp_tab_all:'Tout', exp_tab_boat:'⛵ Mer & Eau', exp_tab_nat:'🌿 Nature', exp_tab_food:'🍛 Cuisine',
     exp_book_btn:'Réserver →',
-    book_eyebrow:'Réservez votre séjour',
+    // Register
+    reg_eyebrow:'Inscription des hôtes',
+    reg_title:'Commencez votre<br><em>aventure mauricienne</em>',
+    reg_sub:'Inscrivez-vous une fois, réservez tout. Votre profil sauvegarde vos coordonnées pour des réservations en quelques secondes.',
+    reg_b1_title:'Réservation instantanée', reg_b1_desc:'Vos coordonnées sont sauvegardées — réservez n'importe quel service en moins de 60 secondes.',
+    reg_b2_title:'Conciergerie dédiée', reg_b2_desc:'Dès votre inscription, vous disposez d'un contact WhatsApp personnel.',
+    reg_b3_title:'La sécurité avant tout', reg_b3_desc:'Votre contact d'urgence et vos préférences médicales sont toujours enregistrés.',
+    reg_b4_title:'Votre itinéraire', reg_b4_desc:'Toutes vos réservations en un seul endroit — un plan jour par jour envoyé par e-mail.',
+    reg_form_title:'Créer votre profil',
+    reg_fname:'Prénom', reg_lname:'Nom de famille', reg_email:'Adresse e-mail',
+    reg_phone:'Téléphone / WhatsApp', reg_nationality:'Nationalité', reg_party:'Taille du groupe',
+    reg_arrival:'Date d'arrivée', reg_departure:'Date de départ', reg_special:'Besoins particuliers',
+    reg_btn:'Créer mon profil →',
+    reg_privacy:'🔒 Vos données sont privées et sécurisées. Nous ne partageons jamais vos informations.',
+    // Booking wizard
+    book_eyebrow:'Réservez votre expérience',
     book_title:'Réservez en<br><em>3 étapes faciles</em>',
-    footer_desc:'Votre plateforme conciergerie tout-en-un pour l\'expérience Maurice ultime.',
+    book_step1:'Choisir les services', book_step2:'Dates & détails', book_step3:'Confirmer & envoyer',
+    book_next1:'Suivant : Dates & détails →', book_next2:'Suivant : Vérifier & confirmer →',
+    // Payment
+    pay_eyebrow:'Paiements sécurisés',
+    pay_title:'Payez à votre façon,<br><em>local ou mondial</em>',
+    pay_tab_card:'Carte bancaire', pay_tab_wallet:'Portefeuille numérique',
+    pay_tab_local:'Local MU', pay_tab_cash:'Espèces + Dépôt',
+    pay_btn:'Finaliser le paiement →',
+    pay_secure:'🔒 SSL 256 bits · Conforme PCI DSS · Votre carte n'est jamais stockée',
+    pay_summary_title:'Récapitulatif de commande',
+    // Testimonials
+    testi_eyebrow:'Témoignages de nos hôtes',
+    testi_title:'Ce que disent<br><em>nos hôtes</em>',
+    // Concierge strip
+    cs_title:'Besoin de quelque chose maintenant ? 🌴',
+    cs_sub:'Notre équipe de conciergerie est disponible 24h/24 sur WhatsApp. Des réservations au restaurant aux transferts de dernière minute — nous nous en occupons.',
+    cs_btn:'💬 Discuter sur WhatsApp',
+    // Footer
+    footer_desc:'Votre plateforme conciergerie tout-en-un pour l'expérience Maurice ultime. Hébergement, excursions, découverte gastronomique et assistance 24h/24 — tout en un.',
+    footer_col1_title:'Services', footer_col2_title:'Planifier votre voyage', footer_col3_title:'Assistance',
+    footer_acc:'Hébergement', footer_boat:'Excursions en mer', footer_nature:'Tours nature',
+    footer_food:'Découverte culinaire', footer_concierge:'Conciergerie',
+    footer_register:'S'inscrire', footer_book:'Réserver maintenant', footer_payments:'Paiements', footer_reviews:'Avis',
+    footer_wa:'WhatsApp 24h/24', footer_cancel:'Politique d'annulation',
+    footer_privacy:'Politique de confidentialité', footer_emergency:'Contacts d'urgence 🆘',
+    footer_copy:'© 2025 Evalia Mauritius. Tous droits réservés.',
+    footer_made:'🏝️ Fait avec amour pour l'île Maurice',
   }
 };
 
-function T(k) { return I18N[lang][k] || I18N.en[k] || k; }
+function T(k) { return (I18N[lang] && I18N[lang][k]) ? I18N[lang][k] : (I18N.en[k] || k); }
 
 function toggleLang() {
   lang = lang === 'en' ? 'fr' : 'en';
@@ -1700,102 +1788,95 @@ function applyLang() {
   const isFr = lang === 'fr';
   document.documentElement.lang = lang;
 
-  // Toggle button
-  document.getElementById('langFlag').textContent = isFr ? '🇫🇷' : '🇬🇧';
-  document.getElementById('langLbl').textContent  = isFr ? 'FR'   : 'EN';
+  // ── Toggle button ───────────────────────────────────────────
+  const flag = document.getElementById('langFlag');
+  const lbl  = document.getElementById('langLbl');
+  if (flag) flag.textContent = isFr ? '🇫🇷' : '🇬🇧';
+  if (lbl)  lbl.textContent  = isFr ? 'FR'   : 'EN';
 
-  // Nav links
-  const navA = document.querySelectorAll('.nav-links a');
-  const navKeys = ['nav_services','nav_stay','nav_exp','nav_book'];
-  navA.forEach((a,i) => { if(navKeys[i]) a.textContent = T(navKeys[i]); });
+  // ── Nav links ───────────────────────────────────────────────
+  const navLinks = document.querySelectorAll('.nav-links a');
+  ['nav_services','nav_stay','nav_exp','nav_book'].forEach((k,i) => {
+    if (navLinks[i]) navLinks[i].textContent = T(k);
+  });
   const btnOutline = document.querySelector('.btn-outline');
   const btnFill    = document.querySelector('.btn-fill');
-  if(btnOutline) btnOutline.textContent = T('nav_cta_outline');
-  if(btnFill)    btnFill.textContent    = T('nav_cta_fill');
+  if (btnOutline) btnOutline.textContent = T('nav_cta_outline');
+  if (btnFill)    btnFill.textContent    = T('nav_cta_fill');
 
-  // Hero
+  // ── Hero ────────────────────────────────────────────────────
   const heroBadge = document.querySelector('.hero-badge');
-  if(heroBadge) heroBadge.textContent = T('hero_badge');
-  const heroStats = document.querySelectorAll('.hstat-lbl');
-  const statKeys = ['hero_stat1','hero_stat2','hero_stat3','hero_stat4'];
-  heroStats.forEach((el,i) => { if(statKeys[i]) el.textContent = T(statKeys[i]); });
-  const heroPri  = document.querySelector('.btn-hero-primary');
-  const heroGho  = document.querySelector('.btn-hero-ghost');
-  if(heroPri) heroPri.textContent = T('hero_btn_primary');
-  if(heroGho) heroGho.textContent = T('hero_btn_ghost');
+  if (heroBadge) heroBadge.textContent = T('hero_badge');
+  document.querySelectorAll('.hstat-lbl').forEach((el,i) => {
+    el.textContent = T(['hero_stat1','hero_stat2','hero_stat3','hero_stat4'][i] || '');
+  });
+  const heroPri = document.querySelector('.btn-hero-primary');
+  const heroGho = document.querySelector('.btn-hero-ghost');
+  if (heroPri) heroPri.textContent = T('hero_btn_primary');
+  if (heroGho) heroGho.textContent = T('hero_btn_ghost');
 
-  // Services section heading
-  _setHTML('.s-eyebrow:first-of-type', T('svc_eyebrow'));
-  const sTitles = document.querySelectorAll('.s-title');
-  const sEyes   = document.querySelectorAll('.s-eyebrow');
-  // Use data-i18n attributes instead — simpler
+  // ── All data-i18n elements ──────────────────────────────────
+  // innerHTML for elements that may contain <em> or <a> tags
+  const HTML_KEYS = new Set([
+    'svc_title','acc_title','exp_title','reg_title','book_title','pay_title','testi_title',
+    'exp_sub'
+  ]);
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const k = el.dataset.i18n;
     const v = T(k);
-    el.innerHTML = v;
+    if (HTML_KEYS.has(k)) { el.innerHTML = v; }
+    else { el.textContent = v; }
   });
 
-  // Service card tags and body text
-  _setTxt('[data-svc-tag="acc"]',       T('svc_acc_tag'));
-  _setTxt('[data-svc-name="acc"]',      T('svc_acc_name'));
-  _setTxt('[data-svc-desc="acc"]',      T('svc_acc_desc'));
-  _setTxt('[data-svc-from="acc"]',      T('svc_acc_from'));
-  _setTxt('[data-svc-btn="acc"]',       T('svc_acc_btn'));
-  _setTxt('[data-svc-tag="boat"]',      T('svc_boat_tag'));
-  _setTxt('[data-svc-name="boat"]',     T('svc_boat_name'));
-  _setTxt('[data-svc-desc="boat"]',     T('svc_boat_desc'));
-  _setTxt('[data-svc-from="boat"]',     T('svc_boat_from'));
-  _setTxt('[data-svc-btn="boat"]',      T('svc_boat_btn'));
-  _setTxt('[data-svc-tag="nat"]',       T('svc_nat_tag'));
-  _setTxt('[data-svc-name="nat"]',      T('svc_nat_name'));
-  // Nature desc has a link in EN — use innerHTML for FR, preserve link for EN
+  // ── Service card descriptions (special: nat has a link in EN) ─
   (function() {
     const el = document.querySelector('[data-svc-desc="nat"]');
     if (!el) return;
-    if (lang === 'fr') {
+    if (isFr) {
       el.innerHTML = T('svc_nat_desc') + ' — avec <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.';
     } else {
       el.innerHTML = 'Hiking, yoga in nature, Black River Gorges, Chamarel and more — curated with local wellness expert <a href="https://www.instagram.com/bea_titudeyoga/" target="_blank" style="color:var(--ocean);font-weight:500">@bea_titudeyoga</a>.';
     }
   })();
-  _setTxt('[data-svc-from="nat"]',      T('svc_nat_from'));
-  _setTxt('[data-svc-btn="nat"]',       T('svc_nat_btn'));
-  _setTxt('[data-svc-tag="food"]',      T('svc_food_tag'));
-  _setTxt('[data-svc-name="food"]',     T('svc_food_name'));
-  _setTxt('[data-svc-desc="food"]',     T('svc_food_desc'));
-  _setTxt('[data-svc-from="food"]',     T('svc_food_from'));
-  _setTxt('[data-svc-btn="food"]',      T('svc_food_btn'));
-  _setTxt('[data-svc-tag="con"]',       T('svc_con_tag'));
-  _setTxt('[data-svc-name="con"]',      T('svc_con_name'));
-  _setTxt('[data-svc-desc="con"]',      T('svc_con_desc'));
-  _setTxt('[data-svc-from="con"]',      T('svc_con_from'));
-  _setTxt('[data-svc-btn="con"]',       T('svc_con_btn'));
-  _setTxt('[data-svc-tag="safe"]',      T('svc_safe_tag'));
-  _setTxt('[data-svc-name="safe"]',     T('svc_safe_name'));
-  _setTxt('[data-svc-desc="safe"]',     T('svc_safe_desc'));
-  _setTxt('[data-svc-price="safe"]',    T('svc_safe_price'));
-  _setTxt('[data-svc-from="safe"]',     T('svc_safe_from'));
-  _setTxt('[data-svc-btn="safe"]',      T('svc_safe_btn'));
 
-  // Experience tab labels
-  _setTxt('[data-tab="all"]',  T('exp_tab_all'));
-  _setTxt('[data-tab="boat"]', T('exp_tab_boat'));
-  _setTxt('[data-tab="nat"]',  T('exp_tab_nat'));
-  _setTxt('[data-tab="food"]', T('exp_tab_food'));
+  // ── Service card other text ─────────────────────────────────
+  const svcKeys = ['acc','boat','nat','food','con','safe'];
+  svcKeys.forEach(s => {
+    const set = (attr, key) => {
+      const el = document.querySelector(`[data-svc-${attr}="${s}"]`);
+      if (el) el.textContent = T(key);
+    };
+    set('tag',  `svc_${s}_tag`);
+    set('name', `svc_${s}_name`);
+    if (s !== 'nat') set('desc', `svc_${s}_desc`); // nat handled above
+    set('from', `svc_${s}_from`);
+    set('btn',  `svc_${s}_btn`);
+    if (s === 'safe') {
+      const priceEl = document.querySelector(`[data-svc-price="safe"]`);
+      if (priceEl) priceEl.textContent = T('svc_safe_price');
+    }
+  });
 
-  // Acc section booking buttons
+  // ── Acc section booking buttons ─────────────────────────────
   const studioBtn = document.querySelector('#studioCard .btn-acc');
-  const villaBtn  = document.querySelector('#villaCard .btn-acc');
-  if(studioBtn) studioBtn.textContent = T('acc_btn_studio');
-  if(villaBtn)  villaBtn.textContent  = T('acc_btn_villa');
+  const villaBtn  = document.querySelector('#villaCard  .btn-acc');
+  if (studioBtn) studioBtn.textContent = T('acc_btn_studio');
+  if (villaBtn)  villaBtn.textContent  = T('acc_btn_villa');
   document.querySelectorAll('.acc-price-lbl').forEach(el => el.textContent = T('acc_per_night'));
 
-  // Footer desc
-  _setTxt('.footer-desc', T('footer_desc'));
+  // ── Experience tabs ─────────────────────────────────────────
+  const tabMap = {all:'exp_tab_all', boat:'exp_tab_boat', nat:'exp_tab_nat', food:'exp_tab_food'};
+  document.querySelectorAll('.exp-tab').forEach(btn => {
+    const tab = btn.dataset.tab;
+    if (tabMap[tab]) btn.textContent = T(tabMap[tab]);
+  });
 
-  // Re-render CMS content with correct language
+  // ── Re-render CMS content in correct language ───────────────
   if (siteProperties.length)  renderProperties();
-  if (siteExperiences.length) renderExp(document.querySelector('.exp-tab.active')?.dataset?.tab || 'all');
+  if (siteExperiences.length) {
+    const activeTab = document.querySelector('.exp-tab.active');
+    renderExp(activeTab ? (activeTab.dataset.tab === 'nat' ? 'nature' : activeTab.dataset.tab) : 'all');
+  }
 }
 
 function _setTxt(sel, val) {
@@ -1807,53 +1888,44 @@ function _setHTML(sel, val) {
   if (el) el.innerHTML = val;
 }
 
-// ═══════════════════════════════════════════════════════════════
-// LIGHTBOX
-// ═══════════════════════════════════════════════════════════════
+// ── LIGHTBOX ───────────────────────────────────────────────────────────────
 let lbImgs = [], lbIdx = 0;
 
-function openLb(imgs, startIdx) {
-  lbImgs = Array.isArray(imgs) ? imgs : [imgs];
-  lbIdx  = startIdx || 0;
-  document.getElementById('lbOverlay').classList.add('open');
+function openLb(imgs, idx) {
+  lbImgs = imgs; lbIdx = idx;
+  const ov = document.getElementById('lbOverlay');
+  const img = document.getElementById('lbImg');
+  if (!ov || !img) return;
+  img.src = lbImgs[lbIdx];
+  ov.classList.add('open');
   document.body.style.overflow = 'hidden';
-  lbRender();
-  document.addEventListener('keydown', lbKey);
+  updateLbNav();
 }
 function closeLb() {
-  document.getElementById('lbOverlay').classList.remove('open');
+  const ov = document.getElementById('lbOverlay');
+  if (ov) ov.classList.remove('open');
   document.body.style.overflow = '';
-  document.removeEventListener('keydown', lbKey);
 }
-function lbBg(e) { if (e.target.id === 'lbOverlay') closeLb(); }
-function lbKey(e) {
-  if (e.key === 'Escape')      closeLb();
-  if (e.key === 'ArrowRight')  lbGo(1);
-  if (e.key === 'ArrowLeft')   lbGo(-1);
-}
-function lbGo(dir) {
+function lbMove(dir) {
   lbIdx = (lbIdx + dir + lbImgs.length) % lbImgs.length;
-  lbRender();
+  const img = document.getElementById('lbImg');
+  if (img) img.src = lbImgs[lbIdx];
+  updateLbNav();
 }
-function lbRender() {
-  const src = lbImgs[lbIdx];
-  const med = document.getElementById('lbMedia');
-  const isV = /\.(mp4|mov)/i.test(src);
-  med.innerHTML = isV
-    ? `<video class="lb-media" src="${src}" controls autoplay muted loop></video>`
-    : `<img class="lb-media" src="${src}" alt="Photo ${lbIdx+1}"/>`;
-  // Dots
-  const dots = document.getElementById('lbDots');
-  dots.innerHTML = lbImgs.length > 1
-    ? lbImgs.map((_,i) => `<div class="lb-dot${i===lbIdx?' on':''}" onclick="lbIdx=${i};lbRender()"></div>`).join('')
-    : '';
-  // Counter
-  document.getElementById('lbCount').textContent = lbImgs.length > 1 ? `${lbIdx+1} / ${lbImgs.length}` : '';
-  // Nav arrows
-  const show = lbImgs.length > 1 ? 'block' : 'none';
-  document.getElementById('lbPrev').style.display = show;
-  document.getElementById('lbNext').style.display = show;
+function updateLbNav() {
+  const show = lbImgs.length > 1;
+  const prev = document.getElementById('lbPrev');
+  const next = document.getElementById('lbNext');
+  if (prev) prev.style.display = show ? 'flex' : 'none';
+  if (next) next.style.display = show ? 'flex' : 'none';
 }
+document.addEventListener('keydown', e => {
+  const ov = document.getElementById('lbOverlay');
+  if (!ov || !ov.classList.contains('open')) return;
+  if (e.key === 'ArrowLeft')  lbMove(-1);
+  if (e.key === 'ArrowRight') lbMove(1);
+  if (e.key === 'Escape') closeLb();
+});
 </script>
 
 
