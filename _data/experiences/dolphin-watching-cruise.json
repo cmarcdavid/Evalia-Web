@@ -1,18 +1,18 @@
 {
   "name": "Dolphin Watching Cruise",
-  "name_fr": "Croisière Observation des Dauphins",
+  "name_fr": "CroisiÃ¨re Observation des Dauphins",
   "category": "boat",
-  "icon": "🐬",
+  "icon": "ð¬",
   "description": "Meet wild dolphins in their natural habitat in the crystal-clear waters off the west coast.",
-  "description_fr": "Rencontrez des dauphins sauvages dans leur habitat naturel dans les eaux cristallines de la côte ouest.",
+  "description_fr": "Rencontrez des dauphins sauvages dans leur habitat naturel dans les eaux cristallines de la cote ouest.",
+  "duration": "Half day",
+  "duration_fr": "Demi-journee",
   "price": 45,
   "unit": "person",
-  "duration": "Half day",
-  "duration_fr": "Demi-journée",
+  "instagram": "",
+  "photo": "/images/IMG_4392.jpeg",
   "gallery": [
     "/images/Hero2.jpg"
   ],
-  "instagram": "",
-  "active": true,
-  "photo": "/images/Hero2.jpg"
+  "active": true
 }
