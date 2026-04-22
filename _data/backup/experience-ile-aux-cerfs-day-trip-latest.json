@@ -1,0 +1,21 @@
+{
+  "name": "Île aux Cerfs Day Trip",
+  "name_fr": "Excursion à l'Île aux Cerfs",
+  "category": "boat",
+  "icon": "🏝️",
+  "description": "A full day on the most stunning island in Mauritius — white sand, turquoise lagoon, water sports.",
+  "description_fr": "Une journée entière sur l'île la plus époustouflante de l'Île Maurice — sable blanc, lagon turquoise, sports nautiques.",
+  "price": 75,
+  "unit": "person",
+  "duration": "Full day",
+  "duration_fr": "Journée complète",
+  "gallery": [
+    "/images/Hero2.jpg"
+  ],
+  "instagram": "",
+  "active": true,
+  "photo": "/images/Hero2.jpg",
+  "_snapshot_ts": "2026-04-22T12:47:59.278456",
+  "_snapshot_type": "experience",
+  "_slug": "ile-aux-cerfs-day-trip"
+}

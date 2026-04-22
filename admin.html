@@ -486,7 +486,7 @@ async function writeDataSnapshot(type, slug){
   }catch(e){
     console.warn('Snapshot failed:',e.message);
     // Non-critical — don't block main save, but surface the error
-    toast('⚠️','History backup failed: '+e.message+' (save continues)');
+    console.warn('History/backup write failed (non-critical):', e.message);
   }
 }
 
@@ -665,7 +665,9 @@ async function loadFolder(p){
   return Promise.all(fs.filter(f=>f.name.endsWith('.json')).map(async f=>{
     const fr=await ghG(`/repos/${REPO}/contents/${f.path}?ref=${BRANCH}`);
     const fd=await fr.json();
-    return{...JSON.parse(atob(fd.content.replace(/\s/g,''))),_path:f.path,_sha:fd.sha,_slug:f.name.replace('.json','')};
+    const raw=atob(fd.content.replace(/\s/g,''));
+    const decoded=decodeURIComponent(raw.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+    return{...JSON.parse(decoded),_path:f.path,_sha:fd.sha,_slug:f.name.replace('.json','')};
   }));
 }
 async function loadFile(p){
@@ -903,7 +905,9 @@ function closePE(i){document.getElementById('ppe'+i)?.classList.remove('open');}
 function closeEE(i){document.getElementById('epe'+i)?.classList.remove('open');}
 async function saveProp(i){
   const p=D.props[i],v=id=>document.getElementById(id)?.value?.trim();
-  const gallery=[...(p.gallery||[])];
+  var rawPGal = p.gallery;
+  if (typeof rawPGal === 'string') { try { rawPGal = JSON.parse(rawPGal); } catch(_) { rawPGal = []; } }
+  const gallery = [...(Array.isArray(rawPGal) ? rawPGal : [])];
   const selectedCover=v('pph'+i);
   const photo=selectedCover||(gallery[0]||'');
   if(selectedCover && gallery.length>0 && gallery[0]!==selectedCover){
@@ -1037,7 +1041,10 @@ function openEE(i){
 }
 async function saveExp(i){
   const e=D.exps[i],v=id=>document.getElementById(id)?.value?.trim();
-  const gallery=[...(e.gallery||[])];
+  // Ensure gallery is always a real array (defensive parse)
+  var rawGal = e.gallery;
+  if (typeof rawGal === 'string') { try { rawGal = JSON.parse(rawGal); } catch(_) { rawGal = []; } }
+  const gallery = [...(Array.isArray(rawGal) ? rawGal : [])];
   // Selected cover photo from dropdown (may differ from gallery[0] if user picked different cover)
   const selectedPhoto=v('eph'+i);
   const photo=selectedPhoto||(gallery[0]||'');
@@ -1339,12 +1346,12 @@ async function saveSettings(){
     hero_photo:v('shp1'),hero_photo2:v('shp2'),hero_photo3:v('shp3'),hero_photo4:v('shp4'),
     svc_accommodation_photo:v('ssacc'),svc_boat_photo:v('ssboa'),svc_nature_photo:v('ssnat'),
     svc_food_photo:v('ssfoo'),svc_concierge_photo:v('sscon'),svc_safe_photo:v('sssaf'),
-    svc_accommodation_active:document.getElementById('svcact_acc')?.checked!==false,
-    svc_boat_active:document.getElementById('svcact_boa')?.checked!==false,
-    svc_nature_active:document.getElementById('svcact_nat')?.checked!==false,
-    svc_food_active:document.getElementById('svcact_foo')?.checked!==false,
-    svc_concierge_active:document.getElementById('svcact_con')?.checked!==false,
-    svc_safe_active:document.getElementById('svcact_saf')?.checked!==false,
+    svc_accommodation_active:document.getElementById('svcact_acc')?.checked===true,
+    svc_boat_active:document.getElementById('svcact_boa')?.checked===true,
+    svc_nature_active:document.getElementById('svcact_nat')?.checked===true,
+    svc_food_active:document.getElementById('svcact_foo')?.checked===true,
+    svc_concierge_active:document.getElementById('svcact_con')?.checked===true,
+    svc_safe_active:document.getElementById('svcact_saf')?.checked===true,
     svc_order:getSvcOrder(),
     svc_custom_cards:D.settings.svc_custom_cards||[]
   };

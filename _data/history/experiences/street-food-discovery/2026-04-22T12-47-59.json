@@ -1,0 +1,21 @@
+{
+  "name": "Street Food Discovery Tour",
+  "name_fr": "Tournée Découverte Street Food",
+  "category": "food",
+  "icon": "🍛",
+  "description": "Explore local markets and street stalls, tasting dholl puri, gato piment, alouda and more.",
+  "description_fr": "Explorez les marchés locaux et les étals de rue en dégustant du dholl puri, du gato piment, de l'alouda et bien plus encore.",
+  "price": 35,
+  "unit": "person",
+  "duration": "3 hours",
+  "duration_fr": "3 heures",
+  "gallery": [
+    "/images/Host.jpg"
+  ],
+  "instagram": "",
+  "active": true,
+  "photo": "/images/Host.jpg",
+  "_snapshot_ts": "2026-04-22T12:47:59.283750",
+  "_snapshot_type": "experience",
+  "_slug": "street-food-discovery"
+}

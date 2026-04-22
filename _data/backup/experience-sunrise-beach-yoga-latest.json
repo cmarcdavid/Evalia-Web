@@ -1,0 +1,21 @@
+{
+  "name": "Sunrise Beach Yoga",
+  "name_fr": "Yoga au Lever du Soleil sur la Plage",
+  "category": "nature",
+  "icon": "🧘",
+  "description": "Start your day with a beachside yoga session at sunrise led by local wellness expert @bea_titudeyoga. All levels welcome.",
+  "description_fr": "Commencez votre journée avec une séance de yoga sur la plage au lever du soleil, animée par l'experte locale en bien-être @bea_titudeyoga. Tous niveaux bienvenus.",
+  "price": 35,
+  "unit": "person",
+  "duration": "90 min",
+  "duration_fr": "90 min",
+  "gallery": [
+    "/images/Hero1.jpg"
+  ],
+  "instagram": "https://www.instagram.com/bea_titudeyoga/",
+  "active": true,
+  "photo": "/images/Hero1.jpg",
+  "_snapshot_ts": "2026-04-22T12:47:59.285448",
+  "_snapshot_type": "experience",
+  "_slug": "sunrise-beach-yoga"
+}
