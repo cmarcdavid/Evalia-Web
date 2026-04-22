@@ -47,7 +47,7 @@
       --font-d:  'Playfair Display', serif;
       --font-b:  'Outfit', sans-serif;
     }
-    html{scroll-behavior:smooth;scroll-padding-top:80px}
+    html{scroll-behavior:smooth;scroll-padding-top:72px}
     body{font-family:var(--font-b);background:var(--cream);color:var(--dark);overflow-x:hidden}
     a{color:inherit;text-decoration:none}
     img{display:block;width:100%;object-fit:cover}
@@ -150,8 +150,11 @@
     .acc-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
     .acc-card{background:var(--white);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);transition:transform .3s,box-shadow .3s}
     .acc-card:hover{transform:translateY(-6px);box-shadow:0 24px 56px rgba(0,107,143,.18)}
-    .acc-img{height:280px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:80px}
+    .acc-img{height:280px;position:relative;overflow:hidden;padding:0}
     /* ── IMAGE SLOTS for accommodation ── */
+    .acc-img .carousel{height:100%;border-radius:0;aspect-ratio:unset}
+    .acc-img .carousel-track{height:100%}
+    .acc-img .carousel-slide{height:100%}
     .acc-studio{background:linear-gradient(135deg,#006B8F 0%,#00A8CC 100%)}
     .acc-villa{background:linear-gradient(135deg,#2D6A4F 0%,#52b788 100%)}
     .acc-badge{position:absolute;top:16px;left:16px;background:var(--ocean);color:#fff;font-size:11px;font-weight:600;padding:5px 14px;border-radius:50px;letter-spacing:.06em}
@@ -266,7 +269,7 @@
     .exp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
     .exp-card{border-radius:16px;overflow:hidden;background:var(--white);border:1.5px solid var(--stone);transition:all .3s;cursor:pointer}
     .exp-card:hover{border-color:var(--lagoon);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,107,143,.12)}
-    .exp-img{height:200px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;overflow:hidden}
+    .exp-img{position:relative;overflow:hidden;padding:0}
     .exp-body{padding:20px}
     .exp-cat{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ocean);margin-bottom:6px}
     .exp-name{font-family:var(--font-d);font-size:18px;font-weight:400;margin-bottom:6px}
@@ -407,6 +410,19 @@
     .gal-strip{display:flex;gap:5px;padding:8px 0 4px;overflow-x:auto}
     .gal-strip::-webkit-scrollbar{height:3px}
     .gal-strip::-webkit-scrollbar-thumb{background:var(--stone);border-radius:3px}
+    /* ── CAROUSEL ── */
+    .carousel{position:relative;overflow:hidden;border-radius:inherit;background:#000;aspect-ratio:3/2}
+    .carousel-track{display:flex;transition:transform .35s cubic-bezier(.22,1,.36,1);height:100%}
+    .carousel-slide{flex:0 0 100%;position:relative;overflow:hidden}
+    .carousel-slide img,.carousel-slide video{width:100%;height:100%;object-fit:cover;display:block}
+    .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.45);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:18px;line-height:1;cursor:pointer;z-index:2;transition:background .2s;display:flex;align-items:center;justify-content:center}
+    .carousel-btn:hover{background:rgba(0,0,0,.7)}
+    .carousel-prev{left:8px}
+    .carousel-next{right:8px}
+    .carousel-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:2}
+    .carousel-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5);border:none;cursor:pointer;padding:0;transition:background .2s,transform .2s}
+    .carousel-dot.on{background:#fff;transform:scale(1.25)}
+    .carousel-count{position:absolute;top:8px;right:10px;background:rgba(0,0,0,.45);color:#fff;font-size:11px;padding:2px 7px;border-radius:10px;z-index:2;font-family:var(--font-b)}
     .gal-th{width:54px;height:38px;border-radius:5px;object-fit:cover;flex-shrink:0;cursor:pointer;transition:transform .15s,outline .15s;outline:2px solid transparent}
     .gal-th:hover{transform:scale(1.1);outline-color:var(--brand-green)}
 
@@ -1191,7 +1207,7 @@ function renderExp(filter) {
       '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">No experiences found.</div>';
     return;
   }
-  document.getElementById('expGrid').innerHTML = list.map(e => {
+  document.getElementById('expGrid').innerHTML = list.map((e, ei) => {
     const cat     = e.category || e.cat || 'nature';
     const name    = (lang === 'fr' && e.name_fr)        ? e.name_fr        : (e.name || '');
     const desc    = (lang === 'fr' && e.description_fr) ? e.description_fr : (e.description || e.desc || '');
@@ -1200,28 +1216,38 @@ function renderExp(filter) {
       ? (e.unit==='person'?'/personne':e.unit==='group'?'/groupe':'/service')
       : ('/'+(e.unit||'person'));
     const photo   = e.photo || (e.gallery && e.gallery[0]) || '';
-    const gallery = e.gallery || (photo ? [photo] : []);
+    const gallery = (e.gallery && e.gallery.length) ? e.gallery : (photo ? [photo] : []);
     const color   = CAT_COLORS[cat] || 'linear-gradient(135deg,#1A1F2E,#2d3550)';
-    const imgHtml = photo
-      ? `<img src="${photo}" alt="${name}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;cursor:${gallery.length>1?'zoom-in':'default'}" ${gallery.length>0?`onclick="openLb(${JSON.stringify(gallery)},0)"`:''}/>`
-      : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:56px">${e.icon||'🌴'}</div>`;
-    const galStrip = gallery.length > 1
-      ? `<div class="gal-strip">${gallery.map((g,gi)=>
-          `<img class="gal-th" src="${g}" loading="lazy" onclick="openLb(${JSON.stringify(gallery)},${gi})" title="Photo ${gi+1}">`
-        ).join('')}</div>`
-      : '';
-    const bookName = name.replace(/'/g,"\\'");
+    const cid     = 'exp-car-' + ei;
+    const multi   = gallery.length > 1;
+    const slides  = gallery.map((g, gi) => {
+      const isVid = /\.(mp4|mov)/i.test(g);
+      const media = isVid
+        ? `<video src="${g}" muted loop playsinline style="width:100%;height:100%;object-fit:cover"></video>`
+        : `<img src="${g}" alt="${name} photo ${gi+1}" style="width:100%;height:100%;object-fit:cover" loading="${gi===0?'eager':'lazy'}"/>`;
+      return `<div class="carousel-slide" onclick="openLb(${JSON.stringify(gallery)},${gi})" style="cursor:zoom-in">${media}</div>`;
+    }).join('');
+    const dots = multi ? gallery.map((_,gi) =>
+      `<button class="carousel-dot${gi===0?' on':''}" onclick="event.stopPropagation();carouselDot('${cid}',${gi})"></button>`
+    ).join('') : '';
+    const carouselHtml = gallery.length
+      ? `<div class="carousel" id="${cid}">
+          <div class="carousel-track">${slides}</div>
+          ${multi?`<button class="carousel-btn carousel-prev" onclick="event.stopPropagation();carouselGo('${cid}',-1)">‹</button>
+          <button class="carousel-btn carousel-next" onclick="event.stopPropagation();carouselGo('${cid}',1)">›</button>
+          <div class="carousel-dots">${dots}</div>
+          <div class="carousel-count">${gallery.length > 1 ? '1 / '+gallery.length : ''}</div>`:''}
+        </div>`
+      : `<div class="carousel" style="background:${color};display:flex;align-items:center;justify-content:center;font-size:56px">${e.icon||'🌴'}</div>`;
+    const bookName = name.replace(/'/g,"\'");
     return `
     <div class="exp-card">
-      <div class="exp-img" style="background:${color};position:relative">
-        ${imgHtml}
-      </div>
+      ${carouselHtml}
       <div class="exp-body">
         <div class="exp-cat">${CAT_LABELS[cat] || cat}</div>
         <div class="exp-name">${name}</div>
         <div class="exp-desc">${desc}</div>
         ${e.instagram ? `<a href="${e.instagram}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ocean);margin-top:8px;margin-bottom:2px;font-weight:500;text-decoration:none">📸 @bea_titudeyoga</a>` : ''}
-        ${galStrip}
         <div class="exp-foot">
           <div class="exp-meta"><span>⏱ ${dur}</span></div>
           <div class="exp-price">€${e.price}<span style="font-size:12px;color:var(--muted);font-family:var(--font-b)">${unitLbl}</span></div>
@@ -1230,6 +1256,8 @@ function renderExp(filter) {
       </div>
     </div>`;
   }).join('');
+  // Initialise all carousels after DOM injection
+  list.forEach(function(_, ei){ carouselInit('exp-car-' + ei); });
 }
 
 // Render accommodation cards from live data
@@ -1247,35 +1275,32 @@ function renderProperties() {
     const gallery = p.gallery || (p.photo ? [p.photo] : []);
     // Photo — first gallery item is the default cover if photo not explicitly set
     const coverPhoto = p.photo || (p.gallery && p.gallery[0]) || '';
-    if (coverPhoto) {
-      const img = card.querySelector('.acc-img img, #villaImg');
-      if (img) {
-        img.src = coverPhoto;
-        if (img.id === 'villaImg') {
-          const hoverPhoto = p.photo_alt || p.gallery?.[1] || coverPhoto;
-          img.setAttribute('onmouseover', `this.src='${hoverPhoto}'`);
-          img.setAttribute('onmouseout',  `this.src='${coverPhoto}'`);
-        }
-        // Click cover to open lightbox if gallery exists
-        if (gallery.length > 0) {
-          img.style.cursor = 'zoom-in';
-          img.onclick = () => openLb(gallery, 0);
-        }
-      }
-    }
-    // Gallery strip — inject after .acc-img if multiple photos
-    if (gallery.length > 1) {
-      let strip = card.querySelector('.acc-gallery-strip');
-      if (!strip) {
-        strip = document.createElement('div');
-        strip.className = 'acc-gallery-strip gal-strip';
-        strip.style.cssText = 'padding:6px 16px 0';
-        const accImg = card.querySelector('.acc-img');
-        if (accImg) accImg.after(strip);
-      }
-      strip.innerHTML = gallery.map((g,gi) =>
-        `<img class="gal-th" src="${g}" loading="lazy" onclick="openLb(${JSON.stringify(gallery)},${gi})">`
-      ).join('');
+    // Cover photo handled by carousel below
+    // Replace static .acc-img with carousel if gallery has multiple images
+    const accImgDiv = card.querySelector('.acc-img');
+    if (accImgDiv && gallery.length > 0) {
+      const cid  = p._slug ? 'prop-car-' + p._slug : 'prop-car-' + Math.random().toString(36).slice(2);
+      const isMulti = gallery.length > 1;
+      const slides = gallery.map((g, gi) => {
+        const isVid = /\.(mp4|mov)/i.test(g);
+        const media = isVid
+          ? `<video src="${g}" muted loop playsinline style="width:100%;height:100%;object-fit:cover"></video>`
+          : `<img src="${g}" alt="${name}" style="width:100%;height:100%;object-fit:cover" loading="${gi===0?'eager':'lazy'}"/>`;
+        return `<div class="carousel-slide" onclick="openLb(${JSON.stringify(gallery)},${gi})" style="cursor:zoom-in">${media}</div>`;
+      }).join('');
+      const dots = isMulti ? gallery.map((_, gi) =>
+        `<button class="carousel-dot${gi===0?' on':''}" onclick="event.stopPropagation();carouselDot('${cid}',${gi})"></button>`
+      ).join('') : '';
+      accImgDiv.innerHTML = `
+        <div class="carousel" id="${cid}" style="border-radius:inherit;height:100%;aspect-ratio:unset">
+          <div class="carousel-track">${slides}</div>
+          ${isMulti ? `<button class="carousel-btn carousel-prev" onclick="event.stopPropagation();carouselGo('${cid}',-1)">‹</button>
+          <button class="carousel-btn carousel-next" onclick="event.stopPropagation();carouselGo('${cid}',1)">›</button>
+          <div class="carousel-dots">${dots}</div>
+          <div class="carousel-count">1 / ${gallery.length}</div>` : ''}
+        </div>
+        <div class="acc-badge">${badge}</div>`;
+      requestAnimationFrame(function(){ carouselInit(cid); });
     }
     // Text fields
     const set = (sel, val) => { const el = card.querySelector(sel); if(el && val) el.textContent = val; };
@@ -1306,6 +1331,18 @@ function renderProperties() {
 }
 
 // Apply settings (WhatsApp, hero text etc) from _data/settings.json
+function applyHeroText(s) {
+  // Use FR fields if lang=fr and they exist, else fall back to EN
+  var isFr = (typeof lang !== 'undefined') && lang === 'fr';
+  var line1 = (isFr && s.hero_line1_fr) ? s.hero_line1_fr : (s.hero_line1 || '');
+  var line2 = (isFr && s.hero_line2_fr) ? s.hero_line2_fr : (s.hero_line2 || '');
+  var sub   = (isFr && s.hero_sub_fr)   ? s.hero_sub_fr   : (s.hero_sub   || '');
+  var t = document.querySelector('.hero-title');
+  if (t && line1) t.innerHTML = line1 + (line2 ? '<br><em>' + line2 + '</em>' : '');
+  var st = document.querySelector('.hero-sub');
+  if (st && sub) st.textContent = sub;
+}
+
 function applySettings(s) {
   if (!s) return;
 
@@ -1318,15 +1355,8 @@ function applySettings(s) {
     });
   }
 
-  // ── Hero text ─────────────────────────────────────────────────
-  if (s.hero_line1) {
-    const t = document.querySelector('.hero-title');
-    if (t) t.innerHTML = s.hero_line1 + '<br><em>' + (s.hero_line2 || 'Perfectly Arranged') + '</em>';
-  }
-  if (s.hero_sub) {
-    const sub = document.querySelector('.hero-sub');
-    if (sub) sub.textContent = s.hero_sub;
-  }
+  // ── Hero text (language-aware) ───────────────────────────────
+  applyHeroText(s);
 
   // ── Hero slideshow photos ─────────────────────────────────────
   const heroPhotos = [s.hero_photo, s.hero_photo2, s.hero_photo3, s.hero_photo4].filter(Boolean);
@@ -1405,10 +1435,12 @@ function applySettings(s) {
 
 // Main loader — fetches _data/manifest.json first, then all content
 // manifest.json is auto-updated by admin on every save/delete
+var siteSettings = null;
 async function loadCMSContent() {
   try {
     // Step 1: load manifest to know what files exist (no hardcoded slugs)
-    const manifestRes = await fetch('/_data/manifest.json').then(r => r.ok ? r.json() : null);
+    const _cb = '?v=' + Date.now();
+    const manifestRes = await fetch('/_data/manifest.json' + _cb).then(r => r.ok ? r.json() : null);
     const propSlugs = manifestRes?.properties || ['studio-evalia','villa-evalia'];
     const expSlugs  = manifestRes?.experiences || [
       'dolphin-watching-cruise','ile-aux-cerfs-day-trip',
@@ -1419,9 +1451,9 @@ async function loadCMSContent() {
 
     // Step 2: load all content in parallel
     const [settingsRes, ...rest] = await Promise.allSettled([
-      fetch('/_data/settings.json').then(r => r.ok ? r.json() : null),
-      ...propSlugs.map(s => fetch(`/_data/properties/${s}.json`).then(r => r.ok ? r.json() : null)),
-      ...expSlugs.map(s  => fetch(`/_data/experiences/${s}.json`).then(r => r.ok ? r.json() : null)),
+      fetch('/_data/settings.json' + _cb).then(r => r.ok ? r.json() : null),
+      ...propSlugs.map(s => fetch(`/_data/properties/${s}.json` + _cb).then(r => r.ok ? r.json() : null)),
+      ...expSlugs.map(s  => fetch(`/_data/experiences/${s}.json` + _cb).then(r => r.ok ? r.json() : null)),
     ]);
     const propResults = rest.slice(0, propSlugs.length);
     const expResults  = rest.slice(propSlugs.length);
@@ -1432,7 +1464,7 @@ async function loadCMSContent() {
 
     // Settings
     const settings = settingsRes.status === 'fulfilled' ? settingsRes.value : null;
-    if (settings) applySettings(settings);
+    if (settings) { siteSettings = settings; applySettings(settings); }
 
     // Properties — load all from manifest
     propResults.forEach((res, idx) => {
@@ -1453,6 +1485,10 @@ async function loadCMSContent() {
 
     // Re-apply language AFTER CMS data is loaded so FR users see translated content
     if (typeof applyLang === 'function') applyLang();
+    // Re-apply service card order after all renders complete (requestAnimationFrame ensures DOM is settled)
+    if (siteSettings && siteSettings.svc_order) {
+      requestAnimationFrame(function() { applySettings(siteSettings); });
+    }
 
   } catch(err) {
     // Silent fail — hardcoded fallbacks remain visible
@@ -1652,7 +1688,13 @@ function fmtExp(el) {
 }
 
 // ── SCROLL HELPERS ────────────────────────────
-function scrollToSection(id) { var el = document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth'}); }
+function scrollToSection(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var navH = (document.getElementById('mainNav') || {offsetHeight:72}).offsetHeight || 72;
+  var top  = el.getBoundingClientRect().top + window.pageYOffset - navH - 8;
+  window.scrollTo({top: top, behavior: 'smooth'});
+}
 
 // ── MOBILE NAV ────────────────────────────────
 function toggleMobile() {
@@ -1889,6 +1931,8 @@ function applyLang() {
   var hg = document.querySelector('.btn-hero-ghost');
   if (hp) hp.textContent = T('hero_btn_primary');
   if (hg) hg.textContent = T('hero_btn_ghost');
+  // Re-translate hero title/sub from CMS settings
+  if (siteSettings) applyHeroText(siteSettings);
 
   // All data-i18n elements
   var HTML_KEYS = {'svc_title':1,'acc_title':1,'exp_title':1,'reg_title':1,
@@ -1944,6 +1988,44 @@ function applyLang() {
     var cat = at ? at.dataset.tab : 'all';
     renderExp(cat === 'nat' ? 'nature' : cat);
   }
+}
+
+// ── CAROUSEL ──────────────────────────────────────────────────────────────
+function carouselInit(id) {
+  var wrap = document.getElementById(id);
+  if (!wrap) return;
+  var track = wrap.querySelector('.carousel-track');
+  var slides = wrap.querySelectorAll('.carousel-slide');
+  var dots   = wrap.querySelectorAll('.carousel-dot');
+  if (!track || !slides.length) return;
+  var cur = 0;
+  wrap._carCur = 0;
+  wrap._carLen = slides.length;
+  function go(n) {
+    cur = ((n % slides.length) + slides.length) % slides.length;
+    wrap._carCur = cur;
+    track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+    dots.forEach(function(d,i){ d.classList.toggle('on', i===cur); });
+    var cnt = wrap.querySelector('.carousel-count');
+    if (cnt) cnt.textContent = (cur+1) + ' / ' + slides.length;
+  }
+  wrap._carGo = go;
+  // Touch/swipe support
+  var tx = 0;
+  track.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive:true});
+  track.addEventListener('touchend', function(e){
+    var dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
+  }, {passive:true});
+  go(0);
+}
+function carouselGo(id, dir) {
+  var wrap = document.getElementById(id);
+  if (wrap && wrap._carGo) wrap._carGo((wrap._carCur || 0) + dir);
+}
+function carouselDot(id, idx) {
+  var wrap = document.getElementById(id);
+  if (wrap && wrap._carGo) wrap._carGo(idx);
 }
 
 // ── LIGHTBOX ──────────────────────────────────────────────────────────────
