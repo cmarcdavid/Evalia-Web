@@ -457,28 +457,36 @@ async function writeDataSnapshot(type, slug){
   try{
     const now=new Date();
     const ts=now.toISOString().replace(/[:.]/g,'-').slice(0,19);
-    let path, content;
+    let path, content, data;
     if(type==='settings'){
+      const {_path,_sha,...s}=D.settings;
+      data={...s,_snapshot_ts:now.toISOString(),_snapshot_type:'settings'};
       path=`_data/history/settings/${ts}.json`;
-      content=JSON.stringify({...D.settings,_snapshot_ts:now.toISOString(),_snapshot_type:'settings'},null,2);
     } else if(type==='property' && slug){
       const p=D.props.find(x=>x._slug===slug);
-      if(!p)return;
+      if(!p){console.warn('Snapshot: property not found',slug);return;}
+      const {_path,_sha,...pd}=p;
+      data={...pd,_snapshot_ts:now.toISOString(),_snapshot_type:'property',_slug:slug};
       path=`_data/history/properties/${slug}/${ts}.json`;
-      const {_path,_sha,...data}=p;
-      content=JSON.stringify({...data,_snapshot_ts:now.toISOString(),_snapshot_type:'property',_slug:slug},null,2);
     } else if(type==='experience' && slug){
       const e=D.exps.find(x=>x._slug===slug);
-      if(!e)return;
+      if(!e){console.warn('Snapshot: experience not found',slug);return;}
+      const {_path,_sha,...ed}=e;
+      data={...ed,_snapshot_ts:now.toISOString(),_snapshot_type:'experience',_slug:slug};
       path=`_data/history/experiences/${slug}/${ts}.json`;
-      const {_path,_sha,...data}=e;
-      content=JSON.stringify({...data,_snapshot_ts:now.toISOString(),_snapshot_type:'experience',_slug:slug},null,2);
     } else return;
-    await ghWrite(path,content,`history: snapshot ${type} ${slug||''} at ${ts}`);
-    console.log('Snapshot saved:',path);
+    content=JSON.stringify(data,null,2);
+    await ghWrite(path,content,`history: snapshot ${type} ${slug||''}`);
+    // Also write/overwrite a "latest" backup for easy recovery
+    const backupPath = type==='settings'
+      ? '_data/backup/settings-latest.json'
+      : `_data/backup/${type}-${slug}-latest.json`;
+    await ghWrite(backupPath,content,`backup: latest ${type} ${slug||''}`);
+    console.log('Snapshot + backup saved:',path);
   }catch(e){
-    // History write failure is non-critical — log but don't block the main save
-    console.warn('Snapshot failed (non-critical):',e.message);
+    console.warn('Snapshot failed:',e.message);
+    // Non-critical — don't block main save, but surface the error
+    toast('⚠️','History backup failed: '+e.message+' (save continues)');
   }
 }
 
@@ -533,7 +541,21 @@ async function showHistory(type, slug){
   setBusy('Loading history…');
   const files=await loadHistory(type,slug);
   setOk('Loaded');
-  if(!files.length){toast('📋','No history yet for this item.');return;}
+  if(!files.length){
+    // Check backup file
+    const backupPath = type==='settings'
+      ? '_data/backup/settings-latest.json'
+      : `_data/backup/${type}-${slug}-latest.json`;
+    const bkRow = `<div style="padding:10px;background:var(--sd);border-radius:8px;font-size:13px">
+      <b>No version history found</b> for this item.<br>
+      <span style="color:var(--mu)">History is saved automatically each time you save. If the backup file exists, you can restore from it.</span><br>
+      <button class="btn bg bsm" style="margin-top:8px" onclick="restoreSnapshot('${backupPath}')">♻️ Restore from latest backup</button>
+    </div>`;
+    document.getElementById('histTitle').textContent='Version History: '+(type==='settings'?'Settings':(slug||type));
+    document.getElementById('histList').innerHTML=bkRow;
+    document.getElementById('histPanel').classList.add('open');
+    return;
+  }
   const label=type==='settings'?'Settings':(slug||type);
   const rows=files.map(f=>{
     const ts=f.name.replace('.json','').replace(/-/g,(c,i)=>i===10?'T':i>10&&i<=15?':':'-').slice(0,19);
@@ -763,6 +785,25 @@ function reRenderGal(ot,oi){
     `<div class="gadd" onclick="openPP(null,null,true,'${ot}',${oi})"><span>+</span><span>Add</span></div>`;
 }
 
+function setGalDefault(ot, oi, gi) {
+  var arr  = ot === 'p' ? D.props : D.exps;
+  var item = arr[oi];
+  if (!item || !item.gallery || gi >= item.gallery.length) return;
+  // Move chosen image to index 0 — it becomes the cover
+  var chosen = item.gallery.splice(gi, 1)[0];
+  item.gallery.unshift(chosen);
+  item.photo = chosen;
+  reRenderGal(ot, oi);
+  // Sync the cover photo INPUT field and its preview
+  var inputId = ot === 'p' ? 'pph' + oi : 'eph' + oi;
+  var pvId    = ot === 'p' ? 'ppe_pv_' + oi : 'epe_pv_' + oi;
+  var inp = document.getElementById(inputId);
+  if (inp) { inp.value = chosen; inp.dispatchEvent(new Event('input')); }
+  updPrev(inputId, pvId, chosen);
+  md();
+  toast('⭐', chosen.split('/').pop() + ' set as cover photo');
+}
+
 function addToGal(ot,oi,path){
   const arr=ot==='p'?D.props:D.exps;const item=arr[oi];if(!item)return;
   if(!item.gallery)item.gallery=[];
@@ -834,12 +875,10 @@ function pForm(p,i){
       <div class="fg"><label class="fl">🇬🇧 Badge</label><input class="fi" id="pbg${i}" value="${esc(p.badge||'')}" oninput="md()"/></div>
       <div class="fg"><label class="fl">🇫🇷 Badge</label><input class="fi" id="pbgfr${i}" value="${esc(p.badge_fr||p.badge||'')}" oninput="md()"/></div>
     </div>
-    <div class="fg"><label class="fl">Cover Photo</label>
-      <div style="display:flex;gap:6px">
-        <select class="fi" id="pph${i}" onchange="md();updPrev('pph${i}','ppe_pv_${i}')">
-          <option value="">— none —</option>${mopts(p.photo)}
-        </select>
-        <button class="btn bg bsm" onclick="openPP('pph${i}','ppe_pv_${i}')">📷</button>
+    <div class="fg"><label class="fl">Cover Photo <span style="font-size:10px;color:var(--mu)">(first gallery image used if empty)</span></label>
+      <div style="display:flex;gap:6px;align-items:center">
+        <input class="fi" id="pph${i}" value="${p.photo||''}" placeholder="/images/photo.jpg" readonly style="flex:1;cursor:pointer;background:var(--sd)" onclick="openPP('pph${i}','ppe_pv_${i}')" oninput="md();updPrev('pph${i}','ppe_pv_${i}')"/>
+        <button class="btn bg bsm" onclick="openPP('pph${i}','ppe_pv_${i}')">📷 Pick</button>
       </div>
       <div class="ipp" id="ppe_pv_${i}" style="${p.photo?'display:block':''}"><img src="${p.photo||''}"/></div>
     </div>
@@ -972,12 +1011,10 @@ function eForm(e,i){
       <div class="fg"><label class="fl">Icon</label><input class="fi" id="eic${i}" value="${esc(e.icon||'')}" style="width:60px" oninput="md()"/></div>
     </div>
     <div class="fg"><label class="fl">Instagram URL</label><input class="fi" id="eig${i}" value="${esc(e.instagram||'')}" oninput="md()"/></div>
-    <div class="fg"><label class="fl">Cover Photo</label>
-      <div style="display:flex;gap:6px">
-        <select class="fi" id="eph${i}" onchange="md();updPrev('eph${i}','epe_pv_${i}')">
-          <option value="">— none —</option>${mopts(e.photo)}
-        </select>
-        <button class="btn bg bsm" onclick="openPP('eph${i}','epe_pv_${i}')">📷</button>
+    <div class="fg"><label class="fl">Cover Photo <span style="font-size:10px;color:var(--mu)">(first gallery image used if empty)</span></label>
+      <div style="display:flex;gap:6px;align-items:center">
+        <input class="fi" id="eph${i}" value="${e.photo||''}" placeholder="/images/photo.jpg" readonly style="flex:1;cursor:pointer;background:var(--sd)" onclick="openPP('eph${i}','epe_pv_${i}')" oninput="md();updPrev('eph${i}','epe_pv_${i}')"/>
+        <button class="btn bg bsm" onclick="openPP('eph${i}','epe_pv_${i}')">📷 Pick</button>
       </div>
       <div class="ipp" id="epe_pv_${i}" style="${e.photo?'display:block':''}"><img src="${e.photo||''}"/></div>
     </div>
