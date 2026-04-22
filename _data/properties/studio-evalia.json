@@ -12,10 +12,10 @@
   "bathrooms": 1,
   "min_stay": 5,
   "cleaning_fee": 30,
-  "photo": "/images/Hero3.jpg",
+  "photo": "/images/IMG_5323.jpeg",
   "photo_alt": "/images/Hero1.jpg",
   "gallery": [
-    "/images/Hero3.jpg",
+    "/images/IMG_5323.jpeg",
     "/images/IMG_5320.jpeg",
     "/images/IMG_5322.jpeg",
     "/images/IMG_5325.jpeg"
