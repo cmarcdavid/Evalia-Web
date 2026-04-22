@@ -59,7 +59,35 @@
     .fi:disabled{background:var(--sd);cursor:not-allowed}
     .fr2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
     .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
-    @media(max-width:640px){.fr2,.fr3{grid-template-columns:1fr}}
+    @media(max-width:640px){.fr2,.fr3,.birow{grid-template-columns:1fr}}
+    /* Admin tablet */
+    @media(max-width:1100px){
+      .sidebar{width:180px}
+      .srow{grid-template-columns:repeat(2,1fr)}
+      .g2{grid-template-columns:1fr}
+    }
+    /* Admin mobile */
+    @media(max-width:768px){
+      .shell{flex-direction:column}
+      .sidebar{width:100%;height:auto;flex-direction:row;flex-wrap:nowrap;overflow-x:auto}
+      .sbrand{display:none}
+      .snav{flex-direction:row;gap:0;padding:4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+      .slbl,.sdiv{display:none}
+      .si{flex-shrink:0;white-space:nowrap;padding:8px 10px;border-radius:6px;font-size:11.5px}
+      .main{height:calc(100vh - 52px)}
+      .topbar{padding:8px 12px}
+      .pgtitle{font-size:15px}
+      .content{padding:12px}
+      .srow{grid-template-columns:repeat(2,1fr)}
+      .birow{grid-template-columns:1fr}
+      .tbb{height:28px;padding:0 8px;font-size:11px}
+      .svc-card-row{flex-wrap:wrap;gap:6px}
+    }
+    @media(max-width:480px){
+      .srow{grid-template-columns:1fr 1fr}
+      .card{padding:14px}
+      .fr2{grid-template-columns:1fr}
+    }
     .fsec{margin-bottom:16px}
     .fsect{font-family:var(--fd);font-size:14.5px;font-weight:400;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--st)}
     .hint{font-size:10.5px;color:var(--mu);margin-top:2px;line-height:1.5}
@@ -94,6 +122,9 @@
     .gth{height:76px;border-radius:7px;position:relative;overflow:hidden;background:var(--sd);cursor:pointer;border:2px solid transparent;transition:border-color .15s}
     .gth img,.gth video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
     .gth-del{position:absolute;top:3px;right:3px;width:18px;height:18px;background:rgba(192,57,43,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;cursor:pointer;border:none;opacity:0;transition:opacity .15s}
+    .gth-actions{position:absolute;inset:0;opacity:0;transition:opacity .15s}
+    .gth:hover .gth-actions{opacity:1}
+    .gth:hover .gth-del{opacity:1}
     .gth:hover .gth-del{opacity:1}
     .gadd{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;border:2px dashed var(--st);cursor:pointer;font-size:11px;color:var(--mu);transition:all .15s;border-radius:7px;height:76px}
     .gadd:hover{border-color:var(--g);color:var(--g)}
@@ -472,7 +503,9 @@ async function restoreSnapshot(path){
       const r=await ghG(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
       if(!r.ok)throw new Error('Cannot read snapshot');
       const f=await r.json();
-      const data=JSON.parse(atob(f.content.replace(/\s/g,'')));
+      const rawSrc=atob(f.content.replace(/\s/g,''));
+      const decoded=decodeURIComponent(rawSrc.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      const data=JSON.parse(decoded);
       // Remove snapshot metadata before restoring
       const {_snapshot_ts,_snapshot_type,_path:__p,_sha:__s,...clean}=data;
       // Determine restore target
@@ -616,7 +649,7 @@ async function loadFolder(p){
 async function loadFile(p){
   const r=await ghG(`/repos/${REPO}/contents/${p}?ref=${BRANCH}`);if(!r.ok)return{};
   const f=await r.json();
-  return{...JSON.parse(atob(f.content.replace(/\s/g,''))),_path:p,_sha:f.sha};
+  const raw=atob(f.content.replace(/\s/g,''));const decoded=decodeURIComponent(raw.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));return{...JSON.parse(decoded),_path:p,_sha:f.sha};
 }
 
 // MANIFEST
@@ -702,8 +735,13 @@ function updPrev(inputId,previewId,force){
 // GALLERY
 function galHtml(gallery,ot,oi){
   const items=(gallery||[]).map((p,gi)=>`
-    <div class="gth">${/\.(mp4|mov)/i.test(p)?`<video src="${p}" muted></video>`:`<img src="${p}" loading="lazy" onerror="this.style.opacity='.4'">`}
-      <button class="gth-del" onclick="rmGal('${ot}',${oi},${gi})">✕</button></div>`).join('');
+    <div class="gth" data-gi="${gi}" data-isdefault="${gi===0}">
+      ${/\.(mp4|mov)/i.test(p)?`<video src="${p}" muted></video>`:`<img src="${p}" loading="lazy" onerror="this.style.opacity='.4'">`}
+      <div class="gth-actions">
+        <button class="gth-def" title="Set as default cover" onclick="setGalDefault('${ot}',${oi},${gi})" style="background:${gi===0?'var(--g)':'rgba(0,0,0,.45)'};color:#fff;border:none;border-radius:3px;font-size:9px;padding:2px 4px;cursor:pointer;position:absolute;bottom:3px;left:3px">${gi===0?'★ Cover':'☆'}</button>
+        <button class="gth-del" onclick="rmGal('${ot}',${oi},${gi})">✕</button>
+      </div>
+    </div>`).join('');
   return`<div class="fg"><label class="fl">Gallery (photos & videos)</label>
     <div class="ggrid" id="gg_${ot}_${oi}">${items}
       <div class="gadd" onclick="openPP(null,null,true,'${ot}',${oi})"><span>+</span><span>Add</span></div>
@@ -715,10 +753,16 @@ function reRenderGal(ot,oi){
   const arr=ot==='p'?D.props:D.exps;const item=arr[oi];if(!item)return;
   const el=document.getElementById('gg_'+ot+'_'+oi);if(!el)return;
   el.innerHTML=(item.gallery||[]).map((p,gi)=>`
-    <div class="gth">${/\.(mp4|mov)/i.test(p)?`<video src="${p}" muted></video>`:`<img src="${p}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\'%3E%3Crect width=\'60\' height=\'60\' fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'55%25\' font-size=\'10\' fill=\'%23999\' text-anchor=\'middle\'%3E🖼%3C/text%3E%3C/svg%3E'">`}
-      <button class="gth-del" onclick="rmGal('${ot}',${oi},${gi})">✕</button></div>`).join('')+
+    <div class="gth">
+      ${/\.(mp4|mov)/i.test(p)?`<video src="${p}" muted></video>`:`<img src="${p}" loading="lazy" onerror="this.style.opacity='.3'">`}
+      <div class="gth-actions">
+        <button onclick="setGalDefault('${ot}',${oi},${gi})" style="background:${gi===0?'var(--g)':'rgba(0,0,0,.55)'};color:#fff;border:none;border-radius:3px;font-size:9px;padding:2px 5px;cursor:pointer;position:absolute;bottom:3px;left:3px">${gi===0?'★ Cover':'☆'}</button>
+        <button class="gth-del" onclick="rmGal('${ot}',${oi},${gi})">✕</button>
+      </div>
+    </div>`).join('')+
     `<div class="gadd" onclick="openPP(null,null,true,'${ot}',${oi})"><span>+</span><span>Add</span></div>`;
 }
+
 function addToGal(ot,oi,path){
   const arr=ot==='p'?D.props:D.exps;const item=arr[oi];if(!item)return;
   if(!item.gallery)item.gallery=[];
