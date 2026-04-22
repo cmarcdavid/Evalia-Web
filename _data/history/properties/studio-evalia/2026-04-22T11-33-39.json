@@ -12,10 +12,9 @@
   "bathrooms": 1,
   "min_stay": 5,
   "cleaning_fee": 30,
-  "photo": "/images/Hero3.jpg",
+  "photo": "/images/IMG_5320.jpeg",
   "photo_alt": "/images/Hero1.jpg",
   "gallery": [
-    "/images/Hero3.jpg",
     "/images/IMG_5320.jpeg",
     "/images/IMG_5322.jpeg",
     "/images/IMG_5325.jpeg"
@@ -30,5 +29,8 @@
     "1 Bed",
     "1 Bath",
     "2 Guests"
-  ]
+  ],
+  "_slug": "studio-evalia",
+  "_snapshot_ts": "2026-04-22T11:33:39.127Z",
+  "_snapshot_type": "property"
 }
