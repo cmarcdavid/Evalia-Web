@@ -35,5 +35,9 @@
     "saf"
   ],
   "svc_custom_cards": [],
-  "tiktok": ""
+  "tiktok": "",
+  "_path": "_data/settings.json",
+  "_sha": "e24fa4786ef2b5f7ca0f4d2732c7fa179052e098",
+  "_snapshot_ts": "2026-04-22T08:45:13.367Z",
+  "_snapshot_type": "settings"
 }
