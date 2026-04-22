@@ -12,11 +12,16 @@
   "bathrooms": 1,
   "min_stay": 5,
   "cleaning_fee": 60,
-  "photo": "/images/Villa-pool.jpg",
+  "photo": "/images/IMG_5325.jpeg",
   "photo_alt": "/images/Villa-pool1.jpg",
   "gallery": [
-    "/images/Villa-pool.jpg",
-    "/images/Villa-pool1.jpg"
+    "/images/IMG_5325.jpeg",
+    "/images/IMG_5324.jpeg",
+    "/images/IMG_5326.jpeg",
+    "/images/IMG_5320.jpeg",
+    "/images/IMG_5322.jpeg",
+    "/images/IMG_5336.jpeg",
+    "/images/IMG_5339.jpeg"
   ],
   "badge": "Pool & Garden",
   "badge_fr": "Piscine & Jardin",
