@@ -1,0 +1,37 @@
+{
+  "name": "Studio Evalia",
+  "name_fr": "Studio Evalia",
+  "type": "Studio",
+  "location": "Flic en Flac, West Mauritius",
+  "location_fr": "Flic en Flac, Ouest de l'Ãle Maurice",
+  "description": "A beautifully designed studio apartment steps from one of Mauritius' most beautiful beaches. Perfect for couples seeking a stylish, intimate retreat with everything within reach.",
+  "description_fr": "Un studio magnifiquement amÃ©nagÃ© Ã  deux pas de l'une des plus belles plages de l'Ãle Maurice. Parfait pour les couples en quÃªte d'un refuge intime et stylÃ© avec tout Ã  portÃ©e de main.",
+  "price": 80,
+  "max_guests": 2,
+  "bedrooms": 1,
+  "bathrooms": 1,
+  "min_stay": 2,
+  "cleaning_fee": 30,
+  "photo": "/images/Hero3.jpg",
+  "photo_alt": "/images/Hero1.jpg",
+  "gallery": [
+    "/images/Hero3.jpg",
+    "/images/IMG_5320.jpeg",
+    "/images/IMG_5322.jpeg",
+    "/images/IMG_5325.jpeg"
+  ],
+  "badge": "Available Now",
+  "badge_fr": "Disponible Maintenant",
+  "available": true,
+  "amenities": [
+    "WiFi",
+    "Air Con",
+    "Kitchenette",
+    "1 Bed",
+    "1 Bath",
+    "2 Guests"
+  ],
+  "_slug": "studio-evalia",
+  "_snapshot_ts": "2026-04-22T11:33:10.320Z",
+  "_snapshot_type": "property"
+}
