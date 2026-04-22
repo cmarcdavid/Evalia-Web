@@ -861,10 +861,17 @@ function openPE(i){
   document.getElementById('ppe'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function closePE(i){document.getElementById('ppe'+i)?.classList.remove('open');}
+function closeEE(i){document.getElementById('epe'+i)?.classList.remove('open');}
 async function saveProp(i){
   const p=D.props[i],v=id=>document.getElementById(id)?.value?.trim();
-  const gallery=p.gallery||[];
-  const photo=v('pph'+i)||(gallery[0]||'');
+  const gallery=[...(p.gallery||[])];
+  const selectedCover=v('pph'+i);
+  const photo=selectedCover||(gallery[0]||'');
+  if(selectedCover && gallery.length>0 && gallery[0]!==selectedCover){
+    const idx=gallery.indexOf(selectedCover);
+    if(idx>0){gallery.splice(idx,1);gallery.unshift(selectedCover);}
+    else if(idx<0){gallery.unshift(selectedCover);}
+  }
   const formData={
     name:v('pn'+i),name_fr:v('pnfr'+i),
     location:v('pl'+i),location_fr:v('plfr'+i),
@@ -987,14 +994,22 @@ function openEE(i){
   // Auto-set cover photo from gallery[0] if photo is unset
   const e=D.exps[i];
   if(e&&!e.photo&&e.gallery&&e.gallery.length){e.photo=e.gallery[0];renderExps();}
-  document.querySelectorAll('.ee').forEach(e=>e.classList.remove('open'));
+  document.querySelectorAll('.ep').forEach(e=>e.classList.remove('open'));
   document.getElementById('epe'+i)?.classList.add('open');
   document.getElementById('epe'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 async function saveExp(i){
   const e=D.exps[i],v=id=>document.getElementById(id)?.value?.trim();
-  const gallery=e.gallery||[];
-  const photo=v('eph'+i)||(gallery[0]||'');
+  const gallery=[...(e.gallery||[])];
+  // Selected cover photo from dropdown (may differ from gallery[0] if user picked different cover)
+  const selectedPhoto=v('eph'+i);
+  const photo=selectedPhoto||(gallery[0]||'');
+  // Keep gallery in sync: if a different cover was selected, move it to position 0
+  if(selectedPhoto && gallery.length>0 && gallery[0]!==selectedPhoto){
+    const idx=gallery.indexOf(selectedPhoto);
+    if(idx>0){gallery.splice(idx,1);gallery.unshift(selectedPhoto);}
+    else if(idx<0){gallery.unshift(selectedPhoto);}
+  }
   const updated={
     name:v('en'+i), name_fr:v('enfr'+i),
     category:v('ec'+i)||'nature',
