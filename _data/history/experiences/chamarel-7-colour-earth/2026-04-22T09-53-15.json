@@ -13,7 +13,10 @@
     "/images/Hero.jpg"
   ],
   "instagram": "",
-  "active": false,
+  "active": true,
   "photo": "/images/Hero.jpg",
-  "type": "Experience"
+  "type": "Experience",
+  "_slug": "chamarel-7-colour-earth",
+  "_snapshot_ts": "2026-04-22T09:53:15.187Z",
+  "_snapshot_type": "experience"
 }

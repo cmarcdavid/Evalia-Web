@@ -13,7 +13,9 @@
     "/images/Hero2.jpg"
   ],
   "instagram": "",
-  "active": false,
+  "active": true,
   "photo": "/images/Hero2.jpg",
-  "type": "Experience"
+  "_slug": "ile-aux-cerfs-day-trip",
+  "_snapshot_ts": "2026-04-22T09:53:30.796Z",
+  "_snapshot_type": "experience"
 }
