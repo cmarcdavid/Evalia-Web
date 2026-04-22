@@ -5,7 +5,7 @@
   "location": "Albion, West Mauritius",
   "location_fr": "Albion, Ouest de l'ile Maurice",
   "description": "A private 2-bedroom villa surrounded by a lush tropical garden with its own pool. Ideal for families or groups seeking privacy, space and the ultimate island living experience.",
-  "description_fr": "Une villa privée de 2 chambres entourée d'un jardin tropical luxuriant avec piscine privée. Idéale pour les familles ou les groupes en quête d'intimité, d'espace et d'une expérience insulaire inoubliable.",
+  "description_fr": "Une villa privÃ©e de 2 chambres entourÃ©e d'un jardin tropical luxuriant avec piscine privÃ©e. IdÃ©ale pour les familles ou les groupes en quÃªte d'intimitÃ©, d'espace et d'une expÃ©rience insulaire inoubliable.",
   "price": 120,
   "max_guests": 6,
   "bedrooms": 2,
@@ -15,14 +15,14 @@
   "photo": "/images/IMG_5320.jpeg",
   "photo_alt": "/images/Villa-pool1.jpg",
   "gallery": [
+    "/images/IMG_5320.jpeg",
     "/images/Villa-pool.jpg",
     "/images/Villa-pool1.jpg",
     "/images/IMG_5324.jpeg",
     "/images/IMG_5325.jpeg",
     "/images/IMG_5326.jpeg",
     "/images/IMG_5336.jpeg",
-    "/images/IMG_5339.jpeg",
-    "/images/IMG_5320.jpeg"
+    "/images/IMG_5339.jpeg"
   ],
   "badge": "Pool & Garden",
   "badge_fr": "Piscine & Jardin",
