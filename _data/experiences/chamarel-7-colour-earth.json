@@ -2,18 +2,17 @@
   "name": "Chamarel 7-Colour Earth",
   "name_fr": "Terres de Sept Couleurs de Chamarel",
   "category": "nature",
-  "icon": "Ã°ÂÂÂ",
+  "icon": "🌈",
   "description": "See the famous multicoloured earth, Chamarel waterfall and visit the rum distillery on this iconic tour.",
-  "description_fr": "DÃ©couvrez la cÃ©lÃ¨bre terre multicolore, la cascade de Chamarel et visitez la distillerie de rhum lors de cette excursion emblÃ©matique.",
+  "description_fr": "Découvrez la célèbre terre aux sept couleurs, la cascade de Chamarel et visitez la distillerie de rhum lors de cette excursion emblématique.",
   "price": 40,
   "unit": "person",
   "duration": "Half day",
-  "duration_fr": "Demi-journÃ©e",
+  "duration_fr": "Demi-journée",
   "gallery": [
     "/images/Hero.jpg"
   ],
   "instagram": "",
-  "active": false,
-  "photo": "/images/Hero.jpg",
-  "type": "Experience"
+  "active": true,
+  "photo": "/images/Hero.jpg"
 }
