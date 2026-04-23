@@ -82,7 +82,7 @@
     .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.15);z-index:98}
     .mobile-overlay.open{display:block}
 
-    /* ── HERO CDD ── */
+    /* ── HERO ── */
     .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:linear-gradient(160deg,#001f3f 0%,#003d6b 40%,#006B8F 100%)}
     .hero-media{position:absolute;inset:0;overflow:hidden}
     /* ── IMAGE SLOT: replace with your real photo ──
@@ -1440,7 +1440,7 @@ async function loadCMSContent() {
   try {
     // Step 1: load manifest to know what files exist (no hardcoded slugs)
     const _cb = '?v=' + Date.now();
-    const manifestRes = await fetch('/_data/manifest.json' + _cb).then(r => r.ok ? r.json() : null);
+    const manifestRes = await fetch('/_data/manifest.json' + _cb, {cache:'no-store'}).then(r => r.ok ? r.json() : null);
     const propSlugs = manifestRes?.properties || ['studio-evalia','villa-evalia'];
     const expSlugs  = manifestRes?.experiences || [
       'dolphin-watching-cruise','ile-aux-cerfs-day-trip',
@@ -1451,9 +1451,9 @@ async function loadCMSContent() {
 
     // Step 2: load all content in parallel
     const [settingsRes, ...rest] = await Promise.allSettled([
-      fetch('/_data/settings.json' + _cb).then(r => r.ok ? r.json() : null),
-      ...propSlugs.map(s => fetch(`/_data/properties/${s}.json` + _cb).then(r => r.ok ? r.json() : null)),
-      ...expSlugs.map(s  => fetch(`/_data/experiences/${s}.json` + _cb).then(r => r.ok ? r.json() : null)),
+      fetch('/_data/settings.json' + _cb, {cache:'no-store'}).then(r => r.ok ? r.json() : null),
+      ...propSlugs.map(s => fetch(`/_data/properties/${s}.json` + _cb, {cache:'no-store'}).then(r => r.ok ? r.json() : null)),
+      ...expSlugs.map(s  => fetch(`/_data/experiences/${s}.json` + _cb, {cache:'no-store'}).then(r => r.ok ? r.json() : null)),
     ]);
     const propResults = rest.slice(0, propSlugs.length);
     const expResults  = rest.slice(propSlugs.length);
@@ -1491,9 +1491,20 @@ async function loadCMSContent() {
     }
 
   } catch(err) {
-    // Silent fail — hardcoded fallbacks remain visible
-    console.log('CMS load skipped:', err.message);
+    console.warn('CMS load error:', err.message);
+    showCmsStatus(false, err.message);
   }
+}
+
+// CMS load status helper
+function showCmsStatus(ok, msg) {
+  // Only show error status — success is silent
+  if (ok) return;
+  var bar = document.createElement('div');
+  bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#c0392b;color:#fff;font-size:11px;padding:6px 12px;z-index:9999;font-family:monospace;text-align:center';
+  bar.textContent = '⚠ CMS: ' + msg + ' — Admin saves still work. Refresh in 30s after admin save.';
+  document.body.appendChild(bar);
+  setTimeout(() => bar.remove(), 8000);
 }
 
 // Run on page load
@@ -1987,6 +1998,10 @@ function applyLang() {
     var at = document.querySelector('.exp-tab.active');
     var cat = at ? at.dataset.tab : 'all';
     renderExp(cat === 'nat' ? 'nature' : cat);
+  }
+  // If CMS data not yet loaded, trigger a fresh load now
+  if ((!siteProperties || !siteProperties.length) || (!siteExperiences || !siteExperiences.length)) {
+    if (typeof loadCMSContent === 'function') loadCMSContent();
   }
 }
 
