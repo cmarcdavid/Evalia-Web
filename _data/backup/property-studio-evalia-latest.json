@@ -2,21 +2,23 @@
   "name": "Studio Evalia",
   "name_fr": "Studio Evalia",
   "type": "Studio",
-  "location": "Flic en Flac, West Mauritius",
-  "location_fr": "Flic en Flac, Ouest de l'Île Maurice",
+  "location": "Albion, West Mauritius",
+  "location_fr": "Albion, Ouest de l'ile Maurice",
   "description": "A beautifully designed studio apartment steps from one of Mauritius' most beautiful beaches. Perfect for couples seeking a stylish, intimate retreat with everything within reach.",
-  "description_fr": "Un studio magnifiquement aménagé à deux pas de l'une des plus belles plages de l'Île Maurice. Parfait pour les couples en quête d'un refuge intime et stylé avec tout à portée de main.",
-  "price": 80,
+  "description_fr": "Un studio magnifiquement conçu, à deux pas de l'une des plus belles plages de l'île Maurice. Idéal pour les couples en quête d'une escapade élégante et intime, avec toutes les commodités à proximité.",
+  "price": 50,
   "max_guests": 2,
   "bedrooms": 1,
   "bathrooms": 1,
-  "min_stay": 2,
+  "min_stay": 5,
   "cleaning_fee": 30,
-  "photo": "/images/Hero3.jpg",
+  "photo": "/images/IMG_5323.jpeg",
   "photo_alt": "/images/Hero1.jpg",
   "gallery": [
-    "/images/Hero3.jpg",
-    "/images/Hero1.jpg"
+    "/images/IMG_5323.jpeg",
+    "/images/IMG_5320.jpeg",
+    "/images/IMG_5322.jpeg",
+    "/images/IMG_5325.jpeg"
   ],
   "badge": "Available Now",
   "badge_fr": "Disponible Maintenant",
@@ -29,7 +31,7 @@
     "1 Bath",
     "2 Guests"
   ],
-  "_snapshot_ts": "2026-04-22T12:47:59.232936",
-  "_snapshot_type": "property",
-  "_slug": "studio-evalia"
+  "_slug": "studio-evalia",
+  "_snapshot_ts": "2026-04-23T07:49:58.336Z",
+  "_snapshot_type": "property"
 }
