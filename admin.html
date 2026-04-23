@@ -236,6 +236,8 @@
     <div class="slbl">Content</div>
     <div class="si" data-page="properties" onclick="gp('properties',this)"><span class="si-ic">🏠</span>Properties</div>
     <div class="si" data-page="experiences" onclick="gp('experiences',this)"><span class="si-ic">🌴</span>Experiences</div>
+    <div class="si" data-page="guests" onclick="gp('guests',this)"><span class="si-ic">👥</span>Guests</div>
+    <div class="si" data-page="reviews" onclick="gp('reviews',this)"><span class="si-ic">⭐</span>Reviews</div>
     <div class="si" data-page="media" onclick="gp('media',this)"><span class="si-ic">📸</span>Media Library</div>
     <div class="si" data-page="settings" onclick="gp('settings',this)"><span class="si-ic">⚙️</span>Settings</div>
     <div class="sdiv"></div>
@@ -420,6 +422,77 @@
   </div>
 </div>
 </div>
+
+<!-- GUESTS PAGE -->
+<div class="page" id="page-guests">
+  <div class="content">
+    <div class="card" style="margin-bottom:16px">
+      <div class="ctitle" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Guest Registrations</span>
+        <div style="display:flex;gap:8px">
+          <input class="fi" id="guestSearch" placeholder="Search name, email…" style="width:200px;font-size:12px" oninput="filterGuests(this.value)"/>
+          <button class="btn bg bsm" onclick="exportGuests()">⬇ Export CSV</button>
+          <button class="btn bg bsm" onclick="loadGuests(true)">🔄 Refresh</button>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--mu);margin-bottom:12px">
+        Guests who have registered on the website. Data stored in <code>_data/guests/</code> on GitHub.
+        Click a row to expand details. Verification status shown by badge.
+      </div>
+      <div id="guestStats" style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap"></div>
+      <div id="guestList"><div style="text-align:center;padding:24px;color:var(--mu)">Loading guests…</div></div>
+    </div>
+
+    <!-- Guest Detail Panel -->
+    <div class="card" id="guestDetail" style="display:none">
+      <div class="ctitle" style="display:flex;justify-content:space-between">
+        <span id="guestDetailName">Guest Detail</span>
+        <button class="btn bg bsm" onclick="closeGuestDetail()">✕ Close</button>
+      </div>
+      <div id="guestDetailBody"></div>
+    </div>
+
+    <!-- Integration Note -->
+    <div class="card" style="border-left:3px solid var(--g)">
+      <div class="ctitle">Integration Ready: QuickBooks / Zoho / Stripe</div>
+      <div style="font-size:12.5px;color:var(--mu);line-height:1.6">
+        Guest records are structured for direct integration with billing systems.<br>
+        <strong>QuickBooks:</strong> Export CSV → Import as Customers (Name, Email, Phone fields map directly).<br>
+        <strong>Zoho CRM:</strong> Use Export CSV → Contacts import. Or use Zoho's GitHub integration to sync <code>_data/guests/</code> automatically.<br>
+        <strong>Stripe:</strong> Use the exported email list to create Stripe customers via the Stripe dashboard or API.<br>
+        <strong>WhatsApp Business API:</strong> Phone numbers are stored in international format, ready for WhatsApp Business messaging campaigns.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS PAGE -->
+<div class="page" id="page-reviews">
+  <div class="content">
+    <div class="card" style="margin-bottom:16px">
+      <div class="ctitle" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Reviews & Testimonials</span>
+        <div style="display:flex;gap:8px">
+          <select class="fi" id="reviewFilter" style="width:130px;font-size:12px" onchange="renderReviews()">
+            <option value="all">All Reviews</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <button class="btn bg bsm" onclick="addReview()">+ Add Review</button>
+          <button class="btn bg bsm" onclick="loadReviews(true)">🔄 Refresh</button>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--mu);margin-bottom:12px">
+        Customer reviews displayed in the Testimonials section. Approve before they appear on the website.
+        Stored in <code>_data/reviews/</code> on GitHub.
+      </div>
+      <div id="reviewStats" style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap"></div>
+      <div id="reviewList"><div style="text-align:center;padding:24px;color:var(--mu)">Loading reviews…</div></div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════════════════════════
 const REPO='cmarcdavid/evalia-web',BRANCH='main',API='https://api.github.com';
@@ -1369,7 +1442,7 @@ async function saveSettings(){
 }
 
 // UI HELPERS
-const PTITLES={connect:'Connect',dashboard:'Dashboard',bookings:'Bookings',properties:'Properties',experiences:'Experiences',media:'Media Library',settings:'Settings',history:'Data History'};
+const PTITLES={connect:'Connect',dashboard:'Dashboard',bookings:'Bookings',properties:'Properties',experiences:'Experiences',media:'Media Library',settings:'Settings',history:'Data History',guests:'Guest Management',reviews:'Reviews & Comments'};
 function gp(id,navEl){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+id)?.classList.add('active');
@@ -1377,6 +1450,8 @@ function gp(id,navEl){
   document.querySelectorAll('.si[data-page]').forEach(e=>e.classList.remove('active'));
   if(navEl)navEl.classList.add('active');
   document.querySelector('.content').scrollTop=0;
+  if(id==='guests'  && token) loadGuests(false);
+  if(id==='reviews' && token) loadReviews(false);
 }
 function md(){dirty=true;document.getElementById('sbanner').classList.add('show');}
 function hideBanner(){dirty=false;document.getElementById('sbanner').classList.remove('show');}
@@ -1392,6 +1467,362 @@ function closeCF(){document.getElementById('cfw').classList.remove('open');cfCb=
 document.getElementById('cfok').addEventListener('click',()=>{if(cfCb)cfCb();closeCF();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCF();closePM();}});
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ═══════════════════════════════════════════════════════════════
+// GUESTS
+// ═══════════════════════════════════════════════════════════════
+let G = { guests: [], reviews: [] };
+
+async function loadGuests(fb) {
+  try {
+    const r = await ghG(`/repos/${REPO}/contents/_data/guests?ref=${BRANCH}`);
+    if (!r.ok) { G.guests = []; renderGuests(); return; }
+    const files = await r.json();
+    const jsons = files.filter(f => f.name.endsWith('.json'));
+    G.guests = await Promise.all(jsons.map(async f => {
+      const fr = await ghG(`/repos/${REPO}/contents/${f.path}?ref=${BRANCH}`);
+      const fd = await fr.json();
+      const raw = atob(fd.content.replace(/\s/g,''));
+      const decoded = decodeURIComponent(raw.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      return { ...JSON.parse(decoded), _path: f.path, _sha: fd.sha, _slug: f.name.replace('.json','') };
+    }));
+    renderGuests();
+    if (fb) toast('✅', G.guests.length + ' guests loaded');
+  } catch(e) { toast('⚠️', 'Guests load error: ' + e.message); G.guests = []; renderGuests(); }
+}
+
+function renderGuests(filter) {
+  const list = document.getElementById('guestList');
+  const stats = document.getElementById('guestStats');
+  if (!list) return;
+  const q = (filter || document.getElementById('guestSearch')?.value || '').toLowerCase();
+  const all = G.guests;
+  const shown = q ? all.filter(g =>
+    (g.name||'').toLowerCase().includes(q) ||
+    (g.email||'').toLowerCase().includes(q) ||
+    (g.phone||'').toLowerCase().includes(q)
+  ) : all;
+  // Stats
+  const verified = all.filter(g => g.verified).length;
+  const pending  = all.filter(g => !g.verified).length;
+  if (stats) stats.innerHTML = [
+    ['Total', all.length, 'var(--g)'],
+    ['Verified', verified, '#27ae60'],
+    ['Pending', pending, '#e67e22'],
+    ['This month', all.filter(g => g.registered_at && new Date(g.registered_at).getMonth() === new Date().getMonth()).length, 'var(--g)'],
+  ].map(([l,v,c]) => `<div style="background:var(--sd);border-radius:8px;padding:8px 14px;border-left:3px solid ${c}">
+    <div style="font-size:20px;font-weight:600;color:${c}">${v}</div>
+    <div style="font-size:11px;color:var(--mu)">${l}</div>
+  </div>`).join('');
+  // List
+  if (!shown.length) { list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mu)">No guests found.</div>'; return; }
+  list.innerHTML = shown.map((g, i) => `
+    <div class="ci" onclick="openGuestDetail('${g._slug}')" style="cursor:pointer">
+      <div class="cith" style="font-size:22px;background:${g.verified?'#eafaf1':'#fef9e7'};display:flex;align-items:center;justify-content:center">
+        ${g.verified ? '✅' : '⏳'}
+      </div>
+      <div class="ciin">
+        <div class="cinm">${esc(g.name||'Unknown')}</div>
+        <div class="cimt">📧 ${esc(g.email||'—')} · 📱 ${esc(g.phone||'—')} · 🌍 ${esc(g.nationality||'—')}</div>
+        <div class="cimt" style="margin-top:2px">📅 Arrival: ${esc(g.arrival||'—')} · 👥 ${g.party_size||1} guests · Registered: ${g.registered_at ? new Date(g.registered_at).toLocaleDateString() : '—'}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="pill ${g.verified?'pg':'po'}">${g.verified?'Verified':'Pending'}</span>
+        <div style="display:flex;gap:4px">
+          ${!g.verified ? `<button class="btn bg bsm" onclick="event.stopPropagation();verifyGuest('${g._slug}')">✓ Verify</button>` : ''}
+          <button class="btn bg bsm" onclick="event.stopPropagation();openGuestDetail('${g._slug}')">View</button>
+          <button class="btn br bsm" onclick="event.stopPropagation();deleteGuest('${g._slug}')">✕</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterGuests(q) { renderGuests(q); }
+
+function openGuestDetail(slug) {
+  const g = G.guests.find(x => x._slug === slug);
+  if (!g) return;
+  const panel = document.getElementById('guestDetail');
+  const name  = document.getElementById('guestDetailName');
+  const body  = document.getElementById('guestDetailBody');
+  if (!panel || !body) return;
+  name.textContent = g.name || 'Guest Detail';
+  body.innerHTML = `
+    <div class="birow" style="margin-top:12px">
+      <div>
+        <div class="fsect">Personal Information</div>
+        ${gField('Full Name', g.name)} ${gField('Email', g.email)} ${gField('Phone / WhatsApp', g.phone)}
+        ${gField('Nationality', g.nationality)} ${gField('Registered', g.registered_at ? new Date(g.registered_at).toLocaleString() : '—')}
+      </div>
+      <div>
+        <div class="fsect">Trip Details</div>
+        ${gField('Arrival Date', g.arrival)} ${gField('Departure Date', g.departure)}
+        ${gField('Party Size', g.party_size)} ${gField('Adults', g.adults)} ${gField('Children', g.children)}
+        ${gField('Special Requirements', g.special_req)}
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="fsect">Booking Preferences</div>
+      <div class="birow">
+        <div>${gField('Services Interested', Array.isArray(g.services) ? g.services.join(', ') : g.services)}</div>
+        <div>${gField('Payment Preference', g.payment_pref)}</div>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="fsect">Verification & Integration</div>
+      <div class="birow">
+        <div>
+          ${gField('Email Verified', g.email_verified ? '✅ Yes' : '⏳ Pending')}
+          ${gField('WhatsApp Verified', g.wa_verified ? '✅ Yes' : '⏳ Pending')}
+          ${gField('Verification Code', g.verif_code || '—')}
+        </div>
+        <div>
+          ${gField('QuickBooks ID', g.quickbooks_id || '— (not linked)')}
+          ${gField('Stripe Customer ID', g.stripe_id || '— (not linked)')}
+          ${gField('Admin Notes', g.notes || '')}
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+      ${!g.verified ? `<button class="btn bpri" onclick="verifyGuest('${g._slug}')">✓ Mark Verified</button>` : '<span class="pill pg">✅ Verified</span>'}
+      <button class="btn bg" onclick="editGuestNotes('${g._slug}')">📝 Add Notes</button>
+      <button class="btn bg" onclick="window.open('https://wa.me/${(g.phone||'').replace(/[^0-9]/g,'')}','_blank')">💬 WhatsApp</button>
+      <button class="btn bg" onclick="window.open('mailto:${g.email||''}','_blank')">📧 Email</button>
+      <button class="btn br" onclick="deleteGuest('${g._slug}');closeGuestDetail()">🗑 Delete</button>
+    </div>`;
+  panel.style.display = 'block';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function gField(label, value) {
+  return `<div class="fg" style="margin-bottom:6px">
+    <label class="fl" style="font-size:11px">${label}</label>
+    <div style="font-size:13px;color:var(--dk);padding:4px 0">${esc(String(value||'—'))}</div>
+  </div>`;
+}
+
+function closeGuestDetail() {
+  const p = document.getElementById('guestDetail');
+  if (p) p.style.display = 'none';
+}
+
+async function verifyGuest(slug) {
+  const g = G.guests.find(x => x._slug === slug);
+  if (!g) return;
+  setBusy('Verifying…');
+  try {
+    const updated = { ...g, verified: true, verified_at: new Date().toISOString() };
+    const { _path, _sha, _slug, ...data } = updated;
+    await ghWrite(g._path, JSON.stringify(data, null, 2), 'admin: verify guest ' + g.name);
+    g.verified = true; g.verified_at = updated.verified_at;
+    renderGuests();
+    openGuestDetail(slug);
+    setOk('Verified ✓'); toast('✅', g.name + ' verified');
+  } catch(e) { setErr('Error'); toast('⚠️', 'Verify failed: ' + e.message); }
+}
+
+async function editGuestNotes(slug) {
+  const g = G.guests.find(x => x._slug === slug);
+  if (!g) return;
+  const notes = prompt('Admin notes for ' + g.name + ':', g.notes || '');
+  if (notes === null) return;
+  setBusy('Saving…');
+  try {
+    const updated = { ...g, notes };
+    const { _path, _sha, _slug, ...data } = updated;
+    await ghWrite(g._path, JSON.stringify(data, null, 2), 'admin: notes for ' + g.name);
+    g.notes = notes; openGuestDetail(slug);
+    setOk('Saved ✓'); toast('✅', 'Notes saved');
+  } catch(e) { setErr('Error'); toast('⚠️', 'Save failed: ' + e.message); }
+}
+
+async function deleteGuest(slug) {
+  const g = G.guests.find(x => x._slug === slug);
+  if (!g) return;
+  showCF('Delete guest "' + g.name + '"?', 'This removes the registration permanently.', async () => {
+    setBusy('Deleting…');
+    try {
+      await ghDel(g._path, 'admin: delete guest ' + g.name);
+      G.guests = G.guests.filter(x => x._slug !== slug);
+      renderGuests(); setOk('Deleted'); toast('🗑', g.name + ' removed');
+    } catch(e) { setErr('Error'); toast('⚠️', 'Delete failed: ' + e.message); }
+  });
+}
+
+function exportGuests() {
+  if (!G.guests.length) { toast('⚠️', 'No guests to export'); return; }
+  const cols = ['name','email','phone','nationality','arrival','departure','party_size','adults','children','verified','registered_at','services','payment_pref','notes','quickbooks_id','stripe_id'];
+  const header = cols.join(',');
+  const rows = G.guests.map(g => cols.map(c => '"' + String(g[c]||'').replace(/"/g,'""') + '"').join(','));
+  const csv = [header, ...rows].join('
+');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'evalia-guests-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  toast('✅', G.guests.length + ' guests exported');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// REVIEWS
+// ═══════════════════════════════════════════════════════════════
+async function loadReviews(fb) {
+  try {
+    const r = await ghG(`/repos/${REPO}/contents/_data/reviews?ref=${BRANCH}`);
+    if (!r.ok) { G.reviews = []; renderReviews(); return; }
+    const files = await r.json();
+    const jsons = files.filter(f => f.name.endsWith('.json'));
+    G.reviews = await Promise.all(jsons.map(async f => {
+      const fr = await ghG(`/repos/${REPO}/contents/${f.path}?ref=${BRANCH}`);
+      const fd = await fr.json();
+      const raw = atob(fd.content.replace(/\s/g,''));
+      const decoded = decodeURIComponent(raw.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      return { ...JSON.parse(decoded), _path: f.path, _sha: fd.sha, _slug: f.name.replace('.json','') };
+    }));
+    renderReviews();
+    if (fb) toast('✅', G.reviews.length + ' reviews loaded');
+  } catch(e) { toast('⚠️', 'Reviews load error: ' + e.message); G.reviews = []; renderReviews(); }
+}
+
+function renderReviews() {
+  const list   = document.getElementById('reviewList');
+  const stats  = document.getElementById('reviewStats');
+  const filter = document.getElementById('reviewFilter')?.value || 'all';
+  if (!list) return;
+  const all     = G.reviews;
+  const shown   = filter === 'all' ? all : all.filter(r => r.status === filter);
+  const approved = all.filter(r => r.status === 'approved').length;
+  const pending  = all.filter(r => r.status === 'pending' || !r.status).length;
+  const rejected = all.filter(r => r.status === 'rejected').length;
+  if (stats) stats.innerHTML = [
+    ['Total', all.length, 'var(--g)'],
+    ['Approved ✅', approved, '#27ae60'],
+    ['Pending ⏳', pending, '#e67e22'],
+    ['Rejected ✗', rejected, '#c0392b'],
+  ].map(([l,v,c]) => `<div style="background:var(--sd);border-radius:8px;padding:8px 14px;border-left:3px solid ${c}">
+    <div style="font-size:20px;font-weight:600;color:${c}">${v}</div>
+    <div style="font-size:11px;color:var(--mu)">${l}</div>
+  </div>`).join('');
+  if (!shown.length) { list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mu)">No reviews.</div>'; return; }
+  const stars = n => '★'.repeat(n||5) + '☆'.repeat(5-(n||5));
+  list.innerHTML = shown.map(r => `
+    <div class="ci">
+      <div class="cith" style="font-size:22px;background:var(--sd);display:flex;align-items:center;justify-content:center">${r.avatar||r.name?.charAt(0)||'👤'}</div>
+      <div class="ciin" style="flex:1">
+        <div class="cinm">${esc(r.name||'Anonymous')} <span style="color:#f39c12;letter-spacing:-1px">${stars(r.rating)}</span></div>
+        <div class="cimt">${esc(r.service||'')} · ${r.date ? new Date(r.date).toLocaleDateString() : '—'}</div>
+        <div style="font-size:13px;color:var(--dk);margin-top:4px;font-style:italic">"${esc(r.text||r.review||'')}"</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
+        <span class="pill ${r.status==='approved'?'pg':r.status==='rejected'?'po':''}" style="${!r.status||r.status==='pending'?'background:#fef3cd;color:#856404':''}">${r.status||'pending'}</span>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          ${r.status !== 'approved' ? `<button class="btn bg bsm" onclick="setReviewStatus('${r._slug}','approved')">✓ Approve</button>` : ''}
+          ${r.status !== 'rejected' ? `<button class="btn bg bsm" onclick="setReviewStatus('${r._slug}','rejected')">✗ Reject</button>` : ''}
+          <button class="btn bg bsm" onclick="editReview('${r._slug}')">✏ Edit</button>
+          <button class="btn br bsm" onclick="deleteReview('${r._slug}')">✕</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+async function setReviewStatus(slug, status) {
+  const r = G.reviews.find(x => x._slug === slug);
+  if (!r) return;
+  setBusy('Saving…');
+  try {
+    const updated = { ...r, status };
+    const { _path, _sha, _slug, ...data } = updated;
+    await ghWrite(r._path, JSON.stringify(data, null, 2), 'admin: review ' + status + ' ' + r.name);
+    r.status = status; renderReviews(); setOk('Saved ✓');
+    toast(status === 'approved' ? '✅' : '🚫', '"' + r.name + '" review ' + status);
+  } catch(e) { setErr('Error'); toast('⚠️', 'Save failed: ' + e.message); }
+}
+
+function addReview() {
+  const slug = 'review-' + Date.now();
+  G.reviews.unshift({
+    name: 'New Review', rating: 5, text: '', service: '', date: new Date().toISOString().slice(0,10),
+    status: 'pending', avatar: '', _path: `_data/reviews/${slug}.json`, _sha: null, _slug: slug
+  });
+  renderReviews();
+  editReview(slug);
+}
+
+function editReview(slug) {
+  const r = G.reviews.find(x => x._slug === slug);
+  if (!r) return;
+  const panel = document.getElementById('guestDetail');
+  const name  = document.getElementById('guestDetailName');
+  const body  = document.getElementById('guestDetailBody');
+  if (!panel||!body) return;
+  name.textContent = 'Edit Review';
+  body.innerHTML = `
+    <div class="birow" style="margin-top:12px">
+      <div class="fg"><label class="fl">Guest Name</label><input class="fi" id="rv_name" value="${esc(r.name||'')}"/></div>
+      <div class="fg"><label class="fl">Rating (1–5)</label>
+        <select class="fi" id="rv_rating">
+          ${[1,2,3,4,5].map(n=>`<option value="${n}" ${r.rating==n?'selected':''}>${'★'.repeat(n)} ${n}/5</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Review Text</label><textarea class="fi" id="rv_text" rows="3" style="resize:vertical">${esc(r.text||r.review||'')}</textarea></div>
+    <div class="birow">
+      <div class="fg"><label class="fl">Service / Experience</label><input class="fi" id="rv_service" value="${esc(r.service||'')}"/></div>
+      <div class="fg"><label class="fl">Date</label><input class="fi" id="rv_date" type="date" value="${r.date||''}"/></div>
+    </div>
+    <div class="birow">
+      <div class="fg"><label class="fl">Avatar (initials or emoji)</label><input class="fi" id="rv_avatar" value="${esc(r.avatar||'')}"/></div>
+      <div class="fg"><label class="fl">Status</label>
+        <select class="fi" id="rv_status">
+          <option value="pending" ${r.status==='pending'||!r.status?'selected':''}>⏳ Pending</option>
+          <option value="approved" ${r.status==='approved'?'selected':''}>✅ Approved</option>
+          <option value="rejected" ${r.status==='rejected'?'selected':''}>✗ Rejected</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn bpri" onclick="saveReview('${slug}')">Save & Publish →</button>
+      <button class="btn bg" onclick="closeGuestDetail()">Cancel</button>
+    </div>`;
+  panel.style.display = 'block';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function saveReview(slug) {
+  const r = G.reviews.find(x => x._slug === slug);
+  if (!r) return;
+  const v = id => document.getElementById(id)?.value?.trim();
+  const updated = {
+    name: v('rv_name'), rating: Number(v('rv_rating')||5),
+    text: v('rv_text'), service: v('rv_service'),
+    date: v('rv_date'), avatar: v('rv_avatar'),
+    status: v('rv_status') || 'pending',
+  };
+  const { _path, _sha, _slug, ...existing } = r;
+  const data = { ...existing, ...updated };
+  setBusy('Saving…');
+  try {
+    await ghWrite(r._path, JSON.stringify(data, null, 2), 'admin: save review ' + data.name);
+    Object.assign(r, data); renderReviews(); closeGuestDetail();
+    setOk('Saved ✓'); toast('✅', '"' + data.name + '" review saved');
+  } catch(e) { setErr('Error'); toast('⚠️', 'Save failed: ' + e.message); }
+}
+
+async function deleteReview(slug) {
+  const r = G.reviews.find(x => x._slug === slug);
+  if (!r || !r._sha) { G.reviews = G.reviews.filter(x => x._slug !== slug); renderReviews(); return; }
+  showCF('Delete this review?', 'Removes from GitHub and live site.', async () => {
+    setBusy('Deleting…');
+    try {
+      await ghDel(r._path, 'admin: delete review ' + r.name);
+      G.reviews = G.reviews.filter(x => x._slug !== slug);
+      renderReviews(); setOk('Deleted'); toast('🗑', 'Review removed');
+    } catch(e) { setErr('Error'); toast('⚠️', 'Delete failed: ' + e.message); }
+  });
+}
+
+// Auto-load guests/reviews when navigating to their pages
+
 
 // INIT
 (function(){

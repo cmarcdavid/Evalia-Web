@@ -1177,6 +1177,9 @@
 </script>
 
 <script>
+// Declare lang early so renderExp/renderProperties work before Script[4] loads
+var lang = (typeof localStorage !== 'undefined' && localStorage.getItem('ev_lang')) || 'en';
+
 // ═══════════════════════════════════════════════════════════════
 // CONTENT ENGINE — all data loaded from _data/*.json
 // Edit in Admin (admin.html) → saves to GitHub → Vercel
@@ -1510,11 +1513,11 @@ function showCmsStatus(ok, msg) {
 // Run on page load
 document.addEventListener('DOMContentLoaded', () => {
   loadCMSContent();
-  applyLang();
+  if (typeof applyLang === 'function') applyLang();
 });
 if (document.readyState !== 'loading') {
   loadCMSContent();
-  applyLang();
+  if (typeof applyLang === 'function') applyLang();
 }
 
 function filterExp(btn, cat) {
