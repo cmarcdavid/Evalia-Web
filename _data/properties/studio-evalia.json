@@ -10,7 +10,7 @@
   "max_guests": 2,
   "bedrooms": 1,
   "bathrooms": 1,
-  "min_stay": 5,
+  "min_stay": 4,
   "cleaning_fee": 30,
   "photo": "/images/IMG_5323.jpeg",
   "photo_alt": "/images/Hero1.jpg",
