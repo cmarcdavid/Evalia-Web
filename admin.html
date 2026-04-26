@@ -1666,8 +1666,7 @@ function exportGuests() {
   const cols = ['name','email','phone','nationality','arrival','departure','party_size','adults','children','verified','registered_at','services','payment_pref','notes','quickbooks_id','stripe_id'];
   const header = cols.join(',');
   const rows = G.guests.map(g => cols.map(c => '"' + String(g[c]||'').replace(/"/g,'""') + '"').join(','));
-  const csv = [header, ...rows].join('
-');
+  const csv = [header, ...rows].join('\n');
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
   a.download = 'evalia-guests-' + new Date().toISOString().slice(0,10) + '.csv';
