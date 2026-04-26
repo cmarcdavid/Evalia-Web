@@ -1008,7 +1008,8 @@
     <div class="s-eyebrow" data-i18n="testi_eyebrow">Guest Stories</div>
     <h2 class="s-title" data-i18n="testi_title">What our guests <em>say</em></h2>
   </div>
-  <div class="testi-grid">
+  <!-- Live reviews loaded from _data/reviews/ — fallback to hardcoded below -->
+  <div class="testi-grid" id="testiGrid">
     <div class="testi-card">
       <div class="testi-stars">★★★★★</div>
       <div class="testi-text">"Evalia arranged everything for our honeymoon — the villa was stunning and the boat trip to Île aux Cerfs was the highlight of our trip. The concierge even organised a beach dinner surprise!"</div>
@@ -1493,6 +1494,9 @@ async function loadCMSContent() {
       requestAnimationFrame(function() { applySettings(siteSettings); });
     }
 
+    // Load approved reviews into testimonials section
+    loadCMSReviews();
+
   } catch(err) {
     console.warn('CMS load error:', err.message);
     showCmsStatus(false, err.message);
@@ -1508,6 +1512,59 @@ function showCmsStatus(ok, msg) {
   bar.textContent = '⚠ CMS: ' + msg + ' — Admin saves still work. Refresh in 30s after admin save.';
   document.body.appendChild(bar);
   setTimeout(() => bar.remove(), 8000);
+}
+
+// ── TESTIMONIALS from _data/reviews/ ───────────────────────────────────────
+// Loads approved reviews from GitHub and replaces hardcoded testimonials.
+// Falls back silently to hardcoded content if fetch fails or returns empty.
+async function loadCMSReviews() {
+  try {
+    var _cb = '?v=' + Date.now();
+    // Fetch reviews directory listing
+    var dirRes = await fetch('https://raw.githubusercontent.com/cmarcdavid/evalia-web/main/_data/reviews/.gitkeep' + _cb, {cache:'no-store'})
+      .catch(() => null);
+    // Use the GitHub contents API via raw isn't ideal — fetch via manifest or directory trick
+    // Instead: try fetching a reviews manifest, or scan by fetching /_data/reviews/ directory
+    // We'll use a simple approach: fetch a reviews index if it exists, else skip silently
+    var revIndexRes = await fetch('/_data/reviews-index.json' + _cb, {cache:'no-store'});
+    var slugs = [];
+    if (revIndexRes.ok) {
+      var idx = await revIndexRes.json();
+      slugs = idx.approved || [];
+    }
+    if (!slugs.length) return; // No index or no approved reviews — keep hardcoded fallback
+
+    var reviews = await Promise.all(
+      slugs.map(s => fetch('/_data/reviews/' + s + '.json' + _cb, {cache:'no-store'}).then(r => r.ok ? r.json() : null))
+    );
+    var approved = reviews.filter(r => r && r.status === 'approved');
+    if (approved.length) renderTestimonials(approved);
+  } catch(e) {
+    // Silently fail — hardcoded fallback stays
+    console.warn('Reviews load (non-critical):', e.message);
+  }
+}
+
+function renderTestimonials(reviews) {
+  var grid = document.getElementById('testiGrid');
+  if (!grid || !reviews.length) return;
+  var stars = function(n) { return '★'.repeat(n||5) + '☆'.repeat(5-(n||5)); };
+  grid.innerHTML = reviews.map(function(r) {
+    var initials = (r.avatar && r.avatar.length <= 3) ? r.avatar : (r.name || '?').split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2);
+    var isEmoji  = (r.avatar && r.avatar.length > 2);
+    var avatarHtml = isEmoji
+      ? '<div class="testi-avatar" style="font-size:20px;background:var(--sand)">' + r.avatar + '</div>'
+      : '<div class="testi-avatar">' + initials + '</div>';
+    var dateStr = r.date ? new Date(r.date).toLocaleDateString('en-GB', {month:'long', year:'numeric'}) : '';
+    var origin  = [r.service, dateStr].filter(Boolean).join(' · ');
+    return '<div class="testi-card">' +
+      '<div class="testi-stars" style="color:var(--sunset)">' + stars(r.rating) + '</div>' +
+      '<div class="testi-text">\u201C' + (r.text || r.review || '') + '\u201D</div>' +
+      '<div class="testi-author">' + avatarHtml +
+        '<div><div class="testi-name">' + (r.name || '') + '</div>' +
+        '<div class="testi-origin">' + origin + '</div></div>' +
+      '</div></div>';
+  }).join('');
 }
 
 // Run on page load
@@ -1648,11 +1705,146 @@ function submitBooking() {
 // Single endpoint mdayoknj handles all three forms
 // The @formspree/ajax library (loaded via CDN) manages state,
 // field errors, success banners and button disabled state automatically.
-formspree('initForm', { formElement: '#regForm',     formId: 'mdayoknj' });
 formspree('initForm', { formElement: '#modalForm',   formId: 'mdayoknj' });
 // bookingForm is submitted manually via submitBooking() below
 // but we still wire it so field errors work on steps 1-2
 formspree('initForm', { formElement: '#bookingForm', formId: 'mdayoknj' });
+
+// ── GUEST REGISTRATION → GITHUB ──────────────────────────────────────────
+// Writes guest JSON to _data/guests/<slug>.json via GitHub API.
+// Falls back gracefully: if GitHub write fails, Formspree email still fires.
+// Token is read from the same localStorage key the admin uses.
+// ─────────────────────────────────────────────────────────────────────────
+const GH_REPO   = 'cmarcdavid/evalia-web';
+const GH_BRANCH = 'main';
+const GH_API    = 'https://api.github.com';
+
+async function ghWriteGuest(path, content) {
+  var tk = localStorage.getItem('ev_gh') || localStorage.getItem('ev_token') || '';
+  if (!tk) throw new Error('no_token');
+  var headers = {
+    'Authorization': 'Bearer ' + tk,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+  // Check if file exists (get SHA)
+  var sha = null;
+  try {
+    var ex = await fetch(GH_API + '/repos/' + GH_REPO + '/contents/' + path + '?ref=' + GH_BRANCH, { headers });
+    if (ex.ok) { var exd = await ex.json(); sha = exd.sha; }
+  } catch(e) {}
+  var body = {
+    message: 'guest: registration ' + path,
+    content: btoa(unescape(encodeURIComponent(content))),
+    branch: GH_BRANCH
+  };
+  if (sha) body.sha = sha;
+  var r = await fetch(GH_API + '/repos/' + GH_REPO + '/contents/' + path, {
+    method: 'PUT', headers, body: JSON.stringify(body)
+  });
+  if (!r.ok) { var err = await r.json(); throw new Error(err.message || 'GitHub write failed'); }
+  return r.json();
+}
+
+// Registration form submit — intercepts native form submit
+document.addEventListener('DOMContentLoaded', function() {
+  var regForm = document.getElementById('regForm');
+  if (!regForm) return;
+
+  regForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var btn = regForm.querySelector('[data-fs-submit-btn]');
+    var successBanner = regForm.closest('.reg-form-card').querySelector('[data-fs-success]');
+    var errorBanner   = regForm.closest('.reg-form-card').querySelector('[data-fs-error]');
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+    if (successBanner) successBanner.style.display = 'none';
+    if (errorBanner)   errorBanner.style.display   = 'none';
+
+    // Collect form data
+    var fd = new FormData(regForm);
+    var firstname = (fd.get('firstname') || '').trim();
+    var lastname  = (fd.get('lastname')  || '').trim();
+    var name      = (firstname + ' ' + lastname).trim();
+    var email     = (fd.get('email')     || '').trim();
+    var phone     = (fd.get('phone')     || '').trim();
+    var nationality = (fd.get('nationality') || '').trim();
+    var party_size  = (fd.get('party_size')  || '').trim();
+    var arrival     = (fd.get('arrival')     || '').trim();
+    var departure   = (fd.get('departure')   || '').trim();
+    var special_req = (fd.get('requirements') || '').trim();
+
+    // Basic required check
+    if (!firstname || !email || !phone || !arrival || !departure) {
+      if (btn) { btn.disabled = false; btn.textContent = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →'; }
+      if (errorBanner) { errorBanner.textContent = lang==='fr' ? '⚠️ Veuillez remplir tous les champs obligatoires.' : '⚠️ Please fill in all required fields.'; errorBanner.style.display = 'block'; }
+      return;
+    }
+
+    // Build guest record
+    var now  = new Date().toISOString();
+    var slug = 'guest-' + Date.now();
+    var guest = {
+      name, email, phone, nationality,
+      party_size, arrival, departure,
+      special_req,
+      registered_at: now,
+      verified: false,
+      email_verified: false,
+      wa_verified: false,
+      verif_code: Math.random().toString(36).substring(2,8).toUpperCase(),
+      services: [],
+      payment_pref: '',
+      quickbooks_id: '',
+      stripe_id: '',
+      notes: ''
+    };
+
+    var ghOk = false;
+    // 1. Try to write to GitHub
+    try {
+      await ghWriteGuest('_data/guests/' + slug + '.json', JSON.stringify(guest, null, 2));
+      ghOk = true;
+    } catch(ghErr) {
+      // GitHub write failed (no token, rate-limit, network) — still try Formspree
+      console.warn('Guest GitHub write failed (non-critical):', ghErr.message);
+    }
+
+    // 2. Always also send via Formspree (email notification to you)
+    var fsOk = false;
+    try {
+      var fsRes = await fetch('https://formspree.io/f/mdayoknj', {
+        method: 'POST',
+        body: new FormData(regForm),
+        headers: { 'Accept': 'application/json' }
+      });
+      fsOk = fsRes.ok;
+    } catch(fsErr) {
+      console.warn('Formspree fallback failed:', fsErr.message);
+    }
+
+    if (ghOk || fsOk) {
+      // Success
+      regForm.reset();
+      if (successBanner) successBanner.style.display = 'block';
+      if (btn) { btn.disabled = false; btn.textContent = '✅ Profile Created!'; btn.style.background = 'var(--palm)'; }
+      showToast('🎉', lang==='fr' ? 'Profil créé ! Un message WhatsApp va vous être envoyé.' : 'Profile created! Watch for our WhatsApp welcome.');
+      // Reset button after delay
+      setTimeout(function() {
+        if (btn) { btn.textContent = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →'; btn.style.background = ''; }
+      }, 5000);
+    } else {
+      // Both failed
+      if (errorBanner) {
+        errorBanner.textContent = lang==='fr'
+          ? '⚠️ Erreur réseau. Contactez-nous sur WhatsApp : +230 5724 2099'
+          : '⚠️ Network error. Please WhatsApp us at +230 5724 2099';
+        errorBanner.style.display = 'block';
+      }
+      if (btn) { btn.disabled = false; btn.textContent = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →'; }
+    }
+  });
+});
 
 // ── MODAL ─────────────────────────────────────
 function openBookingModal(name, price) {

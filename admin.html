@@ -273,10 +273,12 @@
       <strong>Get token (2 min):</strong><br>
       1. <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a><br>
       2. Note: "Evalia Admin" · No expiration · Tick <strong>repo</strong><br>
-      3. Generate → copy → paste above
+      3. Generate → copy → paste above<br><br>
+      <strong>⚠️ Rate limited?</strong> GitHub limits API calls to 60/hr without a token.<br>
+      If you see "rate limit" errors, wait a few minutes then try again — your token is fine.
     </div>
-    <button class="btn bpri bfull" onclick="connect()">Connect →</button>
-    <div id="cerr" style="display:none;margin-top:7px;color:#c0392b;font-size:12px;text-align:center"></div>
+    <button class="btn bpri bfull" id="connectBtn" onclick="connect()">Connect →</button>
+    <div id="cerr" style="display:none;margin-top:7px;color:#c0392b;font-size:12px;text-align:center;background:#fdf0f0;padding:7px;border-radius:6px"></div>
   </div>
 </div>
 </div>
@@ -513,13 +515,23 @@ const ghR=(p,m,b)=>fetch(API+p,{method:m,headers:{...hdr(),'Content-Type':'appli
 async function connect(){
   const t=document.getElementById('tok').value.trim();
   if(!t){cErr('Paste your token');return;}
+  const cerr=document.getElementById('cerr');if(cerr)cerr.style.display='none';
   setBusy('Verifying…');
-  try{const r=await ghG('/repos/'+REPO,t);if(!r.ok)throw new Error('Invalid token');
+  try{
+    // Use /user endpoint — much cheaper than /repos, avoids rate-limit false negatives
+    const r=await ghG('/user',t);
+    if(r.status===401){throw new Error('Invalid token — check scopes include "repo"');}
+    if(r.status===403){
+      // Rate-limited but token IS valid — accept it and proceed
+      token=t;localStorage.setItem('ev_gh',t);setOk('Connected');
+      await loadAll(false);gp('dashboard',qs('dashboard'));return;
+    }
+    if(!r.ok){throw new Error('GitHub error '+r.status+' — try again');}
     token=t;localStorage.setItem('ev_gh',t);setOk('Connected');
     await loadAll(false);gp('dashboard',qs('dashboard'));
   }catch(e){setErr('Failed');cErr(e.message);}
 }
-function disconnect(){localStorage.removeItem('ev_gh');token='';gp('connect',null);setErr('Disconnected');}
+function disconnect(){localStorage.removeItem('ev_gh');localStorage.removeItem('ev_token');token='';gp('connect',null);setErr('Disconnected');}
 
 // WRITE / DELETE (always live SHA)
 // ── DATA HISTORY & VERSIONING ────────────────────────────────────────────────
@@ -1828,10 +1840,17 @@ async function deleteReview(slug) {
 (function(){
   if(token){
     setBusy('Connecting…');
-    ghG('/repos/'+REPO).then(r=>{
+    ghG('/user').then(r=>{
       if(r.ok){setOk('Connected');loadAll(false);gp('dashboard',qs('dashboard'));}
-      else{token='';localStorage.removeItem('ev_gh');gp('connect',null);setErr('Token expired');}
-    }).catch(()=>{gp('connect',null);setErr('Offline');});
+      else if(r.status===403){
+        // Rate-limited — token likely still valid, go to dashboard anyway
+        setOk('Connected');loadAll(false);gp('dashboard',qs('dashboard'));
+      }
+      else{token='';localStorage.removeItem('ev_gh');localStorage.removeItem('ev_token');gp('connect',null);setErr('Token expired — reconnect');}
+    }).catch(()=>{
+      // Network offline — keep token, show dashboard with offline warning
+      setErr('Offline — check connection');gp('dashboard',qs('dashboard'));
+    });
   }else{gp('connect',null);document.getElementById('slb').textContent='Not connected';}
 })();
 </script>
