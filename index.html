@@ -478,6 +478,36 @@
     .pay-confirm-row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid var(--stone)}
     .pay-confirm-row:last-child{border:none;font-weight:600;font-size:16px;margin-top:6px}
 
+    /* ── REQUIRED FIELD STAR ── */
+    .req{color:#e74c3c;margin-left:2px;font-weight:700}
+
+    /* ── USER PROFILE PANEL ── */
+    .profile-panel{position:fixed;top:0;right:-420px;width:400px;max-width:100vw;height:100vh;background:var(--cream);box-shadow:-8px 0 40px rgba(0,0,0,.16);z-index:300;display:flex;flex-direction:column;transition:right .32s cubic-bezier(.22,1,.36,1);overflow:hidden}
+    .profile-panel.open{right:0}
+    .profile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:299;opacity:0;pointer-events:none;transition:opacity .32s}
+    .profile-overlay.open{opacity:1;pointer-events:all}
+    .pp-head{padding:20px 20px 14px;border-bottom:1px solid var(--stone);display:flex;align-items:center;justify-content:space-between;background:var(--ocean);color:#fff;flex-shrink:0}
+    .pp-head h3{font-family:var(--font-d);font-size:20px;font-weight:400}
+    .pp-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+    .pp-close:hover{background:rgba(255,255,255,.3)}
+    .pp-avatar{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;border:2px solid rgba(255,255,255,.4);margin-right:12px;flex-shrink:0}
+    .pp-body{flex:1;overflow-y:auto;padding:20px}
+    .pp-tabs{display:flex;border-bottom:1px solid var(--stone);margin-bottom:18px;gap:0}
+    .pp-tab{flex:1;padding:9px;text-align:center;font-size:12.5px;font-weight:500;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s}
+    .pp-tab.active{color:var(--ocean);border-bottom-color:var(--ocean)}
+    .pp-section{margin-bottom:20px}
+    .pp-sl{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
+    .pp-sv{font-size:14px;color:var(--dark);margin-bottom:10px}
+    .pp-input{width:100%;padding:8px 11px;border:1.5px solid var(--stone);border-radius:8px;font-family:var(--font-b);font-size:13px;color:var(--dark);background:#fff;outline:none;transition:border-color .18s;appearance:none}
+    .pp-input:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(0,107,143,.08)}
+    .pp-save-btn{width:100%;background:var(--ocean);color:#fff;padding:11px;border-radius:10px;font-size:14px;font-weight:500;border:none;cursor:pointer;transition:all .2s;margin-top:6px}
+    .pp-save-btn:hover{background:#005a78}
+    .pp-booking-row{background:var(--sand);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px}
+    .pp-booking-ref{font-weight:600;color:var(--ocean);font-size:12px;margin-bottom:3px}
+    .pp-pref-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(0,107,143,.08);color:var(--ocean);border:1px solid rgba(0,107,143,.2);padding:4px 10px;border-radius:50px;font-size:12px;margin:3px 3px 3px 0;cursor:pointer;transition:all .2s}
+    .pp-pref-chip.active{background:var(--ocean);color:#fff}
+    @media(max-width:480px){.profile-panel{width:100vw}}
+
     /* ── LIGHTBOX ────────────────────────────────────────── */
     .lb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s}
     .lb-overlay.open{opacity:1;pointer-events:all}
@@ -831,29 +861,28 @@
         <div id="regError" style="display:none;background:rgba(232,133,90,.1);color:#c45a30;padding:14px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;text-align:center"></div>
         <div class="form-row2">
           <div class="fg">
-            <label class="fl" data-i18n="reg_fname">First Name</label>
-            <input class="fi" type="text" name="firstname" placeholder="Marie" required data-fs-field/>
+            <label class="fl" data-i18n="reg_fname">First Name <span class="req">*</span></label>
+            <input class="fi" type="text" name="firstname" placeholder="Marie" required/>
             <span data-fs-error="firstname" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
           </div>
           <div class="fg">
             <label class="fl" data-i18n="reg_lname">Last Name</label>
-            <input class="fi" type="text" name="lastname" placeholder="Dupont" required data-fs-field/>
-            <span data-fs-error="lastname" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
+            <input class="fi" type="text" name="lastname" placeholder="Dupont"/>
           </div>
         </div>
         <div class="fg">
-          <label class="fl" data-i18n="reg_email">Email Address</label>
-          <input class="fi" type="email" name="email" placeholder="marie@email.com" required data-fs-field/>
+          <label class="fl" data-i18n="reg_email">Email Address <span class="req">*</span></label>
+          <input class="fi" type="email" name="email" placeholder="marie@email.com" required/>
           <span data-fs-error="email" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
         </div>
         <div class="fg">
-          <label class="fl" data-i18n="reg_phone">Phone / WhatsApp</label>
-          <input class="fi" type="tel" name="phone" placeholder="+33 6 12 34 56 78" required data-fs-field/>
+          <label class="fl" data-i18n="reg_phone">Phone / WhatsApp <span class="req">*</span></label>
+          <input class="fi" type="tel" name="phone" placeholder="+33 6 12 34 56 78" required/>
           <span data-fs-error="phone" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
         </div>
         <div class="form-row2">
           <div class="fg"><label class="fl" data-i18n="reg_nationality">Nationality</label>
-            <select class="fi" name="nationality" data-fs-field>
+            <select class="fi" name="nationality">
               <option value="">Select…</option>
               <option>Afghan</option><option>Albanian</option><option>Algerian</option><option>Andorran</option><option>Angolan</option><option>Argentine</option><option>Armenian</option><option>Australian</option><option>Austrian</option><option>Azerbaijani</option>
               <option>Bahamian</option><option>Bahraini</option><option>Bangladeshi</option><option>Belarusian</option><option>Belgian</option><option>Belizean</option><option>Beninese</option><option>Bhutanese</option><option>Bolivian</option><option>Bosnian</option><option>Botswanan</option><option>Brazilian</option><option>British</option><option>Bruneian</option><option>Bulgarian</option><option>Burkinabe</option><option>Burundian</option>
@@ -883,38 +912,26 @@
             </select>
           </div>
           <div class="fg"><label class="fl" data-i18n="reg_party">Party Size</label>
-            <select class="fi" name="party_size" data-fs-field>
+            <select class="fi" name="party_size">
               <option>1 person</option><option selected>2 people</option><option>3 people</option>
               <option>4 people</option><option>5 people</option><option>6+ people</option>
             </select>
           </div>
         </div>
-        <div class="form-row2">
-          <div class="fg">
-            <label class="fl" data-i18n="reg_arrival">Arrival Date</label>
-            <input class="fi" type="date" name="arrival" required data-fs-field/>
-            <span data-fs-error="arrival" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-          </div>
-          <div class="fg">
-            <label class="fl" data-i18n="reg_departure">Departure Date</label>
-            <input class="fi" type="date" name="departure" required data-fs-field/>
-            <span data-fs-error="departure" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
-          </div>
-        </div>
         <div class="fg">
           <label class="fl" data-i18n="reg_special">Special Requirements</label>
-          <textarea class="fi" name="requirements" rows="2" placeholder="Dietary needs, accessibility, medical info…" style="resize:vertical" data-fs-field></textarea>
+          <textarea class="fi" name="requirements" rows="2" placeholder="Dietary needs, accessibility, medical info…" style="resize:vertical"></textarea>
         </div>
         <div style="height:1px;background:var(--stone);margin:14px 0"></div>
         <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">🔐 Create your login password</div>
         <div class="form-row2">
           <div class="fg">
-            <label class="fl">Password</label>
+            <label class="fl">Password <span class="req">*</span></label>
             <input class="fi" type="password" name="password" id="regPassword" placeholder="Min. 8 characters" required/>
-            <span id="regPwdHint" style="font-size:11px;color:var(--muted);margin-top:3px;display:block">Use at least 8 characters</span>
+            <span id="regPwdHint" style="font-size:11px;color:var(--muted);margin-top:3px;display:block">At least 8 characters</span>
           </div>
           <div class="fg">
-            <label class="fl">Confirm Password</label>
+            <label class="fl">Confirm Password <span class="req">*</span></label>
             <input class="fi" type="password" name="password_confirm" id="regPasswordConfirm" placeholder="Repeat password" required/>
             <span id="regPwdMatch" style="font-size:11px;margin-top:3px;display:block"></span>
           </div>
@@ -1352,6 +1369,21 @@
   const SUPA_URL = 'https://izqyegybvpuhvsvnznih.supabase.co';
   const SUPA_KEY = 'sb_publishable_fbAXOQZJPWis0bmnNm0xDQ_04scivPk';
   const supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+  // ── Auth state — registered HERE (not in DOMContentLoaded) so it fires
+  // immediately when Supabase processes URL tokens from email confirmation links
+  supa.auth.onAuthStateChange(function(event, session) {
+    if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+      if (session) { updateNavForUser(session.user); }
+    }
+    if (event === 'SIGNED_OUT')      { updateNavLoggedOut(); }
+    if (event === 'EMAIL_CONFIRMED') { showToast('✅', 'Email confirmed! You can now sign in.'); }
+  });
+  // Also check immediately for an existing session
+  supa.auth.getSession().then(function(result) {
+    var session = result && result.data && result.data.session;
+    if (session) updateNavForUser(session.user);
+  });
 </script>
 
 <script>
@@ -2153,37 +2185,24 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ── AUTH STATE ──────────────────────────────────────────────────────────────
-// Initialises session on page load and listens for changes
-document.addEventListener('DOMContentLoaded', function() {
-  if (typeof supa === 'undefined') return;
-  // Check for existing session
-  supa.auth.getSession().then(function(result) {
-    var session = result && result.data && result.data.session;
-    if (session) updateNavForUser(session.user);
-  });
-  // Listen for sign in / sign out
-  supa.auth.onAuthStateChange(function(event, session) {
-    if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-      if (session) updateNavForUser(session.user);
-    }
-    if (event === 'SIGNED_OUT') updateNavLoggedOut();
-    if (event === 'EMAIL_CONFIRMED') {
-      showToast('✅', 'Email confirmed! You can now sign in.');
-    }
-  });
-});
+// (onAuthStateChange is registered immediately in the Supabase init block above)
+// These helper functions update the nav UI.
 
 function updateNavForUser(user) {
-  var metaName = (user.user_metadata && user.user_metadata.name) || '';
-  var firstname = metaName.split(' ')[0] || user.email.split('@')[0];
-  var signIn    = document.getElementById('navSignInBtn');
-  var register  = document.getElementById('navRegisterBtn');
+  var meta      = user.user_metadata || {};
+  var fullName  = meta.name || '';
+  var firstname = fullName.split(' ')[0] || user.email.split('@')[0];
+  var initial   = firstname.charAt(0).toUpperCase();
   var navA      = document.getElementById('navActions');
   if (!navA) return;
-  // Replace Sign In + Register buttons with user name + Sign Out
   navA.innerHTML =
-    '<span style="font-size:13px;font-weight:500;color:var(--muted)">👤 ' + firstname + '</span>' +
-    '<button class="btn-outline" onclick="doSignOut()" style="font-size:12px">Sign Out</button>' +
+    '<button class="btn-outline" id="navUserBtn" onclick="openUserProfile()" ' +
+    'style="display:flex;align-items:center;gap:7px;padding:8px 16px 8px 8px">' +
+      '<span style="width:26px;height:26px;background:var(--ocean);border-radius:50%;' +
+             'display:inline-flex;align-items:center;justify-content:center;' +
+             'color:#fff;font-size:12px;font-weight:700;flex-shrink:0">' + initial + '</span>' +
+      '<span style="font-size:13px;font-weight:500;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + firstname + '</span>' +
+    '</button>' +
     '<button class="btn-fill" onclick="scrollToSection(\'booking\')">Book Now</button>';
 }
 
@@ -2199,8 +2218,11 @@ function updateNavLoggedOut() {
 async function doSignOut() {
   if (typeof supa !== 'undefined') await supa.auth.signOut();
   updateNavLoggedOut();
-  showToast('👋', 'Signed out successfully.');
+  showToast('👋', 'Signed out. See you soon! 🌴');
 }
+
+// Remove the DOMContentLoaded auth block (moved to supa init above)
+
 
 // ── AVAILABILITY CHECK (Supabase) ─────────────────────────────────────────
 // Called when dates change in the booking wizard
@@ -2744,7 +2766,293 @@ document.addEventListener('keydown', function(e) {
   <div class="lb-count" id="lbCount"></div>
 </div>
 
-<!-- ── CHATBOT ── -->
+<!-- ── USER PROFILE PANEL ─────────────────────────────────── -->
+<div class="profile-overlay" id="profileOverlay" onclick="closeUserProfile()"></div>
+<div class="profile-panel" id="profilePanel">
+  <div class="pp-head">
+    <div style="display:flex;align-items:center">
+      <div class="pp-avatar" id="ppAvatar">👤</div>
+      <div>
+        <div id="ppName" style="font-family:var(--font-d);font-size:18px;font-weight:400">My Profile</div>
+        <div id="ppEmail" style="font-size:12px;opacity:.75;margin-top:2px"></div>
+      </div>
+    </div>
+    <button class="pp-close" onclick="closeUserProfile()">✕</button>
+  </div>
+  <div class="pp-body">
+    <div class="pp-tabs">
+      <div class="pp-tab active" onclick="switchPpTab('profile',this)">Profile</div>
+      <div class="pp-tab" onclick="switchPpTab('prefs',this)">Preferences</div>
+      <div class="pp-tab" onclick="switchPpTab('history',this)">Bookings</div>
+    </div>
+
+    <!-- Profile tab -->
+    <div id="ppTabProfile">
+      <div class="pp-section">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div><span class="pp-sl">First Name <span class="req">*</span></span><input class="pp-input" id="ppFirstName" placeholder="Marie"/></div>
+          <div><span class="pp-sl">Last Name</span><input class="pp-input" id="ppLastName" placeholder="Dupont"/></div>
+        </div>
+        <div style="margin-bottom:10px"><span class="pp-sl">Email (read-only)</span><input class="pp-input" id="ppEmailField" readonly style="background:var(--sand)"/></div>
+        <div style="margin-bottom:10px"><span class="pp-sl">Phone / WhatsApp</span><input class="pp-input" id="ppPhone" placeholder="+33 6 12 34 56 78" type="tel"/></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div><span class="pp-sl">Nationality</span><input class="pp-input" id="ppNationality" placeholder="French"/></div>
+          <div><span class="pp-sl">Party Size</span>
+            <select class="pp-input" id="ppPartySize">
+              <option>1 person</option><option>2 people</option><option>3 people</option>
+              <option>4 people</option><option>5 people</option><option>6+ people</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:10px"><span class="pp-sl">Special Requirements</span>
+          <textarea class="pp-input" id="ppSpecial" rows="2" style="resize:vertical" placeholder="Dietary needs, accessibility, medical info…"></textarea>
+        </div>
+      </div>
+      <button class="pp-save-btn" onclick="saveProfile()">💾 Save Profile</button>
+      <button class="pp-save-btn" onclick="doSignOut()" style="background:var(--muted);margin-top:8px">Sign Out</button>
+      <div id="ppProfileStatus" style="display:none;margin-top:10px;font-size:13px;text-align:center;padding:8px;border-radius:8px"></div>
+    </div>
+
+    <!-- Preferences tab -->
+    <div id="ppTabPrefs" style="display:none">
+      <div class="pp-section">
+        <span class="pp-sl">💳 Preferred Payment Method</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px" id="ppPayChips">
+          <div class="pp-pref-chip" data-pref="card" onclick="togglePref(this,'payment')">💳 Card</div>
+          <div class="pp-pref-chip" data-pref="wallet" onclick="togglePref(this,'payment')">📱 Digital Wallet</div>
+          <div class="pp-pref-chip" data-pref="mcb_juice" onclick="togglePref(this,'payment')">🏦 MCB Juice</div>
+          <div class="pp-pref-chip" data-pref="myt_money" onclick="togglePref(this,'payment')">💚 MyT Money</div>
+          <div class="pp-pref-chip" data-pref="bank_transfer" onclick="togglePref(this,'payment')">🏧 Bank Transfer</div>
+          <div class="pp-pref-chip" data-pref="cash" onclick="togglePref(this,'payment')">💵 Cash</div>
+        </div>
+      </div>
+      <div class="pp-section" style="margin-top:16px">
+        <span class="pp-sl">🏡 Preferred Accommodation</span>
+        <div style="display:flex;flex-wrap:wrap;margin-top:6px">
+          <div class="pp-pref-chip" data-pref="studio" onclick="togglePref(this,'accommodation')">🏙️ Studio</div>
+          <div class="pp-pref-chip" data-pref="villa" onclick="togglePref(this,'accommodation')">🌴 Villa</div>
+        </div>
+      </div>
+      <div class="pp-section" style="margin-top:16px">
+        <span class="pp-sl">🌿 Favourite Activities</span>
+        <div style="display:flex;flex-wrap:wrap;margin-top:6px">
+          <div class="pp-pref-chip" data-pref="boat" onclick="togglePref(this,'activities')">⛵ Boat & Water</div>
+          <div class="pp-pref-chip" data-pref="nature" onclick="togglePref(this,'activities')">🌿 Nature & Wellness</div>
+          <div class="pp-pref-chip" data-pref="food" onclick="togglePref(this,'activities')">🍛 Food Discovery</div>
+          <div class="pp-pref-chip" data-pref="concierge" onclick="togglePref(this,'activities')">🎩 Concierge</div>
+        </div>
+      </div>
+      <div class="pp-section" style="margin-top:16px">
+        <span class="pp-sl">🍽️ Dietary Preferences</span>
+        <div style="display:flex;flex-wrap:wrap;margin-top:6px">
+          <div class="pp-pref-chip" data-pref="vegetarian" onclick="togglePref(this,'dietary')">🥗 Vegetarian</div>
+          <div class="pp-pref-chip" data-pref="vegan" onclick="togglePref(this,'dietary')">🌱 Vegan</div>
+          <div class="pp-pref-chip" data-pref="halal" onclick="togglePref(this,'dietary')">☪️ Halal</div>
+          <div class="pp-pref-chip" data-pref="gluten_free" onclick="togglePref(this,'dietary')">🌾 Gluten-free</div>
+          <div class="pp-pref-chip" data-pref="no_restrictions" onclick="togglePref(this,'dietary')">✅ No restrictions</div>
+        </div>
+      </div>
+      <div class="pp-section" style="margin-top:16px">
+        <span class="pp-sl">📝 Other Preferences & Notes</span>
+        <textarea class="pp-input" id="ppPrefNotes" rows="3" style="resize:vertical;margin-top:6px" placeholder="E.g. late check-in preferred, ground floor room, travelling with infants…"></textarea>
+      </div>
+      <button class="pp-save-btn" onclick="savePreferences()">💾 Save Preferences</button>
+      <div id="ppPrefsStatus" style="display:none;margin-top:10px;font-size:13px;text-align:center;padding:8px;border-radius:8px"></div>
+    </div>
+
+    <!-- Booking history tab -->
+    <div id="ppTabHistory" style="display:none">
+      <div id="ppBookingHistory"><div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Loading your bookings…</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// USER PROFILE PANEL
+// ═══════════════════════════════════════════════════════════════
+var ppCurrentUser = null;
+var ppPreferences = {};
+
+function openUserProfile() {
+  document.getElementById('profilePanel').classList.add('open');
+  document.getElementById('profileOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (typeof supa !== 'undefined') {
+    supa.auth.getSession().then(function(result) {
+      var session = result && result.data && result.data.session;
+      if (session) { ppCurrentUser = session.user; loadUserProfile(session.user); }
+      else { closeUserProfile(); openLogin(); }
+    });
+  }
+}
+
+function closeUserProfile() {
+  document.getElementById('profilePanel').classList.remove('open');
+  document.getElementById('profileOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function switchPpTab(tab, el) {
+  document.querySelectorAll('.pp-tab').forEach(function(t){ t.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('ppTabProfile').style.display = tab==='profile' ? '' : 'none';
+  document.getElementById('ppTabPrefs').style.display   = tab==='prefs'   ? '' : 'none';
+  document.getElementById('ppTabHistory').style.display = tab==='history' ? '' : 'none';
+  if (tab === 'history') loadBookingHistory();
+}
+
+async function loadUserProfile(user) {
+  var meta      = user.user_metadata || {};
+  var fullName  = meta.name || '';
+  var parts     = fullName.split(' ');
+  var firstname = parts[0] || '';
+  var lastname  = parts.slice(1).join(' ') || '';
+  var initial   = firstname.charAt(0).toUpperCase() || user.email.charAt(0).toUpperCase();
+
+  // Header
+  document.getElementById('ppAvatar').textContent  = initial;
+  document.getElementById('ppName').textContent     = fullName || user.email.split('@')[0];
+  document.getElementById('ppEmail').textContent    = user.email;
+
+  // Profile tab fields
+  document.getElementById('ppFirstName').value    = firstname;
+  document.getElementById('ppLastName').value     = lastname;
+  document.getElementById('ppEmailField').value   = user.email;
+
+  // Load from Supabase guests table
+  try {
+    var { data: guest } = await supa.from('guests').select('*').eq('email', user.email).single();
+    if (guest) {
+      document.getElementById('ppPhone').value   = guest.phone || '';
+      document.getElementById('ppNationality').value = guest.nationality || '';
+      var psEl = document.getElementById('ppPartySize');
+      if (guest.party_size) { for(var i=0;i<psEl.options.length;i++) if(psEl.options[i].value===guest.party_size||psEl.options[i].text===guest.party_size) psEl.selectedIndex=i; }
+      document.getElementById('ppSpecial').value = guest.special_req || '';
+      // Preferences
+      if (guest.notes) {
+        try { ppPreferences = JSON.parse(guest.notes); } catch(e) { ppPreferences = {}; }
+        applyPreferencesToUI();
+      }
+      if (guest.payment_pref) document.getElementById('ppPrefNotes').value = '';
+    }
+  } catch(e) {}
+}
+
+function applyPreferencesToUI() {
+  if (!ppPreferences) return;
+  // Payment
+  document.querySelectorAll('#ppPayChips .pp-pref-chip').forEach(function(chip) {
+    chip.classList.toggle('active', chip.dataset.pref === ppPreferences.payment);
+  });
+  // Other multi-select prefs
+  ['accommodation','activities','dietary'].forEach(function(cat) {
+    var selected = ppPreferences[cat] || [];
+    document.querySelectorAll('[data-pref][onclick*="\''+cat+'\'"]').forEach(function(chip) {
+      chip.classList.toggle('active', selected.includes(chip.dataset.pref));
+    });
+  });
+  if (ppPreferences.notes) document.getElementById('ppPrefNotes').value = ppPreferences.notes || '';
+}
+
+function togglePref(el, category) {
+  if (category === 'payment') {
+    // Single select for payment
+    document.querySelectorAll('#ppPayChips .pp-pref-chip').forEach(function(c){ c.classList.remove('active'); });
+    el.classList.add('active');
+    ppPreferences.payment = el.dataset.pref;
+  } else {
+    // Multi-select for others
+    el.classList.toggle('active');
+    if (!ppPreferences[category]) ppPreferences[category] = [];
+    var pref = el.dataset.pref;
+    if (el.classList.contains('active')) {
+      if (!ppPreferences[category].includes(pref)) ppPreferences[category].push(pref);
+    } else {
+      ppPreferences[category] = ppPreferences[category].filter(function(p){ return p !== pref; });
+    }
+  }
+}
+
+async function saveProfile() {
+  var user = ppCurrentUser;
+  if (!user) return;
+  var firstname = document.getElementById('ppFirstName').value.trim();
+  var lastname  = document.getElementById('ppLastName').value.trim();
+  var phone     = document.getElementById('ppPhone').value.trim();
+  var nationality = document.getElementById('ppNationality').value.trim();
+  var party_size  = document.getElementById('ppPartySize').value;
+  var special_req = document.getElementById('ppSpecial').value.trim();
+  var st = document.getElementById('ppProfileStatus');
+
+  if (!firstname) { showProfileStatus(st, '⚠️ First name is required', true); return; }
+
+  try {
+    // Update Supabase auth metadata
+    await supa.auth.updateUser({ data: { name: (firstname + ' ' + lastname).trim() } });
+    // Update guests table
+    await supa.from('guests').update({ name: (firstname+' '+lastname).trim(), phone, nationality, party_size, special_req }).eq('email', user.email);
+    // Update nav
+    document.getElementById('ppName').textContent = (firstname+' '+lastname).trim() || firstname;
+    var navUserBtn = document.getElementById('navUserBtn');
+    if (navUserBtn) {
+      var initial = firstname.charAt(0).toUpperCase();
+      navUserBtn.innerHTML = '<span style="width:26px;height:26px;background:var(--ocean);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;flex-shrink:0">'+initial+'</span><span style="font-size:13px;font-weight:500;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+firstname+'</span>';
+    }
+    showProfileStatus(st, '✅ Profile saved!', false);
+    showToast('✅', 'Profile updated!');
+  } catch(e) { showProfileStatus(st, '⚠️ Save failed: '+e.message, true); }
+}
+
+async function savePreferences() {
+  var user = ppCurrentUser;
+  if (!user) return;
+  ppPreferences.notes = document.getElementById('ppPrefNotes').value.trim();
+  var st = document.getElementById('ppPrefsStatus');
+  try {
+    var payPref = ppPreferences.payment || '';
+    await supa.from('guests').update({
+      payment_pref: payPref,
+      notes: JSON.stringify(ppPreferences)
+    }).eq('email', user.email);
+    showProfileStatus(st, '✅ Preferences saved!', false);
+    showToast('✅', 'Preferences saved!');
+  } catch(e) { showProfileStatus(st, '⚠️ Save failed: '+e.message, true); }
+}
+
+async function loadBookingHistory() {
+  var user = ppCurrentUser;
+  var el = document.getElementById('ppBookingHistory');
+  if (!user || !el) return;
+  el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:13px">Loading…</div>';
+  try {
+    var { data: bookings, error } = await supa.from('bookings').select('*').eq('guest_email', user.email).order('created_at', {ascending: false});
+    if (error || !bookings || !bookings.length) {
+      el.innerHTML = '<div style="text-align:center;padding:20px;font-size:13px;color:var(--muted)">No bookings yet.<br><a href="#booking" onclick="closeUserProfile();scrollToSection(\'booking\')" style="color:var(--ocean);font-weight:600">Book your first stay →</a></div>';
+      return;
+    }
+    el.innerHTML = bookings.map(function(b) {
+      var sc = b.status==='confirmed' ? '#27ae60' : b.status==='cancelled' ? '#c0392b' : '#e67e22';
+      return '<div class="pp-booking-row">' +
+        '<div class="pp-booking-ref">' + (b.ref||b.id||'—') + ' <span style="background:'+sc+';color:#fff;padding:2px 7px;border-radius:50px;font-size:10px;font-weight:600;text-transform:uppercase">' + (b.status||'pending') + '</span></div>' +
+        '<div style="color:var(--dark);margin-bottom:2px">' + (b.services||'—') + '</div>' +
+        '<div style="color:var(--muted);font-size:12px">' + (b.checkin||'') + (b.checkout?' → '+b.checkout:'') + (b.guests_count?' · '+b.guests_count+' guests':'') + '</div>' +
+        (b.estimated_total ? '<div style="font-weight:600;font-size:13px;margin-top:3px">'+b.estimated_total+'</div>' : '') +
+        '</div>';
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center;padding:16px">Could not load bookings.</div>';
+  }
+}
+
+function showProfileStatus(el, msg, isError) {
+  if (!el) return;
+  el.textContent = msg;
+  el.style.cssText = 'display:block;font-size:13px;text-align:center;padding:8px;border-radius:8px;' +
+    (isError ? 'background:rgba(232,133,90,.1);color:#c45a30' : 'background:rgba(45,106,79,.12);color:var(--palm)');
+  setTimeout(function(){ el.style.display = 'none'; }, 4000);
+}
+</script>
 <div class="chat-bubble" id="chatBubble">
   <div class="chat-window" id="chatWindow">
     <div class="chat-head">

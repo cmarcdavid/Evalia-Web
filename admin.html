@@ -285,27 +285,36 @@
 
 <!-- DASHBOARD -->
 <div id="page-dashboard" class="page">
-  <div class="srow">
+  <div class="srow" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">
     <div class="sc"><div class="scl">Properties</div><div class="scv" id="dp">—</div><div class="scs" id="dpl"></div></div>
     <div class="sc"><div class="scl">Experiences</div><div class="scv" id="de">—</div><div class="scs">Active on site</div></div>
+    <div class="sc"><div class="scl">Registered Guests</div><div class="scv" id="dashGuestCount" style="color:#27ae60">—</div><div class="scs">Total registered</div></div>
+    <div class="sc"><div class="scl">New This Month</div><div class="scv" id="dashGuestMonth" style="color:var(--g)">—</div><div class="scs">Registrations</div></div>
     <div class="sc"><div class="scl">Media Files</div><div class="scv" id="dm">—</div><div class="scs">In images/</div></div>
     <div class="sc"><div class="scl">Last Synced</div><div class="scv" style="font-size:16px" id="dt">—</div><div class="scs" id="db"></div></div>
   </div>
   <div class="g2">
     <div class="card"><div class="ctitle">Quick Actions</div>
       <div style="display:flex;flex-direction:column;gap:6px">
+        <button class="btn bg bfull" onclick="gp('guests',qs('guests'))">👥 View Guests <span id="dashGuestBadge" style="background:#27ae60;color:#fff;border-radius:50px;padding:1px 7px;font-size:10px;margin-left:4px">—</span></button>
+        <button class="btn bg bfull" onclick="gp('bookings',qs('bookings'))">📅 Bookings</button>
         <button class="btn bg bfull" onclick="gp('properties',qs('properties'))">🏠 Edit Properties</button>
         <button class="btn bg bfull" onclick="gp('experiences',qs('experiences'))">🌴 Edit Experiences</button>
         <button class="btn bg bfull" onclick="gp('media',qs('media'))">📸 Upload Media</button>
         <button class="btn bg bfull" onclick="gp('settings',qs('settings'))">⚙️ Settings</button>
       </div>
     </div>
-    <div class="card"><div class="ctitle">How Changes Sync</div>
-      <div class="steps">
-        <div class="step"><div class="sn">1</div><div class="sb2">Edit any property, experience, photo or setting</div></div>
-        <div class="step"><div class="sn">2</div><div class="sb2">Click <strong>Save & Publish →</strong> — writes directly to GitHub</div></div>
-        <div class="step"><div class="sn">3</div><div class="sb2">Vercel detects the change and rebuilds in <strong>~30 seconds</strong></div></div>
-        <div class="step"><div class="sn">✓</div><div class="sb2">Live site updates automatically at <a href="https://evalia-web.vercel.app" target="_blank" style="color:var(--g)">evalia-web.vercel.app</a></div></div>
+    <div>
+      <div class="card" style="margin-bottom:14px"><div class="ctitle">Recent Guests</div>
+        <div id="dashRecentGuests"><div style="text-align:center;padding:14px;color:var(--mu);font-size:12px">Loading…</div></div>
+      </div>
+      <div class="card"><div class="ctitle">How Changes Sync</div>
+        <div class="steps">
+          <div class="step"><div class="sn">1</div><div class="sb2">Edit any property, experience, photo or setting</div></div>
+          <div class="step"><div class="sn">2</div><div class="sb2">Click <strong>Save & Publish →</strong> — writes directly to GitHub</div></div>
+          <div class="step"><div class="sn">3</div><div class="sb2">Vercel detects the change and rebuilds in <strong>~30 seconds</strong></div></div>
+          <div class="step"><div class="sn">✓</div><div class="sb2">Live site updates automatically at <a href="https://evalia-web.vercel.app" target="_blank" style="color:var(--g)">evalia-web.vercel.app</a></div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -872,6 +881,41 @@ function renderDash(){
   const n=new Date();
   document.getElementById('dt').textContent=n.getHours()+':'+String(n.getMinutes()).padStart(2,'0');
   document.getElementById('db').textContent='Branch: '+BRANCH;
+  // Load guest stats from Supabase (async, non-blocking)
+  loadDashboardGuests();
+}
+
+async function loadDashboardGuests() {
+  try {
+    const { data, error } = await supa.from('guests').select('name,email,created_at,verified,nationality').order('created_at',{ascending:false});
+    if (error || !data) return;
+    const total = data.length;
+    const now = new Date();
+    const thisMonth = data.filter(g => {
+      const d = new Date(g.created_at);
+      return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+    }).length;
+    // Update stat cards
+    const gc = document.getElementById('dashGuestCount'); if(gc) gc.textContent = total;
+    const gm = document.getElementById('dashGuestMonth'); if(gm) gm.textContent = thisMonth;
+    const gb = document.getElementById('dashGuestBadge'); if(gb) gb.textContent = total;
+    // Recent guests (last 5)
+    const rg = document.getElementById('dashRecentGuests');
+    if (!rg) return;
+    if (!data.length) { rg.innerHTML = '<div style="text-align:center;padding:14px;color:var(--mu);font-size:12px">No registered guests yet.</div>'; return; }
+    rg.innerHTML = data.slice(0,5).map(g => {
+      const initials = (g.name||'?').split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
+      const daysAgo = Math.floor((Date.now()-new Date(g.created_at).getTime())/86400000);
+      return `<div class="ci" style="cursor:pointer" onclick="gp('guests',qs('guests'))">
+        <div class="cith" style="background:${g.verified?'#eafaf1':'#fef9e7'};font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center">${initials}</div>
+        <div class="ciin">
+          <div class="cinm">${esc(g.name||'—')} <span class="pill ${g.verified?'pg':'po'}" style="font-size:9px">${g.verified?'✓':'Pending'}</span></div>
+          <div class="cimt">${esc(g.email||'—')}${g.nationality?' · '+esc(g.nationality):''}</div>
+        </div>
+        <div style="font-size:11px;color:var(--mu);white-space:nowrap">${daysAgo===0?'Today':daysAgo===1?'1d ago':daysAgo+'d ago'}</div>
+      </div>`;
+    }).join('') + (total>5?`<div style="text-align:center;padding:6px;font-size:12px;color:var(--g);cursor:pointer" onclick="gp('guests',qs('guests'))">View all ${total} guests →</div>`:'');
+  } catch(e) { /* silent */ }
 }
 
 // MEDIA GRID
