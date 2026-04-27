@@ -6,7 +6,7 @@
   "location_fr": "Albion, Ouest de l'ile Maurice",
   "description": "A private 2-bedroom villa surrounded by a lush tropical garden with its own pool. Ideal for families or groups seeking privacy, space and the ultimate island living experience.",
   "description_fr": "UUne villa privée de 2 chambres entourée d'un jardin tropical luxuriant avec piscine privée. Idéale pour les familles ou les groupes en quête d'intimité, d'espace et d'une expérience insulaire inoubliable.",
-  "price": 180,
+  "price": 120,
   "max_guests": 4,
   "bedrooms": 2,
   "bathrooms": 1,
@@ -21,7 +21,10 @@
     "/images/IMG_5320.jpeg",
     "/images/IMG_5322.jpeg",
     "/images/IMG_5336.jpeg",
-    "/images/IMG_5339.jpeg"
+    "/images/IMG_5339.jpeg",
+    "/images/6A6E6F5C-D38B-4A6F-9A32-7351B7168AC8_1_105_c.jpeg",
+    "/images/6AE7A363-D91C-4153-AE95-2A0BB5B9E182_1_105_c.jpeg",
+    "/images/726C0C36-2FE7-4925-87E9-48EFED25BF35_1_105_c.jpeg"
   ],
   "badge": "Pool & Garden",
   "badge_fr": "Piscine & Jardin",
@@ -38,6 +41,6 @@
     "6 Guests"
   ],
   "_slug": "villa-evalia",
-  "_snapshot_ts": "2026-04-22T12:58:35.079Z",
+  "_snapshot_ts": "2026-04-27T06:27:20.648Z",
   "_snapshot_type": "property"
 }
