@@ -10,7 +10,7 @@
   "max_guests": 2,
   "bedrooms": 1,
   "bathrooms": 1,
-  "min_stay": 4,
+  "min_stay": 5,
   "cleaning_fee": 30,
   "photo": "/images/IMG_5323.jpeg",
   "photo_alt": "/images/Hero1.jpg",
@@ -18,7 +18,9 @@
     "/images/IMG_5323.jpeg",
     "/images/IMG_5320.jpeg",
     "/images/IMG_5322.jpeg",
-    "/images/IMG_5325.jpeg"
+    "/images/IMG_5325.jpeg",
+    "/images/322D7F70-07E3-4F79-8C15-F0CBABFB689B_1_105_c.jpeg",
+    "/images/32C83BB4-4EA0-4E7C-98C9-0A434075D448_1_105_c.jpeg"
   ],
   "badge": "Available Now",
   "badge_fr": "Disponible Maintenant",
