@@ -10,12 +10,15 @@
   "duration": "Full day",
   "duration_fr": "Journée complète",
   "gallery": [
-    "/images/Hero3.jpg"
+    "/images/IMG_3838.jpeg",
+    "/images/IMG_3784.jpeg",
+    "/images/IMG_3930.jpeg",
+    "/images/IMG_3933.jpeg"
   ],
   "instagram": "",
   "active": true,
-  "photo": "/images/Hero3.jpg",
+  "photo": "/images/IMG_3838.jpeg",
   "_slug": "black-river-gorges-hike",
-  "_snapshot_ts": "2026-04-22T13:39:04.367Z",
+  "_snapshot_ts": "2026-04-27T06:37:08.800Z",
   "_snapshot_type": "experience"
 }
