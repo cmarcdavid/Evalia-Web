@@ -588,14 +588,14 @@
     <li><a href="#experiences">Experiences</a></li>
     <li><a href="#booking">Book</a></li>
   </ul>
+  <div class="lang-btn" id="langBtn" onclick="toggleLang()" title="Switch language">
+    <span class="lang-flag" id="langFlag">🇬🇧</span>
+    <span class="lang-lbl" id="langLbl">EN</span>
+  </div>
   <div class="nav-actions" id="navActions">
     <button class="btn-outline" id="navSignInBtn" onclick="openLogin()">Sign In</button>
     <button class="btn-outline" id="navRegisterBtn" onclick="scrollToSection('register')">Register</button>
     <button class="btn-fill" onclick="scrollToSection('booking')">Book Now</button>
-  </div>
-  <div class="lang-btn" id="langBtn" onclick="toggleLang()" title="Switch language">
-    <span class="lang-flag" id="langFlag">🇬🇧</span>
-    <span class="lang-lbl" id="langLbl">EN</span>
   </div>
   <div class="nav-burger" onclick="toggleMobile()"><span></span><span></span><span></span></div>
 </nav>
@@ -947,7 +947,7 @@
 <section id="booking" style="background:var(--sand)">
   <div class="s-header center">
     <div class="s-eyebrow" data-i18n="book_eyebrow">Reserve Your Experience</div>
-    <h2 class="s-title" data-i18n="book_title">Book in<br><em>3 easy steps</em></h2>
+    <h2 class="s-title" data-i18n="book_title">Book in<br><em>4 easy steps</em></h2>
   </div>
   <div class="booking-wizard">
     <div class="wizard-steps">
@@ -1221,6 +1221,69 @@
       <div class="testi-author">
         <div class="testi-avatar">AD</div>
         <div><div class="testi-name">Amara Diallo</div><div class="testi-origin">Abidjan, Côte d'Ivoire · December 2024</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leave a Review -->
+  <div style="max-width:560px;margin:48px auto 0;text-align:center">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px">
+      Stayed with us? We'd love to hear about your experience.
+    </div>
+    <button class="btn-outline" id="writeReviewBtn" onclick="openReviewForm()"
+      style="font-size:14px;padding:11px 28px;border-radius:50px">
+      ✍️ Write a Review
+    </button>
+    <div id="reviewFormWrap" style="display:none;margin-top:24px;text-align:left">
+      <div class="card" style="padding:24px">
+        <div style="font-family:var(--font-d);font-size:18px;font-weight:400;margin-bottom:18px">Share your experience</div>
+        <!-- Star rating -->
+        <div style="margin-bottom:16px">
+          <label class="fl">Rating <span class="req">*</span></label>
+          <div id="starPicker" style="display:flex;gap:6px;margin-top:6px">
+            <span class="star-pick" data-val="1" onclick="setReviewRating(1)" style="font-size:28px;cursor:pointer;color:var(--stone)">★</span>
+            <span class="star-pick" data-val="2" onclick="setReviewRating(2)" style="font-size:28px;cursor:pointer;color:var(--stone)">★</span>
+            <span class="star-pick" data-val="3" onclick="setReviewRating(3)" style="font-size:28px;cursor:pointer;color:var(--stone)">★</span>
+            <span class="star-pick" data-val="4" onclick="setReviewRating(4)" style="font-size:28px;cursor:pointer;color:var(--stone)">★</span>
+            <span class="star-pick" data-val="5" onclick="setReviewRating(5)" style="font-size:28px;cursor:pointer;color:var(--stone)">★</span>
+          </div>
+          <input type="hidden" id="reviewRating" value="0"/>
+        </div>
+        <div class="form-row2">
+          <div class="fg"><label class="fl">Your Name <span class="req">*</span></label>
+            <input class="fi" id="reviewName" placeholder="Sophie & Laurent"/>
+          </div>
+          <div class="fg"><label class="fl">Service / Stay</label>
+            <select class="fi" id="reviewService">
+              <option value="">Select…</option>
+              <option>Studio Evalia</option>
+              <option>Villa Evalia</option>
+              <option>Dolphin Watching Cruise</option>
+              <option>Île aux Cerfs Day Trip</option>
+              <option>Sunset Catamaran</option>
+              <option>Beach Yoga</option>
+              <option>Nature Hike</option>
+              <option>Food Discovery Tour</option>
+              <option>Cooking Class</option>
+              <option>Concierge Service</option>
+              <option>Overall Experience</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg"><label class="fl">Your Review <span class="req">*</span></label>
+          <textarea class="fi" id="reviewText" rows="4" placeholder="Tell us about your stay — what made it special?" style="resize:vertical"></textarea>
+        </div>
+        <div class="fg"><label class="fl">Email (optional, not published)</label>
+          <input class="fi" id="reviewEmail" type="email" placeholder="marie@email.com"/>
+        </div>
+        <div style="font-size:11.5px;color:var(--muted);margin-bottom:14px">
+          🔍 Reviews are moderated before publishing — we read every one.
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-register" id="reviewSubmitBtn" onclick="submitReview()" style="flex:1">Submit Review →</button>
+          <button onclick="closeReviewForm()" style="padding:11px 18px;border:1.5px solid var(--stone);border-radius:10px;background:none;cursor:pointer;font-family:var(--font-b)">Cancel</button>
+        </div>
+        <div id="reviewStatus" style="display:none;margin-top:12px;padding:12px;border-radius:8px;font-size:13px;text-align:center"></div>
       </div>
     </div>
   </div>
@@ -2195,15 +2258,16 @@ function updateNavForUser(user) {
   var initial   = firstname.charAt(0).toUpperCase();
   var navA      = document.getElementById('navActions');
   if (!navA) return;
+  // Logged in: Book Now (left) + user avatar button (far right, after lang-btn)
   navA.innerHTML =
+    '<button class="btn-fill" onclick="scrollToSection(\'booking\')">Book Now</button>' +
     '<button class="btn-outline" id="navUserBtn" onclick="openUserProfile()" ' +
-    'style="display:flex;align-items:center;gap:7px;padding:8px 16px 8px 8px">' +
-      '<span style="width:26px;height:26px;background:var(--ocean);border-radius:50%;' +
+    'style="display:flex;align-items:center;gap:7px;padding:7px 14px 7px 8px">' +
+      '<span style="width:27px;height:27px;background:var(--ocean);border-radius:50%;' +
              'display:inline-flex;align-items:center;justify-content:center;' +
              'color:#fff;font-size:12px;font-weight:700;flex-shrink:0">' + initial + '</span>' +
-      '<span style="font-size:13px;font-weight:500;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + firstname + '</span>' +
-    '</button>' +
-    '<button class="btn-fill" onclick="scrollToSection(\'booking\')">Book Now</button>';
+      '<span style="font-size:13px;font-weight:500;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + firstname + '</span>' +
+    '</button>';
 }
 
 function updateNavLoggedOut() {
@@ -2428,7 +2492,7 @@ var I18N = {
     reg_btn:'Create My Profile \u2192',
     reg_privacy:'\uD83D\uDD12 Your data is private and secure. We never share your details.',
     book_eyebrow:'Reserve Your Experience',
-    book_title:'Book in<br><em>3 easy steps</em>',
+    book_title:'Book in<br><em>4 easy steps</em>',
     book_step1:'Choose Services', book_step2:'Dates & Details', book_step3:'Confirm & Send',
     book_next1:'Next: Dates & Details \u2192', book_next2:'Next: Review & Confirm \u2192',
     pay_eyebrow:'Secure Payments',
@@ -2668,6 +2732,86 @@ function carouselGo(id, dir) {
 function carouselDot(id, idx) {
   var wrap = document.getElementById(id);
   if (wrap && wrap._carGo) wrap._carGo(idx);
+}
+
+// ── REVIEW FORM ──────────────────────────────────────────────────────────────
+var reviewRatingVal = 0;
+
+function openReviewForm() {
+  document.getElementById('reviewFormWrap').style.display = '';
+  document.getElementById('writeReviewBtn').style.display = 'none';
+  document.getElementById('reviewFormWrap').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function closeReviewForm() {
+  document.getElementById('reviewFormWrap').style.display = 'none';
+  document.getElementById('writeReviewBtn').style.display = '';
+}
+function setReviewRating(val) {
+  reviewRatingVal = val;
+  document.getElementById('reviewRating').value = val;
+  document.querySelectorAll('.star-pick').forEach(function(s) {
+    s.style.color = parseInt(s.dataset.val) <= val ? 'var(--sunset)' : 'var(--stone)';
+  });
+}
+async function submitReview() {
+  var btn    = document.getElementById('reviewSubmitBtn');
+  var status = document.getElementById('reviewStatus');
+  var name   = (document.getElementById('reviewName').value   || '').trim();
+  var text   = (document.getElementById('reviewText').value   || '').trim();
+  var email  = (document.getElementById('reviewEmail').value  || '').trim();
+  var service= (document.getElementById('reviewService').value|| '').trim();
+  var rating = reviewRatingVal;
+
+  function setStatus(msg, ok) {
+    status.innerHTML = msg;
+    status.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;text-align:center;' +
+      (ok ? 'background:rgba(45,106,79,.1);color:var(--palm)' : 'background:rgba(232,133,90,.1);color:#c45a30');
+  }
+  if (!name) { setStatus('⚠️ Please enter your name.', false); return; }
+  if (!text || text.length < 20) { setStatus('⚠️ Please write at least 20 characters.', false); return; }
+  if (!rating) { setStatus('⚠️ Please select a star rating.', false); return; }
+
+  btn.disabled = true; btn.textContent = 'Submitting…';
+
+  var review = {
+    name, text, service, email, rating,
+    status: 'pending',    // admin must approve before it shows on site
+    date: new Date().toISOString(),
+    avatar: name.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2)
+  };
+
+  var ok = false;
+  // 1. Supabase (primary)
+  if (typeof supa !== 'undefined') {
+    try {
+      var { error } = await supa.from('reviews').insert([review]);
+      if (!error) ok = true;
+      else console.warn('Review Supabase:', error.message);
+    } catch(e) { console.warn('Review error:', e.message); }
+  }
+  // 2. Formspree notification (always)
+  try {
+    var fd = new FormData();
+    fd.append('name', name); fd.append('rating', rating);
+    fd.append('service', service); fd.append('review', text);
+    fd.append('_subject', 'New Review from ' + name + ' — Evalia');
+    var r = await fetch('https://formspree.io/f/mdayoknj', {method:'POST', body:fd, headers:{'Accept':'application/json'}});
+    if (r.ok) ok = true;
+  } catch(e) {}
+
+  if (ok) {
+    setStatus('✅ Thank you! Your review has been submitted and will appear after moderation. We appreciate your feedback 🌴', true);
+    btn.textContent = '✅ Submitted!'; btn.style.background = 'var(--palm)';
+    document.getElementById('reviewName').value = '';
+    document.getElementById('reviewText').value = '';
+    document.getElementById('reviewEmail').value = '';
+    document.getElementById('reviewService').value = '';
+    setReviewRating(0);
+    setTimeout(function(){ closeReviewForm(); btn.disabled=false; btn.textContent='Submit Review →'; btn.style.background=''; }, 5000);
+  } else {
+    setStatus('⚠️ Could not submit — please WhatsApp us at +230 5724 2099', false);
+    btn.disabled = false; btn.textContent = 'Submit Review →';
+  }
 }
 
 // ── LIGHTBOX ──────────────────────────────────────────────────────────────
@@ -3105,7 +3249,7 @@ var CHAT_KB = [
   {q:['location','where','flic en flac','grand baie','mauritius','map'],
    a:'The <strong>Studio</strong> is in <strong>Flic en Flac</strong>, West Mauritius — steps from the beach. The <strong>Villa</strong> is in <strong>Grand Baie</strong>, North Mauritius — close to restaurants and nightlife. 📍'},
   {q:['book','reserve','reservation','availability','available','dates'],
-   a:'You can book directly on this page — just scroll to <strong>Book in 3 easy steps</strong> below, or click <em>Book Now</em> in the menu. For same-day requests, WhatsApp us directly. 📅'},
+   a:'You can book directly on this page — just scroll to <strong>Book in 4 easy steps</strong> below, or click <em>Book Now</em> in the menu. For same-day requests, WhatsApp us directly. 📅'},
   {q:['pay','payment','card','cash','mcb','myt','juice','myT','stripe'],
    a:'We accept <strong>Visa, Mastercard, Amex, Apple Pay, Google Pay, MCB Juice and MyT Money</strong>. Cash on arrival is also accepted with a 30% deposit. 💳'},
   {q:['check in','check-in','checkout','check out','arrival time','departure time'],

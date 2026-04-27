@@ -244,7 +244,7 @@
     <div class="si" onclick="window.open('index.html','_blank')"><span class="si-ic">🌐</span>Live Site</div>
     <div class="si" onclick="loadAll(true)"><span class="si-ic">🔄</span>Refresh</div>
     <div class="si" data-page="history" onclick="gp('history',this)"><span class="si-ic">🕐</span>Data History</div>
-    <div class="si" onclick="disconnect()"><span class="si-ic">🔐</span>Disconnect</div>
+    <div class="si" onclick="disconnect()" title="Clear stored GitHub token — you will be asked to paste a new one"><span class="si-ic">🔑</span>Change GitHub Token</div>
   </nav>
 </aside>
 <div class="main">
@@ -274,8 +274,8 @@
       1. <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a><br>
       2. Note: "Evalia Admin" · No expiration · Tick <strong>repo</strong><br>
       3. Generate → copy → paste above<br><br>
-      <strong>⚠️ Rate limited?</strong> GitHub limits API calls to 60/hr without a token.<br>
-      If you see "rate limit" errors, wait a few minutes then try again — your token is fine.
+      <strong>What the token does:</strong> The admin uses your GitHub token to save content (properties, experiences, settings, media) directly to your GitHub repo. Guests and bookings are stored in Supabase — those don't need the token.<br><br>
+      <strong>⚠️ Rate limited?</strong> GitHub limits API calls. Wait a few minutes then try again — your token is fine.
     </div>
     <button class="btn bpri bfull" id="connectBtn" onclick="connect()">Connect →</button>
     <div id="cerr" style="display:none;margin-top:7px;color:#c0392b;font-size:12px;text-align:center;background:#fdf0f0;padding:7px;border-radius:6px"></div>
@@ -580,9 +580,10 @@
           <button class="btn bg bsm" onclick="loadReviews(true)">🔄 Refresh</button>
         </div>
       </div>
-      <div style="font-size:12px;color:var(--mu);margin-bottom:12px">
-        Customer reviews displayed in the Testimonials section. Approve before they appear on the website.
-        Stored in <code>_data/reviews/</code> on GitHub.
+      <div style="font-size:12px;color:var(--mu);margin-bottom:12px;line-height:1.7">
+        Reviews submitted via the <strong>Write a Review</strong> button on the website appear here as <em>Pending</em>. Approve to publish them in the Testimonials section. Reject to hide. Stored in <code>_data/reviews/</code> on GitHub and in the Supabase <code>reviews</code> table.<br>
+        <span style="color:#e67e22">⚠️ If reviews submitted on the website don't appear here, run this SQL in Supabase:</span>
+        <code style="display:block;background:var(--sd);padding:5px 9px;border-radius:5px;margin-top:5px;font-size:11px">CREATE TABLE IF NOT EXISTS reviews (id UUID DEFAULT gen_random_uuid() PRIMARY KEY, name TEXT, text TEXT, service TEXT, email TEXT, rating INTEGER, status TEXT DEFAULT 'pending', date TIMESTAMPTZ DEFAULT NOW(), avatar TEXT); ALTER TABLE reviews ENABLE ROW LEVEL SECURITY; CREATE POLICY "public_insert_reviews" ON reviews FOR INSERT WITH CHECK (true); CREATE POLICY "public_read_approved" ON reviews FOR SELECT USING (true);</code>
       </div>
       <div id="reviewStats" style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap"></div>
       <div id="reviewList"><div style="text-align:center;padding:24px;color:var(--mu)">Loading reviews…</div></div>
@@ -1651,6 +1652,7 @@ async function loadGuests(fb) {
           _path: null,
           _sha:  null
         }));
+        G._guestsLoaded = true;
         renderGuests();
         if (fb) toast('✅', G.guests.length + ' guest' + (G.guests.length!==1?'s':'') + ' loaded');
         return;
@@ -1696,13 +1698,22 @@ function renderGuests(filter) {
   const list = document.getElementById('guestList');
   const stats = document.getElementById('guestStats');
   if (!list) return;
-  const q = (filter || document.getElementById('guestSearch')?.value || '').toLowerCase();
-  const all = G.guests;
-  const shown = q ? all.filter(g =>
+  // If data not loaded yet, don't overwrite the loading message
+  if (!G._guestsLoaded && !filter) return;
+
+  const statusFilter = (document.getElementById('guestStatusFilter')?.value || 'all');
+  const q = (typeof filter === 'string' ? filter : (document.getElementById('guestSearch')?.value || '')).toLowerCase();
+  let shown = G.guests;
+  // Apply status filter
+  if (statusFilter === 'verified')   shown = shown.filter(g => g.verified);
+  if (statusFilter === 'unverified') shown = shown.filter(g => !g.verified);
+  // Apply text search
+  if (q) shown = shown.filter(g =>
     (g.name||'').toLowerCase().includes(q) ||
     (g.email||'').toLowerCase().includes(q) ||
     (g.phone||'').toLowerCase().includes(q)
-  ) : all;
+  );
+  const all = G.guests;
   // Stats
   const verified = all.filter(g => g.verified).length;
   const pending  = all.filter(g => !g.verified).length;
@@ -1716,8 +1727,12 @@ function renderGuests(filter) {
     <div style="font-size:11px;color:var(--mu)">${l}</div>
   </div>`).join('');
   // List
-  if (!shown.length) { list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mu)">No guests found.</div>'; return; }
-  list.innerHTML = shown.map((g, i) => `
+  if (!shown.length) {
+    list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mu)">' +
+      (all.length ? 'No guests match the current filter.' : 'No registered guests yet.') + '</div>';
+    return;
+  }
+  list.innerHTML = shown.map((g) => `
     <div class="ci" onclick="openGuestDetail('${g._slug}')" style="cursor:pointer">
       <div class="cith" style="font-size:22px;background:${g.verified?'#eafaf1':'#fef9e7'};display:flex;align-items:center;justify-content:center">
         ${g.verified ? '✅' : '⏳'}
@@ -1725,12 +1740,12 @@ function renderGuests(filter) {
       <div class="ciin">
         <div class="cinm">${esc(g.name||'Unknown')}</div>
         <div class="cimt">📧 ${esc(g.email||'—')} · 📱 ${esc(g.phone||'—')} · 🌍 ${esc(g.nationality||'—')}</div>
-        <div class="cimt" style="margin-top:2px">📅 Arrival: ${esc(g.arrival||'—')} · 👥 ${g.party_size||1} guests · Registered: ${g.registered_at ? new Date(g.registered_at).toLocaleDateString() : '—'}</div>
+        <div class="cimt" style="margin-top:2px">👥 ${g.party_size||'—'} · Registered: ${g.registered_at ? new Date(g.registered_at).toLocaleDateString() : '—'}</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
         <span class="pill ${g.verified?'pg':'po'}">${g.verified?'Verified':'Pending'}</span>
         <div style="display:flex;gap:4px">
-          ${!g.verified ? `<button class="btn bg bsm" onclick="event.stopPropagation();verifyGuest('${g._slug}')">✓ Verify</button>` : ''}
+          ${!g.verified ? `<button class="btn bg bsm" onclick="event.stopPropagation();verifyGuest('${g._slug}','verified')">✓ Verify</button>` : ''}
           <button class="btn bg bsm" onclick="event.stopPropagation();openGuestDetail('${g._slug}')">View</button>
           <button class="btn br bsm" onclick="event.stopPropagation();deleteGuest('${g._slug}')">✕</button>
         </div>
