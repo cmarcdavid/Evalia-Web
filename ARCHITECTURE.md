@@ -1,173 +1,275 @@
-# Evalia Mauritius — Architecture & CMS Guide
+# Evalia Mauritius — System Architecture & Roadmap
+*v5.12 · April 2026*
 
-## Overview
+---
 
-Evalia is a Vercel-hosted static site backed by a GitHub-native CMS.
-All content lives as JSON in `_data/`. Admin writes to GitHub via the REST API.
-Vercel auto-deploys on every commit (~30 seconds).
+## Current Architecture (GitHub CMS)
 
 ```
-Admin Panel (admin.html)
-      │
-      ▼  GitHub REST API (live SHA on every write)
-GitHub repo  cmarcdavid/evalia-web
-      │
-      ▼  Vercel auto-deploy on push
-Live site   evalia-web.vercel.app
-      │
-      ▼  fetch() at runtime
-index.html reads _data/manifest.json → _data/**/*.json
+Visitor → Vercel CDN → index.html
+                      ↓ fetch()
+              _data/*.json (GitHub raw)
+
+Admin → admin.html → GitHub API → _data/*.json → Vercel rebuild → Live site
+```
+
+**What works well:**
+- Zero server costs — Vercel free tier handles everything
+- Admin edits go live in ~30 seconds
+- No database to manage, no hosting bills
+- Content is version-controlled automatically
+
+**What it cannot do:**
+- Real-time availability (GitHub files are not a lock system)
+- Guest login and persistent sessions
+- Payment processing (no server to receive webhooks)
+- Abandoned booking automation (no background jobs)
+- Scalable guest database (100+ guests = 100+ JSON files)
+
+---
+
+## Recommended Next Architecture: GitHub CMS + Supabase
+
+Keep GitHub for **content** (properties, experiences, settings, media).  
+Add Supabase for **transactional data** (guests, bookings, payments, availability).
+
+```
+Visitor → Vercel → index.html
+              ↓                    ↓
+        _data/*.json         Supabase REST API
+        (CMS content)        (guests, bookings, availability)
+              ↓                    ↓
+        admin.html           Supabase Auth (login)
 ```
 
 ---
 
-## Data Schema
+## Supabase Setup (Free Tier — €0/month to start)
 
-### Properties (`_data/properties/<slug>.json`)
+### 1. Create Project
+1. Go to [supabase.com](https://supabase.com) → New Project
+2. Name: `evalia-mauritius`
+3. Region: `eu-west-1` (Ireland — closest to Mauritius)
+4. Note your **Project URL** and **anon key**
 
-```json
-{
-  "name":          "Villa Evalia",
-  "name_fr":       "Villa Evalia",
-  "type":          "Villa",
-  "location":      "Grand Baie, North Mauritius",
-  "location_fr":   "Grand Baie, Nord de l'Île Maurice",
-  "description":   "English description…",
-  "description_fr":"French description…",
-  "price":         180,
-  "max_guests":    6,
-  "bedrooms":      2,
-  "bathrooms":     2,
-  "min_stay":      3,
-  "cleaning_fee":  60,
-  "photo":         "/images/Villa-pool.jpg",
-  "gallery":       ["/images/Villa-pool.jpg", "/images/Villa-pool1.jpg"],
-  "badge":         "Pool & Garden",
-  "badge_fr":      "Piscine & Jardin",
-  "available":     true,
-  "amenities":     ["Pool","Garden","WiFi","Kitchen","Parking","Air Con"]
+### 2. Database Tables
+
+Run this SQL in the Supabase SQL Editor:
+
+```sql
+-- Guests table
+CREATE TABLE guests (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  phone TEXT,
+  nationality TEXT,
+  party_size TEXT,
+  arrival DATE,
+  departure DATE,
+  special_req TEXT,
+  verified BOOLEAN DEFAULT FALSE,
+  email_verified BOOLEAN DEFAULT FALSE,
+  wa_verified BOOLEAN DEFAULT FALSE,
+  payment_pref TEXT,
+  quickbooks_id TEXT,
+  stripe_id TEXT,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Bookings table
+CREATE TABLE bookings (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  ref TEXT UNIQUE NOT NULL,
+  guest_id UUID REFERENCES guests(id),
+  guest_email TEXT,
+  guest_name TEXT,
+  guest_phone TEXT,
+  services TEXT[],
+  checkin DATE,
+  checkout DATE,
+  guests_count INTEGER,
+  status TEXT DEFAULT 'pending', -- pending | confirmed | cancelled | abandoned
+  payment_method TEXT,
+  estimated_total TEXT,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Availability blocks
+CREATE TABLE availability (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  date DATE NOT NULL,
+  property TEXT NOT NULL, -- studio | villa | both | maintenance
+  booked_by UUID REFERENCES bookings(id),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(date, property)
+);
+
+-- Enable Row Level Security
+ALTER TABLE guests     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookings   ENABLE ROW LEVEL SECURITY;
+ALTER TABLE availability ENABLE ROW LEVEL SECURITY;
+
+-- Public can read availability (for booking form)
+CREATE POLICY "Public read availability" ON availability FOR SELECT USING (true);
+
+-- Public can insert guest registrations
+CREATE POLICY "Public register" ON guests FOR INSERT WITH CHECK (true);
+
+-- Only authenticated admin can read/write all
+CREATE POLICY "Admin full access guests"   ON guests     FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Admin full access bookings" ON bookings   FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Admin write availability"   ON availability FOR ALL USING (auth.role() = 'authenticated');
+```
+
+### 3. Add Supabase to index.html
+
+Replace the `GH_REPO` constant section with:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+  const SUPABASE_KEY = 'YOUR_ANON_KEY'; // public anon key — safe to expose
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+</script>
+```
+
+Replace `ghWriteGuest()` with:
+
+```javascript
+async function registerGuest(guestData) {
+  const { data, error } = await supabase.from('guests').insert([guestData]).select();
+  if (error) throw new Error(error.message);
+  return data[0];
 }
 ```
 
-### Experiences (`_data/experiences/<slug>.json`)
+### 4. Availability Check in Booking Form
 
-```json
-{
-  "name":           "Dolphin Watching Cruise",
-  "name_fr":        "Croisière Observation des Dauphins",
-  "category":       "boat",
-  "icon":           "🐬",
-  "description":    "English description…",
-  "description_fr": "French description…",
-  "duration":       "Half day",
-  "duration_fr":    "Demi-journée",
-  "price":          45,
-  "unit":           "person",
-  "gallery":        ["/images/photo1.jpg", "/images/video1.mp4"],
-  "instagram":      "",
-  "active":         true
+```javascript
+async function checkAvailability(checkin, checkout, property) {
+  const { data } = await supabase
+    .from('availability')
+    .select('date, property')
+    .gte('date', checkin)
+    .lte('date', checkout)
+    .in('property', [property, 'both']);
+  return data?.length === 0; // true = available
 }
 ```
 
-**gallery** array accepts JPG, PNG, WebP and MP4/MOV files.
-The first item is the cover image. The website renders a clickable thumbnail strip
-and opens a full-screen lightbox on click.
+### 5. Admin Auth (Supabase Auth)
 
-### Settings (`_data/settings.json`)
+```javascript
+// Admin login
+const { data, error } = await supabase.auth.signInWithPassword({
+  email: 'admin@evalia.mu',
+  password: 'YOUR_ADMIN_PASSWORD'
+});
 
-```json
-{
-  "name":                    "Evalia Mauritius",
-  "whatsapp":                "+23057242099",
-  "email":                   "hello@evalia.mu",
-  "instagram":               "@evalia241",
-  "hero_line1":              "Your Mauritius,",
-  "hero_line1_fr":           "Votre Maurice,",
-  "hero_line2":              "Perfectly Arranged",
-  "hero_line2_fr":           "Parfaitement Orchestré",
-  "hero_sub":                "English subtitle…",
-  "hero_sub_fr":             "French subtitle…",
-  "hero_photo":              "/images/Hero.jpg",
-  "hero_photo2":             "/images/Hero1.jpg",
-  "hero_photo3":             "/images/Hero2.jpg",
-  "hero_photo4":             "/images/Hero3.jpg",
-  "svc_accommodation_photo": "/images/Hero1.jpg",
-  "svc_boat_photo":          "/images/Hero2.jpg",
-  "svc_nature_photo":        "/images/Hero3.jpg",
-  "svc_food_photo":          "",
-  "svc_concierge_photo":     "/images/Host.jpg"
-}
-```
-
-### Manifest (`_data/manifest.json`)
-
-Auto-updated by admin on every save/delete. Tells `index.html` which slugs to fetch.
-
-```json
-{
-  "properties":  ["studio-evalia","villa-evalia"],
-  "experiences": ["dolphin-watching-cruise","sunrise-beach-yoga","..."]
-}
+// Replace GitHub token auth with Supabase session
+const { data: { session } } = await supabase.auth.getSession();
 ```
 
 ---
 
-## Multi-language (EN / FR)
+## Migration Plan
 
-**Website:** A flag toggle button in the nav switches between English and French.
-The choice is stored in `localStorage('ev_lang')`.
+### Phase 1 — Parallel (1 week, no downtime)
+1. Create Supabase project and tables
+2. Update `index.html` registration form to write to Supabase (keep GitHub fallback)
+3. Update booking form to check Supabase availability
+4. Update admin to read guests/bookings from Supabase
 
-- Static text: controlled by the `I18N` dictionary in `index.html` JS, applied by `applyLang()`.
-- CMS content: each JSON record stores `name_fr`, `description_fr`, `location_fr`, `duration_fr`, `badge_fr`. `renderExp()` and `renderProperties()` read the correct field based on `lang`.
+### Phase 2 — Auth (1 week)
+1. Add Supabase Auth to admin (replace GitHub token flow)
+2. Add guest login — email/password or magic link
+3. Guest profile page showing their bookings and details
+4. Email verification flow via Supabase Auth
 
-**Admin panel:** All edit forms show bilingual fields side-by-side (🇬🇧 / 🇫🇷) so both languages are always edited together.
+### Phase 3 — Payments & Automation (2 weeks)
+1. Stripe integration via Supabase Edge Functions
+2. WhatsApp Business API webhook (receive and send messages)
+3. Abandoned booking email/WA trigger (Supabase cron job)
+4. Booking confirmation email (Supabase + Resend)
 
----
-
-## Media Upload Performance
-
-Uploads fire in parallel batches of 3 concurrent requests (`CONC = 3`).
-Each file shows individual progress in the upload queue UI (optimistic).
-
-Flow per file:
-1. FileReader → base64 (async)
-2. Fetch live SHA from GitHub (non-blocking)
-3. PUT to `images/<filename>` via GitHub Contents API
-4. Progress bar updates: 30% (read done) → 55% (SHA fetched) → 100% (PUT complete)
-
-After all uploads complete, the media list refreshes automatically
-and all open edit forms re-populate their photo dropdowns.
-
----
-
-## Gallery & Lightbox
-
-Each property and experience has a `gallery` array in JSON.
-
-- **Admin:** Gallery manager shows a grid of thumbnails. Click `+` to open the photo picker modal (upload new or select from library). Click `✕` on a thumbnail to remove. The first item auto-becomes the cover photo.
-- **Website:** If gallery has >1 item, a horizontal thumbnail strip renders below the card image. Clicking any thumbnail (or the cover photo) opens the full-screen lightbox with prev/next navigation and keyboard support (←, →, Esc).
+### Phase 4 — Advanced (ongoing)
+1. Migrate from Formspree to Supabase entirely
+2. Real-time admin dashboard (Supabase realtime)
+3. QuickBooks / Zoho sync via Edge Functions
+4. Analytics dashboard (bookings by month, revenue, occupancy rate)
 
 ---
 
-## Key Files
+## Cost Summary
 
-| File | Purpose |
-|---|---|
-| `index.html` | Live site — fetches `_data/*.json`, renders content, EN/FR toggle, lightbox |
-| `admin.html` | CMS panel — reads/writes GitHub JSON, gallery management, parallel uploads |
-| `_data/manifest.json` | Auto-updated list of content slugs |
-| `_data/settings.json` | Site-wide settings: text, photos, contacts |
-| `_data/properties/` | One JSON file per property |
-| `_data/experiences/` | One JSON file per experience |
-| `images/` | All media files (uploaded via admin) |
-| `site.webmanifest` | PWA manifest |
+| Tier | Monthly Cost | What you get |
+|---|---|---|
+| **Now (GitHub + Vercel free)** | €0 | CMS only, no guests/payments |
+| **Supabase Free** | €0 | 500MB DB, 50K MAU, 2GB storage |
+| **Supabase Pro** | ~€25 | 8GB DB, 100K MAU, 250GB storage, daily backups |
+| **+Stripe** | 1.4% + €0.25/transaction | Card payments (EU rates) |
+| **+Resend (email)** | €0 → €20 | 3K/mo free, then per send |
+| **+WhatsApp Business** | ~€0.05/message | Meta pricing (conversation-based) |
+
+**Realistic monthly cost at 50 bookings/month: ~€30–40 total.**
 
 ---
 
-## Deployment
+## What to Do Right Now (Today)
 
+1. **Deploy v5.12** (`admin.html` + `index.html`) — fixes all bugs, adds calendar, chatbot, step 4 payment flow
+2. **Create Supabase free account** at [supabase.com](https://supabase.com) — 5 minutes
+3. **Run the SQL above** to create the tables
+4. Tell me your Supabase URL and anon key and I'll wire it in v5.13
+
+---
+
+## Payment Flow Summary (Current → Target)
+
+### Current (v5.12, no payment processor)
 ```
-GitHub Desktop → Commit → Push → Vercel auto-builds in ~30s
+Guest fills booking form
+       ↓
+Formspree sends you email (ref: EVL-XXXXXX)
+       ↓
+You manually WhatsApp guest to confirm availability
+       ↓
+You send payment link manually (MyT Money, bank transfer, etc.)
+       ↓
+Guest pays, you confirm manually
 ```
 
-No build step. Vercel serves static files directly.
+### Target (v5.13+, Stripe + Supabase)
+```
+Guest fills booking form
+       ↓
+Supabase checks availability in real-time (blocks if taken)
+       ↓
+Booking record created in Supabase (status: pending)
+       ↓
+Supabase Edge Function sends WhatsApp to you (new booking alert)
+       ↓
+You click "Confirm" in admin → status → confirmed
+       ↓
+Stripe payment link auto-sent to guest via WhatsApp + email
+       ↓
+Guest pays → Stripe webhook → Supabase updates status → confirmed
+       ↓
+Auto-confirmation email + itinerary sent to guest
+```
+
+### What you need to set up Stripe:
+1. [stripe.com](https://stripe.com) business account (MU entity or personal)
+2. Verify your business (ID + bank details, ~2 days)
+3. Create a Payment Link product per property/service
+4. Tell me and I'll wire the links into the booking confirmation flow
+
+---
+
+*Document generated by Evalia Admin System v5.12*  
+*Jira: WEBSITE-176 · Repo: cmarcdavid/evalia-web*

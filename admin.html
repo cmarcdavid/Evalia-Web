@@ -40,7 +40,7 @@
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
     /* pages */
     .page{display:none}.page.active{display:block}
-    /* cards CDD  */
+    /* cards */
     .card{background:var(--wh);border-radius:11px;padding:18px;box-shadow:0 1px 9px rgba(26,31,46,.06);margin-bottom:14px}
     .ctitle{font-family:var(--fd);font-size:16px;font-weight:400;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
     .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -311,12 +311,89 @@
   </div>
 </div>
 
-<!-- BOOKINGS -->
+<!-- BOOKINGS + CALENDAR -->
 <div id="page-bookings" class="page">
-  <div class="card"><div class="ctitle">Booking Requests</div>
-    <div class="ib">Requests arrive via email through Formspree (mdayoknj). View all at <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank">formspree.io</a></div>
-    <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank" class="btn bg" style="margin-right:6px">View on Formspree →</a>
-    <a href="https://wa.me/23057242099" target="_blank" class="btn bg">💬 WhatsApp</a>
+  <div class="content">
+    <div class="srow" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+      <div class="sc"><div class="scl">Total Bookings</div><div class="scv" id="bkStatTotal">0</div></div>
+      <div class="sc"><div class="scl">Confirmed</div><div class="scv" id="bkStatConfirmed" style="color:var(--pa)">0</div></div>
+      <div class="sc"><div class="scl">Pending</div><div class="scv" id="bkStatPending" style="color:var(--su)">0</div></div>
+      <div class="sc"><div class="scl">Abandoned</div><div class="scv" id="bkStatAbandoned" style="color:#c0392b">0</div></div>
+    </div>
+
+    <div class="g2">
+      <!-- Availability Calendar -->
+      <div class="card">
+        <div class="ctitle">Availability Calendar
+          <div style="display:flex;gap:6px">
+            <button class="btn bg bsm" onclick="calPrev()">‹</button>
+            <span id="calTitle" style="font-size:13px;min-width:110px;text-align:center;line-height:2"></span>
+            <button class="btn bg bsm" onclick="calNext()">›</button>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--mu);margin-bottom:10px;display:flex;gap:12px;flex-wrap:wrap">
+          <span><span style="display:inline-block;width:12px;height:12px;background:rgba(232,133,90,.25);border-radius:3px;margin-right:4px"></span>Studio booked</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:rgba(0,107,143,.2);border-radius:3px;margin-right:4px"></span>Villa booked</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:rgba(192,57,43,.15);border-radius:3px;margin-right:4px"></span>Both booked</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:rgba(45,106,79,.15);border-radius:3px;margin-right:4px"></span>Maintenance</span>
+        </div>
+        <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px"></div>
+        <div style="margin-top:12px;font-size:12px">
+          <strong>Block a date range:</strong>
+          <div class="fr3" style="margin-top:6px">
+            <div class="fg"><label class="fl">From</label><input class="fi" type="date" id="blockFrom"/></div>
+            <div class="fg"><label class="fl">To</label><input class="fi" type="date" id="blockTo"/></div>
+            <div class="fg"><label class="fl">Property</label>
+              <select class="fi" id="blockProp">
+                <option value="studio">Studio Evalia</option>
+                <option value="villa">Villa Evalia</option>
+                <option value="both">Both</option>
+                <option value="maintenance">Maintenance</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn bpri bsm" onclick="blockDates()">Block Dates</button>
+          <button class="btn bg bsm" onclick="clearBlock()">Clear Selection</button>
+        </div>
+      </div>
+
+      <!-- Booking List -->
+      <div class="card">
+        <div class="ctitle">Bookings
+          <div style="display:flex;gap:6px">
+            <select class="fi bsm" id="bkFilter" style="width:120px;font-size:11px" onchange="renderBookings()">
+              <option value="all">All</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="pending">Pending</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="abandoned">Abandoned</option>
+            </select>
+            <button class="btn bg bsm" onclick="loadBookings(true)">🔄</button>
+            <button class="btn bg bsm" onclick="exportBookings()">⬇ CSV</button>
+          </div>
+        </div>
+        <div id="bookingList"><div style="text-align:center;padding:24px;color:var(--mu)">Loading bookings…</div></div>
+      </div>
+    </div>
+
+    <!-- Abandoned Bookings -->
+    <div class="card" style="border-left:3px solid #c0392b">
+      <div class="ctitle">⚠️ Abandoned Bookings Follow-up
+        <button class="btn bg bsm" onclick="runAbandonedCheck()">🔄 Check Now</button>
+      </div>
+      <div style="font-size:12px;color:var(--mu);margin-bottom:12px;line-height:1.65">
+        Guests who started a booking but didn't complete it. System checks for incomplete registrations (no arrival date set) or form submissions without payment confirmation. Click <strong>Send Follow-up</strong> to trigger a WhatsApp message.
+      </div>
+      <div id="abandonedList"><div style="color:var(--mu);font-size:12px">Run a check to see abandoned bookings.</div></div>
+    </div>
+
+    <!-- Formspree link -->
+    <div class="card">
+      <div class="ctitle">Raw Booking Requests (Formspree)</div>
+      <div style="font-size:12.5px;color:var(--mu);line-height:1.6;margin-bottom:10px">All booking form submissions also go to Formspree as a backup. View raw submissions and set up email notifications below.</div>
+      <a href="https://formspree.io/forms/mdayoknj/submissions" target="_blank" class="btn bg bsm">View on Formspree →</a>
+      <a href="https://wa.me/23057242099" target="_blank" class="btn bg bsm">💬 WhatsApp</a>
+    </div>
   </div>
 </div>
 
@@ -431,15 +508,20 @@
     <div class="card" style="margin-bottom:16px">
       <div class="ctitle" style="display:flex;justify-content:space-between;align-items:center">
         <span>Guest Registrations</span>
-        <div style="display:flex;gap:8px">
-          <input class="fi" id="guestSearch" placeholder="Search name, email…" style="width:200px;font-size:12px" oninput="filterGuests(this.value)"/>
-          <button class="btn bg bsm" onclick="exportGuests()">⬇ Export CSV</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input class="fi" id="guestSearch" placeholder="Search name, email, phone…" style="width:200px;font-size:12px" oninput="filterGuests(this.value)"/>
+          <select class="fi bsm" id="guestStatusFilter" style="width:110px;font-size:11px" onchange="renderGuests()">
+            <option value="all">All Guests</option>
+            <option value="verified">Verified</option>
+            <option value="unverified">Unverified</option>
+          </select>
+          <button class="btn bg bsm" onclick="exportGuests()">⬇ CSV</button>
           <button class="btn bg bsm" onclick="loadGuests(true)">🔄 Refresh</button>
         </div>
       </div>
       <div style="font-size:12px;color:var(--mu);margin-bottom:12px">
-        Guests who have registered on the website. Data stored in <code>_data/guests/</code> on GitHub.
-        Click a row to expand details. Verification status shown by badge.
+        Registered guests from the website form. Data stored in <code>_data/guests/</code> on GitHub.
+        Click a row to expand full profile including payment details and booking history.
       </div>
       <div id="guestStats" style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap"></div>
       <div id="guestList"><div style="text-align:center;padding:24px;color:var(--mu)">Loading guests…</div></div>
@@ -448,21 +530,25 @@
     <!-- Guest Detail Panel -->
     <div class="card" id="guestDetail" style="display:none">
       <div class="ctitle" style="display:flex;justify-content:space-between">
-        <span id="guestDetailName">Guest Detail</span>
-        <button class="btn bg bsm" onclick="closeGuestDetail()">✕ Close</button>
+        <span id="guestDetailName">Guest Profile</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn bg bsm" onclick="sendGuestWhatsApp()">💬 WhatsApp</button>
+          <button class="btn bg bsm" onclick="sendGuestEmail()">✉️ Email</button>
+          <button class="btn bg bsm" onclick="closeGuestDetail()">✕ Close</button>
+        </div>
       </div>
-      <div id="guestDetailBody"></div>
+      <!-- Profile sections rendered by openGuestDetail() -->
+      <div id="guestDetailBody" style="display:grid;grid-template-columns:1fr 1fr;gap:16px"></div>
     </div>
 
-    <!-- Integration Note -->
+    <!-- Integration Panel -->
     <div class="card" style="border-left:3px solid var(--g)">
-      <div class="ctitle">Integration Ready: QuickBooks / Zoho / Stripe</div>
-      <div style="font-size:12.5px;color:var(--mu);line-height:1.6">
-        Guest records are structured for direct integration with billing systems.<br>
-        <strong>QuickBooks:</strong> Export CSV → Import as Customers (Name, Email, Phone fields map directly).<br>
-        <strong>Zoho CRM:</strong> Use Export CSV → Contacts import. Or use Zoho's GitHub integration to sync <code>_data/guests/</code> automatically.<br>
-        <strong>Stripe:</strong> Use the exported email list to create Stripe customers via the Stripe dashboard or API.<br>
-        <strong>WhatsApp Business API:</strong> Phone numbers are stored in international format, ready for WhatsApp Business messaging campaigns.
+      <div class="ctitle">Integrations: QuickBooks · Zoho · Stripe · WhatsApp Business</div>
+      <div style="font-size:12.5px;color:var(--mu);line-height:1.7;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div><strong>💼 QuickBooks:</strong> Export CSV → Import as Customers. Fields: Name, Email, Phone, Nationality, Arrival, Departure.</div>
+        <div><strong>📊 Zoho CRM:</strong> Use CSV export → Contacts import. Or sync <code>_data/guests/</code> via Zoho's GitHub connector.</div>
+        <div><strong>💳 Stripe:</strong> Guest emails ready for Stripe Customer creation. Use the API or paste email list into Stripe dashboard.</div>
+        <div><strong>📱 WhatsApp Business:</strong> Phone numbers stored in international format. Ready for WhatsApp Business broadcast lists.</div>
       </div>
     </div>
   </div>
@@ -1464,6 +1550,7 @@ function gp(id,navEl){
   document.querySelector('.content').scrollTop=0;
   if(id==='guests'  && token) loadGuests(false);
   if(id==='reviews' && token) loadReviews(false);
+  if(id==='bookings' && token){ loadBookings(false); loadAvailability(); }
 }
 function md(){dirty=true;document.getElementById('sbanner').classList.add('show');}
 function hideBanner(){dirty=false;document.getElementById('sbanner').classList.remove('show');}
@@ -1834,6 +1921,322 @@ async function deleteReview(slug) {
 
 // Auto-load guests/reviews when navigating to their pages
 
+// ═══════════════════════════════════════════════════════════════
+// CALENDAR & AVAILABILITY
+// ═══════════════════════════════════════════════════════════════
+let CAL = {year: new Date().getFullYear(), month: new Date().getMonth(), blocks: {}};
+
+function calRender() {
+  const {year, month} = CAL;
+  const d = new Date(year, month, 1);
+  const titles = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calTitle').textContent = titles[month] + ' ' + year;
+  const grid = document.getElementById('calGrid');
+  if (!grid) return;
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let html = days.map(d=>`<div style="text-align:center;font-size:10px;font-weight:600;color:var(--mu);padding:3px">${d}</div>`).join('');
+  // First day of month (Monday = 0)
+  let firstDay = (d.getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const today = new Date();
+  for (let i = 0; i < firstDay; i++) html += '<div></div>';
+  for (let day = 1; day <= daysInMonth; day++) {
+    const key = year+'-'+String(month+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+    const block = CAL.blocks[key];
+    const isToday = (today.getFullYear()===year && today.getMonth()===month && today.getDate()===day);
+    const bg = block==='studio' ? 'rgba(232,133,90,.25)' : block==='villa' ? 'rgba(0,107,143,.2)' : block==='both' ? 'rgba(192,57,43,.15)' : block==='maintenance' ? 'rgba(45,106,79,.15)' : '';
+    const border = isToday ? '1.5px solid var(--g)' : '1px solid var(--st)';
+    html += `<div onclick="calDayClick('${key}')" style="text-align:center;font-size:12px;padding:5px 2px;border-radius:5px;cursor:pointer;background:${bg};border:${border};transition:all .15s;user-select:none" title="${key}${block?' · '+block:''}">${day}${block?'<div style="font-size:8px;margin-top:1px">●</div>':''}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function calPrev() { CAL.month--; if(CAL.month<0){CAL.month=11;CAL.year--;} calRender(); }
+function calNext() { CAL.month++; if(CAL.month>11){CAL.month=0;CAL.year++;} calRender(); }
+function calDayClick(key) {
+  document.getElementById('blockFrom').value = key;
+  document.getElementById('blockTo').value   = key;
+}
+
+async function blockDates() {
+  const from = document.getElementById('blockFrom').value;
+  const to   = document.getElementById('blockTo').value;
+  const prop = document.getElementById('blockProp').value;
+  if (!from || !to) { toast('⚠️','Select a date range'); return; }
+  const start = new Date(from), end = new Date(to);
+  if (end < start) { toast('⚠️','End date must be after start'); return; }
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate()+1)) {
+    const key = d.toISOString().slice(0,10);
+    CAL.blocks[key] = prop;
+  }
+  await saveAvailability();
+  calRender();
+  toast('✅', 'Dates blocked for ' + prop);
+}
+
+function clearBlock() {
+  document.getElementById('blockFrom').value = '';
+  document.getElementById('blockTo').value   = '';
+}
+
+async function saveAvailability() {
+  try {
+    await ghWrite('_data/availability.json', JSON.stringify(CAL.blocks, null, 2), 'admin: update availability');
+  } catch(e) { toast('⚠️','Could not save availability: '+e.message); }
+}
+
+async function loadAvailability() {
+  try {
+    const r = await ghG(`/repos/${REPO}/contents/_data/availability.json?ref=${BRANCH}`);
+    if (r.ok) {
+      const f = await r.json();
+      CAL.blocks = JSON.parse(atob(f.content.replace(/\n/g,'')));
+    }
+  } catch(e) {}
+  calRender();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BOOKINGS MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+G.bookings = G.bookings || [];
+
+async function loadBookings(force) {
+  if (!token) return;
+  try {
+    const r = await ghG(`/repos/${REPO}/contents/_data/bookings?ref=${BRANCH}`);
+    if (!r.ok) { G.bookings = []; renderBookings(); return; }
+    const files = (await r.json()).filter(f => f.name.endsWith('.json'));
+    const results = await Promise.allSettled(
+      files.map(f => fetch(RAW+'/_data/bookings/'+f.name+'?v='+Date.now()).then(r=>r.ok?r.json():null))
+    );
+    G.bookings = results.map((r,i) => {
+      const b = r.status==='fulfilled' ? r.value : null;
+      if (!b) return null;
+      b._slug = files[i].name.replace('.json','');
+      b._path = `_data/bookings/${files[i].name}`;
+      return b;
+    }).filter(Boolean);
+    renderBookings();
+    updateBookingStats();
+  } catch(e) { G.bookings = []; renderBookings(); }
+}
+
+function renderBookings() {
+  const list = document.getElementById('bookingList');
+  if (!list) return;
+  const filter = (document.getElementById('bkFilter')||{}).value || 'all';
+  const data   = filter === 'all' ? G.bookings : G.bookings.filter(b => b.status === filter);
+  if (!data.length) {
+    list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mu)">No bookings'+(filter!=='all'?' with status "'+filter+'"':'')+'.</div>';
+    return;
+  }
+  list.innerHTML = data.map(b => {
+    const sc = {confirmed:'pg', pending:'po', cancelled:'br', abandoned:'br'}[b.status||'pending'] || 'po';
+    const waLink = b.phone ? `https://wa.me/${b.phone.replace(/\D/g,'')}?text=${encodeURIComponent('Hi '+b.name+', following up on your Evalia booking ref '+b.ref+'.')}` : null;
+    return `<div class="ci">
+      <div class="cith">${b.status==='confirmed'?'✅':b.status==='cancelled'?'❌':b.status==='abandoned'?'⚠️':'🕐'}</div>
+      <div class="ciin">
+        <div class="cinm">${esc(b.name||'Unknown')} <span class="pill ${sc}" style="margin-left:4px">${b.status||'pending'}</span></div>
+        <div class="cimt">${esc(b.services||'')} · ${esc(b.checkin||'')} → ${esc(b.checkout||'')} · ${esc(b.guests||'')} guests</div>
+        <div class="cimt" style="color:var(--mu)">${esc(b.email||'')} ${b.phone?'· '+esc(b.phone):''}</div>
+      </div>
+      <div class="ciac">
+        ${waLink ? `<a href="${waLink}" target="_blank" class="btn bg bsm">💬</a>` : ''}
+        <button class="btn bg bsm" onclick="setBookingStatus('${b._slug}','confirmed')">✅</button>
+        <button class="btn br bsm" onclick="setBookingStatus('${b._slug}','cancelled')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function setBookingStatus(slug, status) {
+  const b = G.bookings.find(x => x._slug === slug);
+  if (!b) return;
+  b.status = status;
+  try {
+    await ghWrite(b._path, JSON.stringify(b, null, 2), 'admin: booking '+status+' '+slug);
+    renderBookings(); updateBookingStats();
+    toast(status==='confirmed'?'✅':'🚫', 'Booking '+status);
+    if (status === 'confirmed' && b.phone) {
+      const wa = 'https://wa.me/'+b.phone.replace(/\D/g,'')+'?text='+encodeURIComponent('🌴 Hello '+b.name+'! Your Evalia booking (ref: '+b.ref+') is CONFIRMED. We\'ll send your payment link shortly. Welcome to Mauritius!');
+      window.open(wa, '_blank');
+    }
+  } catch(e) { toast('⚠️','Save failed: '+e.message); }
+}
+
+function updateBookingStats() {
+  const el = id => document.getElementById(id);
+  if (!el('bkStatTotal')) return;
+  el('bkStatTotal').textContent     = G.bookings.length;
+  el('bkStatConfirmed').textContent = G.bookings.filter(b=>b.status==='confirmed').length;
+  el('bkStatPending').textContent   = G.bookings.filter(b=>b.status==='pending'||!b.status).length;
+  el('bkStatAbandoned').textContent = G.bookings.filter(b=>b.status==='abandoned').length;
+}
+
+function exportBookings() {
+  if (!G.bookings.length) { toast('⚠️','No bookings to export'); return; }
+  const cols = ['ref','name','email','phone','services','checkin','checkout','guests','status','estimated_total','created_at'];
+  const header = cols.join(',');
+  const rows = G.bookings.map(b => cols.map(c => '"'+String(b[c]||'').replace(/"/g,'""')+'"').join(','));
+  const csv = [header, ...rows].join('\n');
+  const a = document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='evalia-bookings-'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ABANDONED BOOKING FOLLOW-UP
+// ═══════════════════════════════════════════════════════════════
+async function runAbandonedCheck() {
+  const list = document.getElementById('abandonedList');
+  if (!list) return;
+  list.innerHTML = '<div style="color:var(--mu);font-size:12px">Checking…</div>';
+  // Find guests with no arrival date confirmed, registered > 24h ago, no confirmed booking
+  const now = Date.now();
+  const cutoff = 24 * 60 * 60 * 1000; // 24 hours
+  const abandoned = G.guests.filter(g => {
+    if (!g.registered_at) return false;
+    const age = now - new Date(g.registered_at).getTime();
+    if (age < cutoff) return false; // too recent
+    // Check if they have a confirmed booking
+    const hasBooking = G.bookings.some(b => b.email === g.email && b.status === 'confirmed');
+    if (hasBooking) return false;
+    return true;
+  });
+  if (!abandoned.length) {
+    list.innerHTML = '<div style="color:var(--pa);font-size:12px">✅ No abandoned bookings found.</div>';
+    return;
+  }
+  list.innerHTML = abandoned.map(g => {
+    const waMsg = encodeURIComponent('Hi '+g.name+', we noticed you registered with Evalia Mauritius but haven\'t completed your booking yet. 🌴 We\'d love to help you plan your perfect stay! Reply here or visit evalia.mu to complete your booking. Any questions? We\'re here 24/7!');
+    const waLink = g.phone ? 'https://wa.me/'+g.phone.replace(/\D/g,'')+'?text='+waMsg : null;
+    const emailLink = 'mailto:'+g.email+'?subject=Your%20Evalia%20Booking%20-%20We%27d%20love%20to%20help!&body=Hi%20'+encodeURIComponent(g.name)+',%0A%0AThank%20you%20for%20registering%20with%20Evalia%20Mauritius.%0A%0AWe%20noticed%20you%20haven\'t%20completed%20your%20booking%20yet.%20We\'d%20love%20to%20help%20you%20plan%20the%20perfect%20Mauritius%20stay!%0A%0AJust%20reply%20to%20this%20email%20or%20WhatsApp%20us%20at%20%2B230%205724%202099.%0A%0ATalk%20soon%2C%0AThe%20Evalia%20Team%20🌴';
+    const days = Math.floor((now - new Date(g.registered_at).getTime()) / 86400000);
+    return `<div class="ci">
+      <div class="cith">⚠️</div>
+      <div class="ciin">
+        <div class="cinm">${esc(g.name||'')} <span class="pill po">No booking</span></div>
+        <div class="cimt">${esc(g.email||'')} · Registered ${days}d ago · Party: ${esc(g.party_size||'')}</div>
+        <div class="cimt">${g.arrival ? 'Arrival: '+g.arrival : 'No dates set'}</div>
+      </div>
+      <div class="ciac">
+        ${waLink ? `<a href="${waLink}" target="_blank" class="btn bg bsm">💬 WhatsApp</a>` : ''}
+        <a href="${emailLink}" class="btn bg bsm">✉️ Email</a>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ENHANCED GUEST DETAIL with payment + booking history
+// ═══════════════════════════════════════════════════════════════
+function openGuestDetail(slug) {
+  const g = G.guests.find(x => x._slug === slug);
+  if (!g) return;
+  const panel = document.getElementById('guestDetail');
+  const nameEl = document.getElementById('guestDetailName');
+  const body   = document.getElementById('guestDetailBody');
+  if (!panel || !body) return;
+  panel.style.display = '';
+  nameEl.textContent  = g.name || 'Guest Profile';
+  // Store current guest slug for WA/email buttons
+  panel.dataset.slug = slug;
+  const vb = (label, value) => value ? `<div style="margin-bottom:8px"><div class="fl">${label}</div><div style="font-size:13px">${esc(value)}</div></div>` : '';
+  const guestBookings = G.bookings.filter(b => b.email === g.email);
+  body.innerHTML = `
+    <div>
+      <div class="fsec">
+        <div class="fsect">👤 Personal Details</div>
+        ${vb('Full Name', g.name)}
+        ${vb('Email', g.email)}
+        ${vb('Phone / WhatsApp', g.phone)}
+        ${vb('Nationality', g.nationality)}
+        ${vb('Party Size', g.party_size)}
+        ${vb('Registered', g.registered_at ? new Date(g.registered_at).toLocaleDateString() : '')}
+      </div>
+      <div class="fsec">
+        <div class="fsect">🗓 Trip Details</div>
+        ${vb('Arrival', g.arrival)}
+        ${vb('Departure', g.departure)}
+        ${vb('Special Requirements', g.requirements || g.special_req)}
+      </div>
+      <div class="fsec">
+        <div class="fsect">✅ Verification</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+          <span class="pill ${g.verified?'pg':'po'}">Profile ${g.verified?'✅ Verified':'⏳ Unverified'}</span>
+          <span class="pill ${g.email_verified?'pg':'po'}">Email ${g.email_verified?'✅':'⏳'}</span>
+          <span class="pill ${g.wa_verified?'pg':'po'}">WhatsApp ${g.wa_verified?'✅':'⏳'}</span>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn bg bsm" onclick="verifyGuest('${slug}','verified')">✅ Mark Verified</button>
+          <button class="btn bg bsm" onclick="verifyGuest('${slug}','email_verified')">✉️ Email ✓</button>
+          <button class="btn bg bsm" onclick="verifyGuest('${slug}','wa_verified')">💬 WhatsApp ✓</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="fsec">
+        <div class="fsect">💳 Payment & Integration IDs</div>
+        <div class="fg"><label class="fl">Payment Preference</label>
+          <select class="fi" id="gd_payPref" style="font-size:12px">
+            <option value="" ${!g.payment_pref?'selected':''}>Not set</option>
+            <option value="card" ${g.payment_pref==='card'?'selected':''}>Credit/Debit Card</option>
+            <option value="wallet" ${g.payment_pref==='wallet'?'selected':''}>Digital Wallet</option>
+            <option value="mcb_juice" ${g.payment_pref==='mcb_juice'?'selected':''}>MCB Juice</option>
+            <option value="myt_money" ${g.payment_pref==='myt_money'?'selected':''}>MyT Money</option>
+            <option value="bank_transfer" ${g.payment_pref==='bank_transfer'?'selected':''}>Bank Transfer</option>
+            <option value="cash" ${g.payment_pref==='cash'?'selected':''}>Cash on Arrival</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">QuickBooks Customer ID</label><input class="fi" id="gd_qbId" value="${esc(g.quickbooks_id||'')}" placeholder="QB-XXXX" style="font-size:12px"/></div>
+        <div class="fg"><label class="fl">Stripe Customer ID</label><input class="fi" id="gd_stripeId" value="${esc(g.stripe_id||'')}" placeholder="cus_XXXX" style="font-size:12px"/></div>
+        <div class="fg"><label class="fl">Internal Notes</label><textarea class="fi" id="gd_notes" rows="3" style="font-size:12px;resize:vertical">${esc(g.notes||'')}</textarea></div>
+        <button class="btn bpri bsm" onclick="saveGuestPaymentDetails('${slug}')">💾 Save Details</button>
+      </div>
+      <div class="fsec">
+        <div class="fsect">📋 Booking History (${guestBookings.length})</div>
+        ${guestBookings.length ? guestBookings.map(b => `
+          <div style="background:var(--sd);border-radius:7px;padding:8px 10px;margin-bottom:6px;font-size:12px">
+            <div style="font-weight:500">${esc(b.ref||'No ref')} <span class="pill ${b.status==='confirmed'?'pg':'po'}">${b.status||'pending'}</span></div>
+            <div style="color:var(--mu);margin-top:2px">${esc(b.services||'')} · ${esc(b.checkin||'')} → ${esc(b.checkout||'')} · ${esc(b.estimated_total||'')}</div>
+          </div>`).join('') : '<div style="color:var(--mu);font-size:12px">No bookings found for this email.</div>'}
+      </div>
+    </div>`;
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+async function saveGuestPaymentDetails(slug) {
+  const g = G.guests.find(x => x._slug === slug);
+  if (!g || !g._path) return;
+  g.payment_pref  = (document.getElementById('gd_payPref')||{}).value || g.payment_pref;
+  g.quickbooks_id = (document.getElementById('gd_qbId')||{}).value    || g.quickbooks_id;
+  g.stripe_id     = (document.getElementById('gd_stripeId')||{}).value || g.stripe_id;
+  g.notes         = (document.getElementById('gd_notes')||{}).value    || g.notes;
+  try {
+    const {_slug, _path, _sha, ...data} = g;
+    await ghWrite(_path, JSON.stringify(data, null, 2), 'admin: guest payment details ' + g.name);
+    toast('✅', 'Guest details saved');
+  } catch(e) { toast('⚠️', 'Save failed: '+e.message); }
+}
+
+function sendGuestWhatsApp() {
+  const panel = document.getElementById('guestDetail');
+  if (!panel) return;
+  const slug = panel.dataset.slug;
+  const g = slug ? G.guests.find(x => x._slug === slug) : null;
+  if (!g || !g.phone) { toast('⚠️','No phone number for this guest'); return; }
+  const msg = encodeURIComponent('Hi '+g.name+'! 🌴 This is Evalia Mauritius. How can we help with your stay?');
+  window.open('https://wa.me/'+g.phone.replace(/\D/g,'')+'?text='+msg, '_blank');
+}
+
+function sendGuestEmail() {
+  const panel = document.getElementById('guestDetail');
+  if (!panel) return;
+  const slug = panel.dataset.slug;
+  const g = slug ? G.guests.find(x => x._slug === slug) : null;
+  if (!g || !g.email) { toast('⚠️','No email for this guest'); return; }
+  window.open('mailto:'+g.email+'?subject=Your%20Evalia%20Mauritius%20Stay', '_blank');
+}
 
 // INIT
 (function(){

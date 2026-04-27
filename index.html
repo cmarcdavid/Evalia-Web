@@ -17,8 +17,51 @@
   <meta property="og:description" content="Curated accommodation, excursions, yoga &amp; nature retreats, food discovery and 24/7 concierge in Mauritius."/>
   <meta property="og:image" content="images/og-image.png"/>
   <meta property="og:type" content="website"/>
+  <!-- SEO -->
+  <meta name="robots" content="index, follow"/>
+  <meta name="author" content="Evalia Mauritius"/>
+  <meta name="keywords" content="Mauritius vacation rental, villa Mauritius, boat excursions Mauritius, yoga retreat Mauritius, concierge Mauritius, accommodation Flic en Flac, Grand Baie villa, Evalia"/>
+  <link rel="canonical" href="https://www.evalia.mu/"/>
+  <!-- Open Graph extended -->
+  <meta property="og:url" content="https://www.evalia.mu/"/>
+  <meta property="og:site_name" content="Evalia Mauritius"/>
+  <meta property="og:locale" content="en_GB"/>
+  <meta property="og:locale:alternate" content="fr_FR"/>
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Evalia — Escape the Ordinary · Mauritius"/>
+  <meta name="twitter:description" content="Curated accommodation, boat excursions, yoga &amp; nature retreats, food discovery and 24/7 concierge in Mauritius."/>
   <meta name="twitter:image" content="images/og-image.png"/>
+  <meta name="twitter:site" content="@evalia241"/>
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "name": "Evalia Mauritius",
+    "description": "Curated accommodation, boat excursions, yoga & nature retreats, food discovery and 24/7 concierge in Mauritius.",
+    "url": "https://www.evalia.mu",
+    "logo": "https://www.evalia.mu/images/favicon-32x32.png",
+    "image": "https://www.evalia.mu/images/og-image.png",
+    "telephone": "+23057242099",
+    "email": "hello@evalia.mu",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "MU",
+      "addressLocality": "Mauritius"
+    },
+    "sameAs": [
+      "https://www.instagram.com/evalia241/",
+      "https://www.facebook.com/evalia241",
+      "https://www.tiktok.com/@evalia241"
+    ],
+    "offers": [
+      {"@type":"Offer","name":"Studio Evalia","priceCurrency":"EUR","price":"80","description":"Studio apartment steps from Flic en Flac beach"},
+      {"@type":"Offer","name":"Villa Evalia","priceCurrency":"EUR","price":"180","description":"Private 2-bedroom villa with pool in Grand Baie"},
+      {"@type":"Offer","name":"Boat Excursion","priceCurrency":"EUR","price":"45","description":"Dolphin watching, snorkelling and Île aux Cerfs day trips"}
+    ]
+  }
+  </script>
   <link rel="manifest" href="site.webmanifest"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -392,6 +435,49 @@
     .lang-flag{font-size:16px;line-height:1}
     .lang-lbl{font-size:12px;font-weight:600;color:var(--brand-green);letter-spacing:.05em}
 
+    /* ── CHATBOT ── */
+    .chat-bubble{position:fixed;bottom:96px;right:28px;z-index:91}
+    .chat-toggle{width:54px;height:54px;background:var(--ocean);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(0,107,143,.4);transition:all .2s;border:none}
+    .chat-toggle:hover{transform:scale(1.1);background:#005a78}
+    .chat-window{position:absolute;bottom:66px;right:0;width:340px;background:#fff;border-radius:20px;box-shadow:0 12px 48px rgba(0,0,0,.18);display:none;flex-direction:column;overflow:hidden;max-height:480px}
+    .chat-window.open{display:flex}
+    .chat-head{background:var(--ocean);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:500}
+    .chat-head-sub{font-size:11px;opacity:.75}
+    .chat-close{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:0}
+    .chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:200px}
+    .chat-msg{max-width:82%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.55}
+    .chat-msg.bot{background:var(--sand);color:var(--dark);border-bottom-left-radius:4px;align-self:flex-start}
+    .chat-msg.user{background:var(--ocean);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+    .chat-msg a{color:inherit;text-decoration:underline}
+    .chat-typing{display:flex;gap:4px;align-items:center;padding:10px 13px;background:var(--sand);border-radius:14px;border-bottom-left-radius:4px;width:56px}
+    .chat-typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:typBounce .9s ease-in-out infinite}
+    .chat-typing span:nth-child(2){animation-delay:.15s}
+    .chat-typing span:nth-child(3){animation-delay:.3s}
+    @keyframes typBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+    .chat-pills{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px}
+    .chat-pill{border:1.5px solid var(--ocean);color:var(--ocean);background:none;border-radius:50px;font-size:11px;font-weight:500;padding:5px 12px;cursor:pointer;transition:all .2s}
+    .chat-pill:hover{background:var(--ocean);color:#fff}
+    .chat-input-row{display:flex;border-top:1px solid var(--stone);padding:10px 12px;gap:8px}
+    .chat-input{flex:1;border:1.5px solid var(--stone);border-radius:50px;padding:8px 14px;font-size:13px;font-family:var(--font-b);outline:none;transition:border-color .2s}
+    .chat-input:focus{border-color:var(--ocean)}
+    .chat-send{background:var(--ocean);color:#fff;border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:background .2s;flex-shrink:0}
+    .chat-send:hover{background:#005a78}
+    /* ── AVAILABILITY BADGE ── */
+    .avail-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:50px;margin-bottom:8px}
+    .avail-badge.available{background:rgba(45,106,79,.12);color:var(--palm)}
+    .avail-badge.unavailable{background:rgba(232,133,90,.12);color:#c45a30}
+    .avail-badge.checking{background:rgba(92,100,120,.1);color:var(--muted)}
+    /* ── LOGIN MODAL ── */
+    #loginOverlay .modal{max-width:420px}
+    .login-tabs{display:flex;border-bottom:1px solid var(--stone);margin-bottom:24px}
+    .login-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s}
+    .login-tab.active{color:var(--ocean);border-bottom-color:var(--ocean)}
+    /* ── BOOKING STEP 4 ── */
+    .pay-confirm-box{background:var(--sand);border-radius:16px;padding:24px;margin-bottom:20px}
+    .pay-ref{font-family:var(--font-d);font-size:22px;color:var(--ocean);letter-spacing:.05em}
+    .pay-confirm-row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid var(--stone)}
+    .pay-confirm-row:last-child{border:none;font-weight:600;font-size:16px;margin-top:6px}
+
     /* ── LIGHTBOX ────────────────────────────────────────── */
     .lb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s}
     .lb-overlay.open{opacity:1;pointer-events:all}
@@ -473,7 +559,8 @@
     <li><a href="#booking">Book</a></li>
   </ul>
   <div class="nav-actions">
-    <button class="btn-outline" onclick="scrollToSection('register')">Register</button>
+    <button class="btn-outline" onclick="openLogin()">Sign In</button>
+    <button class="btn-outline" onclick="scrollToSection('register')" style="display:none" id="navRegisterBtn">Register</button>
     <button class="btn-fill" onclick="scrollToSection('booking')">Book Now</button>
   </div>
   <div class="lang-btn" id="langBtn" onclick="toggleLang()" title="Switch language">
@@ -765,7 +852,36 @@
           <span data-fs-error="phone" style="font-size:12px;color:#c45a30;margin-top:4px;display:block"></span>
         </div>
         <div class="form-row2">
-          <div class="fg"><label class="fl" data-i18n="reg_nationality">Nationality</label><input class="fi" type="text" name="nationality" placeholder="French" data-fs-field/></div>
+          <div class="fg"><label class="fl" data-i18n="reg_nationality">Nationality</label>
+            <select class="fi" name="nationality" data-fs-field>
+              <option value="">Select…</option>
+              <option>Afghan</option><option>Albanian</option><option>Algerian</option><option>Andorran</option><option>Angolan</option><option>Argentine</option><option>Armenian</option><option>Australian</option><option>Austrian</option><option>Azerbaijani</option>
+              <option>Bahamian</option><option>Bahraini</option><option>Bangladeshi</option><option>Belarusian</option><option>Belgian</option><option>Belizean</option><option>Beninese</option><option>Bhutanese</option><option>Bolivian</option><option>Bosnian</option><option>Botswanan</option><option>Brazilian</option><option>British</option><option>Bruneian</option><option>Bulgarian</option><option>Burkinabe</option><option>Burundian</option>
+              <option>Cambodian</option><option>Cameroonian</option><option>Canadian</option><option>Cape Verdean</option><option>Central African</option><option>Chadian</option><option>Chilean</option><option>Chinese</option><option>Colombian</option><option>Congolese</option><option>Costa Rican</option><option>Croatian</option><option>Cuban</option><option>Cypriot</option><option>Czech</option>
+              <option>Danish</option><option>Djiboutian</option><option>Dominican</option>
+              <option>Ecuadorian</option><option>Egyptian</option><option>Emirati</option><option>Eritrean</option><option>Estonian</option><option>Ethiopian</option>
+              <option>Fijian</option><option>Finnish</option><option>French</option>
+              <option>Gabonese</option><option>Gambian</option><option>Georgian</option><option>German</option><option>Ghanaian</option><option>Greek</option><option>Guatemalan</option><option>Guinean</option>
+              <option>Haitian</option><option>Honduran</option><option>Hungarian</option>
+              <option>Icelandic</option><option>Indian</option><option>Indonesian</option><option>Iranian</option><option>Iraqi</option><option>Irish</option><option>Israeli</option><option>Italian</option><option>Ivorian</option>
+              <option>Jamaican</option><option>Japanese</option><option>Jordanian</option>
+              <option>Kazakhstani</option><option>Kenyan</option><option>Korean</option><option>Kuwaiti</option>
+              <option>Laotian</option><option>Latvian</option><option>Lebanese</option><option>Lesothan</option><option>Liberian</option><option>Libyan</option><option>Lithuanian</option><option>Luxembourgish</option>
+              <option>Malagasy</option><option>Malawian</option><option>Malaysian</option><option>Maldivian</option><option>Malian</option><option>Maltese</option><option>Mauritanian</option><option>Mauritian</option><option>Mexican</option><option>Moldovan</option><option>Mongolian</option><option>Moroccan</option><option>Mozambican</option>
+              <option>Namibian</option><option>Nepalese</option><option>New Zealander</option><option>Nicaraguan</option><option>Nigerian</option><option>Norwegian</option>
+              <option>Omani</option>
+              <option>Pakistani</option><option>Panamanian</option><option>Paraguayan</option><option>Peruvian</option><option>Filipino</option><option>Polish</option><option>Portuguese</option>
+              <option>Qatari</option>
+              <option>Romanian</option><option>Russian</option><option>Rwandan</option>
+              <option>Saudi Arabian</option><option>Senegalese</option><option>Serbian</option><option>Sierra Leonean</option><option>Singaporean</option><option>Slovak</option><option>Slovenian</option><option>Somali</option><option>South African</option><option>Spanish</option><option>Sri Lankan</option><option>Sudanese</option><option>Swedish</option><option>Swiss</option><option>Syrian</option>
+              <option>Taiwanese</option><option>Tanzanian</option><option>Thai</option><option>Togolese</option><option>Trinidadian</option><option>Tunisian</option><option>Turkish</option>
+              <option>Ugandan</option><option>Ukrainian</option><option>Uruguayan</option>
+              <option>Venezuelan</option><option>Vietnamese</option>
+              <option>Yemeni</option>
+              <option>Zambian</option><option>Zimbabwean</option>
+              <option>Other</option>
+            </select>
+          </div>
           <div class="fg"><label class="fl" data-i18n="reg_party">Party Size</label>
             <select class="fi" name="party_size" data-fs-field>
               <option>1 person</option><option selected>2 people</option><option>3 people</option>
@@ -807,6 +923,7 @@
       <div class="wizard-step active" id="ws1" onclick="goStep(1)"><div class="ws-circle">1</div><div class="ws-label" data-i18n="book_step1">Choose Services</div></div>
       <div class="wizard-step" id="ws2" onclick="goStep(2)"><div class="ws-circle">2</div><div class="ws-label" data-i18n="book_step2">Dates & Details</div></div>
       <div class="wizard-step" id="ws3" onclick="goStep(3)"><div class="ws-circle">3</div><div class="ws-label" data-i18n="book_step3">Confirm & Send</div></div>
+      <div class="wizard-step" id="ws4"><div class="ws-circle">4</div><div class="ws-label">Payment</div></div>
     </div>
 
     <!-- Step 1: Choose services -->
@@ -889,9 +1006,50 @@
       <p style="font-size:13px;color:var(--muted);margin-bottom:20px">💬 After submitting, our team will confirm availability via WhatsApp or email within 2 hours. Payment is completed on confirmation.</p>
       <div class="wizard-nav">
         <button class="btn-wiz-back" onclick="goStep(2)">← Back</button>
-        <button class="btn-wiz-next" onclick="submitBooking()">Send Booking Request ✓</button>
+        <button class="btn-wiz-next" onclick="submitAndGoPayment()">Confirm & Pay →</button>
       </div>
       <div class="form-status" id="bookStatus"></div>
+    </div>
+
+    <!-- Step 4: Payment -->
+    <div class="wizard-pane booking-card" id="step4">
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="font-size:40px;margin-bottom:8px">🎉</div>
+        <h3 style="font-family:var(--font-d);font-size:22px;font-weight:400;margin-bottom:6px">Booking Request Sent!</h3>
+        <p style="font-size:14px;color:var(--muted)">Your reference number:</p>
+        <div class="pay-ref" id="bookRef" style="margin:8px 0">EVL-000000</div>
+        <p style="font-size:13px;color:var(--muted)">We'll confirm availability and WhatsApp you within 2 hours.</p>
+      </div>
+      <div class="pay-confirm-box" id="payConfirmBox"></div>
+      <h4 style="font-family:var(--font-d);font-size:18px;font-weight:400;margin-bottom:16px">How would you like to pay?</h4>
+      <div class="pay-methods" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+        <div class="pay-method active" onclick="selectPayMethod(this,'card')"><span class="pay-method-icon">💳</span>Card</div>
+        <div class="pay-method" onclick="selectPayMethod(this,'wallet')"><span class="pay-method-icon">📱</span>Digital Wallet</div>
+        <div class="pay-method" onclick="selectPayMethod(this,'local')"><span class="pay-method-icon">🇲🇺</span>MU Local</div>
+        <div class="pay-method" onclick="selectPayMethod(this,'cash')"><span class="pay-method-icon">💵</span>Cash + Deposit</div>
+      </div>
+      <div id="payMethodDetail">
+        <div style="background:rgba(0,107,143,.06);border:1px solid rgba(0,107,143,.2);border-radius:12px;padding:16px;font-size:13px;color:var(--muted);line-height:1.7">
+          💳 <strong>Card payment:</strong> Once your booking is confirmed (within 2 hours), you'll receive a secure WhatsApp payment link. Payment is only processed after availability is confirmed.<br><br>
+          📱 <strong>Digital Wallets:</strong> Apple Pay / Google Pay — link sent via WhatsApp on confirmation.<br><br>
+          🇲🇺 <strong>MCB Juice / MyT Money:</strong> Transfer details sent via WhatsApp on confirmation.<br><br>
+          💵 <strong>Cash:</strong> 30% deposit required via bank transfer to secure the booking. Balance paid on arrival.
+        </div>
+      </div>
+      <div style="background:rgba(45,106,79,.08);border:1px solid rgba(45,106,79,.25);border-radius:12px;padding:16px;margin-top:18px">
+        <div style="font-size:13px;color:var(--palm);font-weight:500;margin-bottom:8px">✅ What happens next?</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.8">
+          <div>1️⃣ You'll receive a <strong>WhatsApp message</strong> from us within 2 hours confirming availability.</div>
+          <div>2️⃣ A <strong>secure payment link</strong> is sent once confirmed.</div>
+          <div>3️⃣ <strong>Booking confirmed</strong> with ref <span id="bookRef2">EVL-000000</span> — you'll receive a full itinerary by email.</div>
+          <div>4️⃣ <strong>Check in</strong> from 2pm on your arrival date. Our concierge is with you from day one.</div>
+        </div>
+      </div>
+      <a id="payWhatsappBtn" href="https://wa.me/23057242099" target="_blank" class="btn-whatsapp" style="margin-top:20px;display:inline-flex;justify-content:center;width:100%">💬 Message Us on WhatsApp →</a>
+      <div class="wizard-nav" style="margin-top:16px">
+        <button class="btn-wiz-back" onclick="goStep(3)">← Edit Booking</button>
+        <button class="btn-wiz-next" style="background:var(--palm)" onclick="scrollToSection('home');showToast('🌴','See you in Mauritius!')">Done ✓</button>
+      </div>
     </div>
 
   </div>
@@ -1202,9 +1360,54 @@ const CAT_LABELS = {
 let siteExperiences = [];
 let siteProperties  = [];
 
-// Render experiences from live data
+// ── FALLBACK EXPERIENCE DATA (shown when no CMS data loaded) ──────────────
+const FALLBACK_EXPERIENCES = [
+  {name:'Dolphin Watching Cruise',name_fr:'Croisière observation dauphins',category:'boat',
+   description:'Set off at dawn to swim with wild spinner dolphins in their natural habitat. After the encounter, snorkel over vibrant coral reefs before a beach picnic on a secluded lagoon.',
+   description_fr:'Partez à l\'aube nager avec les dauphins sauvages. Après l\'observation, plongez sur les récifs coralliens avant un pique-nique sur un lagon isolé.',
+   duration:'Full day (8h)',duration_fr:'Journée complète (8h)',price:75,unit:'person',icon:'🐬',active:true,
+   gallery:['images/Hero2.jpg']},
+  {name:'Île aux Cerfs Day Trip',name_fr:'Excursion Île aux Cerfs',category:'boat',
+   description:'Discover the most beautiful island in Mauritius — crystal lagoons, white sand beaches and lunch at a beachfront restaurant. Includes speedboat transfer and snorkelling equipment.',
+   description_fr:'Découvrez la plus belle île de Maurice — lagon cristallin, plages de sable blanc et déjeuner en bord de mer.',
+   duration:'Full day (7h)',duration_fr:'Journée complète (7h)',price:85,unit:'person',icon:'🏝️',active:true,
+   gallery:['images/Hero2.jpg']},
+  {name:'Sunset Catamaran Cruise',name_fr:'Croisière catamaran coucher de soleil',category:'boat',
+   description:'Sail along the west coast as the sun sets over the Indian Ocean. Enjoy rum punch, fresh seafood and the warmest colours of the Mauritian sky.',
+   description_fr:'Naviguez le long de la côte ouest au coucher du soleil. Profitez du punch au rhum, fruits de mer et couleurs chaudes du ciel mauricien.',
+   duration:'3 hours',duration_fr:'3 heures',price:65,unit:'person',icon:'🌅',active:true,
+   gallery:['images/Hero2.jpg']},
+  {name:'Beach Yoga & Sunrise',name_fr:'Yoga plage & lever de soleil',category:'nature',
+   instagram:'https://www.instagram.com/bea_titudeyoga/',
+   description:'Start your day with a gentle sunrise yoga session on the beach, led by certified instructor @bea_titudeyoga. Breathwork, asanas and meditation on the sand.',
+   description_fr:'Commencez votre journée avec une séance de yoga au lever du soleil sur la plage, avec @bea_titudeyoga.',
+   duration:'90 minutes',duration_fr:'90 minutes',price:40,unit:'person',icon:'🧘',active:true,
+   gallery:['images/Hero3.jpg']},
+  {name:'Black River Gorges Hike',name_fr:'Randonnée Black River Gorges',category:'nature',
+   description:'Trek through Mauritius\'s last primeval rainforest with a local guide. Spot endemic birds, waterfalls and panoramic views from the island\'s highest peaks.',
+   description_fr:'Randonnée dans la dernière forêt vierge de Maurice avec un guide local. Oiseaux endémiques, cascades et panoramas depuis les plus hauts sommets.',
+   duration:'Full day (6h)',duration_fr:'Journée complète (6h)',price:55,unit:'person',icon:'🌿',active:true,
+   gallery:['images/Hero3.jpg']},
+  {name:'Chamarel & 7 Colour Earth',name_fr:'Chamarel & Terres des 7 Couleurs',category:'nature',
+   description:'Visit the famous multi-coloured earth of Chamarel, the Chamarel Waterfall and the rum distillery. A full sensory journey through the soul of Mauritius.',
+   description_fr:'Visitez les célèbres terres colorées de Chamarel, la cascade et la distillerie de rhum. Un voyage sensoriel au cœur de Maurice.',
+   duration:'Half day (4h)',duration_fr:'Demi-journée (4h)',price:45,unit:'person',icon:'🎨',active:true,
+   gallery:['images/Hero3.jpg']},
+  {name:'Street Food Discovery Tour',name_fr:'Tour découverte street food',category:'food',
+   description:'Explore Port Louis market and local street stalls with a foodie guide. Taste gâteaux piments, dholl puri, alouda and briani — the real flavours of multicultural Mauritius.',
+   description_fr:'Explorez le marché de Port Louis et les étals locaux avec un guide gourmand. Gâteaux piments, dholl puri, alouda et briani — les vraies saveurs de Maurice.',
+   duration:'3 hours',duration_fr:'3 heures',price:35,unit:'person',icon:'🍛',active:true,
+   gallery:['images/Hero.jpg']},
+  {name:'Mauritian Cooking Class',name_fr:'Cours de cuisine mauricienne',category:'food',
+   description:'Learn to cook authentic Mauritian dishes in a local home. Market visit, hands-on cooking and a shared meal — an unforgettable cultural immersion.',
+   description_fr:'Apprenez à cuisiner des plats mauriciens authentiques dans une maison locale. Visite du marché, cuisine en main et repas partagé.',
+   duration:'Half day (4h)',duration_fr:'Demi-journée (4h)',price:65,unit:'group',icon:'👨‍🍳',active:true,
+   gallery:['images/Hero.jpg']},
+];
+
+// Render experiences from live data (falls back to hardcoded if CMS empty)
 function renderExp(filter) {
-  const data = siteExperiences.length ? siteExperiences : [];
+  const data = siteExperiences.length ? siteExperiences : FALLBACK_EXPERIENCES;
   const list = filter === 'all' ? data : data.filter(e => e.category === filter || e.cat === filter);
   if (!list.length) {
     document.getElementById('expGrid').innerHTML =
@@ -1648,6 +1851,53 @@ function goStep(n) {
   document.getElementById('booking').scrollIntoView({behavior:'smooth'});
 }
 
+function submitAndGoPayment() {
+  const form = document.getElementById('bookingForm');
+  const name = form.querySelector('[name=name]').value;
+  const email = form.querySelector('[name=email]').value;
+  const phone = form.querySelector('[name=phone]').value || '';
+  if (!name||!email) { showToast('⚠️','Please fill in your name and email in step 2'); goStep(2); return; }
+  if (selectedServices.length===0) { showToast('⚠️','Please select at least one service'); goStep(1); return; }
+  document.getElementById('hiddenServices').value = selectedServices.join(', ');
+  const btn = document.querySelector('#step3 .btn-wiz-next');
+  btn.textContent = 'Sending…'; btn.disabled = true;
+  // Generate booking reference
+  const ref = 'EVL-' + Date.now().toString().slice(-6);
+  fetch('https://formspree.io/f/mdayoknj', { method:'POST', body:new FormData(form), headers:{'Accept':'application/json'} })
+    .then(r => {
+      btn.textContent='Confirm & Pay →'; btn.disabled=false;
+      // Build payment step
+      document.getElementById('bookRef').textContent = ref;
+      document.getElementById('bookRef2').textContent = ref;
+      // Build confirm summary
+      const inV = document.getElementById('bkIn').value;
+      const outV = document.getElementById('bkOut').value;
+      const guests = document.getElementById('bkGuests').value;
+      const total = document.getElementById('hiddenTotal').value || 'TBD';
+      document.getElementById('payConfirmBox').innerHTML =
+        '<div class="pay-confirm-row"><span class="sum-lbl">Services</span><span>'+selectedServices.join(', ')+'</span></div>'+
+        '<div class="pay-confirm-row"><span class="sum-lbl">Dates</span><span>'+(inV&&outV?inV+' → '+outV:'TBD')+'</span></div>'+
+        '<div class="pay-confirm-row"><span class="sum-lbl">Guests</span><span>'+guests+'</span></div>'+
+        '<div class="pay-confirm-row"><span class="sum-lbl">Name</span><span>'+name+'</span></div>'+
+        '<div class="pay-confirm-row pay-confirm-row"><strong>Estimated Total</strong><strong>'+total+'</strong></div>';
+      // Update WhatsApp link with booking details
+      const waMsg = encodeURIComponent('Hi Evalia! My booking ref is '+ref+'. Services: '+selectedServices.join(', ')+'. Dates: '+inV+' to '+outV+'. Guests: '+guests+'. Name: '+name+'.');
+      document.getElementById('payWhatsappBtn').href = 'https://wa.me/23057242099?text='+waMsg;
+      goStep(4);
+    })
+    .catch(() => {
+      btn.textContent='Confirm & Pay →'; btn.disabled=false;
+      document.getElementById('bookStatus').className='form-status error';
+      document.getElementById('bookStatus').textContent='Network error — please WhatsApp us at +230 5724 2099';
+    });
+}
+
+function selectPayMethod(el, id) {
+  document.querySelectorAll('#step4 .pay-method').forEach(m => m.classList.remove('active'));
+  el.classList.add('active');
+  showToast('💳', 'Payment method selected — we\'ll send details on confirmation');
+}
+
 function calcTotal() {
   // Simple estimate — in production this would be a real calc
   const inD = new Date(document.getElementById('bkIn').value);
@@ -1943,7 +2193,8 @@ document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); 
 // querySelector uses single-quoted selectors — inner double-quotes are safe.
 // ═══════════════════════════════════════════════════════════════
 
-var lang = localStorage.getItem('ev_lang') || 'en';
+// lang already declared early — do not re-declare, just ensure it's current
+lang = localStorage.getItem('ev_lang') || lang || 'en';
 
 var I18N = {
   en: {
@@ -2261,7 +2512,7 @@ function lbRender() {
   if (isVid) {
     media.innerHTML = '<video src="'+src+'" controls autoplay style="max-width:90vw;max-height:84vh;border-radius:10px;display:block"></video>';
   } else {
-    media.innerHTML = '<img src="'+src+'" alt="Photo '+(lbIdx+1)+'" class="lb-media" onerror="this.src=''"/>';
+    media.innerHTML = '<img src="'+src+'" alt="Photo '+(lbIdx+1)+'" class="lb-media" onerror="this.onerror=null;this.src=\'images/og-image.png\'"/>';
   }
   var multi = lbImgs.length > 1;
   if (prev) prev.style.display = multi ? 'flex' : 'none';
@@ -2292,11 +2543,37 @@ document.addEventListener('keydown', function(e) {
   if (!ov || !ov.classList.contains('open')) return;
   if (e.key === 'ArrowLeft')  lbGo(-1);
   if (e.key === 'ArrowRight') lbGo(1);
-  if (e.key === 'Escape') closeLb();
+  if (e.key === 'Escape') { closeLb(); closeLogin(); }
 });
 </script>
 
-
+<!-- ── LOGIN MODAL ── -->
+<div class="modal-overlay" id="loginOverlay" onclick="if(event.target===this)closeLogin()">
+  <div class="modal">
+    <div class="modal-close" onclick="closeLogin()">✕</div>
+    <div class="login-tabs">
+      <div class="login-tab active" id="ltab-login" onclick="switchLoginTab('login',this)">Sign In</div>
+      <div class="login-tab" id="ltab-signup" onclick="switchLoginTab('signup',this)">New Guest</div>
+    </div>
+    <div id="loginPane">
+      <div class="modal-title" style="margin-bottom:6px">Welcome back</div>
+      <div class="modal-sub">Sign in with your email to access your profile and bookings</div>
+      <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" id="loginEmail" placeholder="you@email.com" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="loginPwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+        <div style="text-align:right;margin-top:4px"><a href="#" style="font-size:12px;color:var(--ocean)" onclick="showToast('📧','Password reset link sent — check your email');return false">Forgot password?</a></div>
+      </div>
+      <button class="btn-register" onclick="doLogin()" style="margin-top:8px">Sign In →</button>
+      <div id="loginStatus" style="display:none;margin-top:12px;font-size:13px;padding:10px;border-radius:8px;text-align:center"></div>
+    </div>
+    <div id="signupPane" style="display:none">
+      <div class="modal-sub" style="margin-bottom:16px">Already have a guest profile? Just sign in above — your details are already saved.</div>
+      <div style="background:rgba(0,107,143,.06);border:1px solid rgba(0,107,143,.2);border-radius:12px;padding:16px;font-size:13px;color:var(--muted);line-height:1.65">
+        🌴 <strong>To create your guest profile</strong>, use the <strong>Guest Registration</strong> form below. Once registered, you can sign in here any time to view your bookings and preferences.
+        <br><br><a href="#register" onclick="closeLogin();setTimeout(()=>scrollToSection('register'),200)" style="color:var(--ocean);font-weight:600">Register now →</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ── LIGHTBOX ───────────────────────────────── -->
 <div class="lb-overlay" id="lbOverlay" onclick="lbBg(event)">
@@ -2308,5 +2585,203 @@ document.addEventListener('keydown', function(e) {
   <div class="lb-count" id="lbCount"></div>
 </div>
 
+<!-- ── CHATBOT ── -->
+<div class="chat-bubble" id="chatBubble">
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-head">
+      <div>
+        <div style="font-weight:600">Evalia Concierge 🌴</div>
+        <div class="chat-head-sub">Ask me anything about Mauritius</div>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-msgs" id="chatMsgs"></div>
+    <div class="chat-pills" id="chatPills"></div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chatInput" placeholder="Ask me anything…" onkeydown="if(event.key==='Enter')sendChat()"/>
+      <button class="chat-send" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+  <button class="chat-toggle" id="chatToggleBtn" onclick="toggleChat()" title="Chat with Evalia concierge">💬</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CHATBOT — Smart FAQ bot with WhatsApp handover
+// No API key required — uses pre-defined knowledge base
+// ═══════════════════════════════════════════════════════════════
+var chatOpen = false;
+var chatHistory = [];
+var CHAT_WA = 'https://wa.me/23057242099';
+
+var CHAT_KB = [
+  {q:['price','cost','how much','rate','pricing','tarif','prix'],
+   a:'Our prices start from <strong>€80/night</strong> for the Studio Evalia and <strong>€180/night</strong> for the Villa Evalia (pool + garden). Experiences from €35/person. Want me to help you book?'},
+  {q:['studio','apartment','flat'],
+   a:'The <strong>Studio Evalia</strong> is a beautiful apartment steps from Flic en Flac beach — one of Mauritius\'s finest. It sleeps 2, has A/C, WiFi and a kitchenette. From <strong>€80/night</strong>. 🏙️'},
+  {q:['villa','pool','garden','private'],
+   a:'The <strong>Villa Evalia</strong> is a private 2-bedroom villa in Grand Baie with its own pool and tropical garden. Sleeps up to 6. From <strong>€180/night</strong>. 🌴 Perfect for families or groups.'},
+  {q:['boat','dolphin','snorkel','excursion','île aux cerfs','ile aux cerfs','cruise','catamaran'],
+   a:'We offer <strong>dolphin watching cruises</strong>, snorkelling, <strong>Île aux Cerfs</strong> day trips, and sunset catamaran cruises. Prices from <strong>€45/person</strong>. All led by experienced local guides. 🐬'},
+  {q:['yoga','nature','hike','hiking','wellness','black river','chamarel','gorges'],
+   a:'Our nature & wellness experiences are curated with certified instructor <strong>@bea_titudeyoga</strong> — beach yoga, Black River Gorges hikes, Chamarel and more. From <strong>€40/person</strong>. 🌿'},
+  {q:['food','restaurant','eat','cooking','street food','cuisine','mauritian'],
+   a:'We offer <strong>street food discovery tours</strong> in Port Louis market and <strong>Mauritian cooking classes</strong> in a local home. From <strong>€35/person</strong>. The best way to taste the real Maurice! 🍛'},
+  {q:['cancel','cancellation','refund','policy'],
+   a:'<strong>Cancellation policy:</strong> Full refund if cancelled 7+ days before arrival. 50% refund 3–6 days before. No refund within 72 hours. We\'ll always try to find an alternative date for you. 🛡️'},
+  {q:['airport','transfer','taxi','pickup','transport'],
+   a:'We offer <strong>airport transfers</strong> from Sir Seewoosagur Ramgoolam International Airport. From <strong>€30</strong> per transfer. Just let us know your flight details when booking. ✈️'},
+  {q:['wifi','internet','ac','air condition','kitchen','amenities'],
+   a:'Both properties have <strong>high-speed WiFi, A/C and fully equipped kitchen/kitchenette</strong>. The Villa also has a private pool, garden and parking. 📶'},
+  {q:['whatsapp','contact','call','phone','reach','talk','speak'],
+   a:'Our team is available <strong>24/7 on WhatsApp</strong> at +230 5724 2099 for anything you need — from reservations to last-minute help. <a href="'+CHAT_WA+'" target="_blank" style="color:var(--ocean);font-weight:600">💬 Chat now →</a>'},
+  {q:['location','where','flic en flac','grand baie','mauritius','map'],
+   a:'The <strong>Studio</strong> is in <strong>Flic en Flac</strong>, West Mauritius — steps from the beach. The <strong>Villa</strong> is in <strong>Grand Baie</strong>, North Mauritius — close to restaurants and nightlife. 📍'},
+  {q:['book','reserve','reservation','availability','available','dates'],
+   a:'You can book directly on this page — just scroll to <strong>Book in 3 easy steps</strong> below, or click <em>Book Now</em> in the menu. For same-day requests, WhatsApp us directly. 📅'},
+  {q:['pay','payment','card','cash','mcb','myt','juice','myT','stripe'],
+   a:'We accept <strong>Visa, Mastercard, Amex, Apple Pay, Google Pay, MCB Juice and MyT Money</strong>. Cash on arrival is also accepted with a 30% deposit. 💳'},
+  {q:['check in','check-in','checkout','check out','arrival time','departure time'],
+   a:'<strong>Check-in: 2pm onwards</strong> · <strong>Check-out: 11am</strong>. Early check-in or late check-out can often be arranged — just ask us via WhatsApp! 🕐'},
+  {q:['kids','children','family','baby','cot'],
+   a:'Both properties are <strong>family-friendly</strong>. The Villa sleeps up to 6 and has space for a travel cot. We can also arrange babysitting and child-friendly activities. 👨‍👩‍👧'},
+  {q:['emergency','medical','doctor','clinic','safety','health'],
+   a:'<strong>Safety is our priority.</strong> We have a network of healthcare referrals, 24/7 emergency contacts and can arrange clinic access for any guest. For urgent help: <a href="'+CHAT_WA+'?text=EMERGENCY" target="_blank" style="color:var(--ocean);font-weight:600">WhatsApp us now →</a>'},
+  {q:['instagram','facebook','social','tiktok'],
+   a:'Follow us for Mauritius inspiration! 📸 <a href="https://www.instagram.com/evalia241/" target="_blank" style="color:var(--ocean)">@evalia241 on Instagram</a> · TikTok @evalia241 · Facebook @evalia241'},
+  {q:['hello','hi','hey','bonjour','salut','good morning','good afternoon','good evening'],
+   a:'👋 Hello! I\'m the Evalia virtual concierge. I can help with pricing, booking, activities, property info and more. What can I help you with today?'},
+  {q:['merci','thank','thanks','perfect','great','awesome'],
+   a:'You\'re very welcome! 🌴 Is there anything else I can help you with? Or <a href="'+CHAT_WA+'" target="_blank" style="color:var(--ocean);font-weight:600">chat with our team on WhatsApp</a> for personalised assistance.'},
+];
+
+var CHAT_PILLS = ['Prices & availability','Boat excursions','Villa with pool','Book now','Contact us'];
+var CHAT_FALLBACK = 'I\'m not sure about that one! Our team can help — <a href="'+CHAT_WA+'?text=Hi%20Evalia%2C%20I%20have%20a%20question" target="_blank" style="color:var(--ocean);font-weight:600">💬 Chat on WhatsApp</a> for instant help.';
+
+function toggleChat(){
+  chatOpen = !chatOpen;
+  var w = document.getElementById('chatWindow');
+  var btn = document.getElementById('chatToggleBtn');
+  if(chatOpen){
+    w.classList.add('open');
+    btn.textContent = '✕';
+    if(!chatHistory.length) chatBotMsg('👋 Hi! I\'m your Evalia concierge. How can I help you today?', true);
+  } else {
+    w.classList.remove('open');
+    btn.textContent = '💬';
+  }
+}
+
+function chatBotMsg(text, withPills){
+  var msgs = document.getElementById('chatMsgs');
+  // Remove typing indicator if any
+  var typ = document.getElementById('chatTyping');
+  if(typ) typ.remove();
+  var div = document.createElement('div');
+  div.className = 'chat-msg bot';
+  div.innerHTML = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  // Show suggestion pills
+  if(withPills){
+    var pills = document.getElementById('chatPills');
+    pills.innerHTML = CHAT_PILLS.map(function(p){
+      return '<button class="chat-pill" onclick="chatPillClick(\''+p+'\')">' + p + '</button>';
+    }).join('');
+  } else {
+    document.getElementById('chatPills').innerHTML = '';
+  }
+}
+
+function chatUserMsg(text){
+  var msgs = document.getElementById('chatMsgs');
+  var div = document.createElement('div');
+  div.className = 'chat-msg user';
+  div.textContent = text;
+  msgs.appendChild(div);
+  // Typing indicator
+  var typ = document.createElement('div');
+  typ.className = 'chat-msg bot';
+  typ.id = 'chatTyping';
+  typ.innerHTML = '<div class="chat-typing"><span></span><span></span><span></span></div>';
+  msgs.appendChild(typ);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function chatRespond(text){
+  var lower = text.toLowerCase();
+  for(var i=0;i<CHAT_KB.length;i++){
+    var entry = CHAT_KB[i];
+    if(entry.q.some(function(kw){return lower.includes(kw);})){
+      setTimeout(function(ans){return function(){chatBotMsg(ans,false);};}(entry.a), 800);
+      return;
+    }
+  }
+  setTimeout(function(){chatBotMsg(CHAT_FALLBACK,false);}, 800);
+}
+
+function sendChat(){
+  var inp = document.getElementById('chatInput');
+  var text = inp.value.trim();
+  if(!text) return;
+  inp.value = '';
+  chatUserMsg(text);
+  chatHistory.push({role:'user',text:text});
+  chatRespond(text);
+}
+
+function chatPillClick(text){
+  document.getElementById('chatInput').value = text;
+  sendChat();
+}
+
+// ── LOGIN ──────────────────────────────────────────────────────
+function openLogin(){
+  document.getElementById('loginOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLogin(){
+  document.getElementById('loginOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function switchLoginTab(tab, el){
+  document.querySelectorAll('.login-tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById('loginPane').style.display  = tab==='login'  ? '' : 'none';
+  document.getElementById('signupPane').style.display = tab==='signup' ? '' : 'none';
+}
+function doLogin(){
+  var email = (document.getElementById('loginEmail').value||'').trim();
+  var pwd   = (document.getElementById('loginPwd').value||'').trim();
+  var st    = document.getElementById('loginStatus');
+  if(!email||!pwd){st.style.cssText='display:block;background:rgba(232,133,90,.1);color:#c45a30';st.textContent='Please fill in both fields.';return;}
+  st.style.cssText='display:block;background:rgba(0,107,143,.08);color:var(--ocean)';
+  st.textContent='Signing in…';
+  // Supabase auth will go here in Phase 2 — for now check localStorage guest profile
+  setTimeout(function(){
+    var guests = JSON.parse(localStorage.getItem('ev_user_profiles')||'[]');
+    var match  = guests.find(function(g){return g.email===email;});
+    if(match){
+      localStorage.setItem('ev_current_user', JSON.stringify(match));
+      closeLogin();
+      showToast('✅','Welcome back, '+match.name+'!');
+      updateNavForLoggedIn(match);
+    } else {
+      st.style.cssText='display:block;background:rgba(232,133,90,.1);color:#c45a30';
+      st.textContent='No account found. Please register first.';
+    }
+  }, 600);
+}
+function updateNavForLoggedIn(user){
+  var actionsDiv = document.querySelector('.nav-actions');
+  if(!actionsDiv) return;
+  actionsDiv.innerHTML = '<button class="btn-fill" onclick="openLogin()" title="My Profile">👤 '+((user.name||'').split(' ')[0]||'Profile')+'</button>';
+}
+// Check on load
+(function(){
+  var u = localStorage.getItem('ev_current_user');
+  if(u){try{updateNavForLoggedIn(JSON.parse(u));}catch(e){}}
+})();
+</script>
 </body>
 </html>
