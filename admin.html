@@ -552,12 +552,14 @@
 
     <!-- Integration Panel -->
     <div class="card" style="border-left:3px solid var(--g)">
-      <div class="ctitle">Integrations: QuickBooks · Zoho · Stripe · WhatsApp Business</div>
+      <div class="ctitle">Integrations: QuickBooks · Zoho · MCB Juice · MIPS · Bank Transfer</div>
       <div style="font-size:12.5px;color:var(--mu);line-height:1.7;display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div><strong>💼 QuickBooks:</strong> Export CSV → Import as Customers. Fields: Name, Email, Phone, Nationality, Arrival, Departure.</div>
-        <div><strong>📊 Zoho CRM:</strong> Use CSV export → Contacts import. Or sync <code>_data/guests/</code> via Zoho's GitHub connector.</div>
-        <div><strong>💳 Stripe:</strong> Guest emails ready for Stripe Customer creation. Use the API or paste email list into Stripe dashboard.</div>
-        <div><strong>📱 WhatsApp Business:</strong> Phone numbers stored in international format. Ready for WhatsApp Business broadcast lists.</div>
+        <div><strong>💼 QuickBooks:</strong> Export CSV → Import as Customers. Fields: Name, Email, Phone, Nationality.</div>
+        <div><strong>📊 Zoho CRM:</strong> Use CSV export → Contacts import. Or sync via Zoho GitHub connector.</div>
+        <div><strong>🏦 MCB Juice:</strong> Mobile payment via Mauritius Commercial Bank. Guests transfer deposit to your MCB Juice number. No API — manual confirmation via WhatsApp.</div>
+        <div><strong>💳 MIPS (recommended):</strong> Mauritius Internet Payment System — accepts Visa, Mastercard, MCB Juice online. Apply at <a href="https://www.mips.mu" target="_blank" style="color:var(--g)">mips.mu</a>. Requires MCB merchant account. API integration possible in Phase 2.</div>
+        <div><strong>🏧 Bank Transfer:</strong> Standard Chartered or MCB. Guests use booking ref as reference. Confirm payment manually then update booking status to "Paid".</div>
+        <div><strong>📱 WhatsApp Business:</strong> Phone numbers in international format. Ready for broadcast lists on booking confirmation and payment follow-up.</div>
       </div>
     </div>
   </div>
@@ -2210,19 +2212,42 @@ function renderBookings() {
     return;
   }
   list.innerHTML = data.map(b => {
-    const sc = {confirmed:'pg', pending:'po', cancelled:'br', abandoned:'br'}[b.status||'pending'] || 'po';
-    const waLink = b.phone ? `https://wa.me/${b.phone.replace(/\D/g,'')}?text=${encodeURIComponent('Hi '+b.name+', following up on your Evalia booking ref '+b.ref+'.')}` : null;
+    const STATUSES = {
+      request_sent:    {label:'📨 Request Sent',   cls:'po'},
+      pending:         {label:'⏳ Pending',         cls:'po'},
+      confirmed:       {label:'✅ Confirmed',        cls:'pg'},
+      payment_pending: {label:'💳 Payment Pending', cls:'po'},
+      payment_done:    {label:'💰 Paid',             cls:'pg'},
+      checked_in:      {label:'🏠 Checked In',      cls:'pg'},
+      completed:       {label:'🌴 Completed',        cls:'pg'},
+      cancelled:       {label:'❌ Cancelled',        cls:'br'},
+      abandoned:       {label:'⚠️ Abandoned',       cls:'br'},
+    };
+    const st  = b.status || 'request_sent';
+    const stI = STATUSES[st] || {label: st, cls:'po'};
+    const waLink = (b.phone||b.guest_phone) ? `https://wa.me/${(b.phone||b.guest_phone).replace(/\D/g,'')}?text=${encodeURIComponent('Hi '+(b.name||b.guest_name||'')+', regarding your Evalia booking ref '+(b.ref||'')+'.')}` : null;
+    const name = b.name || b.guest_name || 'Unknown';
+    const email= b.email|| b.guest_email|| '';
+    const phone= b.phone|| b.guest_phone|| '';
+    const svcs = Array.isArray(b.services) ? b.services.join(', ') : (b.services||'—');
+    const statusOpts = Object.entries(STATUSES).map(([k,v]) =>
+      `<option value="${k}" ${st===k?'selected':''}>${v.label}</option>`
+    ).join('');
     return `<div class="ci">
-      <div class="cith">${b.status==='confirmed'?'✅':b.status==='cancelled'?'❌':b.status==='abandoned'?'⚠️':'🕐'}</div>
-      <div class="ciin">
-        <div class="cinm">${esc(b.name||'Unknown')} <span class="pill ${sc}" style="margin-left:4px">${b.status||'pending'}</span></div>
-        <div class="cimt">${esc(b.services||'')} · ${esc(b.checkin||'')} → ${esc(b.checkout||'')} · ${esc(b.guests||'')} guests</div>
-        <div class="cimt" style="color:var(--mu)">${esc(b.email||'')} ${b.phone?'· '+esc(b.phone):''}</div>
+      <div class="cith" style="font-size:20px;background:${st==='confirmed'||st==='payment_done'||st==='completed'?'#eafaf1':'#fef9e7'};display:flex;align-items:center;justify-content:center">
+        ${st==='confirmed'||st==='payment_done'?'✅':st==='cancelled'||st==='abandoned'?'❌':st==='checked_in'?'🏠':'🕐'}
       </div>
-      <div class="ciac">
-        ${waLink ? `<a href="${waLink}" target="_blank" class="btn bg bsm">💬</a>` : ''}
-        <button class="btn bg bsm" onclick="setBookingStatus('${b._slug}','confirmed')">✅</button>
-        <button class="btn br bsm" onclick="setBookingStatus('${b._slug}','cancelled')">✕</button>
+      <div class="ciin">
+        <div class="cinm">${esc(name)} <span class="pill ${stI.cls}" style="margin-left:4px;font-size:10px">${stI.label}</span></div>
+        <div class="cimt">${esc(svcs)} · ${esc(b.checkin||'')} → ${esc(b.checkout||'')} · ${b.guests_count||b.guests||'—'} guests</div>
+        <div class="cimt">${esc(email)} ${phone?'· '+esc(phone):''} · <strong>${esc(b.estimated_total||'')}</strong></div>
+      </div>
+      <div class="ciac" style="flex-direction:column;align-items:flex-end;gap:5px">
+        <select class="fi bsm" style="font-size:11px;width:150px" onchange="setBookingStatus('${b._slug}',this.value)">${statusOpts}</select>
+        <div style="display:flex;gap:4px">
+          ${waLink ? `<a href="${waLink}" target="_blank" class="btn bg bsm" title="WhatsApp guest">💬</a>` : ''}
+          <button class="btn br bsm" onclick="setBookingStatus('${b._slug}','cancelled')" title="Cancel">✕</button>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -2232,31 +2257,37 @@ async function setBookingStatus(slug, status) {
   const b = G.bookings.find(x => x._slug === slug);
   if (!b) return;
   b.status = status;
-  // Supabase update
-  try {
-    await supa.from('bookings').update({ status }).eq('id', slug);
-  } catch(e) { console.warn('Supabase booking status update failed:', e.message); }
-  // GitHub fallback
-  if (b._path) {
-    try {
-      await ghWrite(b._path, JSON.stringify(b, null, 2), 'admin: booking '+status+' '+slug);
-    } catch(e) {}
-  }
+  try { await supa.from('bookings').update({ status }).eq('id', slug); } catch(e) {}
+  if (b._path) { try { await ghWrite(b._path, JSON.stringify(b,null,2),'admin: booking '+status+' '+slug); } catch(e) {} }
   renderBookings(); updateBookingStats();
-  toast(status==='confirmed'?'✅':'🚫', 'Booking '+status);
-  if (status === 'confirmed' && b.phone) {
-    const wa = 'https://wa.me/'+b.phone.replace(/\D/g,'')+'?text='+encodeURIComponent('🌴 Hello '+b.name+'! Your Evalia booking (ref: '+b.ref+') is CONFIRMED. We\'ll send your payment link shortly. Welcome to Mauritius!');
+
+  const name  = b.name  || b.guest_name  || '';
+  const phone = b.phone || b.guest_phone || '';
+  const ref   = b.ref   || '';
+  const total = b.estimated_total || '';
+
+  const msgs = {
+    confirmed:       '🌴 Hello '+name+'! Your Evalia booking (ref: '+ref+') is CONFIRMED ✅. Total: '+total+'. We will send payment details shortly. Welcome to Mauritius!',
+    payment_pending: '💳 Hi '+name+'! Payment details for your booking '+ref+' ('+total+'): MCB Juice: [your number] / MIPS link: [link]. Please transfer to confirm.',
+    payment_done:    '✅ Hi '+name+'! We have received your payment for booking '+ref+'. All set! Check-in from 2pm. Our concierge will be in touch 🌴',
+    checked_in:      '🏠 Welcome '+name+'! Hope you are settling in. Don\'t hesitate to WhatsApp us for anything — 24/7! 🌴',
+    completed:       '🌴 Thank you '+name+' for staying with Evalia! We hope Mauritius was everything you dreamed of. Please leave us a review: https://evalia-web.vercel.app/#testimonials',
+  };
+
+  if (msgs[status] && phone) {
+    const wa = 'https://wa.me/'+phone.replace(/\D/g,'')+'?text='+encodeURIComponent(msgs[status]);
     window.open(wa, '_blank');
   }
+  toast(status==='confirmed'?'✅':status==='cancelled'?'❌':'ℹ️', 'Booking → ' + status);
 }
 
 function updateBookingStats() {
   const el = id => document.getElementById(id);
   if (!el('bkStatTotal')) return;
   el('bkStatTotal').textContent     = G.bookings.length;
-  el('bkStatConfirmed').textContent = G.bookings.filter(b=>b.status==='confirmed').length;
-  el('bkStatPending').textContent   = G.bookings.filter(b=>b.status==='pending'||!b.status).length;
-  el('bkStatAbandoned').textContent = G.bookings.filter(b=>b.status==='abandoned').length;
+  el('bkStatConfirmed').textContent = G.bookings.filter(b=>b.status==='confirmed'||b.status==='payment_done'||b.status==='checked_in'||b.status==='completed').length;
+  el('bkStatPending').textContent   = G.bookings.filter(b=>!b.status||b.status==='pending'||b.status==='request_sent').length;
+  el('bkStatAbandoned').textContent = G.bookings.filter(b=>b.status==='abandoned'||b.status==='cancelled').length;
 }
 
 function exportBookings() {
