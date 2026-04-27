@@ -558,9 +558,9 @@
     <li><a href="#experiences">Experiences</a></li>
     <li><a href="#booking">Book</a></li>
   </ul>
-  <div class="nav-actions">
-    <button class="btn-outline" onclick="openLogin()">Sign In</button>
-    <button class="btn-outline" onclick="scrollToSection('register')" style="display:none" id="navRegisterBtn">Register</button>
+  <div class="nav-actions" id="navActions">
+    <button class="btn-outline" id="navSignInBtn" onclick="openLogin()">Sign In</button>
+    <button class="btn-outline" id="navRegisterBtn" onclick="scrollToSection('register')">Register</button>
     <button class="btn-fill" onclick="scrollToSection('booking')">Book Now</button>
   </div>
   <div class="lang-btn" id="langBtn" onclick="toggleLang()" title="Switch language">
@@ -904,6 +904,20 @@
         <div class="fg">
           <label class="fl" data-i18n="reg_special">Special Requirements</label>
           <textarea class="fi" name="requirements" rows="2" placeholder="Dietary needs, accessibility, medical info…" style="resize:vertical" data-fs-field></textarea>
+        </div>
+        <div style="height:1px;background:var(--stone);margin:14px 0"></div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">🔐 Create your login password</div>
+        <div class="form-row2">
+          <div class="fg">
+            <label class="fl">Password</label>
+            <input class="fi" type="password" name="password" id="regPassword" placeholder="Min. 8 characters" required/>
+            <span id="regPwdHint" style="font-size:11px;color:var(--muted);margin-top:3px;display:block">Use at least 8 characters</span>
+          </div>
+          <div class="fg">
+            <label class="fl">Confirm Password</label>
+            <input class="fi" type="password" name="password_confirm" id="regPasswordConfirm" placeholder="Repeat password" required/>
+            <span id="regPwdMatch" style="font-size:11px;margin-top:3px;display:block"></span>
+          </div>
         </div>
         <button type="submit" id="regSubmitBtn" class="btn-register" data-i18n="reg_btn">Create My Profile →</button>
         <div class="form-note" style="margin-top:12px"><span data-i18n="reg_privacy">🔒 Your data is private and secure. We never share your details.</span></div>
@@ -1984,20 +1998,34 @@ document.addEventListener('DOMContentLoaded', function() {
   var regForm = document.getElementById('regForm');
   if (!regForm) return;
 
+  // Live password match indicator
+  var pwdConfirm = document.getElementById('regPasswordConfirm');
+  var pwdField   = document.getElementById('regPassword');
+  if (pwdConfirm && pwdField) {
+    pwdConfirm.addEventListener('input', function() {
+      var matchEl = document.getElementById('regPwdMatch');
+      if (!matchEl) return;
+      if (!this.value) { matchEl.textContent = ''; return; }
+      if (this.value === pwdField.value) {
+        matchEl.style.color = 'var(--palm)'; matchEl.textContent = '✓ Passwords match';
+      } else {
+        matchEl.style.color = '#c45a30'; matchEl.textContent = '✗ Passwords do not match';
+      }
+    });
+  }
+
   regForm.addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    // Use IDs — unambiguous, no querySelector collision
-    var btn            = document.getElementById('regSubmitBtn');
-    var successBanner  = document.getElementById('regSuccess');
-    var errorBanner    = document.getElementById('regError');
+    var btn           = document.getElementById('regSubmitBtn');
+    var successBanner = document.getElementById('regSuccess');
+    var errorBanner   = document.getElementById('regError');
+    var btnLabel      = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →';
 
-    // Reset UI
-    if (btn)           { btn.disabled = true; btn.textContent = lang==='fr' ? 'Envoi en cours…' : 'Sending…'; }
+    if (btn) { btn.disabled = true; btn.textContent = lang==='fr' ? 'Création en cours…' : 'Creating profile…'; }
     if (successBanner) successBanner.style.display = 'none';
     if (errorBanner)   { errorBanner.style.display = 'none'; errorBanner.textContent = ''; }
 
-    // Collect fields
     var fd          = new FormData(regForm);
     var firstname   = (fd.get('firstname')    || '').trim();
     var lastname    = (fd.get('lastname')     || '').trim();
@@ -2006,114 +2034,173 @@ document.addEventListener('DOMContentLoaded', function() {
     var phone       = (fd.get('phone')        || '').trim();
     var nationality = (fd.get('nationality')  || '').trim();
     var party_size  = (fd.get('party_size')   || '').trim();
-    var arrival     = fd.get('arrival')     || null;
-    var departure   = fd.get('departure')   || null;
+    var arrival     = fd.get('arrival')       || null;
+    var departure   = fd.get('departure')     || null;
     var special_req = (fd.get('requirements') || '').trim();
+    var password    = (fd.get('password')     || '').trim();
+    var pwdConfVal  = (fd.get('password_confirm') || '').trim();
 
-    var btnLabel = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →';
-
+    // Validate
     if (!firstname || !email || !phone) {
-      var msg = lang==='fr' ? '⚠️ Prénom, email et téléphone sont obligatoires.' : '⚠️ First name, email and phone are required.';
+      showRegError(lang==='fr' ? '⚠️ Prénom, email et téléphone sont obligatoires.' : '⚠️ First name, email and phone are required.');
       if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
-      if (errorBanner) { errorBanner.textContent = msg; errorBanner.style.display = 'block'; }
+      return;
+    }
+    if (!password || password.length < 8) {
+      showRegError(lang==='fr' ? '⚠️ Le mot de passe doit contenir au moins 8 caractères.' : '⚠️ Password must be at least 8 characters.');
+      if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+      return;
+    }
+    if (password !== pwdConfVal) {
+      showRegError(lang==='fr' ? '⚠️ Les mots de passe ne correspondent pas.' : '⚠️ Passwords do not match.');
+      if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
       return;
     }
 
-    var verif_code = Math.random().toString(36).substring(2,8).toUpperCase();
-    var supaOk = false, fsOk = false;
     var errors = [];
 
-    // ── 1. Supabase insert (primary) ──────────────────────────
-    try {
-      var supaAvailable = typeof supa !== 'undefined';
-      if (supaAvailable) {
+    // ── 1. Supabase Auth signUp (creates auth user, sends confirmation email) ──
+    var authUserId = null;
+    if (typeof supa !== 'undefined') {
+      try {
+        var { data: authData, error: authErr } = await supa.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: { name: name, phone: phone }
+          }
+        });
+        if (authErr) {
+          if (authErr.message.toLowerCase().includes('already registered') ||
+              authErr.message.toLowerCase().includes('already in use') ||
+              authErr.message.toLowerCase().includes('user already')) {
+            showRegError(lang==='fr'
+              ? '⚠️ Cet email est déjà enregistré. <a href="#" onclick="openLogin();return false" style="color:var(--ocean)">Connectez-vous →</a>'
+              : '⚠️ This email is already registered. <a href="#" onclick="openLogin();return false" style="color:var(--ocean)">Sign in instead →</a>');
+            if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+            return;
+          }
+          errors.push('Auth signup: ' + authErr.message);
+        } else if (authData && authData.user) {
+          authUserId = authData.user.id;
+        }
+      } catch(err) {
+        errors.push('Auth error: ' + err.message);
+      }
+
+      // ── 2. Insert guest profile into guests table ──────────────
+      try {
         var guestRow = {
           name, email, phone, nationality, party_size,
           arrival: arrival || null, departure: departure || null,
-          special_req, verified: false,
-          email_verified: false, wa_verified: false,
-          verif_code, payment_pref: '', quickbooks_id: '', stripe_id: '', notes: ''
+          special_req, verified: false, email_verified: false,
+          wa_verified: false, verif_code: Math.random().toString(36).substring(2,8).toUpperCase(),
+          payment_pref: '', quickbooks_id: '', stripe_id: '', notes: ''
         };
-        var supaResult = await supa.from('guests').insert([guestRow]).select();
-        if (supaResult.error) {
-          if (supaResult.error.code === '23505') {
-            // Duplicate — update existing
-            var upResult = await supa.from('guests').update({
-              name, phone, nationality, party_size,
-              arrival: arrival || null, departure: departure || null, special_req
-            }).eq('email', email);
-            supaOk = !upResult.error;
-            if (upResult.error) errors.push('Supabase update: ' + upResult.error.message);
+        var { error: insertErr } = await supa.from('guests').insert([guestRow]);
+        if (insertErr) {
+          if (insertErr.code === '23505') {
+            // Duplicate email — update profile instead
+            await supa.from('guests').update({ name, phone, nationality, party_size, arrival, departure, special_req }).eq('email', email);
           } else {
-            errors.push('Supabase: ' + supaResult.error.message);
+            errors.push('Profile save: ' + insertErr.message);
           }
-        } else {
-          supaOk = true;
-          // Cache profile for login
-          try {
-            var profiles = JSON.parse(localStorage.getItem('ev_user_profiles') || '[]');
-            profiles = profiles.filter(function(p){ return p.email !== email; });
-            profiles.push({ name, email, phone, nationality, party_size, arrival, departure });
-            localStorage.setItem('ev_user_profiles', JSON.stringify(profiles));
-          } catch(e) {}
         }
+      } catch(err) {
+        errors.push('Profile error: ' + err.message);
       }
-    } catch(err) {
-      errors.push('Supabase error: ' + err.message);
+    } else {
+      errors.push('Supabase not loaded');
     }
 
-    // ── 2. Formspree (email notification — always fires) ───────
+    // ── 3. Formspree email notification ────────────────────────────
     try {
-      var fsBody = new FormData(regForm);
-      var fsRes  = await fetch('https://formspree.io/f/mdayoknj', {
-        method: 'POST', body: fsBody, headers: { 'Accept': 'application/json' }
-      });
-      if (fsRes.ok) {
-        fsOk = true;
-      } else {
-        var fsJson = await fsRes.json().catch(function(){return {};});
-        errors.push('Formspree ' + fsRes.status + ': ' + (fsJson.error || 'unknown'));
-      }
-    } catch(err) {
-      errors.push('Formspree network: ' + err.message);
-    }
+      var fsBody = new FormData();
+      fsBody.append('name', name); fsBody.append('email', email);
+      fsBody.append('phone', phone); fsBody.append('nationality', nationality);
+      fsBody.append('party_size', party_size);
+      if (arrival) fsBody.append('arrival', arrival);
+      if (departure) fsBody.append('departure', departure);
+      fsBody.append('_subject', 'New Guest Registration — ' + name + ' — Evalia Mauritius');
+      await fetch('https://formspree.io/f/mdayoknj', { method:'POST', body:fsBody, headers:{'Accept':'application/json'} });
+    } catch(e) { errors.push('Notification: ' + e.message); }
 
-    // ── 3. GitHub write (fallback, silent) ─────────────────────
-    try {
-      var ghTk = localStorage.getItem('ev_gh') || localStorage.getItem('ev_token') || '';
-      if (ghTk) {
-        var slug   = 'guest-' + Date.now();
-        var ghData = JSON.stringify({name,email,phone,nationality,party_size,arrival,departure,special_req,verif_code,registered_at:new Date().toISOString()},null,2);
-        var ghHdr  = {'Authorization':'Bearer '+ghTk,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'};
-        await fetch('https://api.github.com/repos/cmarcdavid/evalia-web/contents/_data/guests/'+slug+'.json',{
-          method:'PUT', headers:ghHdr,
-          body:JSON.stringify({message:'guest: registration '+slug, content:btoa(unescape(encodeURIComponent(ghData))), branch:'main'})
-        });
-      }
-    } catch(e) { /* silent */ }
-
-    // ── Result ─────────────────────────────────────────────────
-    if (supaOk || fsOk) {
+    // ── Show result ─────────────────────────────────────────────────
+    if (authUserId || errors.filter(e => !e.startsWith('Notification') && !e.startsWith('Profile save: null')).length === 0) {
       regForm.reset();
+      if (document.getElementById('regPwdMatch')) document.getElementById('regPwdMatch').textContent = '';
       if (successBanner) {
-        successBanner.textContent = lang==='fr'
-          ? '✅ Profil créé ! Bienvenue chez Evalia — notre équipe vous contactera bientôt sur WhatsApp.'
-          : '✅ Profile created! Welcome to Evalia — our team will reach out on WhatsApp shortly.';
+        successBanner.innerHTML = lang==='fr'
+          ? '✅ <strong>Profil créé !</strong> Un email de confirmation a été envoyé à <strong>' + email + '</strong>.<br>Cliquez sur le lien dans l\'email pour activer votre compte, puis <a href="#" onclick="openLogin();return false" style="color:var(--palm);font-weight:600">connectez-vous ici →</a>'
+          : '✅ <strong>Profile created!</strong> A confirmation email has been sent to <strong>' + email + '</strong>.<br>Click the link in the email to activate your account, then <a href="#" onclick="openLogin();return false" style="color:var(--palm);font-weight:600">sign in here →</a>';
         successBanner.style.display = 'block';
       }
       if (btn) { btn.disabled = false; btn.textContent = '✅ ' + (lang==='fr' ? 'Profil créé !' : 'Profile Created!'); btn.style.background = 'var(--palm)'; }
-      showToast('🎉', lang==='fr' ? 'Profil créé ! Bienvenue 🌴' : 'Profile created! Welcome to Evalia 🌴');
-      setTimeout(function(){ if(btn){ btn.disabled=false; btn.textContent=btnLabel; btn.style.background=''; } }, 6000);
+      showToast('📧', lang==='fr' ? 'Vérifiez votre email pour activer votre compte' : 'Check your email to activate your account');
+      setTimeout(function(){ if(btn){ btn.disabled=false; btn.textContent=btnLabel; btn.style.background=''; } }, 8000);
     } else {
-      var errMsg = lang==='fr'
-        ? '⚠️ Impossible de créer le profil. Contactez-nous sur WhatsApp : +230 5724 2099'
-        : '⚠️ Could not create profile. Please WhatsApp us at +230 5724 2099';
-      if (errorBanner) { errorBanner.textContent = errMsg; errorBanner.style.display = 'block'; }
+      console.error('Registration errors:', errors);
+      showRegError(lang==='fr'
+        ? '⚠️ Impossible de créer le profil. WhatsApp : +230 5724 2099'
+        : '⚠️ Could not create profile. Please WhatsApp us at +230 5724 2099');
       if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
-      console.error('Registration failed:', errors.join(' | '));
+    }
+
+    function showRegError(msg) {
+      if (errorBanner) { errorBanner.innerHTML = msg; errorBanner.style.display = 'block'; }
     }
   });
 });
+
+// ── AUTH STATE ──────────────────────────────────────────────────────────────
+// Initialises session on page load and listens for changes
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof supa === 'undefined') return;
+  // Check for existing session
+  supa.auth.getSession().then(function(result) {
+    var session = result && result.data && result.data.session;
+    if (session) updateNavForUser(session.user);
+  });
+  // Listen for sign in / sign out
+  supa.auth.onAuthStateChange(function(event, session) {
+    if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+      if (session) updateNavForUser(session.user);
+    }
+    if (event === 'SIGNED_OUT') updateNavLoggedOut();
+    if (event === 'EMAIL_CONFIRMED') {
+      showToast('✅', 'Email confirmed! You can now sign in.');
+    }
+  });
+});
+
+function updateNavForUser(user) {
+  var metaName = (user.user_metadata && user.user_metadata.name) || '';
+  var firstname = metaName.split(' ')[0] || user.email.split('@')[0];
+  var signIn    = document.getElementById('navSignInBtn');
+  var register  = document.getElementById('navRegisterBtn');
+  var navA      = document.getElementById('navActions');
+  if (!navA) return;
+  // Replace Sign In + Register buttons with user name + Sign Out
+  navA.innerHTML =
+    '<span style="font-size:13px;font-weight:500;color:var(--muted)">👤 ' + firstname + '</span>' +
+    '<button class="btn-outline" onclick="doSignOut()" style="font-size:12px">Sign Out</button>' +
+    '<button class="btn-fill" onclick="scrollToSection(\'booking\')">Book Now</button>';
+}
+
+function updateNavLoggedOut() {
+  var navA = document.getElementById('navActions');
+  if (!navA) return;
+  navA.innerHTML =
+    '<button class="btn-outline" id="navSignInBtn" onclick="openLogin()">Sign In</button>' +
+    '<button class="btn-outline" id="navRegisterBtn" onclick="scrollToSection(\'register\')">Register</button>' +
+    '<button class="btn-fill" onclick="scrollToSection(\'booking\')">Book Now</button>';
+}
+
+async function doSignOut() {
+  if (typeof supa !== 'undefined') await supa.auth.signOut();
+  updateNavLoggedOut();
+  showToast('👋', 'Signed out successfully.');
+}
 
 // ── AVAILABILITY CHECK (Supabase) ─────────────────────────────────────────
 // Called when dates change in the booking wizard
@@ -2822,38 +2909,61 @@ function switchLoginTab(tab, el){
   document.getElementById('loginPane').style.display  = tab==='login'  ? '' : 'none';
   document.getElementById('signupPane').style.display = tab==='signup' ? '' : 'none';
 }
-function doLogin(){
+async function doLogin(){
   var email = (document.getElementById('loginEmail').value||'').trim();
   var pwd   = (document.getElementById('loginPwd').value||'').trim();
   var st    = document.getElementById('loginStatus');
-  if(!email||!pwd){st.style.cssText='display:block;background:rgba(232,133,90,.1);color:#c45a30';st.textContent='Please fill in both fields.';return;}
-  st.style.cssText='display:block;background:rgba(0,107,143,.08);color:var(--ocean)';
-  st.textContent='Signing in…';
-  // Supabase auth will go here in Phase 2 — for now check localStorage guest profile
-  setTimeout(function(){
-    var guests = JSON.parse(localStorage.getItem('ev_user_profiles')||'[]');
-    var match  = guests.find(function(g){return g.email===email;});
-    if(match){
-      localStorage.setItem('ev_current_user', JSON.stringify(match));
-      closeLogin();
-      showToast('✅','Welcome back, '+match.name+'!');
-      updateNavForLoggedIn(match);
+  function setStatus(msg, isError) {
+    if (!st) return;
+    st.innerHTML = msg;
+    st.style.cssText = 'display:block;padding:10px;border-radius:8px;text-align:center;font-size:13px;' +
+      (isError ? 'background:rgba(232,133,90,.1);color:#c45a30' : 'background:rgba(0,107,143,.08);color:var(--ocean)');
+  }
+  if (!email || !pwd) { setStatus('Please fill in both fields.', true); return; }
+  setStatus('Signing in…', false);
+
+  if (typeof supa === 'undefined') {
+    setStatus('Auth service unavailable — please try again shortly.', true); return;
+  }
+
+  var { data, error } = await supa.auth.signInWithPassword({ email, password: pwd });
+
+  if (error) {
+    var msg = error.message;
+    if (msg.toLowerCase().includes('email not confirmed') || msg.toLowerCase().includes('not confirmed')) {
+      setStatus('⚠️ Please confirm your email first — check your inbox for the Evalia confirmation link.', true);
+    } else if (msg.toLowerCase().includes('invalid') || msg.toLowerCase().includes('credentials') || msg.toLowerCase().includes('wrong')) {
+      setStatus('⚠️ Wrong email or password. <a href="#" onclick="resetPassword();return false" style="color:var(--ocean)">Forgot password?</a>', true);
+    } else if (msg.toLowerCase().includes('too many')) {
+      setStatus('⚠️ Too many attempts — please wait a moment and try again.', true);
     } else {
-      st.style.cssText='display:block;background:rgba(232,133,90,.1);color:#c45a30';
-      st.textContent='No account found. Please register first.';
+      setStatus('⚠️ ' + msg, true);
     }
-  }, 600);
+    return;
+  }
+
+  if (data && data.user) {
+    closeLogin();
+    updateNavForUser(data.user);
+    var metaName = (data.user.user_metadata && data.user.user_metadata.name) || data.user.email.split('@')[0];
+    showToast('✅', 'Welcome back, ' + metaName.split(' ')[0] + '! 🌴');
+  }
 }
-function updateNavForLoggedIn(user){
-  var actionsDiv = document.querySelector('.nav-actions');
-  if(!actionsDiv) return;
-  actionsDiv.innerHTML = '<button class="btn-fill" onclick="openLogin()" title="My Profile">👤 '+((user.name||'').split(' ')[0]||'Profile')+'</button>';
+
+async function resetPassword() {
+  var email = (document.getElementById('loginEmail').value||'').trim();
+  if (!email) { document.getElementById('loginStatus').innerHTML = 'Enter your email above first.'; return; }
+  if (typeof supa === 'undefined') return;
+  var { error } = await supa.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/index.html'
+  });
+  var st = document.getElementById('loginStatus');
+  if (st) {
+    st.innerHTML = error ? '⚠️ ' + error.message : '📧 Password reset email sent — check your inbox.';
+    st.style.cssText = 'display:block;padding:10px;border-radius:8px;text-align:center;font-size:13px;' +
+      (error ? 'background:rgba(232,133,90,.1);color:#c45a30' : 'background:rgba(45,106,79,.12);color:var(--palm)');
+  }
 }
-// Check on load
-(function(){
-  var u = localStorage.getItem('ev_current_user');
-  if(u){try{updateNavForLoggedIn(JSON.parse(u));}catch(e){}}
-})();
 </script>
 </body>
 </html>

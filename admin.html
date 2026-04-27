@@ -1556,9 +1556,9 @@ function gp(id,navEl){
   document.querySelectorAll('.si[data-page]').forEach(e=>e.classList.remove('active'));
   if(navEl)navEl.classList.add('active');
   document.querySelector('.content').scrollTop=0;
-  if(id==='guests'  && token) loadGuests(false);
+  if(id==='guests') loadGuests(false);
   if(id==='reviews' && token) loadReviews(false);
-  if(id==='bookings' && token){ loadBookings(false); loadAvailability(); }
+  if(id==='bookings'){ loadBookings(false); loadAvailability(); }
 }
 function md(){dirty=true;document.getElementById('sbanner').classList.add('show');}
 function hideBanner(){dirty=false;document.getElementById('sbanner').classList.remove('show');}
@@ -1581,31 +1581,56 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;'
 let G = { guests: [], reviews: [] };
 
 async function loadGuests(fb) {
+  const list = document.getElementById('guestList');
+  if (list) list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mu)">Loading from Supabase…</div>';
+
   // ── Primary: Supabase ──────────────────────────────────────
-  try {
-    const { data, error } = await supa.from('guests').select('*').order('created_at', {ascending: false});
-    if (!error && data) {
-      G.guests = data.map(g => ({
-        ...g,
-        registered_at: g.created_at,
-        // Compatibility shims for existing render/detail functions
-        _slug: g.id,
-        _path: null,
-        _sha:  null
-      }));
-      renderGuests();
-      if (fb) toast('✅', G.guests.length + ' guests loaded from Supabase');
-      return;
+  if (typeof supa !== 'undefined') {
+    try {
+      const { data, error } = await supa.from('guests').select('*').order('created_at', {ascending: false});
+      if (error) {
+        // Show visible error with fix instructions
+        if (list) list.innerHTML = `
+          <div style="background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);border-radius:9px;padding:16px;font-size:12.5px;line-height:1.7">
+            <strong style="color:#c0392b">⚠️ Supabase error: ${esc(error.message)}</strong><br>
+            Code: ${esc(error.code||'—')}<br><br>
+            <strong>Fix:</strong> Go to Supabase → SQL Editor → run:<br>
+            <code style="background:var(--sd);padding:4px 8px;border-radius:4px;display:block;margin-top:6px;font-size:11px">CREATE POLICY IF NOT EXISTS "allow_all_guests" ON guests FOR ALL USING (true) WITH CHECK (true);</code>
+            <button class="btn bg bsm" style="margin-top:8px" onclick="loadGuests(true)">🔄 Retry after fix</button>
+          </div>`;
+        toast('⚠️', 'Supabase: ' + error.message);
+      } else {
+        G.guests = (data || []).map(g => ({
+          ...g,
+          registered_at: g.created_at,
+          _slug: g.id,
+          _path: null,
+          _sha:  null
+        }));
+        renderGuests();
+        if (fb) toast('✅', G.guests.length + ' guest' + (G.guests.length!==1?'s':'') + ' loaded');
+        return;
+      }
+    } catch(supaErr) {
+      if (list) list.innerHTML = `<div style="color:#c0392b;padding:16px;font-size:12px">⚠️ Supabase connection error: ${esc(supaErr.message)}</div>`;
+      toast('⚠️', 'Supabase error: ' + supaErr.message);
     }
-  } catch(supaErr) {
-    console.warn('Supabase guests load failed, falling back to GitHub:', supaErr.message);
   }
-  // ── Fallback: GitHub ───────────────────────────────────────
+
+  // ── Fallback: GitHub (only if token available) ─────────────
+  if (!token) {
+    if (list && list.innerHTML.includes('Loading')) {
+      list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mu)">Not connected to GitHub or Supabase. Connect via the connect page.</div>';
+    }
+    return;
+  }
   try {
+    if (list) list.innerHTML = '<div style="text-align:center;padding:12px;color:var(--mu);font-size:12px">Trying GitHub fallback…</div>';
     const r = await ghG(`/repos/${REPO}/contents/_data/guests?ref=${BRANCH}`);
     if (!r.ok) { G.guests = []; renderGuests(); return; }
     const files = await r.json();
     const jsons = files.filter(f => f.name.endsWith('.json'));
+    if (!jsons.length) { G.guests = []; renderGuests(); return; }
     G.guests = await Promise.all(jsons.map(async f => {
       const fr = await ghG(`/repos/${REPO}/contents/${f.path}?ref=${BRANCH}`);
       const fd = await fr.json();
@@ -1615,7 +1640,12 @@ async function loadGuests(fb) {
     }));
     renderGuests();
     if (fb) toast('✅', G.guests.length + ' guests loaded (GitHub fallback)');
-  } catch(e) { toast('⚠️', 'Guests load error: ' + e.message); G.guests = []; renderGuests(); }
+  } catch(e) {
+    if (list) list.innerHTML = '<div style="color:#c0392b;padding:16px;font-size:12px">⚠️ Load error: ' + esc(e.message) + '</div>';
+    toast('⚠️', 'Load error: ' + e.message);
+    G.guests = [];
+    renderGuests();
+  }
 }
 
 function renderGuests(filter) {
