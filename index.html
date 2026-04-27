@@ -821,14 +821,14 @@
     </div>
     <div class="reg-form-card">
       <div class="form-title" data-i18n="reg_form_title">Create Your Profile</div>
-      <!-- Global success / error banners for registration form -->
-      <div data-fs-success style="display:none;background:rgba(45,106,79,.12);color:#2D6A4F;padding:14px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;text-align:center">
-        ✅ Profile created! Welcome to Evalia — watch for our WhatsApp welcome message.
-      </div>
-      <div data-fs-error style="display:none;background:rgba(232,133,90,.1);color:#c45a30;padding:14px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;text-align:center"></div>
 
       <form id="regForm">
         <input type="hidden" name="_subject" value="New Guest Registration — Evalia Mauritius"/>
+        <!-- Status banners — IDs so they're unambiguous -->
+        <div id="regSuccess" style="display:none;background:rgba(45,106,79,.12);color:#2D6A4F;padding:14px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;text-align:center">
+          ✅ Profile created! Welcome to Evalia — watch for our WhatsApp welcome message.
+        </div>
+        <div id="regError" style="display:none;background:rgba(232,133,90,.1);color:#c45a30;padding:14px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;text-align:center"></div>
         <div class="form-row2">
           <div class="fg">
             <label class="fl" data-i18n="reg_fname">First Name</label>
@@ -905,7 +905,7 @@
           <label class="fl" data-i18n="reg_special">Special Requirements</label>
           <textarea class="fi" name="requirements" rows="2" placeholder="Dietary needs, accessibility, medical info…" style="resize:vertical" data-fs-field></textarea>
         </div>
-        <button type="submit" class="btn-register" data-fs-submit-btn data-i18n="reg_btn">Create My Profile →</button>
+        <button type="submit" id="regSubmitBtn" class="btn-register" data-i18n="reg_btn">Create My Profile →</button>
         <div class="form-note" style="margin-top:12px"><span data-i18n="reg_privacy">🔒 Your data is private and secure. We never share your details.</span></div>
       </form>
     </div>
@@ -1986,14 +1986,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
   regForm.addEventListener('submit', async function(e) {
     e.preventDefault();
-    var btn          = regForm.querySelector('[data-fs-submit-btn]');
-    var card         = regForm.closest('.reg-form-card');
-    var successBanner = card ? card.querySelector('[data-fs-success]') : null;
-    var errorBanner   = card ? card.querySelector('[data-fs-error]')   : null;
 
-    if (btn) { btn.disabled = true; btn.textContent = lang==='fr' ? 'Envoi…' : 'Sending…'; }
+    // Use IDs — unambiguous, no querySelector collision
+    var btn            = document.getElementById('regSubmitBtn');
+    var successBanner  = document.getElementById('regSuccess');
+    var errorBanner    = document.getElementById('regError');
+
+    // Reset UI
+    if (btn)           { btn.disabled = true; btn.textContent = lang==='fr' ? 'Envoi en cours…' : 'Sending…'; }
     if (successBanner) successBanner.style.display = 'none';
-    if (errorBanner)   errorBanner.style.display   = 'none';
+    if (errorBanner)   { errorBanner.style.display = 'none'; errorBanner.textContent = ''; }
 
     // Collect fields
     var fd          = new FormData(regForm);
@@ -2004,93 +2006,111 @@ document.addEventListener('DOMContentLoaded', function() {
     var phone       = (fd.get('phone')        || '').trim();
     var nationality = (fd.get('nationality')  || '').trim();
     var party_size  = (fd.get('party_size')   || '').trim();
-    var arrival     = (fd.get('arrival')      || '') || null;
-    var departure   = (fd.get('departure')    || '') || null;
+    var arrival     = fd.get('arrival')     || null;
+    var departure   = fd.get('departure')   || null;
     var special_req = (fd.get('requirements') || '').trim();
+
+    var btnLabel = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →';
 
     if (!firstname || !email || !phone) {
       var msg = lang==='fr' ? '⚠️ Prénom, email et téléphone sont obligatoires.' : '⚠️ First name, email and phone are required.';
-      if (btn) { btn.disabled = false; btn.textContent = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →'; }
+      if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
       if (errorBanner) { errorBanner.textContent = msg; errorBanner.style.display = 'block'; }
       return;
     }
 
     var verif_code = Math.random().toString(36).substring(2,8).toUpperCase();
     var supaOk = false, fsOk = false;
+    var errors = [];
 
-    // ── 1. Supabase insert ────────────────────────────────────
+    // ── 1. Supabase insert (primary) ──────────────────────────
     try {
-      var { data: supaData, error: supaErr } = await supa.from('guests').insert([{
-        name, email, phone, nationality, party_size,
-        arrival: arrival || null, departure: departure || null,
-        special_req, verified: false,
-        email_verified: false, wa_verified: false,
-        verif_code, payment_pref: '', quickbooks_id: '', stripe_id: '', notes: ''
-      }]).select();
-
-      if (supaErr) {
-        if (supaErr.code === '23505') {
-          // Duplicate email — update instead
-          var { error: upErr } = await supa.from('guests').update({
-            name, phone, nationality, party_size,
-            arrival: arrival || null, departure: departure || null, special_req
-          }).eq('email', email);
-          if (!upErr) supaOk = true;
-          else throw new Error(upErr.message);
+      var supaAvailable = typeof supa !== 'undefined';
+      if (supaAvailable) {
+        var guestRow = {
+          name, email, phone, nationality, party_size,
+          arrival: arrival || null, departure: departure || null,
+          special_req, verified: false,
+          email_verified: false, wa_verified: false,
+          verif_code, payment_pref: '', quickbooks_id: '', stripe_id: '', notes: ''
+        };
+        var supaResult = await supa.from('guests').insert([guestRow]).select();
+        if (supaResult.error) {
+          if (supaResult.error.code === '23505') {
+            // Duplicate — update existing
+            var upResult = await supa.from('guests').update({
+              name, phone, nationality, party_size,
+              arrival: arrival || null, departure: departure || null, special_req
+            }).eq('email', email);
+            supaOk = !upResult.error;
+            if (upResult.error) errors.push('Supabase update: ' + upResult.error.message);
+          } else {
+            errors.push('Supabase: ' + supaResult.error.message);
+          }
         } else {
-          throw new Error(supaErr.message);
+          supaOk = true;
+          // Cache profile for login
+          try {
+            var profiles = JSON.parse(localStorage.getItem('ev_user_profiles') || '[]');
+            profiles = profiles.filter(function(p){ return p.email !== email; });
+            profiles.push({ name, email, phone, nationality, party_size, arrival, departure });
+            localStorage.setItem('ev_user_profiles', JSON.stringify(profiles));
+          } catch(e) {}
         }
-      } else {
-        supaOk = true;
-        // Cache in localStorage for login feature
-        var profile = { name, email, phone, nationality, party_size, arrival, departure };
-        var profiles = JSON.parse(localStorage.getItem('ev_user_profiles') || '[]');
-        profiles = profiles.filter(function(p){ return p.email !== email; });
-        profiles.push(profile);
-        localStorage.setItem('ev_user_profiles', JSON.stringify(profiles));
       }
-    } catch(supaErr) {
-      console.warn('Supabase guest insert failed:', supaErr.message);
+    } catch(err) {
+      errors.push('Supabase error: ' + err.message);
     }
 
-    // ── 2. Formspree email notification (always) ──────────────
+    // ── 2. Formspree (email notification — always fires) ───────
     try {
-      var fsRes = await fetch('https://formspree.io/f/mdayoknj', {
-        method: 'POST', body: new FormData(regForm), headers: { 'Accept': 'application/json' }
+      var fsBody = new FormData(regForm);
+      var fsRes  = await fetch('https://formspree.io/f/mdayoknj', {
+        method: 'POST', body: fsBody, headers: { 'Accept': 'application/json' }
       });
-      fsOk = fsRes.ok;
-    } catch(fsErr) {
-      console.warn('Formspree notification failed:', fsErr.message);
+      if (fsRes.ok) {
+        fsOk = true;
+      } else {
+        var fsJson = await fsRes.json().catch(function(){return {};});
+        errors.push('Formspree ' + fsRes.status + ': ' + (fsJson.error || 'unknown'));
+      }
+    } catch(err) {
+      errors.push('Formspree network: ' + err.message);
     }
 
-    // ── 3. GitHub fallback (non-critical, only if admin token exists) ─
+    // ── 3. GitHub write (fallback, silent) ─────────────────────
     try {
       var ghTk = localStorage.getItem('ev_gh') || localStorage.getItem('ev_token') || '';
-      if (ghTk && !supaOk) {
-        var slug    = 'guest-' + Date.now();
-        var content = JSON.stringify({name,email,phone,nationality,party_size,arrival,departure,special_req,verif_code,registered_at:new Date().toISOString()},null,2);
-        var ghHdr   = {'Authorization':'Bearer '+ghTk,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'};
-        var ghBody  = {message:'guest: registration '+slug, content:btoa(unescape(encodeURIComponent(content))), branch:'main'};
-        await fetch('https://api.github.com/repos/cmarcdavid/evalia-web/contents/_data/guests/'+slug+'.json',{method:'PUT',headers:ghHdr,body:JSON.stringify(ghBody)});
+      if (ghTk) {
+        var slug   = 'guest-' + Date.now();
+        var ghData = JSON.stringify({name,email,phone,nationality,party_size,arrival,departure,special_req,verif_code,registered_at:new Date().toISOString()},null,2);
+        var ghHdr  = {'Authorization':'Bearer '+ghTk,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'};
+        await fetch('https://api.github.com/repos/cmarcdavid/evalia-web/contents/_data/guests/'+slug+'.json',{
+          method:'PUT', headers:ghHdr,
+          body:JSON.stringify({message:'guest: registration '+slug, content:btoa(unescape(encodeURIComponent(ghData))), branch:'main'})
+        });
       }
-    } catch(ghErr) { /* silent */ }
+    } catch(e) { /* silent */ }
 
-    // ── Result ────────────────────────────────────────────────
-    var btnLabel = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →';
+    // ── Result ─────────────────────────────────────────────────
     if (supaOk || fsOk) {
       regForm.reset();
-      if (successBanner) successBanner.style.display = 'block';
-      if (btn) { btn.disabled = false; btn.textContent = '✅ ' + (lang==='fr' ? 'Profil créé !' : 'Profile Created!'); btn.style.background = 'var(--palm)'; }
-      showToast('🎉', lang==='fr' ? 'Profil créé ! Bienvenue chez Evalia 🌴' : 'Profile created! Welcome to Evalia 🌴');
-      setTimeout(function(){ if(btn){ btn.textContent=btnLabel; btn.style.background=''; } }, 5000);
-    } else {
-      if (errorBanner) {
-        errorBanner.textContent = lang==='fr'
-          ? '⚠️ Erreur réseau. WhatsApp : +230 5724 2099'
-          : '⚠️ Network error. Please WhatsApp us at +230 5724 2099';
-        errorBanner.style.display = 'block';
+      if (successBanner) {
+        successBanner.textContent = lang==='fr'
+          ? '✅ Profil créé ! Bienvenue chez Evalia — notre équipe vous contactera bientôt sur WhatsApp.'
+          : '✅ Profile created! Welcome to Evalia — our team will reach out on WhatsApp shortly.';
+        successBanner.style.display = 'block';
       }
+      if (btn) { btn.disabled = false; btn.textContent = '✅ ' + (lang==='fr' ? 'Profil créé !' : 'Profile Created!'); btn.style.background = 'var(--palm)'; }
+      showToast('🎉', lang==='fr' ? 'Profil créé ! Bienvenue 🌴' : 'Profile created! Welcome to Evalia 🌴');
+      setTimeout(function(){ if(btn){ btn.disabled=false; btn.textContent=btnLabel; btn.style.background=''; } }, 6000);
+    } else {
+      var errMsg = lang==='fr'
+        ? '⚠️ Impossible de créer le profil. Contactez-nous sur WhatsApp : +230 5724 2099'
+        : '⚠️ Could not create profile. Please WhatsApp us at +230 5724 2099';
+      if (errorBanner) { errorBanner.textContent = errMsg; errorBanner.style.display = 'block'; }
       if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+      console.error('Registration failed:', errors.join(' | '));
     }
   });
 });
