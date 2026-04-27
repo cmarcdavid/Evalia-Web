@@ -1,0 +1,39 @@
+{
+  "name": "Studio Evalia",
+  "name_fr": "Studio Evalia",
+  "type": "Studio",
+  "location": "Albion, West Mauritius",
+  "location_fr": "Albion, Ouest de l'ile Maurice",
+  "description": "A beautifully designed studio apartment steps from one of Mauritius' most beautiful beaches. Perfect for couples seeking a stylish, intimate retreat with everything within reach.",
+  "description_fr": "Un studio magnifiquement conçu, à deux pas de l'une des plus belles plages de l'île Maurice. Idéal pour les couples en quête d'une escapade élégante et intime, avec toutes les commodités à proximité.",
+  "price": 50,
+  "max_guests": 2,
+  "bedrooms": 1,
+  "bathrooms": 1,
+  "min_stay": 4,
+  "cleaning_fee": 30,
+  "photo": "/images/IMG_5323.jpeg",
+  "photo_alt": "/images/Hero1.jpg",
+  "gallery": [
+    "/images/IMG_5323.jpeg",
+    "/images/IMG_5320.jpeg",
+    "/images/IMG_5322.jpeg",
+    "/images/IMG_5325.jpeg",
+    "/images/322D7F70-07E3-4F79-8C15-F0CBABFB689B_1_105_c.jpeg",
+    "/images/32C83BB4-4EA0-4E7C-98C9-0A434075D448_1_105_c.jpeg"
+  ],
+  "badge": "Available Now",
+  "badge_fr": "Disponible Maintenant",
+  "available": true,
+  "amenities": [
+    "WiFi",
+    "Air Con",
+    "Kitchenette",
+    "1 Bed",
+    "1 Bath",
+    "2 Guests"
+  ],
+  "_slug": "studio-evalia",
+  "_snapshot_ts": "2026-04-27T06:26:20.446Z",
+  "_snapshot_type": "property"
+}

@@ -10,15 +10,15 @@
   "hero_line2_fr": "Parfaitement Orchestré",
   "hero_sub": "From your villa to the open ocean — accommodation, excursions, food discovery and 24/7 concierge, all in one trusted platform.",
   "hero_sub_fr": "De votre villa à l'océan ouvert — hébergement, excursions, découverte culinaire et concierge 24h/24, tout sur une seule plateforme de confiance.",
-  "hero_photo": "/images/Hero.jpg",
-  "hero_photo2": "/images/Hero1.jpg",
-  "hero_photo3": "/images/Hero2.jpg",
-  "hero_photo4": "/images/Hero3.jpg",
-  "svc_accommodation_photo": "/images/Hero1.jpg",
-  "svc_boat_photo": "/images/Hero2.jpg",
-  "svc_nature_photo": "/images/Hero3.jpg",
+  "hero_photo": "/images/34306658-5499-4263-A7E6-4121B598AC41_1_105_c.jpeg",
+  "hero_photo2": "/images/726C0C36-2FE7-4925-87E9-48EFED25BF35_1_105_c.jpeg",
+  "hero_photo3": "/images/IMG_2171.jpeg",
+  "hero_photo4": "/images/322D7F70-07E3-4F79-8C15-F0CBABFB689B_1_105_c.jpeg",
+  "svc_accommodation_photo": "/images/IMG_5325.jpeg",
+  "svc_boat_photo": "/images/IMG_5167.jpeg",
+  "svc_nature_photo": "/images/IMG_3784.jpeg",
   "svc_food_photo": "/images/Host.jpg",
-  "svc_concierge_photo": "/images/Host.jpg",
+  "svc_concierge_photo": "/images/IMG_5327.jpeg",
   "svc_safe_photo": "",
   "svc_accommodation_active": true,
   "svc_boat_active": true,
@@ -34,5 +34,6 @@
     "con",
     "saf"
   ],
-  "svc_custom_cards": []
+  "svc_custom_cards": [],
+  "tiktok": ""
 }

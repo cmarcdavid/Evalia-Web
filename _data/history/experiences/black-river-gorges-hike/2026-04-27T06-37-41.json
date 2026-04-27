@@ -1,0 +1,25 @@
+{
+  "name": "Explore Hikes",
+  "name_fr": "Randonnée",
+  "category": "nature",
+  "icon": "🦜",
+  "description": "Explore Mauritius's breathtaking nature — waterfalls, endemic birds and stunning valley views.",
+  "description_fr": "Explorez la nature époustouflante de l'île Maurice : cascades, oiseaux endémiques et vues imprenables sur la vallée.",
+  "price": 55,
+  "unit": "person",
+  "duration": "Half - Full day",
+  "duration_fr": "Demi ou Journée complète",
+  "gallery": [
+    "/images/IMG_3838.jpeg",
+    "/images/IMG_3784.jpeg",
+    "/images/IMG_3930.jpeg",
+    "/images/IMG_3933.jpeg"
+  ],
+  "instagram": "",
+  "active": true,
+  "photo": "/images/IMG_3838.jpeg",
+  "type": "Experience",
+  "_slug": "black-river-gorges-hike",
+  "_snapshot_ts": "2026-04-27T06:37:41.548Z",
+  "_snapshot_type": "experience"
+}

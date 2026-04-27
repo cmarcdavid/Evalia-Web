@@ -1,21 +1,26 @@
 {
-  "name": "Black River Gorges Hike",
+  "name": "Explore Hikes",
   "name_fr": "Randonnée aux Gorges de la Rivière Noire",
   "category": "nature",
   "icon": "🦜",
-  "description": "Explore Mauritius's largest national park — waterfalls, endemic birds and stunning valley views.",
-  "description_fr": "Explorez le plus grand parc national de l'Île Maurice — cascades, oiseaux endémiques et vues époustouflantes sur les vallées.",
+  "description": "Explore Mauritius's breathtaking nature — waterfalls, endemic birds and stunning valley views.",
+  "description_fr": "Explorez la nature époustouflante de l'île Maurice : cascades, oiseaux endémiques et vues imprenables sur la vallée.",
   "price": 55,
   "unit": "person",
   "duration": "Full day",
   "duration_fr": "Journée complète",
   "gallery": [
-    "/images/Hero3.jpg"
+    "/images/IMG_3784.jpeg",
+    "/images/Hero3.jpg",
+    "/images/IMG_3838.jpeg",
+    "/images/IMG_3933.jpeg",
+    "/images/IMG_3930.jpeg"
   ],
   "instagram": "",
   "active": true,
-  "photo": "/images/Hero3.jpg",
+  "photo": "/images/IMG_3784.jpeg",
+  "type": "Experience",
   "_slug": "black-river-gorges-hike",
-  "_snapshot_ts": "2026-04-22T13:39:04.367Z",
+  "_snapshot_ts": "2026-04-27T06:43:32.107Z",
   "_snapshot_type": "experience"
 }
