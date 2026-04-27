@@ -581,11 +581,19 @@
   </div>
 </div>
 
+<!-- Supabase browser client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
 <script>
 // ═══════════════════════════════════════════════════════════════
 const REPO='cmarcdavid/evalia-web',BRANCH='main',API='https://api.github.com';
 const RAW=`https://raw.githubusercontent.com/${REPO}/${BRANCH}`;
 const CONC=3; // upload concurrency
+
+// ── Supabase ─────────────────────────────────────────────────
+const SUPA_URL = 'https://izqyegybvpuhvsvnznih.supabase.co';
+const SUPA_KEY = 'sb_publishable_fbAXOQZJPWis0bmnNm0xDQ_04scivPk';
+const supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
 let token=localStorage.getItem('ev_gh')||localStorage.getItem('ev_token')||'';
 let dirty=false;
@@ -1573,6 +1581,26 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;'
 let G = { guests: [], reviews: [] };
 
 async function loadGuests(fb) {
+  // ── Primary: Supabase ──────────────────────────────────────
+  try {
+    const { data, error } = await supa.from('guests').select('*').order('created_at', {ascending: false});
+    if (!error && data) {
+      G.guests = data.map(g => ({
+        ...g,
+        registered_at: g.created_at,
+        // Compatibility shims for existing render/detail functions
+        _slug: g.id,
+        _path: null,
+        _sha:  null
+      }));
+      renderGuests();
+      if (fb) toast('✅', G.guests.length + ' guests loaded from Supabase');
+      return;
+    }
+  } catch(supaErr) {
+    console.warn('Supabase guests load failed, falling back to GitHub:', supaErr.message);
+  }
+  // ── Fallback: GitHub ───────────────────────────────────────
   try {
     const r = await ghG(`/repos/${REPO}/contents/_data/guests?ref=${BRANCH}`);
     if (!r.ok) { G.guests = []; renderGuests(); return; }
@@ -1586,7 +1614,7 @@ async function loadGuests(fb) {
       return { ...JSON.parse(decoded), _path: f.path, _sha: fd.sha, _slug: f.name.replace('.json','') };
     }));
     renderGuests();
-    if (fb) toast('✅', G.guests.length + ' guests loaded');
+    if (fb) toast('✅', G.guests.length + ' guests loaded (GitHub fallback)');
   } catch(e) { toast('⚠️', 'Guests load error: ' + e.message); G.guests = []; renderGuests(); }
 }
 
@@ -1705,19 +1733,31 @@ function closeGuestDetail() {
   if (p) p.style.display = 'none';
 }
 
-async function verifyGuest(slug) {
+async function verifyGuest(slug, field) {
   const g = G.guests.find(x => x._slug === slug);
   if (!g) return;
   setBusy('Verifying…');
+  const updates = { verified: true };
+  if (field === 'email_verified') updates.email_verified = true;
+  if (field === 'wa_verified')    updates.wa_verified    = true;
+  Object.assign(g, updates);
+  // Supabase
   try {
-    const updated = { ...g, verified: true, verified_at: new Date().toISOString() };
-    const { _path, _sha, _slug, ...data } = updated;
-    await ghWrite(g._path, JSON.stringify(data, null, 2), 'admin: verify guest ' + g.name);
-    g.verified = true; g.verified_at = updated.verified_at;
-    renderGuests();
-    openGuestDetail(slug);
-    setOk('Verified ✓'); toast('✅', g.name + ' verified');
-  } catch(e) { setErr('Error'); toast('⚠️', 'Verify failed: ' + e.message); }
+    await supa.from('guests').update(updates).eq('id', slug);
+    renderGuests(); openGuestDetail(slug);
+    setOk('Verified ✓'); toast('✅', (g.name||'Guest') + ' ' + (field||'verified'));
+    return;
+  } catch(e) { console.warn('Supabase verify failed, trying GitHub:', e.message); }
+  // GitHub fallback
+  if (g._path) {
+    try {
+      const updated = { ...g, ...updates, verified_at: new Date().toISOString() };
+      const { _path, _sha, _slug, ...data } = updated;
+      await ghWrite(g._path, JSON.stringify(data, null, 2), 'admin: verify guest ' + g.name);
+    } catch(e) {}
+  }
+  renderGuests(); openGuestDetail(slug);
+  setOk('Verified ✓'); toast('✅', (g.name||'Guest') + ' verified');
 }
 
 async function editGuestNotes(slug) {
@@ -1980,12 +2020,37 @@ function clearBlock() {
 }
 
 async function saveAvailability() {
+  // Supabase: upsert all blocks
+  try {
+    const rows = Object.entries(CAL.blocks).map(([date, property]) => ({date, property}));
+    if (rows.length) {
+      const { error } = await supa.from('availability').upsert(rows, {onConflict: 'date,property'});
+      if (error) throw new Error(error.message);
+    }
+    return; // Supabase OK — no need to also write GitHub
+  } catch(supaErr) {
+    console.warn('Supabase availability save failed, falling back to GitHub:', supaErr.message);
+  }
+  // GitHub fallback
   try {
     await ghWrite('_data/availability.json', JSON.stringify(CAL.blocks, null, 2), 'admin: update availability');
   } catch(e) { toast('⚠️','Could not save availability: '+e.message); }
 }
 
 async function loadAvailability() {
+  // Supabase
+  try {
+    const { data, error } = await supa.from('availability').select('date, property');
+    if (!error && data) {
+      CAL.blocks = {};
+      data.forEach(function(row){ CAL.blocks[row.date] = row.property; });
+      calRender();
+      return;
+    }
+  } catch(supaErr) {
+    console.warn('Supabase availability load failed, trying GitHub:', supaErr.message);
+  }
+  // GitHub fallback
   try {
     const r = await ghG(`/repos/${REPO}/contents/_data/availability.json?ref=${BRANCH}`);
     if (r.ok) {
@@ -2002,6 +2067,30 @@ async function loadAvailability() {
 G.bookings = G.bookings || [];
 
 async function loadBookings(force) {
+  // ── Primary: Supabase ──────────────────────────────────────
+  try {
+    const { data, error } = await supa.from('bookings').select('*').order('created_at', {ascending: false});
+    if (!error && data) {
+      G.bookings = data.map(b => ({
+        ...b,
+        ref:       b.ref || b.id,
+        name:      b.guest_name  || b.name,
+        email:     b.guest_email || b.email,
+        phone:     b.guest_phone || b.phone,
+        services:  Array.isArray(b.services) ? b.services.join(', ') : (b.services || ''),
+        checkin:   b.checkin,
+        checkout:  b.checkout,
+        guests:    b.guests_count || b.guests,
+        _slug:     b.id,
+        _path:     null
+      }));
+      renderBookings(); updateBookingStats();
+      return;
+    }
+  } catch(supaErr) {
+    console.warn('Supabase bookings load failed, falling back to GitHub:', supaErr.message);
+  }
+  // ── Fallback: GitHub ───────────────────────────────────────
   if (!token) return;
   try {
     const r = await ghG(`/repos/${REPO}/contents/_data/bookings?ref=${BRANCH}`);
@@ -2054,15 +2143,22 @@ async function setBookingStatus(slug, status) {
   const b = G.bookings.find(x => x._slug === slug);
   if (!b) return;
   b.status = status;
+  // Supabase update
   try {
-    await ghWrite(b._path, JSON.stringify(b, null, 2), 'admin: booking '+status+' '+slug);
-    renderBookings(); updateBookingStats();
-    toast(status==='confirmed'?'✅':'🚫', 'Booking '+status);
-    if (status === 'confirmed' && b.phone) {
-      const wa = 'https://wa.me/'+b.phone.replace(/\D/g,'')+'?text='+encodeURIComponent('🌴 Hello '+b.name+'! Your Evalia booking (ref: '+b.ref+') is CONFIRMED. We\'ll send your payment link shortly. Welcome to Mauritius!');
-      window.open(wa, '_blank');
-    }
-  } catch(e) { toast('⚠️','Save failed: '+e.message); }
+    await supa.from('bookings').update({ status }).eq('id', slug);
+  } catch(e) { console.warn('Supabase booking status update failed:', e.message); }
+  // GitHub fallback
+  if (b._path) {
+    try {
+      await ghWrite(b._path, JSON.stringify(b, null, 2), 'admin: booking '+status+' '+slug);
+    } catch(e) {}
+  }
+  renderBookings(); updateBookingStats();
+  toast(status==='confirmed'?'✅':'🚫', 'Booking '+status);
+  if (status === 'confirmed' && b.phone) {
+    const wa = 'https://wa.me/'+b.phone.replace(/\D/g,'')+'?text='+encodeURIComponent('🌴 Hello '+b.name+'! Your Evalia booking (ref: '+b.ref+') is CONFIRMED. We\'ll send your payment link shortly. Welcome to Mauritius!');
+    window.open(wa, '_blank');
+  }
 }
 
 function updateBookingStats() {
@@ -2207,16 +2303,35 @@ function openGuestDetail(slug) {
 
 async function saveGuestPaymentDetails(slug) {
   const g = G.guests.find(x => x._slug === slug);
-  if (!g || !g._path) return;
-  g.payment_pref  = (document.getElementById('gd_payPref')||{}).value || g.payment_pref;
-  g.quickbooks_id = (document.getElementById('gd_qbId')||{}).value    || g.quickbooks_id;
+  if (!g) return;
+  g.payment_pref  = (document.getElementById('gd_payPref') ||{}).value || g.payment_pref;
+  g.quickbooks_id = (document.getElementById('gd_qbId')    ||{}).value || g.quickbooks_id;
   g.stripe_id     = (document.getElementById('gd_stripeId')||{}).value || g.stripe_id;
-  g.notes         = (document.getElementById('gd_notes')||{}).value    || g.notes;
+  g.notes         = (document.getElementById('gd_notes')   ||{}).value || g.notes;
+  // Supabase update
   try {
-    const {_slug, _path, _sha, ...data} = g;
-    await ghWrite(_path, JSON.stringify(data, null, 2), 'admin: guest payment details ' + g.name);
-    toast('✅', 'Guest details saved');
-  } catch(e) { toast('⚠️', 'Save failed: '+e.message); }
+    const { error } = await supa.from('guests').update({
+      payment_pref:  g.payment_pref,
+      quickbooks_id: g.quickbooks_id,
+      stripe_id:     g.stripe_id,
+      notes:         g.notes
+    }).eq('id', slug);
+    if (error) throw new Error(error.message);
+    toast('✅', 'Guest details saved to Supabase');
+    return;
+  } catch(supaErr) {
+    console.warn('Supabase guest update failed, trying GitHub:', supaErr.message);
+  }
+  // GitHub fallback
+  if (g._path) {
+    try {
+      const {_slug, _path, _sha, ...data} = g;
+      await ghWrite(_path, JSON.stringify(data, null, 2), 'admin: guest payment details ' + g.name);
+      toast('✅', 'Guest details saved');
+    } catch(e) { toast('⚠️', 'Save failed: '+e.message); }
+  } else {
+    toast('⚠️', 'Could not save — no path available');
+  }
 }
 
 function sendGuestWhatsApp() {

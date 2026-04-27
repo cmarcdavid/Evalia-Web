@@ -1328,6 +1328,18 @@
   </div>
 </div>
 
+<!-- Supabase browser client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+  /* Evalia — Supabase config
+   * These are safe to expose: anon key has RLS-restricted access only.
+   * Guests can INSERT their own row. Admin reads via service role in admin.html.
+   */
+  const SUPA_URL = 'https://izqyegybvpuhvsvnznih.supabase.co';
+  const SUPA_KEY = 'sb_publishable_fbAXOQZJPWis0bmnNm0xDQ_04scivPk';
+  const supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+</script>
+
 <script>
   /* Formspree Ajax shim — must come before the library loads */
   window.formspree = window.formspree || function() {
@@ -1960,140 +1972,180 @@ formspree('initForm', { formElement: '#modalForm',   formId: 'mdayoknj' });
 // but we still wire it so field errors work on steps 1-2
 formspree('initForm', { formElement: '#bookingForm', formId: 'mdayoknj' });
 
-// ── GUEST REGISTRATION → GITHUB ──────────────────────────────────────────
-// Writes guest JSON to _data/guests/<slug>.json via GitHub API.
-// Falls back gracefully: if GitHub write fails, Formspree email still fires.
-// Token is read from the same localStorage key the admin uses.
-// ─────────────────────────────────────────────────────────────────────────
-const GH_REPO   = 'cmarcdavid/evalia-web';
-const GH_BRANCH = 'main';
-const GH_API    = 'https://api.github.com';
+// ── GUEST REGISTRATION → SUPABASE (primary) + Formspree (email alert) ───────
+// Priority order:
+//   1. Supabase → real database, enables login, availability, admin management
+//   2. Formspree → email notification to you (always fires regardless)
+//   3. GitHub → legacy fallback (only if token exists in browser, non-critical)
+// ─────────────────────────────────────────────────────────────────────────────
 
-async function ghWriteGuest(path, content) {
-  var tk = localStorage.getItem('ev_gh') || localStorage.getItem('ev_token') || '';
-  if (!tk) throw new Error('no_token');
-  var headers = {
-    'Authorization': 'Bearer ' + tk,
-    'Accept': 'application/vnd.github.v3+json',
-    'Content-Type': 'application/json',
-    'X-GitHub-Api-Version': '2022-11-28'
-  };
-  // Check if file exists (get SHA)
-  var sha = null;
-  try {
-    var ex = await fetch(GH_API + '/repos/' + GH_REPO + '/contents/' + path + '?ref=' + GH_BRANCH, { headers });
-    if (ex.ok) { var exd = await ex.json(); sha = exd.sha; }
-  } catch(e) {}
-  var body = {
-    message: 'guest: registration ' + path,
-    content: btoa(unescape(encodeURIComponent(content))),
-    branch: GH_BRANCH
-  };
-  if (sha) body.sha = sha;
-  var r = await fetch(GH_API + '/repos/' + GH_REPO + '/contents/' + path, {
-    method: 'PUT', headers, body: JSON.stringify(body)
-  });
-  if (!r.ok) { var err = await r.json(); throw new Error(err.message || 'GitHub write failed'); }
-  return r.json();
-}
-
-// Registration form submit — intercepts native form submit
+// Registration form submit
 document.addEventListener('DOMContentLoaded', function() {
   var regForm = document.getElementById('regForm');
   if (!regForm) return;
 
   regForm.addEventListener('submit', async function(e) {
     e.preventDefault();
-    var btn = regForm.querySelector('[data-fs-submit-btn]');
-    var successBanner = regForm.closest('.reg-form-card').querySelector('[data-fs-success]');
-    var errorBanner   = regForm.closest('.reg-form-card').querySelector('[data-fs-error]');
-    if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+    var btn          = regForm.querySelector('[data-fs-submit-btn]');
+    var card         = regForm.closest('.reg-form-card');
+    var successBanner = card ? card.querySelector('[data-fs-success]') : null;
+    var errorBanner   = card ? card.querySelector('[data-fs-error]')   : null;
+
+    if (btn) { btn.disabled = true; btn.textContent = lang==='fr' ? 'Envoi…' : 'Sending…'; }
     if (successBanner) successBanner.style.display = 'none';
     if (errorBanner)   errorBanner.style.display   = 'none';
 
-    // Collect form data
-    var fd = new FormData(regForm);
-    var firstname = (fd.get('firstname') || '').trim();
-    var lastname  = (fd.get('lastname')  || '').trim();
-    var name      = (firstname + ' ' + lastname).trim();
-    var email     = (fd.get('email')     || '').trim();
-    var phone     = (fd.get('phone')     || '').trim();
-    var nationality = (fd.get('nationality') || '').trim();
-    var party_size  = (fd.get('party_size')  || '').trim();
-    var arrival     = (fd.get('arrival')     || '').trim();
-    var departure   = (fd.get('departure')   || '').trim();
+    // Collect fields
+    var fd          = new FormData(regForm);
+    var firstname   = (fd.get('firstname')    || '').trim();
+    var lastname    = (fd.get('lastname')     || '').trim();
+    var name        = (firstname + ' ' + lastname).trim();
+    var email       = (fd.get('email')        || '').trim();
+    var phone       = (fd.get('phone')        || '').trim();
+    var nationality = (fd.get('nationality')  || '').trim();
+    var party_size  = (fd.get('party_size')   || '').trim();
+    var arrival     = (fd.get('arrival')      || '') || null;
+    var departure   = (fd.get('departure')    || '') || null;
     var special_req = (fd.get('requirements') || '').trim();
 
-    // Basic required check
-    if (!firstname || !email || !phone || !arrival || !departure) {
+    if (!firstname || !email || !phone) {
+      var msg = lang==='fr' ? '⚠️ Prénom, email et téléphone sont obligatoires.' : '⚠️ First name, email and phone are required.';
       if (btn) { btn.disabled = false; btn.textContent = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →'; }
-      if (errorBanner) { errorBanner.textContent = lang==='fr' ? '⚠️ Veuillez remplir tous les champs obligatoires.' : '⚠️ Please fill in all required fields.'; errorBanner.style.display = 'block'; }
+      if (errorBanner) { errorBanner.textContent = msg; errorBanner.style.display = 'block'; }
       return;
     }
 
-    // Build guest record
-    var now  = new Date().toISOString();
-    var slug = 'guest-' + Date.now();
-    var guest = {
-      name, email, phone, nationality,
-      party_size, arrival, departure,
-      special_req,
-      registered_at: now,
-      verified: false,
-      email_verified: false,
-      wa_verified: false,
-      verif_code: Math.random().toString(36).substring(2,8).toUpperCase(),
-      services: [],
-      payment_pref: '',
-      quickbooks_id: '',
-      stripe_id: '',
-      notes: ''
-    };
+    var verif_code = Math.random().toString(36).substring(2,8).toUpperCase();
+    var supaOk = false, fsOk = false;
 
-    var ghOk = false;
-    // 1. Try to write to GitHub
+    // ── 1. Supabase insert ────────────────────────────────────
     try {
-      await ghWriteGuest('_data/guests/' + slug + '.json', JSON.stringify(guest, null, 2));
-      ghOk = true;
-    } catch(ghErr) {
-      // GitHub write failed (no token, rate-limit, network) — still try Formspree
-      console.warn('Guest GitHub write failed (non-critical):', ghErr.message);
+      var { data: supaData, error: supaErr } = await supa.from('guests').insert([{
+        name, email, phone, nationality, party_size,
+        arrival: arrival || null, departure: departure || null,
+        special_req, verified: false,
+        email_verified: false, wa_verified: false,
+        verif_code, payment_pref: '', quickbooks_id: '', stripe_id: '', notes: ''
+      }]).select();
+
+      if (supaErr) {
+        if (supaErr.code === '23505') {
+          // Duplicate email — update instead
+          var { error: upErr } = await supa.from('guests').update({
+            name, phone, nationality, party_size,
+            arrival: arrival || null, departure: departure || null, special_req
+          }).eq('email', email);
+          if (!upErr) supaOk = true;
+          else throw new Error(upErr.message);
+        } else {
+          throw new Error(supaErr.message);
+        }
+      } else {
+        supaOk = true;
+        // Cache in localStorage for login feature
+        var profile = { name, email, phone, nationality, party_size, arrival, departure };
+        var profiles = JSON.parse(localStorage.getItem('ev_user_profiles') || '[]');
+        profiles = profiles.filter(function(p){ return p.email !== email; });
+        profiles.push(profile);
+        localStorage.setItem('ev_user_profiles', JSON.stringify(profiles));
+      }
+    } catch(supaErr) {
+      console.warn('Supabase guest insert failed:', supaErr.message);
     }
 
-    // 2. Always also send via Formspree (email notification to you)
-    var fsOk = false;
+    // ── 2. Formspree email notification (always) ──────────────
     try {
       var fsRes = await fetch('https://formspree.io/f/mdayoknj', {
-        method: 'POST',
-        body: new FormData(regForm),
-        headers: { 'Accept': 'application/json' }
+        method: 'POST', body: new FormData(regForm), headers: { 'Accept': 'application/json' }
       });
       fsOk = fsRes.ok;
     } catch(fsErr) {
-      console.warn('Formspree fallback failed:', fsErr.message);
+      console.warn('Formspree notification failed:', fsErr.message);
     }
 
-    if (ghOk || fsOk) {
-      // Success
+    // ── 3. GitHub fallback (non-critical, only if admin token exists) ─
+    try {
+      var ghTk = localStorage.getItem('ev_gh') || localStorage.getItem('ev_token') || '';
+      if (ghTk && !supaOk) {
+        var slug    = 'guest-' + Date.now();
+        var content = JSON.stringify({name,email,phone,nationality,party_size,arrival,departure,special_req,verif_code,registered_at:new Date().toISOString()},null,2);
+        var ghHdr   = {'Authorization':'Bearer '+ghTk,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'};
+        var ghBody  = {message:'guest: registration '+slug, content:btoa(unescape(encodeURIComponent(content))), branch:'main'};
+        await fetch('https://api.github.com/repos/cmarcdavid/evalia-web/contents/_data/guests/'+slug+'.json',{method:'PUT',headers:ghHdr,body:JSON.stringify(ghBody)});
+      }
+    } catch(ghErr) { /* silent */ }
+
+    // ── Result ────────────────────────────────────────────────
+    var btnLabel = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →';
+    if (supaOk || fsOk) {
       regForm.reset();
       if (successBanner) successBanner.style.display = 'block';
-      if (btn) { btn.disabled = false; btn.textContent = '✅ Profile Created!'; btn.style.background = 'var(--palm)'; }
-      showToast('🎉', lang==='fr' ? 'Profil créé ! Un message WhatsApp va vous être envoyé.' : 'Profile created! Watch for our WhatsApp welcome.');
-      // Reset button after delay
-      setTimeout(function() {
-        if (btn) { btn.textContent = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →'; btn.style.background = ''; }
-      }, 5000);
+      if (btn) { btn.disabled = false; btn.textContent = '✅ ' + (lang==='fr' ? 'Profil créé !' : 'Profile Created!'); btn.style.background = 'var(--palm)'; }
+      showToast('🎉', lang==='fr' ? 'Profil créé ! Bienvenue chez Evalia 🌴' : 'Profile created! Welcome to Evalia 🌴');
+      setTimeout(function(){ if(btn){ btn.textContent=btnLabel; btn.style.background=''; } }, 5000);
     } else {
-      // Both failed
       if (errorBanner) {
         errorBanner.textContent = lang==='fr'
-          ? '⚠️ Erreur réseau. Contactez-nous sur WhatsApp : +230 5724 2099'
+          ? '⚠️ Erreur réseau. WhatsApp : +230 5724 2099'
           : '⚠️ Network error. Please WhatsApp us at +230 5724 2099';
         errorBanner.style.display = 'block';
       }
-      if (btn) { btn.disabled = false; btn.textContent = lang==='fr' ? 'Créer mon profil →' : 'Create My Profile →'; }
+      if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
     }
   });
+});
+
+// ── AVAILABILITY CHECK (Supabase) ─────────────────────────────────────────
+// Called when dates change in the booking wizard
+async function checkPropertyAvailability(checkin, checkout, property) {
+  if (!checkin || !checkout || typeof supa === 'undefined') return null;
+  try {
+    // Map wizard property names to availability table values
+    var propMap = {'Studio Evalia':'studio', 'Villa Evalia':'villa'};
+    var propKey = propMap[property] || property;
+    var { data, error } = await supa.from('availability')
+      .select('date, property')
+      .gte('date', checkin)
+      .lte('date', checkout)
+      .in('property', [propKey, 'both']);
+    if (error) return null;
+    return data && data.length === 0; // true = available
+  } catch(e) { return null; }
+}
+
+// Show availability badge on property cards when booking dates selected
+async function updateAvailabilityBadges() {
+  var checkin  = (document.getElementById('bkIn')  || {}).value;
+  var checkout = (document.getElementById('bkOut') || {}).value;
+  if (!checkin || !checkout) return;
+  var props = [
+    {name:'Studio Evalia', btnSel:'#studioCard .btn-acc'},
+    {name:'Villa Evalia',  btnSel:'#villaCard .btn-acc'}
+  ];
+  for (var i = 0; i < props.length; i++) {
+    var p = props[i];
+    var avail = await checkPropertyAvailability(checkin, checkout, p.name);
+    var btn   = document.querySelector(p.btnSel);
+    var card  = btn && btn.closest('.acc-card');
+    if (!card) continue;
+    // Remove existing badge
+    var old = card.querySelector('.avail-badge');
+    if (old) old.remove();
+    if (avail === null) continue; // unknown — no badge
+    var badge = document.createElement('span');
+    badge.className = 'avail-badge ' + (avail ? 'available' : 'unavailable');
+    badge.textContent = avail ? '✅ Available ' + checkin + '–' + checkout : '❌ Not available for those dates';
+    var foot = card.querySelector('.acc-foot');
+    if (foot) card.querySelector('.acc-body').insertBefore(badge, foot);
+  }
+}
+
+// Hook into existing date inputs
+document.addEventListener('DOMContentLoaded', function() {
+  var bkIn  = document.getElementById('bkIn');
+  var bkOut = document.getElementById('bkOut');
+  if (bkIn)  bkIn.addEventListener('change',  updateAvailabilityBadges);
+  if (bkOut) bkOut.addEventListener('change', updateAvailabilityBadges);
 });
 
 // ── MODAL ─────────────────────────────────────
